@@ -3,32 +3,31 @@ import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { AppointmentCalendar } from "@/components/appointments/AppointmentCalendar";
 import { DailyAppointments } from "@/components/appointments/DailyAppointments";
-import { AppointmentStats } from "@/components/appointments/AppointmentStats";
+import { TeamAvailabilityOverview } from "@/components/appointments/TeamAvailabilityOverview";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Filter } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
-import { TeamType } from "@/types";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { AppointmentSettings, ScheduleSettings } from "@/components/appointments/AppointmentSettings";
+
+// Voorbeeld data voor teams en werkgebieden
+const mockEnvironments = [
+  { id: "1", name: "Rotterdam", region: "Zuid-Holland", color: "#0EA5E9" },
+  { id: "2", name: "Amsterdam", region: "Noord-Holland", color: "#9b87f5" },
+  { id: "3", name: "Utrecht", region: "Utrecht", color: "#7E69AB" },
+];
+
+const mockTeams = [
+  { id: "1", name: "Verkoop Team A", type: "sales", environmentId: "1", color: "#0EA5E9" },
+  { id: "2", name: "Verkoop Team B", type: "sales", environmentId: "2", color: "#9b87f5" },
+  { id: "3", name: "Uitvoerende Ploeg 1", type: "installation", environmentId: "1", color: "#0EA5E9" },
+  { id: "4", name: "Uitvoerende Ploeg 2", type: "installation", environmentId: "3", color: "#7E69AB" },
+];
 
 const Appointments = () => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
-  const [selectedTeamType, setSelectedTeamType] = useState<TeamType | "all">("all");
   
-  // Define default schedule settings
   const [scheduleSettings, setScheduleSettings] = useState<ScheduleSettings>({
     salesMorningSlots: 2,
     salesAfternoonSlots: 2,
@@ -39,14 +38,7 @@ const Appointments = () => {
     defaultJobDuration: "medium"
   });
 
-  const filteredAppointments = mockAppointments.filter(appointment => {
-    if (selectedTeamType !== "all" && appointment.teamType !== selectedTeamType) {
-      return false;
-    }
-    return true;
-  });
-
-  const appointmentsForSelectedDate = filteredAppointments.filter(
+  const appointmentsForSelectedDate = mockAppointments.filter(
     (a) => a.date === selectedDate
   );
 
@@ -59,8 +51,8 @@ const Appointments = () => {
       <div className="container py-6 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Afspraken</h1>
-            <p className="text-gray-500">
+            <h1 className="text-3xl font-bold tracking-tight">Afspraken</h1>
+            <p className="text-muted-foreground">
               Planning & beschikbaarheid overzicht
             </p>
           </div>
@@ -69,36 +61,6 @@ const Appointments = () => {
               settings={scheduleSettings} 
               onSettingsChange={handleSettingsChange} 
             />
-            
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="bg-white">
-                  <Filter className="mr-2 h-4 w-4" />
-                  Filter Teams
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="space-y-4">
-                  <h4 className="font-medium text-gray-900">Filter Afspraken</h4>
-                  <div className="space-y-2">
-                    <h5 className="text-sm font-medium text-gray-700">Team Type</h5>
-                    <Select 
-                      value={selectedTeamType} 
-                      onValueChange={(value) => setSelectedTeamType(value as TeamType | "all")}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Selecteer een team" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Alle Teams</SelectItem>
-                        <SelectItem value="sales">Verkoop Teams</SelectItem>
-                        <SelectItem value="installation">Uitvoerende Ploegen</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
             <Button className="bg-primary hover:bg-primary/90">
               <PlusCircle className="mr-2 h-4 w-4" />
               Nieuwe Afspraak
@@ -106,15 +68,17 @@ const Appointments = () => {
           </div>
         </div>
 
-        <AppointmentStats 
-          appointments={filteredAppointments} 
-          selectedDate={selectedDate}
+        <TeamAvailabilityOverview
+          startDate={selectedDate}
+          appointments={mockAppointments}
+          teams={mockTeams}
+          environments={mockEnvironments}
           scheduleSettings={scheduleSettings}
         />
 
         <div className="grid gap-6 lg:grid-cols-2">
           <AppointmentCalendar
-            appointments={filteredAppointments}
+            appointments={mockAppointments}
             onDateSelect={setSelectedDate}
             selectedDate={selectedDate}
           />

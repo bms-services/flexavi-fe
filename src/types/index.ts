@@ -108,3 +108,18 @@ export type InvoiceStatus =
   | "paid" 
   | "overdue" 
   | "canceled";
+
+export type WorkEnvironment = {
+  id: string;
+  name: string;
+  region: string;
+  color: string;
+};
+
+export type TeamDetails = {
+  id: string;
+  name: string;
+  type: TeamType;
+  environmentId: string;
+  color: string;
+};
