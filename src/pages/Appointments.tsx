@@ -21,11 +21,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { AppointmentSettings, ScheduleSettings } from "@/components/appointments/AppointmentSettings";
 
 const Appointments = () => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedTeamType, setSelectedTeamType] = useState<TeamType | "all">("all");
+  
+  // Define default schedule settings
+  const [scheduleSettings, setScheduleSettings] = useState<ScheduleSettings>({
+    salesMorningSlots: 2,
+    salesAfternoonSlots: 2,
+    salesEveningSlots: 2,
+    installationMorningSlots: 2,
+    installationAfternoonSlots: 2,
+    installationEveningSlots: 1,
+    defaultJobDuration: "medium"
+  });
 
   const filteredAppointments = mockAppointments.filter(appointment => {
     if (selectedTeamType !== "all" && appointment.teamType !== selectedTeamType) {
@@ -38,6 +50,10 @@ const Appointments = () => {
     (a) => a.date === selectedDate
   );
 
+  const handleSettingsChange = (newSettings: ScheduleSettings) => {
+    setScheduleSettings(newSettings);
+  };
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
@@ -49,6 +65,11 @@ const Appointments = () => {
             </p>
           </div>
           <div className="flex gap-2">
+            <AppointmentSettings 
+              settings={scheduleSettings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+            
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="bg-white">
@@ -87,7 +108,8 @@ const Appointments = () => {
 
         <AppointmentStats 
           appointments={filteredAppointments} 
-          selectedDate={selectedDate} 
+          selectedDate={selectedDate}
+          scheduleSettings={scheduleSettings}
         />
 
         <div className="grid gap-6 lg:grid-cols-2">

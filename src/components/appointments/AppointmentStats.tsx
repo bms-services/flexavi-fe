@@ -6,15 +6,18 @@ import { parseISO, format, isToday, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScheduleSettings } from "./AppointmentSettings";
 
 interface AppointmentStatsProps {
   appointments: Appointment[];
   selectedDate: string;
+  scheduleSettings: ScheduleSettings;
 }
 
 export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
   appointments,
   selectedDate,
+  scheduleSettings,
 }) => {
   // Generate next 5 days for overview
   const daysToShow = Array.from({ length: 5 }, (_, i) => {
@@ -22,11 +25,32 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
     return format(date, 'yyyy-MM-dd');
   });
 
-  // Define time slots and max appointments per slot
+  // Define time slots with dynamic max appointments from settings
   const timeSlots = [
-    { label: "Ochtend", time: "9:00-12:00", max: 2 },
-    { label: "Middag", time: "12:00-17:00", max: 2 },
-    { label: "Avond", time: "17:00-21:00", max: 2 }
+    { 
+      label: "Ochtend", 
+      time: "9:00-12:00", 
+      salesMax: scheduleSettings.salesMorningSlots,
+      installationMax: scheduleSettings.installationMorningSlots,
+      startHour: 9,
+      endHour: 12
+    },
+    { 
+      label: "Middag", 
+      time: "12:00-17:00", 
+      salesMax: scheduleSettings.salesAfternoonSlots,
+      installationMax: scheduleSettings.installationAfternoonSlots,
+      startHour: 12,
+      endHour: 17
+    },
+    { 
+      label: "Avond", 
+      time: "17:00-21:00", 
+      salesMax: scheduleSettings.salesEveningSlots,
+      installationMax: scheduleSettings.installationEveningSlots,
+      startHour: 17,
+      endHour: 21
+    }
   ];
 
   const getAppointmentsForDateAndTime = (date: string, startHour: number, endHour: number, teamType: TeamType) => {
@@ -79,10 +103,10 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
                     {timeSlots.map((slot, idx) => {
                       const availability = getTimeSlotAvailability(
                         date,
-                        parseInt(slot.time.split("-")[0]),
-                        parseInt(slot.time.split("-")[1]),
+                        slot.startHour,
+                        slot.endHour,
                         "sales",
-                        slot.max
+                        slot.salesMax
                       );
                       return (
                         <div key={idx} className="flex items-center justify-between text-sm">
@@ -94,7 +118,7 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
                             "font-medium",
                             availability.available === 0 ? "text-red-600" : "text-blue-600"
                           )}>
-                            {availability.count}/{slot.max}
+                            {availability.count}/{slot.salesMax}
                           </span>
                         </div>
                       );
@@ -110,10 +134,10 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
                     {timeSlots.map((slot, idx) => {
                       const availability = getTimeSlotAvailability(
                         date,
-                        parseInt(slot.time.split("-")[0]),
-                        parseInt(slot.time.split("-")[1]),
+                        slot.startHour,
+                        slot.endHour,
                         "installation",
-                        slot.max
+                        slot.installationMax
                       );
                       return (
                         <div key={idx} className="flex items-center justify-between text-sm">
@@ -125,7 +149,7 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
                             "font-medium",
                             availability.available === 0 ? "text-red-600" : "text-green-600"
                           )}>
-                            {availability.count}/{slot.max}
+                            {availability.count}/{slot.installationMax}
                           </span>
                         </div>
                       );
