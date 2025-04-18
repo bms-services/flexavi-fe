@@ -9,19 +9,20 @@ import { PlusCircle } from "lucide-react";
 import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
 import { AppointmentSettings, ScheduleSettings } from "@/components/appointments/AppointmentSettings";
+import { WorkEnvironment, TeamDetails, TeamType } from "@/types";
 
 // Voorbeeld data voor teams en werkgebieden
-const mockEnvironments = [
+const mockEnvironments: WorkEnvironment[] = [
   { id: "1", name: "Rotterdam", region: "Zuid-Holland", color: "#0EA5E9" },
   { id: "2", name: "Amsterdam", region: "Noord-Holland", color: "#9b87f5" },
   { id: "3", name: "Utrecht", region: "Utrecht", color: "#7E69AB" },
 ];
 
-const mockTeams = [
-  { id: "1", name: "Verkoop Team A", type: "sales", environmentId: "1", color: "#0EA5E9" },
-  { id: "2", name: "Verkoop Team B", type: "sales", environmentId: "2", color: "#9b87f5" },
-  { id: "3", name: "Uitvoerende Ploeg 1", type: "installation", environmentId: "1", color: "#0EA5E9" },
-  { id: "4", name: "Uitvoerende Ploeg 2", type: "installation", environmentId: "3", color: "#7E69AB" },
+const mockTeams: TeamDetails[] = [
+  { id: "1", name: "Verkoop Team A", type: "sales" as TeamType, environmentId: "1", color: "#0EA5E9" },
+  { id: "2", name: "Verkoop Team B", type: "sales" as TeamType, environmentId: "2", color: "#9b87f5" },
+  { id: "3", name: "Uitvoerende Ploeg 1", type: "installation" as TeamType, environmentId: "1", color: "#0EA5E9" },
+  { id: "4", name: "Uitvoerende Ploeg 2", type: "installation" as TeamType, environmentId: "3", color: "#7E69AB" },
 ];
 
 const Appointments = () => {
