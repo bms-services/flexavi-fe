@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { AppointmentCalendar } from "@/components/appointments/AppointmentCalendar";
 import { DailyAppointments } from "@/components/appointments/DailyAppointments";
+import { AppointmentStats } from "@/components/appointments/AppointmentStats";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Filter } from "lucide-react";
 import { mockAppointments } from "@/data/mockData";
@@ -87,6 +88,11 @@ const Appointments = () => {
             </Button>
           </div>
         </div>
+
+        <AppointmentStats 
+          appointments={filteredAppointments} 
+          selectedDate={selectedDate} 
+        />
 
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "calendar" | "list")}>
           <div className="flex justify-between items-center">

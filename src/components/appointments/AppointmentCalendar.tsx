@@ -23,6 +23,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Appointment } from "@/types";
 import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
 
 interface AppointmentCalendarProps {
   appointments: Appointment[];
@@ -64,6 +65,24 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   const handleDateClick = (day: Date) => {
     const formattedDate = format(day, "yyyy-MM-dd");
     onDateSelect(formattedDate);
+  };
+
+  // Helper to get appointments by team type for a specific day
+  const getTeamTypeCount = (date: string) => {
+    if (!daysWithAppointments[date]) return null;
+    
+    const counts = {
+      sales: 0,
+      installation: 0,
+      repair: 0,
+      maintenance: 0
+    };
+    
+    daysWithAppointments[date].forEach(app => {
+      counts[app.teamType]++;
+    });
+    
+    return counts;
   };
 
   return (
@@ -114,35 +133,80 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
           {Array.from({
             length: (days[0].getDay() + 6) % 7,
           }).map((_, index) => (
-            <div key={`empty-${index}`} className="h-12 p-1" />
+            <div key={`empty-${index}`} className="h-16 p-1" />
           ))}
 
           {days.map((day) => {
             const dateStr = format(day, "yyyy-MM-dd");
-            const hasAppointments = !!daysWithAppointments[dateStr];
+            const appointments = daysWithAppointments[dateStr] || [];
+            const appointmentCount = appointments.length;
             const isSelected = selectedDate === dateStr;
             const isToday = isSameDay(day, today);
+            const teamCounts = getTeamTypeCount(dateStr);
 
             return (
               <div
                 key={day.toString()}
-                className="h-12 p-1"
+                className={cn("h-16 p-1 border rounded cursor-pointer hover:bg-muted/50 transition-colors", 
+                  isSelected && "border-primary bg-primary/10",
+                  isToday && "bg-accent/50"
+                )}
                 onClick={() => handleDateClick(day)}
               >
-                <div
-                  className={cn(
-                    "calendar-day h-full flex items-center justify-center",
-                    !isSameMonth(day, currentMonth) && "opacity-50",
-                    hasAppointments && "has-appointments",
-                    isSelected && "selected",
-                    isToday && "today"
+                <div className="flex flex-col h-full">
+                  <div className="flex justify-between items-center">
+                    <span className={cn("text-sm font-medium", 
+                      !isSameMonth(day, currentMonth) && "opacity-30",
+                      isSelected && "text-primary font-bold"
+                    )}>
+                      {format(day, "d")}
+                    </span>
+                    {appointmentCount > 0 && (
+                      <Badge className="text-xs" variant="primary">
+                        {appointmentCount}
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {teamCounts && (
+                    <div className="mt-auto grid grid-cols-2 gap-1">
+                      {teamCounts.sales > 0 && (
+                        <div className="h-1.5 bg-blue-500 rounded-full" title="Verkoop"></div>
+                      )}
+                      {teamCounts.installation > 0 && (
+                        <div className="h-1.5 bg-green-500 rounded-full" title="Installatie"></div>
+                      )}
+                      {teamCounts.repair > 0 && (
+                        <div className="h-1.5 bg-red-500 rounded-full" title="Reparatie"></div>
+                      )}
+                      {teamCounts.maintenance > 0 && (
+                        <div className="h-1.5 bg-amber-500 rounded-full" title="Onderhoud"></div>
+                      )}
+                    </div>
                   )}
-                >
-                  {format(day, "d")}
                 </div>
               </div>
             );
           })}
+        </div>
+        
+        <div className="flex flex-wrap gap-2 mt-4 text-xs text-muted-foreground">
+          <div className="flex items-center">
+            <div className="w-3 h-1.5 bg-blue-500 rounded-full mr-1"></div>
+            <span>Verkoop</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-1.5 bg-green-500 rounded-full mr-1"></div>
+            <span>Installatie</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-1.5 bg-red-500 rounded-full mr-1"></div>
+            <span>Reparatie</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-3 h-1.5 bg-amber-500 rounded-full mr-1"></div>
+            <span>Onderhoud</span>
+          </div>
         </div>
       </CardContent>
     </Card>
