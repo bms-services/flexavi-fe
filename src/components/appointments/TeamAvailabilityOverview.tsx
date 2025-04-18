@@ -2,12 +2,21 @@
 import React, { useState } from "react";
 import { format, parseISO, addDays, isToday } from "date-fns";
 import { nl } from "date-fns/locale";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Building2, Users, Calendar, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { WorkEnvironment, TeamDetails, Appointment } from "@/types";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface TeamAvailabilityOverviewProps {
   startDate: string;
@@ -30,12 +39,16 @@ export const TeamAvailabilityOverview = ({
     { label: "Middag", start: 13, end: 19 },
   ];
 
-  // State to track expanded teams
-  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
-
   const dates = Array.from({ length: daysToShow }, (_, i) => 
     format(addDays(parseISO(startDate), i), 'yyyy-MM-dd')
   );
+
+  const getAppointmentsForDateAndTeam = (date: string, teamId: string) => {
+    return appointments.filter(app => 
+      app.date === date && 
+      app.teamId === teamId
+    );
+  };
 
   const getAppointmentsCount = (date: string, teamId: string, startHour: number, endHour: number) => {
     return appointments.filter(app => {
@@ -55,152 +68,130 @@ export const TeamAvailabilityOverview = ({
   const salesTeams = teams.filter(team => team.type === "sales");
   const installationTeams = teams.filter(team => team.type === "installation");
 
-  // Group teams by environment
-  const salesTeamsByEnvironment = salesTeams.reduce((acc, team) => {
-    const env = environments.find(e => e.id === team.environmentId);
-    if (!acc[team.environmentId]) {
-      acc[team.environmentId] = {
-        environment: env,
-        teams: []
-      };
-    }
-    acc[team.environmentId].teams.push(team);
-    return acc;
-  }, {} as Record<string, { environment: WorkEnvironment | undefined, teams: TeamDetails[] }>);
-
-  const installationTeamsByEnvironment = installationTeams.reduce((acc, team) => {
-    const env = environments.find(e => e.id === team.environmentId);
-    if (!acc[team.environmentId]) {
-      acc[team.environmentId] = {
-        environment: env,
-        teams: []
-      };
-    }
-    acc[team.environmentId].teams.push(team);
-    return acc;
-  }, {} as Record<string, { environment: WorkEnvironment | undefined, teams: TeamDetails[] }>);
-
-  const TeamHeader = ({ type }: { type: string }) => (
-    <div className="bg-muted p-4 rounded-t-lg border-b flex items-center space-x-2">
-      <Users className="h-5 w-5 text-primary" />
-      <h2 className="text-lg font-semibold">
-        {type === 'sales' ? 'Verkoop Teams' : 'Uitvoerende Ploegen'}
-      </h2>
-    </div>
-  );
-
-  const EnvironmentHeader = ({ environment }: { environment: WorkEnvironment | undefined }) => (
-    <div 
-      className="px-4 py-3 flex items-center gap-2 border-l-4" 
-      style={{ borderLeftColor: environment?.color || '#e2e8f0' }}
-    >
-      <MapPin className="h-4 w-4" style={{ color: environment?.color }} />
-      <span className="font-medium">{environment?.name || 'Onbekend gebied'}</span>
-    </div>
-  );
-
-  const DateHeader = ({ date }: { date: string }) => {
-    const isCurrentDay = isToday(parseISO(date));
-    return (
-      <div className={cn(
-        "p-2 text-center border-b",
-        isCurrentDay && "bg-primary/10 font-medium"
-      )}>
-        <div className="text-sm font-medium">
-          {format(parseISO(date), "EEE", { locale: nl })}
-        </div>
-        <div className="text-xs text-muted-foreground">
-          {format(parseISO(date), "d MMM", { locale: nl })}
-        </div>
+  const TeamHeader = ({ type, icon }: { type: string; icon: React.ReactNode }) => (
+    <div className="bg-muted/50 p-4 rounded-t-lg border-b flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        {icon}
+        <h2 className="text-lg font-semibold">
+          {type === 'sales' ? 'Verkoopteams' : 'Uitvoerende Teams'}
+        </h2>
       </div>
+    </div>
+  );
+
+  const DateCell = ({ date, team, timeSlot }: { date: string; team: TeamDetails; timeSlot: { start: number; end: number; label: string } }) => {
+    const count = getAppointmentsCount(date, team.id, timeSlot.start, timeSlot.end);
+    const maxSlots = getMaxSlots(team.type, timeSlot.label);
+    const available = maxSlots - count;
+    const isFullyBooked = available === 0;
+    const isLimitedAvailability = available <= 1;
+    
+    // Get appointments for this date and team
+    const dateAppointments = getAppointmentsForDateAndTeam(date, team.id);
+    const cities = [...new Set(dateAppointments.map(app => app.location))].join(', ');
+    
+    return (
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <div className="relative">
+            <Badge 
+              variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
+              className={cn(
+                "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
+                !isFullyBooked && "hover:bg-primary hover:text-primary-foreground"
+              )}
+            >
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                {timeSlot.start}:00
+              </span>
+              <span className="font-medium">{count}/{maxSlots}</span>
+            </Badge>
+          </div>
+        </HoverCardTrigger>
+        <HoverCardContent 
+          className="w-80 p-4" 
+          align="start"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <p className="font-medium">
+                {format(parseISO(date), "EEEE d MMMM", { locale: nl })}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <p>{timeSlot.start}:00 - {timeSlot.end}:00</p>
+            </div>
+            {cities && (
+              <div className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
+                <p className="text-sm">{cities || 'Geen locaties gepland'}</p>
+              </div>
+            )}
+            <p className={cn(
+              "mt-2 text-sm font-medium",
+              isFullyBooked ? "text-destructive" : "text-primary"
+            )}>
+              {isFullyBooked 
+                ? "Volledig volgeboekt" 
+                : `${available} ${available === 1 ? 'plek' : 'plekken'} beschikbaar`}
+            </p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
     );
   };
 
   return (
     <div className="space-y-6">
-      {/* Sales Teams Section */}
-      <Card className="overflow-hidden shadow-sm">
-        <TeamHeader type="sales" />
-        
-        <CardContent className="p-0">
-          <div className="divide-y">
-            {Object.values(salesTeamsByEnvironment).map(({ environment, teams }) => (
-              <div key={environment?.id} className="bg-card">
-                <EnvironmentHeader environment={environment} />
-                
-                <div className="overflow-x-auto">
-                  <div className="min-w-[700px]">
-                    <div className="grid grid-cols-[200px,1fr] border-b">
-                      <div className="p-2 font-medium border-r bg-muted/30">Team</div>
-                      <div className="grid grid-cols-5">
-                        {dates.map(date => (
-                          <DateHeader key={date} date={date} />
-                        ))}
-                      </div>
+      {/* Sales Teams */}
+      <Card className="overflow-hidden">
+        <TeamHeader type="sales" icon={<Users className="h-5 w-5 text-primary" />} />
+        <CardContent className="p-4">
+          <div className="rounded-lg border overflow-hidden">
+            <div className="grid grid-cols-[200px,1fr] bg-muted/30">
+              <div className="p-3 font-medium border-r">Team</div>
+              <div className="grid grid-cols-5">
+                {dates.map(date => (
+                  <div key={date} className={cn(
+                    "p-2 text-center border-l",
+                    isToday(parseISO(date)) && "bg-primary/5"
+                  )}>
+                    <div className="font-medium">
+                      {format(parseISO(date), "EEE", { locale: nl })}
                     </div>
-                    
-                    {teams.map(team => (
-                      <div key={team.id} className="grid grid-cols-[200px,1fr] border-b hover:bg-muted/5">
-                        <div className="p-3 flex items-center gap-2 border-r">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: team.color }}
-                          ></div>
-                          <span className="font-medium truncate">{team.name}</span>
-                        </div>
-                        
-                        <div className="grid grid-cols-5">
-                          {dates.map(date => (
-                            <div key={date} className="p-2 flex flex-col gap-2">
-                              {timeSlots.map((slot, idx) => {
-                                const count = getAppointmentsCount(date, team.id, slot.start, slot.end);
-                                const maxSlots = getMaxSlots(team.type, slot.label);
-                                const available = maxSlots - count;
-                                const isFullyBooked = available === 0;
-                                const isLimitedAvailability = available <= 1;
-                                
-                                return (
-                                  <Tooltip key={idx}>
-                                    <TooltipTrigger asChild>
-                                      <div className="relative">
-                                        <Badge 
-                                          variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
-                                          className={cn(
-                                            "w-full justify-between gap-1 cursor-pointer transition-colors text-xs px-2 py-1",
-                                            !isFullyBooked && "hover:bg-primary hover:text-primary-foreground"
-                                          )}
-                                        >
-                                          <span className="flex items-center">
-                                            <Clock className="h-3 w-3 mr-1" />
-                                            {slot.start}:00
-                                          </span>
-                                          <span className="font-medium">
-                                            {count}/{maxSlots}
-                                          </span>
-                                        </Badge>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="bottom" align="center">
-                                      <div className="text-center">
-                                        <p className="font-medium">{slot.label}</p>
-                                        <p>{slot.start}:00 - {slot.end}:00</p>
-                                        <p className={cn(
-                                          "mt-1 text-sm",
-                                          isFullyBooked ? "text-destructive" : "text-primary"
-                                        )}>
-                                          {isFullyBooked ? "Volledig volgeboekt" : `${available} plekken beschikbaar`}
-                                        </p>
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                );
-                              })}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                    <div className="text-sm text-muted-foreground">
+                      {format(parseISO(date), "d MMM", { locale: nl })}
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {salesTeams.map(team => (
+              <div key={team.id} className="grid grid-cols-[200px,1fr] border-t hover:bg-muted/5">
+                <div className="p-3 flex items-center gap-2 border-r">
+                  <div 
+                    className="w-2.5 h-2.5 rounded-full" 
+                    style={{ backgroundColor: team.color }}
+                  />
+                  <span className="font-medium">{team.name}</span>
+                </div>
+                <div className="grid grid-cols-5">
+                  {dates.map(date => (
+                    <div key={date} className="p-2 space-y-2 border-l">
+                      {timeSlots.map((slot, idx) => (
+                        <DateCell 
+                          key={idx} 
+                          date={date} 
+                          team={team} 
+                          timeSlot={slot}
+                        />
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -208,89 +199,52 @@ export const TeamAvailabilityOverview = ({
         </CardContent>
       </Card>
 
-      {/* Installation Teams Section */}
-      <Card className="overflow-hidden shadow-sm">
-        <TeamHeader type="installation" />
-        
-        <CardContent className="p-0">
-          <div className="divide-y">
-            {Object.values(installationTeamsByEnvironment).map(({ environment, teams }) => (
-              <div key={environment?.id} className="bg-card">
-                <EnvironmentHeader environment={environment} />
-                
-                <div className="overflow-x-auto">
-                  <div className="min-w-[700px]">
-                    <div className="grid grid-cols-[200px,1fr] border-b">
-                      <div className="p-2 font-medium border-r bg-muted/30">Team</div>
-                      <div className="grid grid-cols-5">
-                        {dates.map(date => (
-                          <DateHeader key={date} date={date} />
-                        ))}
-                      </div>
+      {/* Installation Teams */}
+      <Card className="overflow-hidden">
+        <TeamHeader type="installation" icon={<Building2 className="h-5 w-5 text-primary" />} />
+        <CardContent className="p-4">
+          <div className="rounded-lg border overflow-hidden">
+            <div className="grid grid-cols-[200px,1fr] bg-muted/30">
+              <div className="p-3 font-medium border-r">Team</div>
+              <div className="grid grid-cols-5">
+                {dates.map(date => (
+                  <div key={date} className={cn(
+                    "p-2 text-center border-l",
+                    isToday(parseISO(date)) && "bg-primary/5"
+                  )}>
+                    <div className="font-medium">
+                      {format(parseISO(date), "EEE", { locale: nl })}
                     </div>
-                    
-                    {teams.map(team => (
-                      <div key={team.id} className="grid grid-cols-[200px,1fr] border-b hover:bg-muted/5">
-                        <div className="p-3 flex items-center gap-2 border-r">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: team.color }}
-                          ></div>
-                          <span className="font-medium truncate">{team.name}</span>
-                        </div>
-                        
-                        <div className="grid grid-cols-5">
-                          {dates.map(date => (
-                            <div key={date} className="p-2 flex flex-col gap-2">
-                              {timeSlots.map((slot, idx) => {
-                                const count = getAppointmentsCount(date, team.id, slot.start, slot.end);
-                                const maxSlots = getMaxSlots(team.type, slot.label);
-                                const available = maxSlots - count;
-                                const isFullyBooked = available === 0;
-                                const isLimitedAvailability = available <= 1;
-                                
-                                return (
-                                  <Tooltip key={idx}>
-                                    <TooltipTrigger asChild>
-                                      <div className="relative">
-                                        <Badge 
-                                          variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
-                                          className={cn(
-                                            "w-full justify-between gap-1 cursor-pointer transition-colors text-xs px-2 py-1",
-                                            !isFullyBooked && "hover:bg-primary hover:text-primary-foreground"
-                                          )}
-                                        >
-                                          <span className="flex items-center">
-                                            <Clock className="h-3 w-3 mr-1" />
-                                            {slot.start}:00
-                                          </span>
-                                          <span className="font-medium">
-                                            {count}/{maxSlots}
-                                          </span>
-                                        </Badge>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="bottom" align="center">
-                                      <div className="text-center">
-                                        <p className="font-medium">{slot.label}</p>
-                                        <p>{slot.start}:00 - {slot.end}:00</p>
-                                        <p className={cn(
-                                          "mt-1 text-sm",
-                                          isFullyBooked ? "text-destructive" : "text-primary"
-                                        )}>
-                                          {isFullyBooked ? "Volledig volgeboekt" : `${available} plekken beschikbaar`}
-                                        </p>
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                );
-                              })}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                    <div className="text-sm text-muted-foreground">
+                      {format(parseISO(date), "d MMM", { locale: nl })}
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {installationTeams.map(team => (
+              <div key={team.id} className="grid grid-cols-[200px,1fr] border-t hover:bg-muted/5">
+                <div className="p-3 flex items-center gap-2 border-r">
+                  <div 
+                    className="w-2.5 h-2.5 rounded-full" 
+                    style={{ backgroundColor: team.color }}
+                  />
+                  <span className="font-medium">{team.name}</span>
+                </div>
+                <div className="grid grid-cols-5">
+                  {dates.map(date => (
+                    <div key={date} className="p-2 space-y-2 border-l">
+                      {timeSlots.map((slot, idx) => (
+                        <DateCell 
+                          key={idx} 
+                          date={date} 
+                          team={team} 
+                          timeSlot={slot}
+                        />
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -300,3 +254,4 @@ export const TeamAvailabilityOverview = ({
     </div>
   );
 };
+
