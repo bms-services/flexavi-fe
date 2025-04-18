@@ -43,31 +43,31 @@ const Appointments = () => {
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Afspraken</h1>
-            <p className="text-muted-foreground">
-              Beheer al je afspraken op de kalender.
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Afspraken</h1>
+            <p className="text-gray-500">
+              Planning & beschikbaarheid overzicht
             </p>
           </div>
           <div className="flex gap-2">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="bg-white">
                   <Filter className="mr-2 h-4 w-4" />
-                  Filter
+                  Filter Teams
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-80">
                 <div className="space-y-4">
-                  <h4 className="font-medium">Filter Afspraken</h4>
+                  <h4 className="font-medium text-gray-900">Filter Afspraken</h4>
                   <div className="space-y-2">
-                    <h5 className="text-sm font-medium">Team Type</h5>
+                    <h5 className="text-sm font-medium text-gray-700">Team Type</h5>
                     <Select 
                       value={selectedTeamType} 
                       onValueChange={(value) => setSelectedTeamType(value as TeamType | "all")}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Selecteer een team" />
                       </SelectTrigger>
                       <SelectContent>
@@ -82,7 +82,7 @@ const Appointments = () => {
                 </div>
               </PopoverContent>
             </Popover>
-            <Button>
+            <Button className="bg-primary hover:bg-primary/90">
               <PlusCircle className="mr-2 h-4 w-4" />
               Nieuwe Afspraak
             </Button>
@@ -94,16 +94,24 @@ const Appointments = () => {
           selectedDate={selectedDate} 
         />
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "calendar" | "list")}>
-          <div className="flex justify-between items-center">
-            <TabsList>
-              <TabsTrigger value="calendar">Kalender</TabsTrigger>
-              <TabsTrigger value="list">Lijst</TabsTrigger>
+        <Tabs 
+          value={activeTab} 
+          onValueChange={(value) => setActiveTab(value as "calendar" | "list")}
+          className="mt-8"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <TabsList className="bg-muted">
+              <TabsTrigger value="calendar" className="data-[state=active]:bg-white">
+                Kalender
+              </TabsTrigger>
+              <TabsTrigger value="list" className="data-[state=active]:bg-white">
+                Lijst
+              </TabsTrigger>
             </TabsList>
           </div>
           
-          <TabsContent value="calendar" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2">
+          <TabsContent value="calendar">
+            <div className="grid gap-6 lg:grid-cols-2">
               <AppointmentCalendar
                 appointments={filteredAppointments}
                 onDateSelect={setSelectedDate}
@@ -116,15 +124,15 @@ const Appointments = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="list" className="mt-6">
-            <div className="bg-white rounded-md shadow">
+          <TabsContent value="list">
+            <div className="bg-white rounded-lg shadow-sm border">
               <div className="p-4 border-b">
-                <h3 className="text-lg font-medium">Alle Afspraken</h3>
+                <h3 className="text-lg font-medium text-gray-900">Alle Afspraken</h3>
               </div>
               <div className="p-4">
                 <table className="w-full">
                   <thead>
-                    <tr className="text-left text-sm text-muted-foreground">
+                    <tr className="text-left text-sm text-gray-500">
                       <th className="pb-3 pl-4">Datum</th>
                       <th className="pb-3">Tijd</th>
                       <th className="pb-3">Titel</th>
@@ -135,7 +143,7 @@ const Appointments = () => {
                   <tbody>
                     {filteredAppointments.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="p-4 text-center text-muted-foreground">
+                        <td colSpan={5} className="p-4 text-center text-gray-500">
                           Geen afspraken gevonden.
                         </td>
                       </tr>
@@ -147,7 +155,7 @@ const Appointments = () => {
                           return dateB.getTime() - dateA.getTime();
                         })
                         .map((appointment) => (
-                          <tr key={appointment.id} className="border-t hover:bg-muted/50">
+                          <tr key={appointment.id} className="border-t hover:bg-gray-50">
                             <td className="py-3 pl-4">{format(new Date(appointment.date), "dd-MM-yyyy")}</td>
                             <td className="py-3">{appointment.startTime}</td>
                             <td className="py-3">{appointment.title}</td>

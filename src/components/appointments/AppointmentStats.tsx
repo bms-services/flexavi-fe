@@ -1,13 +1,16 @@
 
 import React from "react";
 import { Appointment, TeamType } from "@/types";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import { parseISO, format, isToday, isSameDay } from "date-fns";
+import { Card, CardContent } from "@/components/ui/card";
+import { parseISO, format, isToday } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Clock, 
+  Users, 
+  Calendar,
+  AlertCircle
+} from "lucide-react";
 
 interface AppointmentStatsProps {
   appointments: Appointment[];
@@ -33,10 +36,6 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
 
   // Get counts by status
   const statusCounts = {
-    scheduled: appointmentsForDate.filter(a => a.status === "scheduled").length,
-    completed: appointmentsForDate.filter(a => a.status === "completed").length,
-    canceled: appointmentsForDate.filter(a => a.status === "canceled").length,
-    rescheduled: appointmentsForDate.filter(a => a.status === "rescheduled").length,
     quote_request: appointmentsForDate.filter(a => a.status === "quote_request").length,
     warranty: appointmentsForDate.filter(a => a.status === "warranty").length,
     new_assignment: appointmentsForDate.filter(a => a.status === "new_assignment").length,
@@ -77,74 +76,112 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="flex-1">
-            <h3 className="font-medium mb-2">Overzicht {formatDateLabel()}</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-muted rounded-md p-3">
-                <div className="text-muted-foreground text-sm">Totaal afspraken</div>
-                <div className="text-2xl font-bold">{totalAppointments}</div>
-              </div>
-              <div className="bg-muted rounded-md p-3">
-                <div className="text-muted-foreground text-sm">Beschikbaarheid</div>
-                <div className="flex gap-1 mt-1">
-                  {timeSlots.map((slot, index) => (
-                    <Badge 
-                      key={index} 
-                      variant={slot.available ? "success" : "destructive"}
-                      className="text-xs"
-                    >
-                      {slot.count} / 3
-                    </Badge>
-                  ))}
+    <Card className="bg-white shadow-md">
+      <CardContent className="p-6">
+        <div className="flex flex-col gap-6">
+          {/* Date Overview Section */}
+          <div className="flex items-center justify-between border-b pb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">{formatDateLabel()}</h2>
+              <p className="text-gray-500">Overzicht van beschikbaarheid en planning</p>
+            </div>
+            <Calendar className="h-8 w-8 text-primary" />
+          </div>
+
+          {/* Availability Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {timeSlots.map((slot, index) => (
+              <div 
+                key={index}
+                className={`p-4 rounded-lg border ${
+                  slot.available ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <Clock className={`h-5 w-5 ${slot.available ? 'text-emerald-600' : 'text-red-600'}`} />
+                  <Badge variant={slot.available ? "success" : "destructive"}>
+                    {slot.count} / 3
+                  </Badge>
                 </div>
+                <h3 className="font-medium text-gray-900">{slot.label}</h3>
+                <p className={`text-sm ${slot.available ? 'text-emerald-600' : 'text-red-600'}`}>
+                  {slot.available ? 'Beschikbaar' : 'Vol gepland'}
+                </p>
               </div>
+            ))}
+          </div>
+
+          {/* Team Status */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-5 w-5 text-blue-600" />
+                <span className="text-lg font-bold text-blue-600">{teamCounts.sales}</span>
+              </div>
+              <h3 className="font-medium text-gray-900">Verkoop</h3>
+              <p className="text-sm text-blue-600">Team planning</p>
+            </div>
+            
+            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-5 w-5 text-green-600" />
+                <span className="text-lg font-bold text-green-600">{teamCounts.installation}</span>
+              </div>
+              <h3 className="font-medium text-gray-900">Installatie</h3>
+              <p className="text-sm text-green-600">Team planning</p>
+            </div>
+            
+            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-5 w-5 text-red-600" />
+                <span className="text-lg font-bold text-red-600">{teamCounts.repair}</span>
+              </div>
+              <h3 className="font-medium text-gray-900">Reparatie</h3>
+              <p className="text-sm text-red-600">Team planning</p>
+            </div>
+            
+            <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+              <div className="flex items-center justify-between mb-2">
+                <Users className="h-5 w-5 text-amber-600" />
+                <span className="text-lg font-bold text-amber-600">{teamCounts.maintenance}</span>
+              </div>
+              <h3 className="font-medium text-gray-900">Onderhoud</h3>
+              <p className="text-sm text-amber-600">Team planning</p>
             </div>
           </div>
-          
-          <div className="flex-1">
-            <h3 className="font-medium mb-2">Teams</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-blue-100 rounded-md p-3">
-                <div className="text-blue-600 text-sm">Verkoop</div>
-                <div className="text-2xl font-bold">{teamCounts.sales}</div>
+
+          {/* Status Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="rounded-lg p-4 border bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <AlertCircle className="h-5 w-5 text-gray-600" />
+                <span className="text-lg font-bold text-gray-600">{statusCounts.quote_request}</span>
               </div>
-              <div className="bg-green-100 rounded-md p-3">
-                <div className="text-green-600 text-sm">Installatie</div>
-                <div className="text-2xl font-bold">{teamCounts.installation}</div>
-              </div>
-              <div className="bg-red-100 rounded-md p-3">
-                <div className="text-red-600 text-sm">Reparatie</div>
-                <div className="text-2xl font-bold">{teamCounts.repair}</div>
-              </div>
-              <div className="bg-amber-100 rounded-md p-3">
-                <div className="text-amber-600 text-sm">Onderhoud</div>
-                <div className="text-2xl font-bold">{teamCounts.maintenance}</div>
-              </div>
+              <h3 className="font-medium text-gray-900">Offerte aanvraag</h3>
             </div>
-          </div>
-          
-          <div className="flex-1">
-            <h3 className="font-medium mb-2">Status</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-muted rounded-md p-3 flex flex-col justify-between">
-                <div className="text-muted-foreground text-sm">Offerte aanvraag</div>
-                <div className="text-xl font-bold">{statusCounts.quote_request}</div>
+            
+            <div className="rounded-lg p-4 border bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <AlertCircle className="h-5 w-5 text-gray-600" />
+                <span className="text-lg font-bold text-gray-600">{statusCounts.warranty}</span>
               </div>
-              <div className="bg-muted rounded-md p-3 flex flex-col justify-between">
-                <div className="text-muted-foreground text-sm">Garantie</div>
-                <div className="text-xl font-bold">{statusCounts.warranty}</div>
+              <h3 className="font-medium text-gray-900">Garantie</h3>
+            </div>
+            
+            <div className="rounded-lg p-4 border bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <AlertCircle className="h-5 w-5 text-gray-600" />
+                <span className="text-lg font-bold text-gray-600">{statusCounts.new_assignment}</span>
               </div>
-              <div className="bg-muted rounded-md p-3 flex flex-col justify-between">
-                <div className="text-muted-foreground text-sm">Nieuwe opdracht</div>
-                <div className="text-xl font-bold">{statusCounts.new_assignment}</div>
+              <h3 className="font-medium text-gray-900">Nieuwe opdracht</h3>
+            </div>
+            
+            <div className="rounded-lg p-4 border bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <AlertCircle className="h-5 w-5 text-gray-600" />
+                <span className="text-lg font-bold text-gray-600">{statusCounts.extra_assignment}</span>
               </div>
-              <div className="bg-muted rounded-md p-3 flex flex-col justify-between">
-                <div className="text-muted-foreground text-sm">Extra opdracht</div>
-                <div className="text-xl font-bold">{statusCounts.extra_assignment}</div>
-              </div>
+              <h3 className="font-medium text-gray-900">Extra opdracht</h3>
             </div>
           </div>
         </div>
