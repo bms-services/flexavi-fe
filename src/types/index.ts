@@ -1,3 +1,4 @@
+
 export type Lead = {
   id: string;
   name: string;
@@ -61,6 +62,7 @@ export type Appointment = {
   status: AppointmentStatus;
   teamId: string;
   teamType: TeamType;
+  location?: string; // Added location property as optional
   createdAt: string;
   updatedAt: string;
 };

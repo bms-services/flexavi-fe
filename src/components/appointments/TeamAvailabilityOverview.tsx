@@ -88,7 +88,14 @@ export const TeamAvailabilityOverview = ({
     
     // Get appointments for this date and team
     const dateAppointments = getAppointmentsForDateAndTeam(date, team.id);
-    const cities = [...new Set(dateAppointments.map(app => app.location))].join(', ');
+    
+    // Extract locations, checking if property exists on each appointment
+    const locations = dateAppointments
+      .map(app => app.location || app.address || 'Geen locatie')
+      .filter(Boolean);
+    
+    // Get unique locations
+    const cities = [...new Set(locations)].join(', ');
     
     return (
       <HoverCard>
@@ -254,4 +261,3 @@ export const TeamAvailabilityOverview = ({
     </div>
   );
 };
-
