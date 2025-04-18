@@ -13,14 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-
-interface InstallationTeamSectionProps {
-  title: string;
-  icon: React.ReactNode;
-  teams: any[];
-  dates: string[];
-  appointments: any[];
-}
+import { InstallationTeamSectionProps } from "../types";
 
 export const InstallationTeamSection = ({
   title,
@@ -28,6 +21,7 @@ export const InstallationTeamSection = ({
   teams,
   dates,
   appointments,
+  searchLocation
 }: InstallationTeamSectionProps) => {
   return (
     <Card className="overflow-hidden">
@@ -67,44 +61,60 @@ export const InstallationTeamSection = ({
                     app => app.date === date && app.teamId === team.id
                   );
 
+                  // Check if any appointments match the search location
+                  const hasMatchingLocation = searchLocation ? 
+                    dayAppointments.some(app => 
+                      app.location?.toLowerCase().includes(searchLocation.toLowerCase())
+                    ) : false;
+
                   return (
                     <div key={date} className="p-2 border-l">
                       {dayAppointments.length > 0 ? (
-                        dayAppointments.map((app, idx) => (
-                          <HoverCard key={idx}>
-                            <HoverCardTrigger asChild>
-                              <div className="mb-2 last:mb-0">
-                                <Badge 
-                                  variant="outline"
-                                  className="w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5 hover:bg-primary hover:text-primary-foreground"
-                                >
-                                  <span className="flex items-center gap-1.5">
-                                    <Clock className="h-3.5 w-3.5" />
-                                    {app.startTime} - {app.endTime}
-                                  </span>
-                                </Badge>
-                              </div>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-80 p-4" align="start">
-                              <div className="space-y-2">
-                                <p className="font-medium">{app.title}</p>
-                                <div className="flex items-center gap-2">
-                                  <Clock className="h-4 w-4 text-muted-foreground" />
-                                  <p>{app.startTime} - {app.endTime}</p>
+                        dayAppointments.map((app, idx) => {
+                          const locationMatches = searchLocation ? 
+                            app.location?.toLowerCase().includes(searchLocation.toLowerCase()) : 
+                            false;
+
+                          return (
+                            <HoverCard key={idx}>
+                              <HoverCardTrigger asChild>
+                                <div className="mb-2 last:mb-0">
+                                  <Badge 
+                                    variant="outline"
+                                    className={cn(
+                                      "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
+                                      locationMatches && "bg-green-100 hover:bg-green-200 border-green-500",
+                                      !locationMatches && "hover:bg-primary hover:text-primary-foreground"
+                                    )}
+                                  >
+                                    <span className="flex items-center gap-1.5">
+                                      <Clock className="h-3.5 w-3.5" />
+                                      {app.startTime} - {app.endTime}
+                                    </span>
+                                  </Badge>
                                 </div>
-                                {app.location && (
-                                  <div className="flex items-start gap-2">
-                                    <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
-                                    <p className="text-sm">{app.location}</p>
+                              </HoverCardTrigger>
+                              <HoverCardContent className="w-80 p-4" align="start">
+                                <div className="space-y-2">
+                                  <p className="font-medium">{app.title}</p>
+                                  <div className="flex items-center gap-2">
+                                    <Clock className="h-4 w-4 text-muted-foreground" />
+                                    <p>{app.startTime} - {app.endTime}</p>
                                   </div>
-                                )}
-                                <p className="text-sm text-muted-foreground">
-                                  {app.description}
-                                </p>
-                              </div>
-                            </HoverCardContent>
-                          </HoverCard>
-                        ))
+                                  {app.location && (
+                                    <div className="flex items-start gap-2">
+                                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
+                                      <p className="text-sm">{app.location}</p>
+                                    </div>
+                                  )}
+                                  <p className="text-sm text-muted-foreground">
+                                    {app.description}
+                                  </p>
+                                </div>
+                              </HoverCardContent>
+                            </HoverCard>
+                          );
+                        })
                       ) : (
                         <div className="text-sm text-muted-foreground text-center py-2">
                           Geen afspraken

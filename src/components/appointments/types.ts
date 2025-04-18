@@ -36,3 +36,12 @@ export interface AvailabilityCellProps {
   maxSlots: number;
   searchLocation?: string;
 }
+
+export interface InstallationTeamSectionProps {
+  title: string;
+  icon: React.ReactNode;
+  teams: TeamDetails[];
+  dates: string[];
+  appointments: Appointment[];
+  searchLocation?: string;
+}
