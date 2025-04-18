@@ -5,10 +5,9 @@ import { AppointmentCalendar } from "@/components/appointments/AppointmentCalend
 import { DailyAppointments } from "@/components/appointments/DailyAppointments";
 import { TeamAvailabilityOverview } from "@/components/appointments/TeamAvailabilityOverview";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, CalendarDays, Settings2 } from "lucide-react";
+import { PlusCircle, CalendarDays } from "lucide-react";
 import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
 import { AppointmentSettings, ScheduleSettings } from "@/components/appointments/AppointmentSettings";
 import { WorkEnvironment, TeamDetails, TeamType } from "@/types";
 import { 
@@ -18,6 +17,7 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 
 // Voorbeeld data voor teams en werkgebieden
 const mockEnvironments: WorkEnvironment[] = [
@@ -34,15 +34,19 @@ const mockTeams: TeamDetails[] = [
 ];
 
 const Appointments = () => {
+  const { toast } = useToast();
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
   const [activeTab, setActiveTab] = useState("planning");
 
+  // Expanded the settings with evening slots
   const [scheduleSettings, setScheduleSettings] = useState<ScheduleSettings>({
     salesMorningSlots: 3,
     salesAfternoonSlots: 3,
+    salesEveningSlots: 2,
     installationMorningSlots: 2,
     installationAfternoonSlots: 2,
+    installationEveningSlots: 1,
     defaultJobDuration: "medium"
   });
 
@@ -52,11 +56,22 @@ const Appointments = () => {
 
   const handleSettingsChange = (newSettings: ScheduleSettings) => {
     setScheduleSettings(newSettings);
+    toast({
+      title: "Instellingen bijgewerkt",
+      description: "De planning instellingen zijn succesvol bijgewerkt.",
+    });
   };
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
     setActiveTab("daily");
+  };
+
+  const handleNewAppointment = () => {
+    toast({
+      title: "Nieuwe afspraak",
+      description: "Functionaliteit voor het toevoegen van een nieuwe afspraak komt binnenkort beschikbaar.",
+    });
   };
 
   return (
@@ -75,7 +90,7 @@ const Appointments = () => {
                 settings={scheduleSettings} 
                 onSettingsChange={handleSettingsChange} 
               />
-              <Button className="bg-primary hover:bg-primary/90">
+              <Button className="bg-primary hover:bg-primary/90" onClick={handleNewAppointment}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Nieuwe Afspraak
               </Button>
