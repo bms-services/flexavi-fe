@@ -1,4 +1,3 @@
-
 export type Lead = {
   id: string;
   name: string;
@@ -35,6 +34,22 @@ export type Note = {
   updatedAt: string;
 };
 
+export type AppointmentStatus = 
+  | "scheduled" 
+  | "completed" 
+  | "canceled" 
+  | "rescheduled"
+  | "quote_request"    // Offerte aanvraag
+  | "warranty"         // Garantie
+  | "new_assignment"   // Nieuwe opdracht
+  | "extra_assignment"; // Extra opdracht
+
+export type TeamType =
+  | "sales"
+  | "installation"
+  | "repair"
+  | "maintenance";
+
 export type Appointment = {
   id: string;
   leadId: string;
@@ -44,15 +59,19 @@ export type Appointment = {
   startTime: string;
   endTime: string;
   status: AppointmentStatus;
+  teamId: string;
+  teamType: TeamType;
   createdAt: string;
   updatedAt: string;
 };
 
-export type AppointmentStatus = 
-  | "scheduled" 
-  | "completed" 
-  | "canceled" 
-  | "rescheduled";
+export type Team = {
+  id: string;
+  name: string;
+  type: TeamType;
+  members: string[];
+  color: string;
+};
 
 export type Quote = {
   id: string;

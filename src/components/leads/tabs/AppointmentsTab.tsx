@@ -33,6 +33,10 @@ const getStatusBadge = (status: Appointment["status"]) => {
     completed: { label: "Voltooid", variant: "success" as const },
     canceled: { label: "Geannuleerd", variant: "destructive" as const },
     rescheduled: { label: "Verzet", variant: "warning" as const },
+    quote_request: { label: "Offerte aanvraag", variant: "primary" as const },
+    warranty: { label: "Garantie", variant: "secondary" as const },
+    new_assignment: { label: "Nieuwe opdracht", variant: "success" as const },
+    extra_assignment: { label: "Extra opdracht", variant: "warning" as const }
   };
 
   const config = statusConfig[status] || statusConfig.scheduled;
@@ -80,6 +84,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
                     Beschrijving
                   </TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Team</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -105,6 +110,9 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(appointment.status)}
+                      </TableCell>
+                      <TableCell>
+                        {appointment.teamType === "sales" ? "Verkoop" : "Uitvoering"}
                       </TableCell>
                     </TableRow>
                   ))}

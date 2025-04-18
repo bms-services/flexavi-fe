@@ -11,7 +11,8 @@ import { Appointment } from "@/types";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { mockLeads } from "@/data/mockData";
-import { Clock, User, MapPin } from "lucide-react";
+import { Clock, User, MapPin, Users, Calendar } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface DailyAppointmentsProps {
   date: string;
@@ -40,6 +41,22 @@ export const DailyAppointments: React.FC<DailyAppointmentsProps> = ({
     return format(parseISO(dateString), "EEEE d MMMM yyyy", { locale: nl });
   };
 
+  const getStatusBadge = (status: Appointment["status"]) => {
+    const statusConfig = {
+      scheduled: { label: "Gepland", variant: "default" as const },
+      completed: { label: "Voltooid", variant: "success" as const },
+      canceled: { label: "Geannuleerd", variant: "destructive" as const },
+      rescheduled: { label: "Verzet", variant: "warning" as const },
+      quote_request: { label: "Offerte aanvraag", variant: "primary" as const },
+      warranty: { label: "Garantie", variant: "secondary" as const },
+      new_assignment: { label: "Nieuwe opdracht", variant: "success" as const },
+      extra_assignment: { label: "Extra opdracht", variant: "warning" as const }
+    };
+
+    const config = statusConfig[status] || statusConfig.scheduled;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -64,9 +81,12 @@ export const DailyAppointments: React.FC<DailyAppointmentsProps> = ({
               >
                 <div className="flex items-start md:items-center gap-4 flex-col md:flex-row md:justify-between mb-3">
                   <h3 className="font-medium text-lg">{appointment.title}</h3>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Clock className="inline mr-1 h-4 w-4" />
-                    {appointment.startTime} - {appointment.endTime}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Clock className="inline mr-1 h-4 w-4" />
+                      {appointment.startTime} - {appointment.endTime}
+                    </div>
+                    {getStatusBadge(appointment.status)}
                   </div>
                 </div>
                 <p className="mb-4">{appointment.description}</p>
@@ -78,6 +98,12 @@ export const DailyAppointments: React.FC<DailyAppointmentsProps> = ({
                   <div className="flex items-center text-muted-foreground">
                     <MapPin className="inline mr-2 h-4 w-4" />
                     {getLeadAddress(appointment.leadId)}
+                  </div>
+                  <div className="flex items-center text-muted-foreground">
+                    <Users className="inline mr-2 h-4 w-4" />
+                    {appointment.teamType === "sales" ? "Verkoop" : 
+                     appointment.teamType === "installation" ? "Installatie" :
+                     appointment.teamType === "repair" ? "Reparatie" : "Onderhoud"}
                   </div>
                 </div>
               </div>
