@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { AppointmentCalendar } from "@/components/appointments/AppointmentCalendar";
@@ -30,12 +29,10 @@ const Appointments = () => {
   const [selectedDate, setSelectedDate] = useState(today);
   
   const [scheduleSettings, setScheduleSettings] = useState<ScheduleSettings>({
-    salesMorningSlots: 2,
-    salesAfternoonSlots: 2,
-    salesEveningSlots: 2,
+    salesMorningSlots: 3,
+    salesAfternoonSlots: 3,
     installationMorningSlots: 2,
     installationAfternoonSlots: 2,
-    installationEveningSlots: 1,
     defaultJobDuration: "medium"
   });
 
@@ -49,7 +46,7 @@ const Appointments = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="container py-6 space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Afspraken</h1>
