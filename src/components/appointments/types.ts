@@ -16,6 +16,7 @@ export interface TeamSectionProps {
   dates: string[];
   appointments: Appointment[];
   scheduleSettings: any;
+  searchLocation?: string;
 }
 
 export interface DateHeaderProps {
@@ -33,4 +34,5 @@ export interface AvailabilityCellProps {
   };
   appointments: Appointment[];
   maxSlots: number;
+  searchLocation?: string;
 }

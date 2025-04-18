@@ -12,7 +12,14 @@ import {
 } from "@/components/ui/hover-card";
 import { AvailabilityCellProps } from "../types";
 
-export const AvailabilityCell = ({ date, team, timeSlot, appointments, maxSlots }: AvailabilityCellProps) => {
+export const AvailabilityCell = ({ 
+  date, 
+  team, 
+  timeSlot, 
+  appointments, 
+  maxSlots,
+  searchLocation 
+}: AvailabilityCellProps) => {
   const count = appointments.filter(app => {
     const hour = parseInt(app.startTime.split(":")[0]);
     return app.date === date && 
@@ -26,7 +33,10 @@ export const AvailabilityCell = ({ date, team, timeSlot, appointments, maxSlots 
   const isLimitedAvailability = available <= 1;
 
   const dateAppointments = appointments.filter(app => 
-    app.date === date && app.teamId === team.id
+    app.date === date && 
+    app.teamId === team.id &&
+    parseInt(app.startTime.split(":")[0]) >= timeSlot.start &&
+    parseInt(app.startTime.split(":")[0]) < timeSlot.end
   );
 
   const locations = dateAppointments
@@ -34,6 +44,10 @@ export const AvailabilityCell = ({ date, team, timeSlot, appointments, maxSlots 
     .filter(Boolean);
 
   const cities = [...new Set(locations)].join(', ');
+  
+  const hasSearchedLocation = searchLocation ? 
+    cities.toLowerCase().includes(searchLocation.toLowerCase()) : 
+    false;
 
   return (
     <HoverCard>
@@ -43,7 +57,8 @@ export const AvailabilityCell = ({ date, team, timeSlot, appointments, maxSlots 
             variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
             className={cn(
               "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
-              !isFullyBooked && "hover:bg-primary hover:text-primary-foreground"
+              hasSearchedLocation && "bg-green-100 hover:bg-green-200 border-green-500",
+              !isFullyBooked && !hasSearchedLocation && "hover:bg-primary hover:text-primary-foreground"
             )}
           >
             <span className="flex items-center gap-1.5">
