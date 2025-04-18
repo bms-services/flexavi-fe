@@ -4,13 +4,24 @@ import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Clock, Calendar, MapPin } from "lucide-react";
+import { Clock, Calendar, MapPin, FileText } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { AvailabilityCellProps } from "../types";
+
+const appointmentTypeLabels = {
+  quote_request: "Offerte aanvraag",
+  warranty: "Garantie",
+  new_assignment: "Nieuwe opdracht",
+  extra_assignment: "Extra opdracht",
+  scheduled: "Ingepland",
+  completed: "Afgerond",
+  canceled: "Geannuleerd",
+  rescheduled: "Verzet",
+};
 
 export const AvailabilityCell = ({ 
   date, 
@@ -70,25 +81,60 @@ export const AvailabilityCell = ({
         </div>
       </HoverCardTrigger>
       <HoverCardContent className="w-80 p-4" align="start">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <p className="font-medium">
-              {format(parseISO(date), "EEEE d MMMM", { locale: nl })}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <p>{timeSlot.start}:00 - {timeSlot.end}:00</p>
-          </div>
-          {cities && (
-            <div className="flex items-start gap-2">
-              <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
-              <p className="text-sm">{cities}</p>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <p className="font-medium">
+                {format(parseISO(date), "EEEE d MMMM", { locale: nl })}
+              </p>
             </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <p>{timeSlot.start}:00 - {timeSlot.end}:00</p>
+            </div>
+          </div>
+
+          {dateAppointments.length > 0 ? (
+            <div className="space-y-3">
+              <p className="text-sm font-medium text-muted-foreground">Geplande afspraken:</p>
+              {dateAppointments.map((app, idx) => (
+                <div key={idx} className="space-y-2 border-l-2 border-primary pl-3">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <p className="font-medium">{app.title}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <p className="text-sm">{app.startTime} - {app.endTime}</p>
+                  </div>
+                  {app.location && (
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
+                      <p className="text-sm">{app.location}</p>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">
+                      {appointmentTypeLabels[app.status]}
+                    </Badge>
+                  </div>
+                  {app.description && (
+                    <p className="text-sm text-muted-foreground">
+                      {app.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Geen afspraken gepland
+            </p>
           )}
+          
           <p className={cn(
-            "mt-2 text-sm font-medium",
+            "text-sm font-medium",
             isFullyBooked ? "text-destructive" : "text-primary"
           )}>
             {isFullyBooked 
