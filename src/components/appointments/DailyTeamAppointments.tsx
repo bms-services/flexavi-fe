@@ -102,6 +102,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
               key={team.id}
               team={team}
               appointments={teamAppointments}
+              onDragStart={handleDragStart}
               onGeneratePdf={generateWorklistPdf}
               isGeneratingPdf={generatingPdf === team.id}
               onDrop={handleDrop}

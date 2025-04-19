@@ -13,6 +13,7 @@ interface TeamAppointmentCardProps {
   onGeneratePdf: (teamId: string, teamName: string) => void;
   isGeneratingPdf: boolean;
   onDrop: (e: React.DragEvent, teamId: string) => void;
+  onDragStart?: (e: React.DragEvent, appointment: Appointment) => void;
 }
 
 export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
@@ -21,6 +22,7 @@ export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
   onGeneratePdf,
   isGeneratingPdf,
   onDrop,
+  onDragStart
 }) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -68,7 +70,10 @@ export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
             <p className="text-xs mt-1">Sleep afspraken hierheen om toe te wijzen</p>
           </div>
         ) : (
-          <TeamAppointmentList appointments={appointments} />
+          <TeamAppointmentList 
+            appointments={appointments} 
+            onDragStart={onDragStart}
+          />
         )}
       </CardContent>
     </Card>
