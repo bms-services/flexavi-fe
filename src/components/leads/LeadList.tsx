@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Lead, Quote, Invoice } from "@/types";
 import { Link } from "react-router-dom";
@@ -17,6 +16,14 @@ import { LeadStatusBadge } from "./LeadStatusBadge";
 import { mockQuotes } from "@/data/mockQuotes";
 import { mockInvoices } from "@/data/mockInvoices";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CreateLeadForm } from "./CreateLeadForm";
+import { useToast } from "@/hooks/use-toast";
 
 interface LeadListProps {
   leads: Lead[];
@@ -31,6 +38,8 @@ interface LeadStats {
 
 export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const getLeadStats = (leadId: string): LeadStats => {
     const leadQuotes = mockQuotes.filter(quote => quote.leadId === leadId);
@@ -85,6 +94,15 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const handleCreateLead = (data: { name: string; email: string; phone: string }) => {
+    console.log("Creating new lead:", data);
+    toast({
+      title: "Lead toegevoegd",
+      description: "De nieuwe lead is succesvol aangemaakt.",
+    });
+    setIsDialogOpen(false);
+  };
+
   const filteredLeads = leads.filter(
     (lead) =>
       lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -106,7 +124,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button size="sm">
+        <Button size="sm" onClick={() => setIsDialogOpen(true)}>
           <PlusCircle className="mr-2 h-3.5 w-3.5" />
           Nieuwe Lead
         </Button>
@@ -186,7 +204,18 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Nieuwe Lead Toevoegen</DialogTitle>
+          </DialogHeader>
+          <CreateLeadForm
+            onSubmit={handleCreateLead}
+            onCancel={() => setIsDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
-
