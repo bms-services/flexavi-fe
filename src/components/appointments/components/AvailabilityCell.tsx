@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -42,7 +41,6 @@ export const AvailabilityCell = ({
   const available = maxSlots - count;
   const isFullyBooked = available === 0;
   const isLimitedAvailability = available <= 1;
-  const isSufficientCapacity = count >= maxSlots * 0.75; // Consider 75% full as sufficient capacity
 
   const dateAppointments = appointments.filter(app => 
     app.date === date && 
@@ -66,13 +64,14 @@ export const AvailabilityCell = ({
       <HoverCardTrigger asChild>
         <div className="relative">
           <Badge 
-            variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
+            variant="outline"
             className={cn(
-              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
-              hasSearchedLocation && "bg-green-100 hover:bg-green-200 border-green-500",
-              isSufficientCapacity && !isFullyBooked && "border-blue-500",
-              !isSufficientCapacity && !isFullyBooked && "border-red-500",
-              !isFullyBooked && !hasSearchedLocation && "hover:bg-primary hover:text-primary-foreground"
+              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5 bg-white",
+              isFullyBooked 
+                ? "border-green-700" // Dark green border when fully booked
+                : "border-blue-500",  // Blue border when not fully booked
+              hasSearchedLocation && "border-green-500",
+              "hover:border-opacity-80"
             )}
           >
             <span className="flex items-center gap-1.5">
