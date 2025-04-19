@@ -9,8 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { LeadStatusBadge } from "./LeadStatusBadge";
+import { QuoteStatusBadge } from "./badges/QuoteStatusBadge";
+import { InvoiceStatusBadge } from "./badges/InvoiceStatusBadge";
 import { Lead, Quote, Invoice } from "@/types";
 import { FileText, TrendingUp } from "lucide-react";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -153,9 +154,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
                   <TableCell className="py-1.5">
                     <div className="space-y-0.5">
                       <div className="text-xs text-muted-foreground">Offerte</div>
-                      {getQuoteStatusBadge(stats.latestQuoteStatus)}
+                      <QuoteStatusBadge status={stats.latestQuoteStatus} />
                       <div className="text-xs text-muted-foreground mt-1">Factuur</div>
-                      {getInvoiceStatusBadge(stats.latestInvoiceStatus)}
+                      <InvoiceStatusBadge status={stats.latestInvoiceStatus} />
                     </div>
                   </TableCell>
                 </TableRow>
