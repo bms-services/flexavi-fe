@@ -6,9 +6,10 @@ import { mockLeads } from "@/data/mockLeads";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useWorkAgreementStatusBadge } from "@/hooks/useWorkAgreementStatusBadge";
-import { ChevronLeft, Check, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import { WorkAgreementDetails } from "@/components/workagreements/customer-portal/WorkAgreementDetails";
+import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import Signature from "@/components/customer/Signature";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
 
@@ -82,14 +83,19 @@ const CustomerPortalWorkAgreement = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container max-w-4xl mx-auto px-4 py-8">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate(-1)}
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Terug
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate(-1)}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Terug
+          </Button>
+          <h1 className="text-2xl font-semibold">
+            Werkovereenkomst {workAgreement.id}
+          </h1>
+        </div>
 
         <div className="space-y-8">
           <Card>
@@ -101,6 +107,11 @@ const CustomerPortalWorkAgreement = () => {
               />
             </CardContent>
           </Card>
+
+          <Attachments 
+            attachments={workAgreement.attachments}
+            defaultAttachments={workAgreement.defaultAttachments}
+          />
 
           <Card>
             <CardContent className="p-6 space-y-6">
