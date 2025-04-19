@@ -145,7 +145,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
               filteredLeads.map((lead) => {
                 const stats = getLeadStats(lead.id);
                 return (
-                  <TableRow key={lead.id}>
+                  <TableRow key={lead.id} className="py-2 h-auto">
                     <TableCell>
                       <Link
                         to={`/leads/${lead.id}`}
@@ -164,18 +164,18 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
                       <LeadStatusBadge status={lead.status} />
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <div className="text-xs text-muted-foreground">Offertes</div>
-                        <div className="font-medium">{formatCurrency(stats.quotesValue)}</div>
+                        <div className="font-medium text-sm">{formatCurrency(stats.quotesValue)}</div>
                         <div className="text-xs text-muted-foreground">Facturen</div>
-                        <div className="font-medium">{formatCurrency(stats.invoicesValue)}</div>
+                        <div className="font-medium text-sm">{formatCurrency(stats.invoicesValue)}</div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
+                      <div className="space-y-0.5">
                         <div className="text-xs text-muted-foreground">Offerte</div>
                         {getQuoteStatusBadge(stats.latestQuoteStatus)}
-                        <div className="text-xs text-muted-foreground mt-2">Factuur</div>
+                        <div className="text-xs text-muted-foreground mt-1">Factuur</div>
                         {getInvoiceStatusBadge(stats.latestInvoiceStatus)}
                       </div>
                     </TableCell>
