@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { ColorPicker, Clock, Plus, Minus, Users, Building2 } from "lucide-react";
+import { Clock, Plus, Minus, Users, Building2, Palette } from "lucide-react";
 
 const Settings = () => {
   const { toast } = useToast();
