@@ -1,19 +1,14 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Plus, UserPlus } from 'lucide-react';
+import { AddPartnerDialog } from './partners/AddPartnerDialog';
 
 export function PartnersManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Partners Beheer</h2>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Partner Toevoegen
-        </Button>
+        <AddPartnerDialog />
       </div>
 
       <Card>

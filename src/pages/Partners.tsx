@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,19 +21,19 @@ const Partners = () => {
           
           <div className="grid gap-6 md:gap-10 md:grid-cols-2 lg:grid-cols-3 items-stretch">
             <Card className="group hover:shadow-xl transition-all duration-500 border-2 hover:border-purple-200 hover:-translate-y-1 flex flex-col">
-              <CardHeader className="relative overflow-hidden pb-6 pt-16 px-6">
+              <CardHeader className="relative overflow-hidden pb-6 pt-20 px-8">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 transform group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-blue-500 p-4 rounded-full shadow-md">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-blue-500 p-4 rounded-full shadow-md">
                   <Handshake className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle className="text-xl sm:text-2xl text-center mt-2">Marketing Bureau XYZ</CardTitle>
-                <CardDescription className="text-center text-base mt-2">
+                <CardDescription className="text-center text-base mt-3">
                   Professionele marketing diensten
                 </CardDescription>
               </CardHeader>
-              <CardContent className="px-6 pb-8 pt-2 flex-grow flex flex-col">
+              <CardContent className="px-8 pb-8 pt-4 flex-grow flex flex-col">
                 <div className="space-y-6 flex-grow">
-                  <ul className="space-y-3">
+                  <ul className="space-y-4">
                     <li className="flex items-start gap-3">
                       <span className="h-2 w-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 mt-2 flex-shrink-0" />
                       <span className="text-base">20% korting op alle diensten</span>
@@ -53,8 +52,8 @@ const Partners = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="mt-6">
-                  <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-lg py-5">
+                <div className="mt-8">
+                  <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-lg py-6">
                     Contact opnemen
                   </Button>
                 </div>
