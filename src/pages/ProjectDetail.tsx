@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { mockProjects } from "@/data/mockData";
 import { ProjectDetailContent } from "@/components/projects/detail/ProjectDetailContent";
-import { NotFound } from "./NotFound";
+import NotFound from "./NotFound";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
