@@ -75,6 +75,24 @@ const Appointments = () => {
     }));
   };
 
+  const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
+    setAppointments(appointments.map(app => 
+      app.id === appointmentId ? { ...app, teamId } : app
+    ));
+    
+    toast({
+      title: "Afspraak toegewezen",
+      description: "De afspraak is succesvol toegewezen aan het team.",
+    });
+  };
+
+  const handleSettingsOpen = () => {
+    toast({
+      title: "Instellingen",
+      description: "Functionaliteit voor instellingen wordt binnenkort beschikbaar.",
+    });
+  };
+
   const handleTeamDelete = (teamId: string) => {
     setTeams(teams.filter(team => team.id !== teamId));
     
@@ -98,19 +116,6 @@ const Appointments = () => {
         description: `Team naam is bijgewerkt naar "${newName}".`,
       });
     }
-  };
-
-  const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
-    setAppointments(appointments.map(app => 
-      app.id === appointmentId ? { ...app, teamId } : app
-    ));
-  };
-
-  const handleSettingsOpen = () => {
-    toast({
-      title: "Instellingen",
-      description: "Functionaliteit voor instellingen wordt binnenkort beschikbaar.",
-    });
   };
 
   return (
