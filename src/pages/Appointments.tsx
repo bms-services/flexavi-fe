@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { DailyTeamAppointments } from "@/components/appointments/DailyTeamAppointments";
 import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
 import { WorkEnvironment, TeamDetails, TeamType, Appointment } from "@/types";
@@ -20,8 +18,6 @@ const Appointments = () => {
   const { toast } = useToast();
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
-  const [activeTab, setActiveTab] = useState("planning");
-  const [isDateDetailView, setIsDateDetailView] = useState(false);
   const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
 
   const [teams, setTeams] = useState<TeamDetails[]>([
@@ -50,8 +46,6 @@ const Appointments = () => {
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
-    setIsDateDetailView(true);
-    setActiveTab("daily");
   };
 
   const handleNewAppointment = () => {
@@ -112,10 +106,6 @@ const Appointments = () => {
     ));
   };
 
-  const handleBackToOverview = () => {
-    setIsDateDetailView(false);
-  };
-
   const handleSettingsOpen = () => {
     toast({
       title: "Instellingen",
@@ -132,30 +122,20 @@ const Appointments = () => {
             onSettingsOpen={handleSettingsOpen}
           />
 
-          {!isDateDetailView ? (
-            <AppointmentsTabs
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              selectedDate={selectedDate}
-              appointments={appointments}
-              teams={teams}
-              environments={mockEnvironments}
-              scheduleSettings={scheduleSettings}
-              unavailableDates={unavailableDates}
-              onDateSelect={handleDateSelect}
-              onTeamUpdate={handleTeamUpdate}
-              onUnavailableDateAdd={handleUnavailableDateAdd}
-              onUnavailableDateRemove={handleUnavailableDateRemove}
-            />
-          ) : (
-            <DailyTeamAppointments
-              date={selectedDate}
-              appointments={appointments}
-              teams={teams}
-              onBackToOverview={handleBackToOverview}
-              onAppointmentAssign={handleAppointmentAssign}
-            />
-          )}
+          <AppointmentsTabs
+            activeTab="planning"
+            setActiveTab={() => {}}
+            selectedDate={selectedDate}
+            appointments={appointments}
+            teams={teams}
+            environments={mockEnvironments}
+            scheduleSettings={scheduleSettings}
+            unavailableDates={unavailableDates}
+            onDateSelect={handleDateSelect}
+            onTeamUpdate={handleTeamUpdate}
+            onUnavailableDateAdd={handleUnavailableDateAdd}
+            onUnavailableDateRemove={handleUnavailableDateRemove}
+          />
         </div>
       </TooltipProvider>
     </Layout>
