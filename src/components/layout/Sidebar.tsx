@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -10,7 +9,6 @@ import {
   Settings,
   LogOut,
   Package,
-  FileText2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +20,7 @@ export const Sidebar: React.FC = () => {
     { name: "Leads", href: "/leads", icon: Users },
     { name: "Afspraken", href: "/appointments", icon: Calendar },
     { name: "Offertes", href: "/quotes", icon: FileText },
-    { name: "Werkovereenkomsten", href: "/workagreements", icon: FileText2 },
+    { name: "Werkovereenkomsten", href: "/workagreements", icon: FileText },
     { name: "Facturen", href: "/invoices", icon: FileCheck },
     { name: "Producten", href: "/products", icon: Package },
     { name: "Instellingen", href: "/settings", icon: Settings },
