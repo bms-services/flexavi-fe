@@ -7,7 +7,7 @@ import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { 
   Clock, MapPin, User, Calendar, FileText, ChevronLeft, 
-  Route, Truck, FilePdf, AlertTriangle, ArrowLeft, Check
+  Route, Truck, FileText2, AlertTriangle, ArrowLeft, Check
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -186,7 +186,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
                       "Genereren..."
                     ) : (
                       <>
-                        <FilePdf className="h-3.5 w-3.5 mr-1.5" />
+                        <FileText2 className="h-3.5 w-3.5 mr-1.5" />
                         Werklijst PDF
                       </>
                     )}
@@ -209,8 +209,8 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
                       >
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-medium">{appointment.title}</h3>
-                          <Badge variant={appointment.type === "sales" ? "default" : "secondary"}>
-                            {appointment.type === "sales" ? "Verkoop" : "Installatie"}
+                          <Badge variant={appointment.teamType === "sales" ? "default" : "secondary"}>
+                            {appointment.teamType === "sales" ? "Verkoop" : "Installatie"}
                           </Badge>
                         </div>
                         

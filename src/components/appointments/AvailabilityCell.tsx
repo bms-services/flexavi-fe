@@ -10,7 +10,20 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { AvailabilityCellProps } from "../types";
+import { Appointment, TeamDetails } from "@/types";
+
+interface AvailabilityCellProps {
+  date: string;
+  team: TeamDetails;
+  timeSlot: {
+    label: string;
+    start: number;
+    end: number;
+  };
+  appointments: Appointment[];
+  maxSlots: number;
+  searchLocation?: string;
+}
 
 const appointmentTypeLabels = {
   quote_request: "Offerte aanvraag",

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Appointment, TeamDetails } from "@/types";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
-import { Clock, MapPin, User, Calendar, FileText, DragHandle } from "lucide-react";
+import { Clock, MapPin, User, Calendar, FileText, GripVertical } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -50,11 +50,11 @@ export const UnassignedAppointments: React.FC<UnassignedAppointmentsProps> = ({
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <DragHandle className="h-4 w-4 text-muted-foreground cursor-move" />
+                    <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
                     <h3 className="font-medium">{appointment.title}</h3>
                   </div>
-                  <Badge variant={appointment.type === "sales" ? "default" : "secondary"}>
-                    {appointment.type === "sales" ? "Verkoop" : "Installatie"}
+                  <Badge variant={appointment.teamType === "sales" ? "default" : "secondary"}>
+                    {appointment.teamType === "sales" ? "Verkoop" : "Installatie"}
                   </Badge>
                 </div>
                 
