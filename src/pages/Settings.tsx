@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,9 +9,8 @@ import { PersonalInfoSettings } from "@/components/settings/account/PersonalInfo
 import { PasswordSettings } from "@/components/settings/account/PasswordSettings";
 import { CompanySettings } from "@/components/settings/company/CompanySettings";
 import { useToast } from "@/hooks/use-toast";
-import { DefaultAttachmentsSettings } from "@/components/settings/workagreements/DefaultAttachmentsSettings";
-import { QuoteAttachmentsSettings } from "@/components/settings/quotes/QuoteAttachmentsSettings";
-import { InvoiceAttachmentsSettings } from "@/components/settings/invoices/InvoiceAttachmentsSettings";
+import { DefaultAttachmentsSettings } from "@/components/settings/attachments/DefaultAttachmentsSettings";
+import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -65,16 +65,33 @@ const Settings = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="appointments">
-          <TabsList className="w-full md:w-auto">
-            <TabsTrigger value="appointments">Agenda</TabsTrigger>
-            <TabsTrigger value="teams">Teams</TabsTrigger>
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="company">Bedrijf</TabsTrigger>
-            <TabsTrigger value="workagreements">Werkovereenkomsten</TabsTrigger>
+        <Tabs defaultValue="company" className="space-y-6">
+          <TabsList className="bg-background border-b w-full justify-start rounded-none h-auto p-0">
+            <TabsTrigger value="company" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Bedrijf
+            </TabsTrigger>
+            <TabsTrigger value="appointments" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Agenda
+            </TabsTrigger>
+            <TabsTrigger value="teams" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Teams
+            </TabsTrigger>
+            <TabsTrigger value="account" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Account
+            </TabsTrigger>
+            <TabsTrigger value="attachments" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Standaard bijlagen
+            </TabsTrigger>
+            <TabsTrigger value="email" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Email templates
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="appointments" className="space-y-6 mt-6">
+          <TabsContent value="company" className="space-y-6">
+            <CompanySettings />
+          </TabsContent>
+
+          <TabsContent value="appointments" className="space-y-6">
             <TimeBlockSettings
               timeBlocks={timeBlocks}
               slotSettings={slotSettings}
@@ -89,23 +106,21 @@ const Settings = () => {
             />
           </TabsContent>
 
-          <TabsContent value="teams" className="space-y-6 mt-6">
+          <TabsContent value="teams" className="space-y-6">
             <TeamSettings />
           </TabsContent>
 
-          <TabsContent value="account" className="space-y-6 mt-6">
+          <TabsContent value="account" className="space-y-6">
             <PersonalInfoSettings />
             <PasswordSettings />
           </TabsContent>
 
-          <TabsContent value="company" className="space-y-6 mt-6">
-            <CompanySettings />
+          <TabsContent value="attachments" className="space-y-6">
+            <DefaultAttachmentsSettings />
           </TabsContent>
 
-          <TabsContent value="workagreements" className="space-y-6 mt-6">
-            <DefaultAttachmentsSettings />
-            <QuoteAttachmentsSettings />
-            <InvoiceAttachmentsSettings />
+          <TabsContent value="email" className="space-y-6">
+            <EmailTemplatesSettings />
           </TabsContent>
         </Tabs>
       </div>
