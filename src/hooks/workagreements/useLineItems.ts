@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { QuoteLineItem, Quote, Product } from "@/types";
+import { QuoteLineItem, Quote } from "@/types";
+import { Product } from "@/types/product";
 import { useProducts } from "@/hooks/useProducts";
 
 export const useLineItems = (selectedQuote: Quote | null) => {
