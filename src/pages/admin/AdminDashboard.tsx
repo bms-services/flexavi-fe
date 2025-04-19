@@ -19,25 +19,27 @@ export default function AdminDashboard() {
       <div className="container mx-auto py-6 px-4">
         <AdminHeader title="Admin Dashboard" />
         
-        <div className="flex gap-6 mt-6">
-          <Tabs defaultValue="overview" orientation="vertical" className="w-full">
-            <TabsList className="w-48 flex flex-col h-auto space-y-1">
-              <TabsTrigger value="overview" className="w-full justify-start">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Overzicht
-              </TabsTrigger>
-              <TabsTrigger value="members" className="w-full justify-start">
-                <Users className="h-4 w-4 mr-2" />
-                Leden
-              </TabsTrigger>
-              <TabsTrigger value="subscriptions" className="w-full justify-start">
-                <CreditCard className="h-4 w-4 mr-2" />
-                Abonnementen
-              </TabsTrigger>
-            </TabsList>
-            
-            <div className="flex-1 space-y-6">
-              <TabsContent value="overview" className="m-0">
+        <div className="flex mt-6 min-h-[calc(100vh-10rem)]">
+          <Tabs defaultValue="overview" orientation="vertical" className="flex min-h-full">
+            <div className="shrink-0">
+              <TabsList className="flex flex-col h-auto space-y-1 min-w-[200px] bg-muted p-2 rounded-l-md">
+                <TabsTrigger value="overview" className="w-full justify-start">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Overzicht
+                </TabsTrigger>
+                <TabsTrigger value="members" className="w-full justify-start">
+                  <Users className="h-4 w-4 mr-2" />
+                  Leden
+                </TabsTrigger>
+                <TabsTrigger value="subscriptions" className="w-full justify-start">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Abonnementen
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <div className="flex-1 border-l bg-background ml-4 pl-6">
+              <TabsContent value="overview" className="mt-0">
                 <AdminStats />
                 <Card className="mt-6">
                   <CardHeader className="flex flex-row items-center justify-between">
@@ -63,11 +65,11 @@ export default function AdminDashboard() {
                 </Card>
               </TabsContent>
               
-              <TabsContent value="members" className="m-0">
+              <TabsContent value="members" className="mt-0">
                 <RecentMembers />
               </TabsContent>
               
-              <TabsContent value="subscriptions" className="m-0">
+              <TabsContent value="subscriptions" className="mt-0">
                 <SubscriptionOverview />
               </TabsContent>
             </div>
