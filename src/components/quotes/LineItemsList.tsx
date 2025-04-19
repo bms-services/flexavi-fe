@@ -44,8 +44,16 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
           lineItem={item}
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}
-          productSuggestions={Array.isArray(suggestions[item.id]) ? suggestions[item.id] : []}
-          onProductSearch={(title) => onProductSearch(title, item.id)}
+          productSuggestions={
+            item.id && suggestions[item.id] && Array.isArray(suggestions[item.id]) 
+              ? suggestions[item.id] 
+              : []
+          }
+          onProductSearch={(title) => {
+            if (item.id) {
+              onProductSearch(title, item.id);
+            }
+          }}
           showRemoveButton={items.length > 1}
         />
       ))}

@@ -86,6 +86,8 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   // Ensure stable description value
   const safeDescription = description || "";
   
+  // Don't render CommandInput and CommandGroup if there are no suggestions
+  // This prevents the "undefined is not iterable" error
   return (
     <Popover 
       open={suggestionsOpen && hasSuggestions} 
@@ -118,23 +120,25 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
               className="h-9"
             />
             <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-            <CommandGroup>
-              {suggestions.map((product, index) => (
-                <CommandItem 
-                  key={index}
-                  onSelect={() => {
-                    onProductSelect(product);
-                    setSuggestionsOpen(false);
-                  }}
-                >
-                  <div className="flex flex-col">
-                    <span className="font-medium">{product.title}</span>
-                    <span className="text-xs text-muted-foreground">{product.description}</span>
-                    <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {suggestions.length > 0 && (
+              <CommandGroup>
+                {suggestions.map((product, index) => (
+                  <CommandItem 
+                    key={index}
+                    onSelect={() => {
+                      onProductSelect(product);
+                      setSuggestionsOpen(false);
+                    }}
+                  >
+                    <div className="flex flex-col">
+                      <span className="font-medium">{product.title}</span>
+                      <span className="text-xs text-muted-foreground">{product.description}</span>
+                      <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </Command>
         </PopoverContent>
       )}

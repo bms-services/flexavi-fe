@@ -122,6 +122,13 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     ...lineItem
   };
 
+  // Handle product search
+  const handleProductSearch = (title: string) => {
+    if (typeof onProductSearch === 'function') {
+      onProductSearch(title);
+    }
+  };
+
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
@@ -130,7 +137,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
           productSuggestions={suggestions}
-          onProductSearch={onProductSearch}
+          onProductSearch={handleProductSearch}
         />
       </div>
       

@@ -106,9 +106,12 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const getProductSuggestions = (title: string, index: string) => {
     // Check if input is empty to prevent generating suggestions for empty input
-    if (!title || title.trim().length <= 2) {
+    if (!title || !index || title.trim().length <= 2) {
       // Always set an array, even if it's empty
-      setProductSuggestions(prev => ({ ...prev, [index]: [] }));
+      setProductSuggestions(prev => ({ 
+        ...prev, 
+        [index]: [] 
+      }));
       return;
     }
     
@@ -138,7 +141,10 @@ export const useQuoteForm = (quoteId?: string) => {
     ];
     
     // Update suggestions for this specific line item
-    setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
+    setProductSuggestions(prev => ({ 
+      ...prev, 
+      [index]: suggestions 
+    }));
   };
 
   const handleSaveQuote = () => {
