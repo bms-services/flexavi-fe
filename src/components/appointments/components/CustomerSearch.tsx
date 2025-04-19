@@ -90,7 +90,10 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                   <p>Geen klanten gevonden.</p>
                   <Button
                     variant="outline"
-                    onClick={() => setShowNewCustomerDialog(true)}
+                    onClick={() => {
+                      setShowNewCustomerDialog(true);
+                      setOpen(false);
+                    }}
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Nieuwe klant toevoegen
