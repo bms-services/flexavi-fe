@@ -52,7 +52,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
   };
 
   const handleAddInstallment = () => {
-    const newInstallments = [
+    const newInstallments: PaymentInstallment[] = [
       ...paymentInstallments,
       {
         percentage: 25,
@@ -77,7 +77,9 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     } else if (field === 'description') {
       newInstallments[index][field] = value as string;
     } else if (field === 'dueType') {
-      newInstallments[index][field] = value as "upfront" | "start" | "during" | "completion";
+      // Ensure we only assign valid dueType values
+      const dueTypeValue = value as "upfront" | "start" | "during" | "completion";
+      newInstallments[index][field] = dueTypeValue;
     }
     onPaymentInstallmentsChange(newInstallments);
   };
