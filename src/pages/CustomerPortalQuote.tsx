@@ -14,11 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
 import { FileText, ChevronLeft } from "lucide-react";
-import QuoteDetails from "@/components/customer-portal/QuoteDetails";
-import QuoteLineItems from "@/components/customer-portal/QuoteLineItems";
+import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
+import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 
 const CustomerPortalQuote = () => {
   const { id } = useParams<{ id: string }>();

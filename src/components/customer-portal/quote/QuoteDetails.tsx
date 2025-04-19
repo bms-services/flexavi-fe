@@ -5,12 +5,18 @@ import { nl } from "date-fns/locale";
 import { User, MapPin, Calendar } from "lucide-react";
 
 interface QuoteDetailsProps {
-  customer: any;
-  quote: any;
+  customer: {
+    name: string;
+    address: string;
+  };
+  quote: {
+    createdAt: string;
+    plannedStartDate?: string;
+  };
   formatCurrency: (amount: number) => string;
 }
 
-const QuoteDetails = ({ customer, quote, formatCurrency }: QuoteDetailsProps) => {
+export const QuoteDetails = ({ customer, quote, formatCurrency }: QuoteDetailsProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
@@ -49,5 +55,3 @@ const QuoteDetails = ({ customer, quote, formatCurrency }: QuoteDetailsProps) =>
     </div>
   );
 };
-
-export default QuoteDetails;

@@ -6,7 +6,7 @@ interface QuoteLineItemsProps {
   formatCurrency: (amount: number) => string;
 }
 
-const QuoteLineItems = ({ lineItems, formatCurrency }: QuoteLineItemsProps) => {
+export const QuoteLineItems = ({ lineItems, formatCurrency }: QuoteLineItemsProps) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -31,12 +31,12 @@ const QuoteLineItems = ({ lineItems, formatCurrency }: QuoteLineItemsProps) => {
           ))}
           <tr>
             <td colSpan={4} className="text-right py-4 font-medium">Totaal:</td>
-            <td className="text-right py-4 font-bold">{formatCurrency(lineItems.reduce((sum, item) => sum + item.total, 0))}</td>
+            <td className="text-right py-4 font-bold">
+              {formatCurrency(lineItems.reduce((sum, item) => sum + item.total, 0))}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   );
 };
-
-export default QuoteLineItems;
