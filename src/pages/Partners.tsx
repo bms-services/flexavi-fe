@@ -20,7 +20,7 @@ const Partners = () => {
         
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <Card className="group hover:shadow-lg transition-all duration-300 border-2">
-            <CardHeader className="relative overflow-hidden pb-8">
+            <CardHeader className="relative overflow-hidden pb-8 pt-10"> {/* Increased top padding */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 transform group-hover:scale-105 transition-transform duration-300" />
               <CardTitle className="flex items-center gap-2 relative">
                 <Handshake className="h-5 w-5 text-purple-500" />
@@ -57,9 +57,8 @@ const Partners = () => {
             </CardContent>
           </Card>
 
-          {/* Extra partner card example */}
           <Card className="group hover:shadow-lg transition-all duration-300 border-2">
-            <CardHeader className="relative overflow-hidden pb-8">
+            <CardHeader className="relative overflow-hidden pb-8 pt-10"> {/* Increased top padding */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 transform group-hover:scale-105 transition-transform duration-300" />
               <CardTitle className="flex items-center gap-2 relative">
                 <Users className="h-5 w-5 text-blue-500" />
@@ -102,3 +101,4 @@ const Partners = () => {
 };
 
 export default Partners;
+
