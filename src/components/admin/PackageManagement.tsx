@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Package, Discount } from 'lucide-react';
+import { Package, PercentCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -80,6 +80,16 @@ export function PackageManagement() {
           : { [field]: value })
       }
     }));
+  };
+
+  const handleFeatureToggle = (featureId: string, packageType: 'starter' | 'professional' | 'enterprise') => {
+    setFeatures(prev => 
+      prev.map(feature => 
+        feature.id === featureId 
+          ? { ...feature, [packageType]: !feature[packageType] } 
+          : feature
+      )
+    );
   };
 
   const handleSave = () => {
