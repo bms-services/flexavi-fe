@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +10,7 @@ import { CompanySettings } from "@/components/settings/company/CompanySettings";
 import { useToast } from "@/hooks/use-toast";
 import { DefaultAttachmentsSettings } from "@/components/settings/attachments/DefaultAttachmentsSettings";
 import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
+import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -85,6 +85,9 @@ const Settings = () => {
             <TabsTrigger value="email" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
               Email templates
             </TabsTrigger>
+            <TabsTrigger value="signature" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Handtekening
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="company" className="space-y-6">
@@ -121,6 +124,10 @@ const Settings = () => {
 
           <TabsContent value="email" className="space-y-6">
             <EmailTemplatesSettings />
+          </TabsContent>
+
+          <TabsContent value="signature" className="space-y-6">
+            <SignatureSettings />
           </TabsContent>
         </Tabs>
       </div>
