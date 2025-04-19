@@ -87,10 +87,10 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
             <User className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0 z-50">
+        <PopoverContent className="w-[400px] p-0">
           <Command>
             <CommandInput placeholder="Zoek een klant..." />
-            <CommandList className="z-50">
+            <CommandList>
               <CommandEmpty>
                 <div className="flex flex-col items-center justify-center p-4 gap-2">
                   <p>Geen klanten gevonden.</p>
@@ -133,7 +133,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       </Popover>
 
       <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
-        <DialogContent className="sm:max-w-md z-50">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
             <DialogDescription>

@@ -21,7 +21,7 @@ export const DescriptionField: React.FC<DescriptionFieldProps> = ({ form }) => {
             <div className="relative">
               <Textarea 
                 placeholder="Gedetailleerde omschrijving van de opdracht" 
-                className="min-h-[100px] z-0" 
+                className="min-h-[100px]" 
                 {...field} 
               />
               <FileText className="absolute right-3 top-3 h-4 w-4 opacity-50 pointer-events-none" />
