@@ -97,20 +97,15 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
 
   // Handle product selection
   const handleSelectProduct = (product: Product) => {
-    if (!product) return;
-    
     onChange({
       ...lineItem,
-      description: product.title || "",
-      unit: product.unit || "stuk",
-      pricePerUnit: product.pricePerUnit || 0,
-      total: calculateTotal(lineItem.quantity, product.pricePerUnit || 0),
-      vatRate: product.vat || 21,
+      description: product.title,
+      unit: product.unit,
+      pricePerUnit: product.pricePerUnit,
+      total: calculateTotal(lineItem.quantity, product.pricePerUnit),
+      vatRate: product.vat,
     });
   };
-
-  // Ensure productSuggestions is always an array
-  const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
 
   // Safety: ensure lineItem has all required properties
   const safeLineItem = {
@@ -123,22 +118,15 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     ...lineItem
   };
 
-  // Handle product search with safety checks
-  const handleProductSearch = (title: string) => {
-    if (typeof onProductSearch === 'function' && title) {
-      onProductSearch(title);
-    }
-  };
-
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
         <ProductSearch
-          description={safeLineItem.description || ""}
+          description={safeLineItem.description}
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
-          productSuggestions={suggestions}
-          onProductSearch={handleProductSearch}
+          productSuggestions={productSuggestions}
+          onProductSearch={onProductSearch}
         />
       </div>
       

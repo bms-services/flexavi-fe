@@ -4,6 +4,7 @@ import { Product } from "@/types/product";
 
 export const useProducts = () => {
   const searchProducts = (query: string): Product[] => {
+    // Return empty array for invalid queries
     if (!query || typeof query !== 'string' || query.trim().length < 2) {
       return [];
     }

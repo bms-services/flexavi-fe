@@ -41,13 +41,12 @@ export const useQuoteForm = (quoteId?: string) => {
   const { searchProducts } = useProducts();
 
   // Calculate total amount
-  const totalAmount = lineItems.reduce((sum, item) => sum + item.total, 0);
+  const totalAmount = lineItems.reduce((sum, item) => sum + (item.total || 0), 0);
 
   // Load quote data when editing
   useEffect(() => {
     if (isEditing && quoteId) {
-      const quotes = Array.isArray(mockQuotes) ? mockQuotes : [];
-      const foundQuote = quotes.find(q => q.id === quoteId);
+      const foundQuote = mockQuotes.find(q => q.id === quoteId);
       
       if (foundQuote) {
         setQuote({
@@ -65,8 +64,7 @@ export const useQuoteForm = (quoteId?: string) => {
           ? foundQuote.lineItems 
           : [createEmptyLineItem()]);
         
-        const leads = Array.isArray(mockLeads) ? mockLeads : [];
-        const customer = leads.find(l => l.id === foundQuote.leadId);
+        const customer = mockLeads.find(l => l.id === foundQuote.leadId);
         if (customer) {
           setSelectedCustomer(customer);
         }
@@ -109,25 +107,18 @@ export const useQuoteForm = (quoteId?: string) => {
   };
 
   const getProductSuggestions = (title: string, index: string) => {
-    // Validate parameters to prevent undefined errors
-    if (!title || !index || typeof title !== 'string' || typeof index !== 'string') {
+    // Skip invalid searches
+    if (!title || title.trim().length <= 1 || !index) {
       return;
     }
     
-    if (title.trim().length <= 1) {
-      setProductSuggestions(prev => ({ 
-        ...prev, 
-        [index]: [] 
-      }));
-      return;
-    }
+    // Get suggestions from the product hook
+    const results = searchProducts(title);
     
-    const suggestions = searchProducts(title);
-    
-    // Always ensure we set a valid array for this line item
-    setProductSuggestions(prev => ({ 
-      ...prev, 
-      [index]: Array.isArray(suggestions) ? suggestions : [] 
+    // Update suggestions state with the results
+    setProductSuggestions(prev => ({
+      ...prev,
+      [index]: results
     }));
   };
 
