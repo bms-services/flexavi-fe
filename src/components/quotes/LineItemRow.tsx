@@ -137,7 +137,15 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
-        <Popover open={suggestionsOpen && hasSuggestions} onOpenChange={setSuggestionsOpen}>
+        <Popover 
+          open={suggestionsOpen && hasSuggestions} 
+          onOpenChange={(open) => {
+            // Only allow opening if we have suggestions
+            if (!open || hasSuggestions) {
+              setSuggestionsOpen(open);
+            }
+          }}
+        >
           <PopoverTrigger asChild>
             <div className="relative">
               <Input 

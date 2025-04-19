@@ -136,7 +136,16 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
         </PopoverContent>
       </Popover>
 
-      <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
+      <Dialog 
+        open={showNewCustomerDialog} 
+        onOpenChange={(open) => {
+          setShowNewCustomerDialog(open);
+          // If dialog is closed but not via form submission, make sure popover is also closed
+          if (!open) {
+            setOpen(false);
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>

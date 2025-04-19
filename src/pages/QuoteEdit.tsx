@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, PlusCircle, Save, Trash2 } from "lucide-react";
+import { ChevronLeft, PlusCircle, Save } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -80,7 +80,7 @@ const QuoteEdit = () => {
           location: foundQuote.location || "",
           plannedStartDate: foundQuote.plannedStartDate || new Date().toISOString(),
           notes: foundQuote.notes || "",
-          lineItems: foundQuote.lineItems,
+          lineItems: Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [],
         });
         
         // Ensure lineItems is an array
@@ -191,8 +191,11 @@ const QuoteEdit = () => {
           vat: 21
         }
       ];
+      
+      // Update product suggestions state with the new suggestions for this line item
       setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
     } else {
+      // Clear suggestions if the search term is too short
       setProductSuggestions(prev => ({ ...prev, [index]: [] }));
     }
   };
