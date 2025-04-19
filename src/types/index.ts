@@ -1,4 +1,3 @@
-
 export type Lead = {
   id: string;
   name: string;
@@ -75,6 +74,15 @@ export type Team = {
   color: string;
 };
 
+export type QuoteLineItem = {
+  id: string;
+  description: string;
+  quantity: number;
+  unit: string;
+  pricePerUnit: number;
+  total: number;
+};
+
 export type Quote = {
   id: string;
   leadId: string;
@@ -86,6 +94,7 @@ export type Quote = {
   location?: string;
   plannedStartDate?: string;
   notes?: string;
+  lineItems: QuoteLineItem[];
 };
 
 export type QuoteStatus = 

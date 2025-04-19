@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Dialog,
@@ -14,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/leadStats";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import { Separator } from "@/components/ui/separator";
+import { Table, TableHeader, TableRow, TableBody, TableCell } from "@/components/ui/table";
 
 interface QuoteDetailsDialogProps {
   quote: Quote;
@@ -30,9 +30,13 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
   const createdDate = format(new Date(quote.createdAt), "d MMMM yyyy", { locale: nl });
   const formattedAmount = formatCurrency(quote.amount);
 
+  const subtotal = quote.lineItems.reduce((acc, item) => acc + item.total, 0);
+  const vat = subtotal * 0.21;
+  const total = subtotal + vat;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>Offerte Details</DialogTitle>
           <DialogDescription>
@@ -61,22 +65,56 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
 
           <Separator />
 
-          {/* Financiële details */}
+          {/* Werk specificatie */}
           <div>
-            <h3 className="font-semibold mb-3">Financiële Details</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Subtotaal</p>
-                <p className="font-medium">{formatCurrency(quote.amount * 0.79)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">BTW (21%)</p>
-                <p className="font-medium">{formatCurrency(quote.amount * 0.21)}</p>
-              </div>
-              <div className="col-span-2">
-                <p className="text-sm text-muted-foreground">Totaalbedrag</p>
-                <p className="font-semibold text-lg text-primary">{formattedAmount}</p>
-              </div>
+            <h3 className="font-semibold mb-3">Werk Specificatie</h3>
+            <div className="rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[400px]">Omschrijving</TableHead>
+                    <TableHead className="text-right">Aantal</TableHead>
+                    <TableHead className="text-right">Eenheid</TableHead>
+                    <TableHead className="text-right">Prijs per eenheid</TableHead>
+                    <TableHead className="text-right">Totaal</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {quote.lineItems.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.description}</TableCell>
+                      <TableCell className="text-right">{item.quantity}</TableCell>
+                      <TableCell className="text-right">{item.unit}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(item.pricePerUnit)}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(item.total)}</TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-right font-medium">
+                      Subtotaal
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {formatCurrency(subtotal)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-right font-medium">
+                      BTW (21%)
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {formatCurrency(vat)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-right font-bold">
+                      Totaalbedrag
+                    </TableCell>
+                    <TableCell className="text-right font-bold text-lg">
+                      {formatCurrency(total)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
           </div>
 
