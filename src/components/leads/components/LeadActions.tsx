@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, FilePlus, PlusCircle, Edit2 } from "lucide-react";
+import { FileText, FilePlus, PlusCircle, Edit2, Calendar } from "lucide-react";
 
 export const LeadDetailActions = () => {
   return (
