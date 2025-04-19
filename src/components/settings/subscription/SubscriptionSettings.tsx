@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -97,20 +98,20 @@ export const SubscriptionSettings = () => {
 
   return (
     <div className="space-y-8">
-      <Card className="bg-gradient-to-br from-purple-50 to-white border-purple-100">
+      <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-background">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-purple-500" />
+              <CreditCard className="h-5 w-5 text-primary" />
               <div>
                 <CardTitle>Huidig abonnement</CardTitle>
-                <CardDescription className="text-purple-700">
+                <CardDescription>
                   {plans.find(p => p.id === currentPlan)?.name} plan
                 </CardDescription>
               </div>
             </div>
-            <Badge variant="secondary" className="bg-purple-100 text-purple-700 hover:bg-purple-200">
-              €{plans.find(p => p.id === currentPlan)?.price}/maand
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/20">
+              {plans.find(p => p.id === currentPlan)?.price}/{plans.find(p => p.id === currentPlan)?.period}
             </Badge>
           </div>
         </CardHeader>
@@ -122,20 +123,20 @@ export const SubscriptionSettings = () => {
             key={plan.id} 
             className={`relative overflow-hidden transition-all duration-200 hover:shadow-lg ${
               plan.isCurrent 
-                ? 'border-purple-400 ring-2 ring-purple-100' 
-                : 'hover:border-purple-200'
+                ? 'border-primary ring-1 ring-primary/20' 
+                : 'hover:border-primary/20'
             }`}
           >
             {plan.isCurrent && (
-              <div className="absolute -right-12 top-6 rotate-45 bg-purple-500 text-white px-12 py-1 text-sm">
+              <div className="absolute -right-12 top-6 rotate-45 bg-primary text-primary-foreground px-12 py-1 text-sm font-medium">
                 Actief
               </div>
             )}
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <span>{plan.name}</span>
-                <Badge variant="secondary" className={
-                  plan.isCurrent ? 'bg-purple-100 text-purple-700' : 'bg-gray-100'
+                <Badge variant="outline" className={
+                  plan.isCurrent ? 'bg-primary/10 text-primary border-primary/30' : 'bg-secondary text-secondary-foreground'
                 }>
                   {plan.price}/{plan.period}
                 </Badge>
@@ -145,21 +146,22 @@ export const SubscriptionSettings = () => {
               <ul className="space-y-3 min-h-[280px]">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm">
-                    <span className="text-purple-500 mt-0.5">✓</span>
+                    <span className="text-primary mt-0.5">✓</span>
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="pt-4 border-t bg-gray-50">
+            <CardFooter className="pt-4 border-t bg-muted/50">
               <Button 
                 className={`w-full ${
                   plan.isCurrent 
-                    ? 'bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-default'
-                    : 'bg-purple-600 hover:bg-purple-700'
+                    ? 'bg-muted text-muted-foreground hover:bg-muted/80 cursor-default'
+                    : ''
                 }`}
                 onClick={() => handleUpgrade(plan.id)}
                 disabled={plan.isCurrent}
+                variant={plan.isCurrent ? "outline" : "default"}
               >
                 <ArrowUpCircle className="mr-2 h-4 w-4" />
                 {plan.isCurrent ? 'Huidig plan' : 'Upgrade'}
@@ -172,7 +174,7 @@ export const SubscriptionSettings = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-gray-500" />
+            <FileText className="h-5 w-5 text-primary" />
             <div>
               <CardTitle>Factuurgeschiedenis</CardTitle>
               <CardDescription>
@@ -197,7 +199,7 @@ export const SubscriptionSettings = () => {
                 {recentInvoices.map((invoice) => {
                   const statusBadge = useInvoiceStatusBadge(invoice.status as InvoiceStatus);
                   return (
-                    <TableRow key={invoice.id} className="hover:bg-gray-50">
+                    <TableRow key={invoice.id} className="hover:bg-muted/50">
                       <TableCell className="font-medium">
                         {invoice.id.replace('inv-', 'FACT-')}
                       </TableCell>
@@ -232,7 +234,7 @@ export const SubscriptionSettings = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-destructive/50">
+      <Card className="border-destructive/30">
         <CardHeader>
           <div className="flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-destructive" />
@@ -240,7 +242,7 @@ export const SubscriptionSettings = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             Bij opzegging blijft je abonnement actief tot het einde van de huidige facturatieperiode.
             Je kunt altijd weer een nieuw abonnement afsluiten.
           </p>
