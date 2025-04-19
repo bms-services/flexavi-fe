@@ -108,14 +108,25 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     });
   };
 
-  // Waarborg dat productSuggestions altijd een array is
+  // Ensure productSuggestions is always an array
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
+
+  // Safety: ensure lineItem has all required properties
+  const safeLineItem = {
+    description: "",
+    quantity: 1,
+    unit: "stuk",
+    pricePerUnit: 0,
+    total: 0,
+    vatRate: 21,
+    ...lineItem
+  };
 
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
         <ProductSearch
-          description={lineItem.description || ""}
+          description={safeLineItem.description || ""}
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
           productSuggestions={suggestions}
@@ -125,21 +136,21 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       
       <div className="col-span-1">
         <QuantityInput
-          value={lineItem.quantity}
+          value={safeLineItem.quantity}
           onChange={handleQuantityChange}
         />
       </div>
       
       <div className="col-span-2">
         <UnitSelect
-          value={lineItem.unit}
+          value={safeLineItem.unit}
           onChange={handleUnitChange}
         />
       </div>
       
       <div className="col-span-1">
         <Select 
-          value={(lineItem.vatRate?.toString() || "21")}
+          value={(safeLineItem.vatRate?.toString() || "21")}
           onValueChange={handleVatChange}
         >
           <SelectTrigger>
@@ -158,14 +169,14 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           type="number" 
           min="0" 
           step="0.01"
-          value={lineItem.pricePerUnit.toString()}
+          value={safeLineItem.pricePerUnit.toString()}
           onChange={(e) => handlePricePerUnitChange(e.target.value)}
           className="text-right"
         />
       </div>
       
       <div className="col-span-1 text-right font-medium">
-        {formatCurrency(lineItem.total)}
+        {formatCurrency(safeLineItem.total)}
       </div>
       
       <div className="col-span-1 flex justify-center">

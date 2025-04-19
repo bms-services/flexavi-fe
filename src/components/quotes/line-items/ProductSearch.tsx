@@ -41,7 +41,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Zorg ervoor dat productSuggestions altijd een array is
+  // Always ensure productSuggestions is an array
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
   const hasSuggestions = suggestions.length > 0;
 
@@ -68,13 +68,13 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
           setSuggestionsOpen(true);
         }
       } else {
-        // Als de input leeg is, sluiten we de suggesties
+        // Close suggestions when input is empty
         setSuggestionsOpen(false);
       }
     }, 300);
   };
 
-  // Maak de timeout schoon bij unmount
+  // Clean up timeout on unmount
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
@@ -83,13 +83,14 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     };
   }, []);
 
-  // Voorkom renderproblemen door veilige waarden vast te stellen
+  // Ensure stable description value
   const safeDescription = description || "";
   
   return (
     <Popover 
       open={suggestionsOpen && hasSuggestions} 
       onOpenChange={(open) => {
+        // Only open if we have suggestions
         if (!open || !hasSuggestions) {
           setSuggestionsOpen(false);
         } else {
@@ -114,27 +115,26 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
               placeholder="Zoek product..." 
               value={title} 
               onValueChange={handleDescriptionChange} 
+              className="h-9"
             />
             <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-            {suggestions.length > 0 && (
-              <CommandGroup>
-                {suggestions.map((product, index) => (
-                  <CommandItem 
-                    key={index}
-                    onSelect={() => {
-                      onProductSelect(product);
-                      setSuggestionsOpen(false);
-                    }}
-                  >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{product.title}</span>
-                      <span className="text-xs text-muted-foreground">{product.description}</span>
-                      <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
+            <CommandGroup>
+              {suggestions.map((product, index) => (
+                <CommandItem 
+                  key={index}
+                  onSelect={() => {
+                    onProductSelect(product);
+                    setSuggestionsOpen(false);
+                  }}
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{product.title}</span>
+                    <span className="text-xs text-muted-foreground">{product.description}</span>
+                    <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
           </Command>
         </PopoverContent>
       )}

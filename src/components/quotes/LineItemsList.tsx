@@ -22,7 +22,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   productSuggestions = {},
   onProductSearch,
 }) => {
-  // Zorg ervoor dat lineItems en productSuggestions altijd geldige waarden hebben
+  // Always ensure lineItems and productSuggestions are valid
   const items = Array.isArray(lineItems) ? lineItems : [];
   const suggestions = productSuggestions || {};
 
