@@ -147,9 +147,9 @@ export type TeamDetails = {
   color: string;
 };
 
-type PaymentMethod = "bank" | "cash" | "both";
+export type PaymentMethod = "bank" | "cash" | "both";
 
-type PaymentInstallment = {
+export type PaymentInstallment = {
   percentage: number;
   description: string;
   dueType: "upfront" | "start" | "during" | "completion";

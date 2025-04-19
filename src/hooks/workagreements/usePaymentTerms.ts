@@ -1,5 +1,5 @@
 
-import { PaymentMethod, PaymentInstallment } from "@/types";
+import { PaymentMethod, PaymentInstallment, WorkAgreement } from "@/types";
 
 export const usePaymentTerms = (
   workAgreement: WorkAgreement,

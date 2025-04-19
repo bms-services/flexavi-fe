@@ -1,9 +1,12 @@
 
 import { WorkAgreement, Lead, Quote } from "@/types";
+import { useEffect } from "react";
+import { mockLeads } from "@/data/mockData";
 import { toast } from "sonner";
 import { useWorkAgreementState } from "./workagreements/useWorkAgreementState";
 import { useLineItems } from "./workagreements/useLineItems";
 import { usePaymentTerms } from "./workagreements/usePaymentTerms";
+import { useWorkAgreementValidation } from "./workagreements/useWorkAgreementValidation";
 
 export const useWorkAgreementForm = (workAgreementId?: string) => {
   const {
@@ -31,6 +34,8 @@ export const useWorkAgreementForm = (workAgreementId?: string) => {
     handleCashPaymentAmountChange,
     handlePaymentInstallmentsChange
   } = usePaymentTerms(workAgreement, setWorkAgreement);
+
+  const { validateAndSaveWorkAgreement } = useWorkAgreementValidation(isEditing);
 
   useEffect(() => {
     if (selectedQuote) {
@@ -83,51 +88,13 @@ export const useWorkAgreementForm = (workAgreementId?: string) => {
   };
 
   const handleSaveWorkAgreement = () => {
-    if (!selectedCustomer) {
-      toast.error("Selecteer een klant");
-      return;
-    }
-
-    if (!selectedQuote) {
-      toast.error("Selecteer een offerte");
-      return;
-    }
-
-    if (lineItems.some(item => !item.description || item.quantity <= 0)) {
-      toast.error("Vul alle velden van de werkzaamheden in");
-      return;
-    }
-
-    if (workAgreement.paymentInstallments && workAgreement.paymentInstallments.length > 0) {
-      const totalPercentage = workAgreement.paymentInstallments.reduce(
-        (sum, { percentage }) => sum + percentage, 
-        0
-      );
-      
-      if (totalPercentage !== 100) {
-        toast.error("Betaaltermijnen moeten in totaal 100% zijn");
-        return;
-      }
-    }
-
-    const finalWorkAgreement = {
-      ...workAgreement,
-      leadId: selectedCustomer.id,
-      quoteId: selectedQuote.id,
-      totalAmount: totalAmount,
-      lineItems: lineItems,
-      updatedAt: new Date().toISOString()
-    };
-
-    console.log("Saving work agreement:", finalWorkAgreement);
-    
-    if (isEditing) {
-      toast.success("Werkovereenkomst bijgewerkt");
-    } else {
-      toast.success("Nieuwe werkovereenkomst aangemaakt");
-    }
-    
-    navigate("/workagreements");
+    validateAndSaveWorkAgreement(
+      workAgreement,
+      selectedCustomer,
+      selectedQuote,
+      lineItems,
+      totalAmount
+    );
   };
 
   return {
