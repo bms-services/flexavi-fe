@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Appointment } from "@/types";
@@ -58,76 +57,64 @@ export const UnassignedAppointments: React.FC<UnassignedAppointmentsProps> = ({
           </Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3">
         {unassignedAppointments.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
             <p>Alle afspraken zijn toegewezen aan teams</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {unassignedAppointments.map((appointment) => {
               const leadInfo = getLeadInfo(appointment.leadId);
               
               return (
                 <div 
                   key={appointment.id}
-                  className="p-3 bg-white rounded-lg border border-orange-200 shadow-sm cursor-move hover:shadow-md transition-shadow"
+                  className="p-2 bg-white rounded-lg border border-orange-200 shadow-sm cursor-move hover:shadow-md transition-shadow"
                   draggable
                   onDragStart={(e) => onDragStart(e, appointment)}
                 >
                   <div className="flex items-start gap-2">
-                    <GripVertical className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-medium">{appointment.title}</h3>
-                        <Badge variant={appointment.teamType === "sales" ? "default" : "secondary"}>
+                    <GripVertical className="h-3.5 w-3.5 text-muted-foreground mt-1 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-0.5">
+                        <p className="font-medium text-sm truncate">{appointment.title}</p>
+                        <Badge variant={appointment.teamType === "sales" ? "default" : "secondary"} className="text-xs flex-shrink-0">
                           {appointment.teamType === "sales" ? "Verkoop" : "Installatie"}
                         </Badge>
                       </div>
                       
-                      <div className="grid gap-2 text-sm">
-                        <div className="flex items-center text-muted-foreground">
-                          <Clock className="inline mr-1.5 h-3.5 w-3.5" />
-                          {appointment.startTime} - {appointment.endTime}
+                      <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          <span className="truncate">{appointment.startTime} - {appointment.endTime}</span>
                         </div>
 
                         {leadInfo && (
-                          <>
-                            <div className="flex items-center text-muted-foreground">
-                              <User className="inline mr-1.5 h-3.5 w-3.5" />
-                              {leadInfo.name}
-                            </div>
-                            {leadInfo.phone && (
-                              <div className="flex items-center text-muted-foreground">
-                                <Info className="inline mr-1.5 h-3.5 w-3.5" />
-                                {leadInfo.phone}
-                              </div>
-                            )}
-                          </>
+                          <div className="flex items-center gap-1">
+                            <User className="h-3 w-3" />
+                            <span className="truncate">{leadInfo.name}</span>
+                          </div>
                         )}
 
                         {appointment.location && (
-                          <div className="flex items-start text-muted-foreground">
-                            <MapPin className="inline mr-1.5 h-3.5 w-3.5 mt-0.5" />
-                            <span className="flex-1">{appointment.location}</span>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            <span className="truncate">{appointment.location}</span>
                           </div>
                         )}
 
-                        {appointment.description && (
-                          <div className="flex items-start text-muted-foreground">
-                            <FileText className="inline mr-1.5 h-3.5 w-3.5 mt-0.5" />
-                            <span className="flex-1">
-                              {appointment.description.length > 100 
-                                ? `${appointment.description.substring(0, 100)}...` 
-                                : appointment.description}
-                            </span>
+                        {leadInfo?.phone && (
+                          <div className="flex items-center gap-1">
+                            <Info className="h-3 w-3" />
+                            <span className="truncate">{leadInfo.phone}</span>
                           </div>
                         )}
-
-                        <Badge variant="outline" className="w-fit">
-                          {appointmentTypeLabels[appointment.status]}
-                        </Badge>
                       </div>
+
+                      <Badge variant="outline" className="w-fit mt-1 text-xs">
+                        {appointmentTypeLabels[appointment.status]}
+                      </Badge>
                     </div>
                   </div>
                 </div>
@@ -139,4 +126,3 @@ export const UnassignedAppointments: React.FC<UnassignedAppointmentsProps> = ({
     </Card>
   );
 };
-
