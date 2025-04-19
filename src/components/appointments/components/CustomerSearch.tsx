@@ -67,6 +67,11 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
     });
   };
 
+  const handleOpenNewCustomerDialog = () => {
+    setShowNewCustomerDialog(true);
+    setOpen(false);
+  };
+
   return (
     <>
       <Popover open={open} onOpenChange={setOpen}>
@@ -90,10 +95,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                   <p>Geen klanten gevonden.</p>
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      setShowNewCustomerDialog(true);
-                      setOpen(false);
-                    }}
+                    onClick={handleOpenNewCustomerDialog}
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Nieuwe klant toevoegen

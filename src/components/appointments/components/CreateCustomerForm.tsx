@@ -40,6 +40,7 @@ export const CreateCustomerForm: React.FC<CreateCustomerFormProps> = ({
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log("Form submitted with values:", values);
     onSubmit(values);
     form.reset();
   };

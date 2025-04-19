@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { NewAppointmentForm } from "./NewAppointmentForm";
 import { useToast } from "@/hooks/use-toast";
@@ -63,6 +64,9 @@ export const AppointmentActions: React.FC<AppointmentActionsProps> = ({
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Nieuwe Afspraak Inplannen</DialogTitle>
+            <DialogDescription>
+              Vul het formulier in om een nieuwe afspraak in te plannen.
+            </DialogDescription>
           </DialogHeader>
           <NewAppointmentForm onSubmit={handleSubmit} teams={teams} />
         </DialogContent>
