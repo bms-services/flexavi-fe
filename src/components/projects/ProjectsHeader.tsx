@@ -16,7 +16,10 @@ export const ProjectsHeader: React.FC<ProjectsHeaderProps> = ({ onCreateClick })
           Beheer al je projecten en bekijk hun status en winstgevendheid
         </p>
       </div>
-      <Button onClick={onCreateClick}>
+      <Button 
+        onClick={onCreateClick}
+        data-create-project-button
+      >
         <Plus className="h-4 w-4 mr-2" />
         Nieuw project
       </Button>

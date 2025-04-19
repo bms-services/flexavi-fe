@@ -34,7 +34,15 @@ export const QuickActionsList = () => {
     {
       icon: Folder,
       label: 'Project maken',
-      href: '/projects/new',
+      href: '/projects',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        // This will trigger the wizard on the projects page
+        const projectsPage = document.querySelector('[data-create-project-button]');
+        if (projectsPage) {
+          (projectsPage as HTMLButtonElement).click();
+        }
+      },
     },
   ];
 
@@ -43,7 +51,7 @@ export const QuickActionsList = () => {
       {actions.map((action) => (
         <Tooltip key={action.href}>
           <TooltipTrigger asChild>
-            <Link to={action.href}>
+            <Link to={action.href} onClick={action.onClick}>
               <Button
                 variant="ghost"
                 size="icon"
