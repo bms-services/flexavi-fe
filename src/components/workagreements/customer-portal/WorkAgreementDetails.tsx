@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -79,12 +78,7 @@ export const WorkAgreementDetails: React.FC<WorkAgreementDetailsProps> = ({
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <CompanyDetails companyDetails={companyDetails} />
-        <CustomerInfoCard customer={{
-          name: customer.name,
-          address: customer.address,
-          email: customer.email || "customer@example.com",
-          phone: customer.phone || "06-12345678"
-        }} />
+        <CustomerInfoCard customer={customer} />
       </div>
 
       <AgreementDetails workAgreement={workAgreement} formatCurrency={formatCurrency} />
@@ -96,8 +90,8 @@ export const WorkAgreementDetails: React.FC<WorkAgreementDetailsProps> = ({
       <ExclusionsCard exclusions={exclusions} />
 
       <Attachments 
-        attachments={workAgreement.attachments || []}
-        defaultAttachments={workAgreement.defaultAttachments || []}
+        attachments={workAgreement.attachments}
+        defaultAttachments={workAgreement.defaultAttachments}
       />
 
       <GeneralTerms />
