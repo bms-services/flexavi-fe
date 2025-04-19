@@ -1,3 +1,4 @@
+
 import {
   Home,
   Users,
@@ -8,6 +9,7 @@ import {
   Settings,
   Briefcase,
   Shield,
+  Handshake,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -20,6 +22,7 @@ export const navigationItems: NavItem[] = [
   { name: "Projecten", href: "/projects", icon: Briefcase },
   { name: "Facturen", href: "/invoices", icon: FileCheck },
   { name: "Producten", href: "/products", icon: Package },
+  { name: "Partners", href: "/partners", icon: Handshake },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
