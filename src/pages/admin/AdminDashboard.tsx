@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -9,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Users, CreditCard } from 'lucide-react';
+import { BarChart3, Users, CreditCard, Package } from 'lucide-react';
+import { PackageManagement } from '@/components/admin/PackageManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -34,6 +34,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="subscriptions" className="w-full justify-start">
                   <CreditCard className="h-4 w-4 mr-2" />
                   Abonnementen
+                </TabsTrigger>
+                <TabsTrigger value="packages" className="w-full justify-start">
+                  <Package className="h-4 w-4 mr-2" />
+                  Pakketten
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -71,6 +75,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="subscriptions" className="mt-0">
                 <SubscriptionOverview />
+              </TabsContent>
+              
+              <TabsContent value="packages" className="mt-0">
+                <PackageManagement />
               </TabsContent>
             </div>
           </Tabs>
