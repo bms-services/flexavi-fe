@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { InvoiceStatus } from "@/types";
 import { mockInvoices } from "@/data/mockInvoices";
 import { mockLeads } from "@/data/mockLeads";
@@ -17,18 +16,18 @@ import { Badge } from "@/components/ui/badge";
 import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { FileText, User, MapPin, Calendar, Check, Download, CreditCard } from "lucide-react";
+import { FileText, User, MapPin, Calendar, Check, Download, CreditCard, ChevronLeft } from "lucide-react";
 import { InvoiceSummary } from "@/components/invoices/InvoiceSummary";
 
 const CustomerPortalInvoice = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [invoice, setInvoice] = useState<any | null>(null);
   const [customer, setCustomer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [paymentStarted, setPaymentStarted] = useState(false);
 
   useEffect(() => {
-    // In a real application, this would be an API call
     if (id) {
       const foundInvoice = mockInvoices.find(i => i.id === id);
       if (foundInvoice) {
@@ -52,13 +51,11 @@ const CustomerPortalInvoice = () => {
   };
 
   const handleStartPayment = () => {
-    // In a real application, this would redirect to a payment gateway
     setPaymentStarted(true);
     console.log("Starting payment for invoice:", invoice?.id);
   };
 
   const handleDownloadInvoice = () => {
-    // In a real application, this would download the invoice PDF
     console.log("Downloading invoice:", invoice?.id);
     alert("Factuur wordt gedownload als PDF.");
   };
@@ -104,6 +101,17 @@ const CustomerPortalInvoice = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
+        <div className="mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate(-1)}
+            className="hover:bg-white/50 transition-colors"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Terug naar overzicht
+          </Button>
+        </div>
+        
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader className="border-b pb-6">
             <div className="flex justify-between items-start">
