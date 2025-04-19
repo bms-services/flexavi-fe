@@ -1,5 +1,7 @@
 
 import { Quote, Invoice, QuoteStatus, InvoiceStatus } from "@/types";
+import { mockQuotes } from "@/data/mockQuotes";
+import { mockInvoices } from "@/data/mockInvoices";
 
 export const getLeadStats = (leadId: string) => {
   const leadQuotes = mockQuotes.filter(quote => quote.leadId === leadId);

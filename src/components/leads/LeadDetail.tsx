@@ -13,6 +13,8 @@ import { AppointmentsTab } from "./tabs/AppointmentsTab";
 import { QuotesTab } from "./tabs/QuotesTab";
 import { InvoicesTab } from "./tabs/InvoicesTab";
 import { getLeadStats, formatCurrency } from "@/utils/leadStats";
+import { Badge } from "@/components/ui/badge";
+import { QuoteStatus, InvoiceStatus } from "@/types";
 
 interface LeadDetailProps {
   lead: LeadDetailType;
@@ -24,6 +26,38 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
   };
 
   const leadStats = getLeadStats(lead.id);
+
+  // Helper function to get the status badge for quotes
+  const getQuoteStatusBadge = (status: QuoteStatus | undefined) => {
+    if (!status) return "Geen";
+    
+    const statusConfig = {
+      draft: { label: "Concept", variant: "outline" as const },
+      sent: { label: "Verzonden", variant: "default" as const },
+      accepted: { label: "Geaccepteerd", variant: "success" as const },
+      rejected: { label: "Afgewezen", variant: "destructive" as const },
+      revised: { label: "Herzien", variant: "warning" as const },
+    };
+
+    const config = statusConfig[status] || statusConfig.draft;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+
+  // Helper function to get the status badge for invoices
+  const getInvoiceStatusBadge = (status: InvoiceStatus | undefined) => {
+    if (!status) return "Geen";
+    
+    const statusConfig = {
+      draft: { label: "Concept", variant: "outline" as const },
+      sent: { label: "Verzonden", variant: "default" as const },
+      paid: { label: "Betaald", variant: "success" as const },
+      overdue: { label: "Te laat", variant: "destructive" as const },
+      canceled: { label: "Geannuleerd", variant: "secondary" as const },
+    };
+
+    const config = statusConfig[status] || statusConfig.draft;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
 
   return (
     <div className="space-y-6">
@@ -55,11 +89,10 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
               <CardHeader className="p-4">
                 <CardDescription>Laatste Offerte</CardDescription>
                 <CardTitle className="text-lg">
-                  {leadStats.latestQuoteStatus ? (
-                    <LeadStatusBadge status={leadStats.latestQuoteStatus} />
-                  ) : (
+                  {leadStats.latestQuoteStatus ? 
+                    getQuoteStatusBadge(leadStats.latestQuoteStatus) : 
                     "Geen"
-                  )}
+                  }
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -67,11 +100,10 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
               <CardHeader className="p-4">
                 <CardDescription>Laatste Factuur</CardDescription>
                 <CardTitle className="text-lg">
-                  {leadStats.latestInvoiceStatus ? (
-                    <LeadStatusBadge status={leadStats.latestInvoiceStatus} />
-                  ) : (
+                  {leadStats.latestInvoiceStatus ? 
+                    getInvoiceStatusBadge(leadStats.latestInvoiceStatus) : 
                     "Geen"
-                  )}
+                  }
                 </CardTitle>
               </CardHeader>
             </Card>
