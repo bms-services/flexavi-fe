@@ -1,4 +1,3 @@
-
 import { Appointment, TeamDetails, WorkEnvironment } from "@/types";
 
 export interface TeamAvailabilityOverviewProps {
@@ -11,6 +10,7 @@ export interface TeamAvailabilityOverviewProps {
   onTeamUpdate: (team: TeamDetails) => void;
   onUnavailableDateAdd: (teamId: string, date: string) => void;
   onUnavailableDateRemove: (teamId: string, date: string) => void;
+  onDateClick?: (date: string) => void;
 }
 
 export interface TeamSectionProps {
@@ -28,6 +28,7 @@ export interface TeamSectionProps {
 export interface DateHeaderProps {
   date: string;
   isToday: boolean;
+  onDateClick?: (date: string) => void;
 }
 
 export interface AvailabilityCellProps {

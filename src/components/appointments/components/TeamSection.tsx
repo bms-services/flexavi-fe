@@ -22,7 +22,8 @@ export const TeamSection = ({
   scheduleSettings,
   searchLocation,
   unavailableDates = {},
-  onTeamNameEdit
+  onTeamNameEdit,
+  onDateClick
 }: TeamSectionProps) => {
   const timeSlots = [
     { label: "Ochtend", start: 8, end: 13 },
@@ -63,6 +64,7 @@ export const TeamSection = ({
                   key={date} 
                   date={date} 
                   isToday={isToday(parseISO(date))}
+                  onDateClick={onDateClick}
                 />
               ))}
             </div>
