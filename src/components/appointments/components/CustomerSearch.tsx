@@ -128,7 +128,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       </Popover>
 
       <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
             <DialogDescription>
