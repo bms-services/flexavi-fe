@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Dialog,
@@ -31,7 +32,9 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
   const createdDate = format(new Date(quote.createdAt), "d MMMM yyyy", { locale: nl });
   const formattedAmount = formatCurrency(quote.amount);
 
-  const subtotal = quote.lineItems.reduce((acc, item) => acc + item.total, 0);
+  // Add null check for lineItems
+  const lineItems = quote.lineItems || [];
+  const subtotal = lineItems.reduce((acc, item) => acc + item.total, 0);
   const vat = subtotal * 0.21;
   const total = subtotal + vat;
 
@@ -83,7 +86,7 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {quote.lineItems.map((item) => (
+                      {lineItems.map((item) => (
                         <TableRow key={item.id}>
                           <TableCell className="align-top">{item.description}</TableCell>
                           <TableCell className="text-right">{item.quantity}</TableCell>
