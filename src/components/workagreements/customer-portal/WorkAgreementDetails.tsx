@@ -2,7 +2,7 @@
 import React from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { FileText, Info } from "lucide-react";
+import { FileText, Info, Paperclip } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { CompanyDetails } from "./components/CompanyDetails";
@@ -29,6 +29,8 @@ interface WorkAgreementDetailsProps {
       description: string;
       percentage: number;
     }[];
+    attachments?: File[];
+    defaultAttachments?: { name: string; url: string }[];
   };
   formatCurrency: (amount: number) => string;
   companyDetails?: {
@@ -68,6 +70,10 @@ export const WorkAgreementDetails = ({
 
   const provisions = workAgreement.provisions || defaultProvisions;
   const exclusions = workAgreement.exclusions || defaultExclusions;
+  const defaultAttachments = workAgreement.defaultAttachments || [];
+  const attachments = workAgreement.attachments || [];
+
+  const hasAttachments = defaultAttachments.length > 0 || attachments.length > 0;
 
   return (
     <div className="space-y-6">
@@ -133,6 +139,40 @@ export const WorkAgreementDetails = ({
           ))}
         </ul>
       </Card>
+
+      {hasAttachments && (
+        <Card className="p-4">
+          <h3 className="text-sm font-medium text-gray-500 mb-4 flex items-center gap-2">
+            <Paperclip className="h-4 w-4" />
+            Bijlages
+          </h3>
+          <div className="space-y-2">
+            {defaultAttachments.map((attachment, index) => (
+              <div key={`default-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                <a 
+                  href={attachment.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex-1 text-sm hover:underline"
+                >
+                  {attachment.name}
+                </a>
+                <span className="text-xs text-muted-foreground">Standaard bijlage</span>
+              </div>
+            ))}
+
+            {attachments.map((file, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                <span className="flex-1 text-sm">
+                  {file.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       <GeneralTerms />
 
