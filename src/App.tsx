@@ -12,8 +12,10 @@ import Appointments from "./pages/Appointments";
 import Quotes from "./pages/Quotes";
 import QuoteEdit from "./pages/QuoteEdit";
 import Invoices from "./pages/Invoices";
+import InvoiceEdit from "./pages/InvoiceEdit";
 import Settings from "./pages/Settings";
 import Products from "./pages/Products";
+import CustomerPortal from "./pages/CustomerPortal";
 
 const queryClient = new QueryClient();
 
@@ -32,8 +34,11 @@ const App = () => (
           <Route path="/quotes/create" element={<QuoteEdit />} />
           <Route path="/quotes/edit/:id" element={<QuoteEdit />} />
           <Route path="/invoices" element={<Invoices />} />
+          <Route path="/invoices/create" element={<InvoiceEdit />} />
+          <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />
           <Route path="/products" element={<Products />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/portal/quote/:id" element={<CustomerPortal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

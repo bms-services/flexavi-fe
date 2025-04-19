@@ -1,4 +1,3 @@
-
 export type Lead = {
   id: string;
   name: string;
@@ -116,6 +115,11 @@ export type Invoice = {
   dueDate: string;
   createdAt: string;
   updatedAt: string;
+  lineItems: QuoteLineItem[];
+  location?: string;
+  notes?: string;
+  paymentDate?: string;
+  customerSignature?: string;
 };
 
 export type InvoiceStatus = 
@@ -123,7 +127,9 @@ export type InvoiceStatus =
   | "sent" 
   | "paid" 
   | "overdue" 
-  | "canceled";
+  | "canceled"
+  | "collection"
+  | "legal";
 
 export type WorkEnvironment = {
   id: string;

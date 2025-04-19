@@ -20,15 +20,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, PlusCircle, Search, Edit2, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { mockInvoices, mockLeads } from "@/data/mockData";
+import { mockInvoices } from "@/data/mockData";
+import { mockLeads } from "@/data/mockLeads";
 import { format, isPast, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Invoice } from "@/types";
 import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
+import { useNavigate } from "react-router-dom";
 
 const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
@@ -50,13 +53,16 @@ const Invoices = () => {
   );
 
   const handleEditInvoice = (invoice: Invoice) => {
-    // Will be implemented in the next step
-    console.log("Edit invoice:", invoice);
+    navigate(`/invoices/edit/${invoice.id}`);
   };
 
   const handleDeleteInvoice = (invoice: Invoice) => {
-    // Will be implemented in the next step
+    // In een echte applicatie zou dit een delete request doen
     console.log("Delete invoice:", invoice);
+  };
+
+  const handleCreateNewInvoice = () => {
+    navigate('/invoices/create');
   };
 
   return (
@@ -69,7 +75,7 @@ const Invoices = () => {
               Beheer al je facturen op één plek
             </p>
           </div>
-          <Button>
+          <Button onClick={handleCreateNewInvoice}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Nieuwe Factuur
           </Button>

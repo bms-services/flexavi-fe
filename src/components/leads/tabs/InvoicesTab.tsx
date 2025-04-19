@@ -21,29 +21,20 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, FileCheck } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
+import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 
 interface InvoicesTabProps {
   invoices: Invoice[];
   leadId: string;
 }
 
-const getStatusBadge = (status: Invoice["status"]) => {
-  const statusConfig = {
-    draft: { label: "Concept", variant: "outline" as const },
-    sent: { label: "Verzonden", variant: "default" as const },
-    paid: { label: "Betaald", variant: "success" as const },
-    overdue: { label: "Te laat", variant: "destructive" as const },
-    canceled: { label: "Geannuleerd", variant: "secondary" as const },
-  };
-
-  const config = statusConfig[status] || statusConfig.draft;
-  return <Badge variant={config.variant}>{config.label}</Badge>;
-};
-
 export const InvoicesTab: React.FC<InvoicesTabProps> = ({
   invoices,
   leadId,
 }) => {
+  const navigate = useNavigate();
+  
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
@@ -51,10 +42,14 @@ export const InvoicesTab: React.FC<InvoicesTabProps> = ({
     }).format(amount);
   };
 
+  const handleCreateInvoice = () => {
+    navigate(`/invoices/create?leadId=${leadId}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button>
+        <Button onClick={handleCreateInvoice}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Nieuwe Factuur
         </Button>
@@ -95,29 +90,42 @@ export const InvoicesTab: React.FC<InvoicesTabProps> = ({
                       new Date(b.createdAt).getTime() -
                       new Date(a.createdAt).getTime()
                   )
-                  .map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell>
-                        <span className="font-medium text-primary">
-                          {invoice.id.replace("inv-", "FACT-")}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {format(new Date(invoice.createdAt), "d MMMM yyyy", {
-                          locale: nl,
-                        })}
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {formatCurrency(invoice.amount)}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {format(new Date(invoice.dueDate), "d MMMM yyyy", {
-                          locale: nl,
-                        })}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    </TableRow>
-                  ))}
+                  .map((invoice) => {
+                    const statusConfig = useInvoiceStatusBadge(invoice.status);
+                    
+                    return (
+                      <TableRow key={invoice.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => navigate(`/invoices/edit/${invoice.id}`)}
+                      >
+                        <TableCell>
+                          <span className="font-medium text-primary">
+                            {invoice.id.replace("inv-", "FACT-")}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {format(new Date(invoice.createdAt), "d MMMM yyyy", {
+                            locale: nl,
+                          })}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {formatCurrency(invoice.amount)}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          {format(new Date(invoice.dueDate), "d MMMM yyyy", {
+                            locale: nl,
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          {statusConfig && (
+                            <Badge variant={statusConfig.variant}>
+                              {statusConfig.label}
+                            </Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           )}
