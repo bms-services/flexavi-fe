@@ -18,6 +18,8 @@ const formSchema = z.object({
   name: z.string().min(2, "Naam moet minimaal 2 karakters bevatten"),
   email: z.string().email("Ongeldig email adres"),
   phone: z.string().min(10, "Ongeldig telefoonnummer"),
+  postcode: z.string().regex(/^[1-9][0-9]{3} ?[A-Z]{2}$/i, "Ongeldige postcode"),
+  huisnummer: z.string().min(1, "Huisnummer is verplicht"),
 });
 
 interface CreateLeadFormProps {
@@ -32,6 +34,8 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
       name: "",
       email: "",
       phone: "",
+      postcode: "",
+      huisnummer: "",
     },
   });
 
@@ -79,6 +83,36 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
             </FormItem>
           )}
         />
+
+        <div className="flex gap-3">
+          <FormField
+            control={form.control}
+            name="postcode"
+            render={({ field }) => (
+              <FormItem className="flex-grow">
+                <FormLabel>Postcode</FormLabel>
+                <FormControl>
+                  <Input placeholder="Bijv. 1234 AB" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="huisnummer"
+            render={({ field }) => (
+              <FormItem className="w-1/3">
+                <FormLabel>Huisnummer</FormLabel>
+                <FormControl>
+                  <Input placeholder="Nr" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <div className="flex justify-end gap-3 pt-2">
           <Button variant="outline" type="button" onClick={onCancel}>

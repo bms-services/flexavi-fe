@@ -94,8 +94,15 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const handleCreateLead = (data: { name: string; email: string; phone: string }) => {
-    console.log("Creating new lead:", data);
+  const handleCreateLead = (data: { 
+    name: string; 
+    email: string; 
+    phone: string; 
+    postcode: string;
+    huisnummer: string;
+  }) => {
+    const fullAddress = `${data.postcode} ${data.huisnummer}`;
+    console.log("Creating new lead:", { ...data, address: fullAddress });
     toast({
       title: "Lead toegevoegd",
       description: "De nieuwe lead is succesvol aangemaakt.",
