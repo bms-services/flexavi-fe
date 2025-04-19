@@ -47,6 +47,7 @@ const createEmptyLineItem = (): QuoteLineItem => ({
   unit: "stuk",
   pricePerUnit: 0,
   total: 0,
+  vatRate: 21,
 });
 
 const QuoteEdit = () => {
@@ -66,7 +67,9 @@ const QuoteEdit = () => {
   // Load quote data when editing
   useEffect(() => {
     if (isEditing && id) {
-      const foundQuote = mockQuotes.find(q => q.id === id);
+      // Ensure mockQuotes is an array
+      const quotes = Array.isArray(mockQuotes) ? mockQuotes : [];
+      const foundQuote = quotes.find(q => q.id === id);
       
       if (foundQuote) {
         setQuote({
@@ -80,10 +83,12 @@ const QuoteEdit = () => {
           lineItems: foundQuote.lineItems,
         });
         
-        setLineItems(foundQuote.lineItems);
+        // Ensure lineItems is an array
+        setLineItems(Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [createEmptyLineItem()]);
         
         // Find the customer
-        const customer = mockLeads.find(l => l.id === foundQuote.leadId);
+        const leads = Array.isArray(mockLeads) ? mockLeads : [];
+        const customer = leads.find(l => l.id === foundQuote.leadId);
         if (customer) {
           setSelectedCustomer(customer);
         }
@@ -359,7 +364,7 @@ const QuoteEdit = () => {
                   <div className="col-span-1"></div>
                 </div>
 
-                {lineItems.map((item, index) => (
+                {Array.isArray(lineItems) && lineItems.map((item, index) => (
                   <LineItemRow
                     key={item.id}
                     lineItem={item}

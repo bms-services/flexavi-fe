@@ -32,10 +32,10 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   onChange,
   onRemove,
   showRemoveButton,
-  productSuggestions,
+  productSuggestions = [], // Provide default empty array
   onProductSearch,
 }) => {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(lineItem.description || "");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
@@ -148,26 +148,28 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
               />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-[400px] p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Zoek product..." value={title} onValueChange={handleDescriptionChange} />
-              <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-              <CommandGroup>
-                {(productSuggestions || []).map((product, index) => (
-                  <CommandItem 
-                    key={index}
-                    onSelect={() => handleSelectProduct(product)}
-                  >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{product.title}</span>
-                      <span className="text-xs text-muted-foreground">{product.description}</span>
-                      <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
+          {hasSuggestions && (
+            <PopoverContent className="w-[400px] p-0" align="start">
+              <Command>
+                <CommandInput placeholder="Zoek product..." value={title} onValueChange={handleDescriptionChange} />
+                <CommandEmpty>Geen producten gevonden.</CommandEmpty>
+                <CommandGroup>
+                  {productSuggestions.map((product, index) => (
+                    <CommandItem 
+                      key={index}
+                      onSelect={() => handleSelectProduct(product)}
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-medium">{product.title}</span>
+                        <span className="text-xs text-muted-foreground">{product.description}</span>
+                        <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          )}
         </Popover>
       </div>
       
@@ -204,7 +206,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       
       <div className="col-span-1">
         <Select 
-          value={lineItem.vatRate?.toString() || "21"} 
+          value={(lineItem.vatRate?.toString() || "21")}
           onValueChange={handleVatChange}
         >
           <SelectTrigger>

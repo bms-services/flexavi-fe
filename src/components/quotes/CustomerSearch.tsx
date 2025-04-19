@@ -40,6 +40,9 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
   const [open, setOpen] = React.useState(false);
   const [showNewCustomerDialog, setShowNewCustomerDialog] = React.useState(false);
   const { toast } = useToast();
+  
+  // Ensure mockLeads is always an array
+  const customers = Array.isArray(mockLeads) ? mockLeads : [];
 
   const handleCreateNewCustomer = (customerData: Partial<Lead>) => {
     // In a real app, this would make an API call
@@ -104,28 +107,30 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                   </Button>
                 </div>
               </CommandEmpty>
-              <CommandGroup>
-                {(mockLeads || []).map((customer) => (
-                  <CommandItem
-                    key={customer.id}
-                    value={customer.name}
-                    onSelect={() => {
-                      onSelectCustomer(customer);
-                      setOpen(false);
-                    }}
-                  >
-                    {customer.name}
-                    <Check
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        selectedCustomer?.id === customer.id
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {customers.length > 0 && (
+                <CommandGroup>
+                  {customers.map((customer) => (
+                    <CommandItem
+                      key={customer.id}
+                      value={customer.name}
+                      onSelect={() => {
+                        onSelectCustomer(customer);
+                        setOpen(false);
+                      }}
+                    >
+                      {customer.name}
+                      <Check
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          selectedCustomer?.id === customer.id
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>
