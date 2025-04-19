@@ -8,6 +8,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -61,40 +62,42 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
         <PopoverContent className="w-[400px] p-0">
           <Command>
             <CommandInput placeholder="Zoek een klant..." />
-            <CommandEmpty>
-              <div className="flex flex-col items-center justify-center p-4 gap-2">
-                <p>Geen klanten gevonden.</p>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowNewCustomerDialog(true)}
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Nieuwe klant toevoegen
-                </Button>
-              </div>
-            </CommandEmpty>
-            <CommandGroup>
-              {mockLeads.map((customer) => (
-                <CommandItem
-                  key={customer.id}
-                  value={customer.name}
-                  onSelect={() => {
-                    onSelectCustomer(customer);
-                    setOpen(false);
-                  }}
-                >
-                  {customer.name}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      selectedCustomer?.id === customer.id
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandList>
+              <CommandEmpty>
+                <div className="flex flex-col items-center justify-center p-4 gap-2">
+                  <p>Geen klanten gevonden.</p>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowNewCustomerDialog(true)}
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Nieuwe klant toevoegen
+                  </Button>
+                </div>
+              </CommandEmpty>
+              <CommandGroup>
+                {mockLeads.map((customer) => (
+                  <CommandItem
+                    key={customer.id}
+                    value={customer.name}
+                    onSelect={() => {
+                      onSelectCustomer(customer);
+                      setOpen(false);
+                    }}
+                  >
+                    {customer.name}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        selectedCustomer?.id === customer.id
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
