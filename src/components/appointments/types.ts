@@ -7,6 +7,10 @@ export interface TeamAvailabilityOverviewProps {
   teams: TeamDetails[];
   environments: WorkEnvironment[];
   scheduleSettings: any;
+  unavailableDates: Record<string, string[]>;
+  onTeamUpdate: (team: TeamDetails) => void;
+  onUnavailableDateAdd: (teamId: string, date: string) => void;
+  onUnavailableDateRemove: (teamId: string, date: string) => void;
 }
 
 export interface TeamSectionProps {
@@ -17,6 +21,8 @@ export interface TeamSectionProps {
   appointments: Appointment[];
   scheduleSettings: any;
   searchLocation?: string;
+  unavailableDates?: Record<string, string[]>;
+  onTeamNameEdit?: (team: TeamDetails) => void;
 }
 
 export interface DateHeaderProps {
@@ -44,4 +50,6 @@ export interface InstallationTeamSectionProps {
   dates: string[];
   appointments: Appointment[];
   searchLocation?: string;
+  unavailableDates?: Record<string, string[]>;
+  onTeamNameEdit?: (team: TeamDetails) => void;
 }

@@ -8,6 +8,14 @@ import { InstallationTeamSection } from "./components/InstallationTeamSection";
 import { TeamAvailabilityOverviewProps } from "./types";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { TeamDetails } from "@/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const TeamAvailabilityOverview = ({
   startDate,
@@ -15,9 +23,14 @@ export const TeamAvailabilityOverview = ({
   teams,
   environments,
   scheduleSettings,
+  unavailableDates,
+  onTeamUpdate,
+  onUnavailableDateAdd,
+  onUnavailableDateRemove,
 }: TeamAvailabilityOverviewProps) => {
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
+  const [editingTeam, setEditingTeam] = useState<TeamDetails | null>(null);
   const daysToShow = 5;
   
   // Calculate dates based on startDate and dateOffset
@@ -40,6 +53,10 @@ export const TeamAvailabilityOverview = ({
 
   const handleSliderChange = (value: number[]) => {
     setDateOffset(value[0]);
+  };
+
+  const handleTeamNameEdit = (team: TeamDetails) => {
+    setEditingTeam(team);
   };
 
   return (
@@ -100,6 +117,8 @@ export const TeamAvailabilityOverview = ({
         appointments={appointments}
         scheduleSettings={scheduleSettings}
         searchLocation={searchLocation}
+        unavailableDates={unavailableDates}
+        onTeamNameEdit={handleTeamNameEdit}
       />
       
       <InstallationTeamSection
@@ -109,6 +128,8 @@ export const TeamAvailabilityOverview = ({
         dates={dates}
         appointments={appointments}
         searchLocation={searchLocation}
+        unavailableDates={unavailableDates}
+        onTeamNameEdit={handleTeamNameEdit}
       />
     </div>
   );

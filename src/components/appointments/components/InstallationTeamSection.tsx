@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isToday, parseISO } from "date-fns";
 import { DateHeader } from "./DateHeader";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, MapPin, AlertOctagon } from "lucide-react";
 import {
   HoverCard,
   HoverCardContent,
@@ -11,8 +11,12 @@ import {
 } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { InstallationTeamSectionProps } from "../types";
 
 export const InstallationTeamSection = ({
@@ -21,8 +25,14 @@ export const InstallationTeamSection = ({
   teams,
   dates,
   appointments,
-  searchLocation
+  searchLocation,
+  unavailableDates = {},
+  onTeamNameEdit
 }: InstallationTeamSectionProps) => {
+  const isTeamUnavailableOnDate = (teamId: string, date: string) => {
+    return unavailableDates[teamId]?.includes(date);
+  };
+
   return (
     <Card className="overflow-hidden">
       <div className="bg-muted/50 p-4 rounded-t-lg border-b flex items-center justify-between">
@@ -53,7 +63,13 @@ export const InstallationTeamSection = ({
                   className="w-2.5 h-2.5 rounded-full" 
                   style={{ backgroundColor: team.color }}
                 />
-                <span className="font-medium">{team.name}</span>
+                <Button 
+                  variant="ghost" 
+                  className="h-auto px-2 py-0.5 font-medium hover:bg-transparent hover:underline"
+                  onClick={() => onTeamNameEdit && onTeamNameEdit(team)}
+                >
+                  {team.name}
+                </Button>
               </div>
               <div className="grid grid-cols-5">
                 {dates.map(date => {
@@ -69,7 +85,21 @@ export const InstallationTeamSection = ({
 
                   return (
                     <div key={date} className="p-2 border-l">
-                      {dayAppointments.length > 0 ? (
+                      {isTeamUnavailableOnDate(team.id, date) ? (
+                        <div className="flex flex-col items-center justify-center h-full py-3">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex flex-col items-center text-orange-500">
+                                <AlertOctagon className="h-5 w-5 mb-1" />
+                                <span className="text-xs">Niet beschikbaar</span>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Team is niet beschikbaar op deze datum</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      ) : dayAppointments.length > 0 ? (
                         dayAppointments.map((app, idx) => {
                           const locationMatches = searchLocation ? 
                             app.location?.toLowerCase().includes(searchLocation.toLowerCase()) : 

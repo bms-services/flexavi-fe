@@ -5,6 +5,13 @@ import { isToday, parseISO } from "date-fns";
 import { DateHeader } from "./DateHeader";
 import { AvailabilityCell } from "./AvailabilityCell";
 import { TeamSectionProps } from "../types";
+import { Button } from "@/components/ui/button";
+import { AlertOctagon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const TeamSection = ({ 
   title, 
@@ -12,18 +19,30 @@ export const TeamSection = ({
   teams, 
   dates, 
   appointments,
-  scheduleSettings 
+  scheduleSettings,
+  searchLocation,
+  unavailableDates = {},
+  onTeamNameEdit
 }: TeamSectionProps) => {
   const timeSlots = [
     { label: "Ochtend", start: 8, end: 13 },
     { label: "Middag", start: 13, end: 19 },
+    { label: "Avond", start: 19, end: 22 },
   ];
 
   const getMaxSlots = (teamType: string, timeSlot: string) => {
     if (teamType === "sales") {
-      return timeSlot === "Ochtend" ? scheduleSettings.salesMorningSlots : scheduleSettings.salesAfternoonSlots;
+      if (timeSlot === "Ochtend") return scheduleSettings.salesMorningSlots;
+      if (timeSlot === "Middag") return scheduleSettings.salesAfternoonSlots;
+      return scheduleSettings.salesEveningSlots;
     }
-    return timeSlot === "Ochtend" ? scheduleSettings.installationMorningSlots : scheduleSettings.installationAfternoonSlots;
+    if (timeSlot === "Ochtend") return scheduleSettings.installationMorningSlots;
+    if (timeSlot === "Middag") return scheduleSettings.installationAfternoonSlots;
+    return scheduleSettings.installationEveningSlots;
+  };
+
+  const isTeamUnavailableOnDate = (teamId: string, date: string) => {
+    return unavailableDates[teamId]?.includes(date);
   };
 
   return (
@@ -56,21 +75,44 @@ export const TeamSection = ({
                   className="w-2.5 h-2.5 rounded-full" 
                   style={{ backgroundColor: team.color }}
                 />
-                <span className="font-medium">{team.name}</span>
+                <Button 
+                  variant="ghost" 
+                  className="h-auto px-2 py-0.5 font-medium hover:bg-transparent hover:underline"
+                  onClick={() => onTeamNameEdit && onTeamNameEdit(team)}
+                >
+                  {team.name}
+                </Button>
               </div>
               <div className="grid grid-cols-5">
                 {dates.map(date => (
-                  <div key={date} className="p-2 space-y-2 border-l">
-                    {timeSlots.map((slot, idx) => (
-                      <AvailabilityCell 
-                        key={idx}
-                        date={date}
-                        team={team}
-                        timeSlot={slot}
-                        appointments={appointments}
-                        maxSlots={getMaxSlots(team.type, slot.label)}
-                      />
-                    ))}
+                  <div key={date} className="p-2 space-y-2 border-l relative">
+                    {isTeamUnavailableOnDate(team.id, date) ? (
+                      <div className="flex flex-col items-center justify-center h-full py-3">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex flex-col items-center text-orange-500">
+                              <AlertOctagon className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Niet beschikbaar</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Team is niet beschikbaar op deze datum</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      timeSlots.map((slot, idx) => (
+                        <AvailabilityCell 
+                          key={idx}
+                          date={date}
+                          team={team}
+                          timeSlot={slot}
+                          appointments={appointments}
+                          maxSlots={getMaxSlots(team.type, slot.label)}
+                          searchLocation={searchLocation}
+                        />
+                      ))
+                    )}
                   </div>
                 ))}
               </div>
