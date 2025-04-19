@@ -3,32 +3,32 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isToday, parseISO } from "date-fns";
 import { DateHeader } from "./DateHeader";
-import { Clock, MapPin, AlertOctagon } from "lucide-react";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { AvailabilityCell } from "./AvailabilityCell";
+import { InstallationTeamSectionProps } from "../types";
 import { Button } from "@/components/ui/button";
+import { AlertOctagon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { InstallationTeamSectionProps } from "../types";
 
-export const InstallationTeamSection = ({
-  title,
-  icon,
-  teams,
-  dates,
+export const InstallationTeamSection = ({ 
+  title, 
+  icon, 
+  teams, 
+  dates, 
   appointments,
   searchLocation,
   unavailableDates = {},
-  onTeamNameEdit
+  onTeamNameEdit,
+  onDateClick
 }: InstallationTeamSectionProps) => {
+  const timeSlots = [
+    { label: "Ochtend", start: 8, end: 13 },
+    { label: "Middag", start: 13, end: 19 },
+  ];
+
   const isTeamUnavailableOnDate = (teamId: string, date: string) => {
     return unavailableDates[teamId]?.includes(date);
   };
@@ -51,6 +51,7 @@ export const InstallationTeamSection = ({
                   key={date} 
                   date={date} 
                   isToday={isToday(parseISO(date))}
+                  onDateClick={onDateClick}
                 />
               ))}
             </div>
@@ -72,87 +73,37 @@ export const InstallationTeamSection = ({
                 </Button>
               </div>
               <div className="grid grid-cols-5">
-                {dates.map(date => {
-                  const dayAppointments = appointments.filter(
-                    app => app.date === date && app.teamId === team.id
-                  );
-
-                  // Check if any appointments match the search location
-                  const hasMatchingLocation = searchLocation ? 
-                    dayAppointments.some(app => 
-                      app.location?.toLowerCase().includes(searchLocation.toLowerCase())
-                    ) : false;
-
-                  return (
-                    <div key={date} className="p-2 border-l">
-                      {isTeamUnavailableOnDate(team.id, date) ? (
-                        <div className="flex flex-col items-center justify-center h-full py-3">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="flex flex-col items-center text-orange-500">
-                                <AlertOctagon className="h-5 w-5 mb-1" />
-                                <span className="text-xs">Niet beschikbaar</span>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Team is niet beschikbaar op deze datum</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      ) : dayAppointments.length > 0 ? (
-                        dayAppointments.map((app, idx) => {
-                          const locationMatches = searchLocation ? 
-                            app.location?.toLowerCase().includes(searchLocation.toLowerCase()) : 
-                            false;
-
-                          return (
-                            <HoverCard key={idx}>
-                              <HoverCardTrigger asChild>
-                                <div className="mb-2 last:mb-0">
-                                  <Badge 
-                                    variant="outline"
-                                    className={cn(
-                                      "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
-                                      locationMatches && "bg-green-100 hover:bg-green-200 border-green-500",
-                                      !locationMatches && "hover:bg-primary hover:text-primary-foreground"
-                                    )}
-                                  >
-                                    <span className="flex items-center gap-1.5">
-                                      <Clock className="h-3.5 w-3.5" />
-                                      {app.startTime} - {app.endTime}
-                                    </span>
-                                  </Badge>
-                                </div>
-                              </HoverCardTrigger>
-                              <HoverCardContent className="w-80 p-4" align="start">
-                                <div className="space-y-2">
-                                  <p className="font-medium">{app.title}</p>
-                                  <div className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4 text-muted-foreground" />
-                                    <p>{app.startTime} - {app.endTime}</p>
-                                  </div>
-                                  {app.location && (
-                                    <div className="flex items-start gap-2">
-                                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
-                                      <p className="text-sm">{app.location}</p>
-                                    </div>
-                                  )}
-                                  <p className="text-sm text-muted-foreground">
-                                    {app.description}
-                                  </p>
-                                </div>
-                              </HoverCardContent>
-                            </HoverCard>
-                          );
-                        })
-                      ) : (
-                        <div className="text-sm text-muted-foreground text-center py-2">
-                          Geen afspraken
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                {dates.map(date => (
+                  <div key={date} className="p-2 space-y-2 border-l relative">
+                    {isTeamUnavailableOnDate(team.id, date) ? (
+                      <div className="flex flex-col items-center justify-center h-full py-3">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex flex-col items-center text-orange-500">
+                              <AlertOctagon className="h-5 w-5 mb-1" />
+                              <span className="text-xs">Niet beschikbaar</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Team is niet beschikbaar op deze datum</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      timeSlots.map((slot, idx) => (
+                        <AvailabilityCell 
+                          key={idx}
+                          date={date}
+                          team={team}
+                          timeSlot={slot}
+                          appointments={appointments}
+                          maxSlots={2}
+                          searchLocation={searchLocation}
+                        />
+                      ))
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           ))}

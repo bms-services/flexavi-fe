@@ -55,6 +55,7 @@ export interface InstallationTeamSectionProps {
   searchLocation?: string;
   unavailableDates?: Record<string, string[]>;
   onTeamNameEdit?: (team: TeamDetails) => void;
+  onDateClick?: (date: string) => void;
 }
 
 export interface UnassignedAppointmentsProps {

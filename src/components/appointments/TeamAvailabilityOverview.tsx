@@ -27,6 +27,7 @@ export const TeamAvailabilityOverview = ({
   onTeamUpdate,
   onUnavailableDateAdd,
   onUnavailableDateRemove,
+  onDateClick,
 }: TeamAvailabilityOverviewProps) => {
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
@@ -119,6 +120,7 @@ export const TeamAvailabilityOverview = ({
         searchLocation={searchLocation}
         unavailableDates={unavailableDates}
         onTeamNameEdit={handleTeamNameEdit}
+        onDateClick={onDateClick}
       />
       
       <InstallationTeamSection
@@ -130,6 +132,7 @@ export const TeamAvailabilityOverview = ({
         searchLocation={searchLocation}
         unavailableDates={unavailableDates}
         onTeamNameEdit={handleTeamNameEdit}
+        onDateClick={onDateClick}
       />
     </div>
   );
