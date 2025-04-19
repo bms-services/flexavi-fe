@@ -94,20 +94,20 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+    <div className="space-y-2">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
         <div className="relative w-full sm:w-auto sm:max-w-xs">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-2 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Zoek leads..."
-            className="pl-8"
+            className="pl-8 h-8"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
+        <Button size="sm">
+          <PlusCircle className="mr-2 h-3.5 w-3.5" />
           Nieuwe Lead
         </Button>
       </div>
@@ -115,20 +115,20 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
       <div className="border rounded-md">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Naam</TableHead>
-              <TableHead className="hidden md:table-cell">Email</TableHead>
-              <TableHead className="hidden lg:table-cell">Telefoon</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1.5">
-                  <TrendingUp className="h-4 w-4" />
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="h-8">Naam</TableHead>
+              <TableHead className="h-8 hidden md:table-cell">Email</TableHead>
+              <TableHead className="h-8 hidden lg:table-cell">Telefoon</TableHead>
+              <TableHead className="h-8">Status</TableHead>
+              <TableHead className="h-8">
+                <div className="flex items-center gap-1">
+                  <TrendingUp className="h-3.5 w-3.5" />
                   <span>Waarde</span>
                 </div>
               </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-1.5">
-                  <FileText className="h-4 w-4" />
+              <TableHead className="h-8">
+                <div className="flex items-center gap-1">
+                  <FileText className="h-3.5 w-3.5" />
                   <span>Status</span>
                 </div>
               </TableHead>
@@ -137,7 +137,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
           <TableBody>
             {filteredLeads.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center h-32">
+                <TableCell colSpan={6} className="text-center h-24">
                   Geen leads gevonden
                 </TableCell>
               </TableRow>
@@ -145,25 +145,25 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
               filteredLeads.map((lead) => {
                 const stats = getLeadStats(lead.id);
                 return (
-                  <TableRow key={lead.id} className="py-2 h-auto">
-                    <TableCell>
+                  <TableRow key={lead.id} className="h-auto">
+                    <TableCell className="py-1.5">
                       <Link
                         to={`/leads/${lead.id}`}
-                        className="font-medium text-primary hover:underline"
+                        className="font-medium text-sm text-primary hover:underline"
                       >
                         {lead.name}
                       </Link>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden md:table-cell py-1.5 text-sm">
                       {lead.email}
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">
+                    <TableCell className="hidden lg:table-cell py-1.5 text-sm">
                       {lead.phone}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-1.5">
                       <LeadStatusBadge status={lead.status} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-1.5">
                       <div className="space-y-0.5">
                         <div className="text-xs text-muted-foreground">Offertes</div>
                         <div className="font-medium text-sm">{formatCurrency(stats.quotesValue)}</div>
@@ -171,7 +171,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
                         <div className="font-medium text-sm">{formatCurrency(stats.invoicesValue)}</div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-1.5">
                       <div className="space-y-0.5">
                         <div className="text-xs text-muted-foreground">Offerte</div>
                         {getQuoteStatusBadge(stats.latestQuoteStatus)}
@@ -180,7 +180,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
                       </div>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })
             )}
           </TableBody>
@@ -189,3 +189,4 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
     </div>
   );
 };
+
