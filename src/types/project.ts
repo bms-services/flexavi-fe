@@ -1,4 +1,3 @@
-
 import { Lead, Quote, Invoice, WorkAgreement } from "./index";
 
 export type ProjectStatus = "active" | "completed" | "on-hold" | "cancelled";
@@ -9,6 +8,7 @@ export type ProjectExpense = {
   description: string;
   amount: number;
   date: string;
+  type?: 'material' | 'transport'; // Added type field
   receiptUrl?: string;
   createdAt: string;
   updatedAt: string;

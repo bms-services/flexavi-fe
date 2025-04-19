@@ -10,6 +10,9 @@ import { WizardLeadStep } from './steps/WizardLeadStep';
 import { WizardQuoteStep } from './steps/WizardQuoteStep';
 import { WizardWorkAgreementStep } from './steps/WizardWorkAgreementStep';
 import { WizardInvoiceStep } from './steps/WizardInvoiceStep';
+import { WizardPersonnelStep } from './steps/WizardPersonnelStep';
+import { WizardMaterialStep } from './steps/WizardMaterialStep';
+import { WizardTransportStep } from './steps/WizardTransportStep';
 import { WizardPhotosStep } from './steps/WizardPhotosStep';
 
 interface ProjectWizardProps {
@@ -52,6 +55,12 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
       case 3:
         return <WizardInvoiceStep wizardData={wizardData} setWizardData={setWizardData} />;
       case 4:
+        return <WizardPersonnelStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 5:
+        return <WizardMaterialStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 6:
+        return <WizardTransportStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 7:
         return <WizardPhotosStep wizardData={wizardData} setWizardData={setWizardData} />;
       default:
         return null;

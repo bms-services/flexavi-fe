@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Users, FileText, CircleDollarSign, Image } from 'lucide-react';
+import { Users, Box, Truck, FileText, CircleDollarSign, Image } from 'lucide-react';
 
 interface Step {
   icon: React.ElementType;
@@ -13,6 +13,9 @@ const steps: Step[] = [
   { icon: FileText, label: 'Offerte' },
   { icon: FileText, label: 'Werkopdracht' },
   { icon: CircleDollarSign, label: 'Factuur' },
+  { icon: Users, label: 'Personeel' },
+  { icon: Box, label: 'Materiaal' },
+  { icon: Truck, label: 'Transport' },
   { icon: Image, label: "Foto's" },
 ];
 

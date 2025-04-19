@@ -1,6 +1,6 @@
-
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { ProjectExpense, ProjectPersonnel } from '@/types/project';
 
 export interface WizardData {
   projectId?: string;
@@ -9,16 +9,20 @@ export interface WizardData {
   workAgreementId?: string;
   invoiceId?: string;
   photos?: { name: string; url: string }[];
+  personnel?: ProjectPersonnel[];
+  expenses?: ProjectExpense[];
 }
 
 export const useProjectWizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [wizardData, setWizardData] = useState<WizardData>({
     projectId: `proj-${uuidv4().slice(0, 8)}`,
-    photos: []
+    photos: [],
+    personnel: [],
+    expenses: []
   });
 
-  const TOTAL_STEPS = 5;
+  const TOTAL_STEPS = 8;
 
   const goToNextStep = () => {
     if (currentStep < TOTAL_STEPS - 1) {
@@ -32,7 +36,6 @@ export const useProjectWizard = () => {
     }
   };
 
-  // For lead step, next button is enabled when a lead is selected
   const canGoNext = () => {
     if (currentStep === 0) return !!wizardData.leadId;
     return true;
