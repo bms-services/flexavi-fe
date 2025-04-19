@@ -17,13 +17,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Search, Edit2, Trash2 } from "lucide-react";
+import { Plus, PlusCircle, Pencil, Trash2, Category } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockProducts } from "@/data/mockProducts";
 import { Badge } from "@/components/ui/badge";
+import { ProductDialog } from "@/components/products/ProductDialog";
+import { CategoryDialog } from "@/components/products/CategoryDialog";
+import { Product } from "@/types/product";
+import { Category } from "@/types/category";
+import { mockCategories } from "@/data/mockCategories";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingProduct, setEditingProduct] = useState<Product | undefined>();
+  const [editingCategory, setEditingCategory] = useState<Category | undefined>();
+  const [productDialogOpen, setProductDialogOpen] = useState(false);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -39,6 +48,14 @@ const Products = () => {
       product.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleSaveProduct = (productData: Partial<Product>) => {
+    console.log("Save product:", productData);
+  };
+
+  const handleSaveCategory = (categoryData: Partial<Category>) => {
+    console.log("Save category:", categoryData);
+  };
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
@@ -49,10 +66,27 @@ const Products = () => {
               Beheer al je producten en diensten op één plek
             </p>
           </div>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Nieuw Product
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditingCategory(undefined);
+                setCategoryDialogOpen(true);
+              }}
+            >
+              <Category className="mr-2 h-4 w-4" />
+              Categorie
+            </Button>
+            <Button
+              onClick={() => {
+                setEditingProduct(undefined);
+                setProductDialogOpen(true);
+              }}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Nieuw Product
+            </Button>
+          </div>
         </div>
 
         <Card>
@@ -65,60 +99,88 @@ const Products = () => {
                 </CardDescription>
               </div>
               <div className="relative w-full sm:w-auto sm:max-w-xs">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Zoek producten..."
-                  className="pl-8"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8"
                 />
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Acties</TableHead>
-                  <TableHead>Titel</TableHead>
-                  <TableHead className="hidden md:table-cell">Omschrijving</TableHead>
-                  <TableHead>Eenheid</TableHead>
-                  <TableHead>Prijs</TableHead>
-                  <TableHead>BTW</TableHead>
-                  <TableHead>Categorie</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredProducts.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon">
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{product.title}</TableCell>
-                    <TableCell className="hidden md:table-cell max-w-xs truncate">
-                      {product.description}
-                    </TableCell>
-                    <TableCell>{product.unit}</TableCell>
-                    <TableCell>{formatCurrency(product.pricePerUnit)}</TableCell>
-                    <TableCell>{product.vat}%</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{product.category}</Badge>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Acties</TableHead>
+                    <TableHead>Titel</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Omschrijving
+                    </TableHead>
+                    <TableHead>Eenheid</TableHead>
+                    <TableHead>Prijs</TableHead>
+                    <TableHead>BTW</TableHead>
+                    <TableHead>Categorie</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredProducts.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEditingProduct(product);
+                              setProductDialogOpen(true);
+                            }}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {product.title}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell max-w-xs truncate">
+                        {product.description}
+                      </TableCell>
+                      <TableCell>{product.unit}</TableCell>
+                      <TableCell>
+                        {formatCurrency(product.pricePerUnit)}
+                      </TableCell>
+                      <TableCell>{product.vat}%</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{product.category}</Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      <ProductDialog
+        open={productDialogOpen}
+        onOpenChange={setProductDialogOpen}
+        product={editingProduct}
+        onSave={handleSaveProduct}
+      />
+
+      <CategoryDialog
+        open={categoryDialogOpen}
+        onOpenChange={setCategoryDialogOpen}
+        category={editingCategory}
+        onSave={handleSaveCategory}
+      />
     </Layout>
   );
 };
