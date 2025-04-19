@@ -1,6 +1,6 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
+import { CircleSlash } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -57,9 +57,6 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
     }).format(amount);
   };
 
-  // Removing the unused getQuoteStatusBadge and getInvoiceStatusBadge functions
-  // as they've been replaced by the dedicated badge components
-
   const filteredLeads = leads.filter(
     (lead) =>
       lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,7 +92,10 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
           {filteredLeads.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center h-24">
-                Geen leads gevonden
+                <div className="flex flex-col items-center justify-center space-y-2 text-muted-foreground">
+                  <CircleSlash className="h-8 w-8 text-gray-400" />
+                  <p>Geen leads gevonden</p>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
@@ -118,7 +118,14 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
                     {lead.phone}
                   </TableCell>
                   <TableCell className="py-1.5">
-                    <LeadStatusBadge status={lead.status} />
+                    {lead.status ? (
+                      <LeadStatusBadge status={lead.status} />
+                    ) : (
+                      <div className="flex items-center space-x-2 text-muted-foreground">
+                        <CircleSlash className="h-4 w-4" />
+                        <span className="text-xs">Geen status</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="py-1.5">
                     <div className="space-y-0.5">
@@ -131,9 +138,23 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
                   <TableCell className="py-1.5">
                     <div className="space-y-0.5">
                       <div className="text-xs text-muted-foreground">Offerte</div>
-                      <QuoteStatusBadge status={stats.latestQuoteStatus} />
+                      {stats.latestQuoteStatus ? (
+                        <QuoteStatusBadge status={stats.latestQuoteStatus} />
+                      ) : (
+                        <div className="flex items-center space-x-2 text-muted-foreground">
+                          <CircleSlash className="h-4 w-4" />
+                          <span className="text-xs">Geen offerte</span>
+                        </div>
+                      )}
                       <div className="text-xs text-muted-foreground mt-1">Factuur</div>
-                      <InvoiceStatusBadge status={stats.latestInvoiceStatus} />
+                      {stats.latestInvoiceStatus ? (
+                        <InvoiceStatusBadge status={stats.latestInvoiceStatus} />
+                      ) : (
+                        <div className="flex items-center space-x-2 text-muted-foreground">
+                          <CircleSlash className="h-4 w-4" />
+                          <span className="text-xs">Geen factuur</span>
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
