@@ -57,31 +57,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
     }).format(amount);
   };
 
-  const getQuoteStatusBadge = (status?: Quote['status']) => {
-    if (!status) return null;
-    const statusConfig = {
-      draft: { label: "Concept", variant: "outline" as const },
-      sent: { label: "Verzonden", variant: "default" as const },
-      accepted: { label: "Geaccepteerd", variant: "success" as const },
-      rejected: { label: "Afgewezen", variant: "destructive" as const },
-      revised: { label: "Herzien", variant: "warning" as const },
-    };
-    const config = statusConfig[status];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  const getInvoiceStatusBadge = (status?: Invoice['status']) => {
-    if (!status) return null;
-    const statusConfig = {
-      draft: { label: "Concept", variant: "outline" as const },
-      sent: { label: "Verzonden", variant: "default" as const },
-      paid: { label: "Betaald", variant: "success" as const },
-      overdue: { label: "Te laat", variant: "destructive" as const },
-      canceled: { label: "Geannuleerd", variant: "secondary" as const },
-    };
-    const config = statusConfig[status];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
+  // Removing the unused getQuoteStatusBadge and getInvoiceStatusBadge functions
+  // as they've been replaced by the dedicated badge components
 
   const filteredLeads = leads.filter(
     (lead) =>
