@@ -42,6 +42,7 @@ export const AvailabilityCell = ({
   const available = maxSlots - count;
   const isFullyBooked = available === 0;
   const isLimitedAvailability = available <= 1;
+  const isSufficientCapacity = count >= maxSlots * 0.75; // Consider 75% full as sufficient capacity
 
   const dateAppointments = appointments.filter(app => 
     app.date === date && 
@@ -69,6 +70,8 @@ export const AvailabilityCell = ({
             className={cn(
               "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
               hasSearchedLocation && "bg-green-100 hover:bg-green-200 border-green-500",
+              isSufficientCapacity && !isFullyBooked && "border-blue-500",
+              !isSufficientCapacity && !isFullyBooked && "border-red-500",
               !isFullyBooked && !hasSearchedLocation && "hover:bg-primary hover:text-primary-foreground"
             )}
           >

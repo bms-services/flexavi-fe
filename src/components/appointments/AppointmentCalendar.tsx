@@ -19,7 +19,7 @@ import {
   parseISO,
 } from "date-fns";
 import { nl } from "date-fns/locale";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Appointment } from "@/types";
 import { cn } from "@/lib/utils";
@@ -85,6 +85,13 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
     return counts;
   };
 
+  // Check if a day is fully booked (for demo purposes)
+  const isDayFullyBooked = (date: string) => {
+    const appointments = daysWithAppointments[date] || [];
+    // Consider a day fully booked if it has more than 7 appointments (for demo purposes)
+    return appointments.length > 7;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -143,11 +150,12 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             const isSelected = selectedDate === dateStr;
             const isToday = isSameDay(day, today);
             const teamCounts = getTeamTypeCount(dateStr);
+            const isFullyBooked = isDayFullyBooked(dateStr);
 
             return (
               <div
                 key={day.toString()}
-                className={cn("h-16 p-1 border rounded cursor-pointer hover:bg-muted/50 transition-colors", 
+                className={cn("h-16 p-1 border rounded cursor-pointer hover:bg-muted/50 transition-colors relative", 
                   isSelected && "border-primary bg-primary/10",
                   isToday && "bg-accent/50"
                 )}
@@ -167,6 +175,14 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                       </Badge>
                     )}
                   </div>
+                  
+                  {isFullyBooked && (
+                    <div className="absolute top-1 right-1">
+                      <Badge variant="destructive" className="px-1 h-5">
+                        <AlertCircle className="h-3 w-3" />
+                      </Badge>
+                    </div>
+                  )}
                   
                   {teamCounts && (
                     <div className="mt-auto grid grid-cols-2 gap-1">
@@ -206,6 +222,12 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
           <div className="flex items-center">
             <div className="w-3 h-1.5 bg-amber-500 rounded-full mr-1"></div>
             <span>Onderhoud</span>
+          </div>
+          <div className="flex items-center ml-auto">
+            <Badge variant="destructive" className="px-1 h-4 mr-1">
+              <AlertCircle className="h-2.5 w-2.5" />
+            </Badge>
+            <span>Vol gepland</span>
           </div>
         </div>
       </CardContent>

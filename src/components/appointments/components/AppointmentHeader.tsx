@@ -1,7 +1,9 @@
 
 import React from "react";
+import { format, parseISO } from "date-fns";
+import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { Route, Check, ArrowLeft } from "lucide-react";
+import { ChevronLeft, CalculatorIcon, Route, Brain } from "lucide-react";
 
 interface AppointmentHeaderProps {
   date: string;
@@ -18,54 +20,39 @@ export const AppointmentHeader: React.FC<AppointmentHeaderProps> = ({
   onAutoAssign,
   isOptimizingRoute
 }) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('nl-NL', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
-
+  const formattedDate = format(parseISO(date), "EEEE d MMMM yyyy", { locale: nl });
+  
   return (
-    <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <Button 
-          variant="outline" 
-          size="sm" 
+          variant="ghost" 
+          className="mb-2 -ml-2 h-8 gap-1"
           onClick={onBackToOverview}
-          className="mb-2"
         >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Terug naar overzicht
+          <ChevronLeft className="h-4 w-4" />
+          <span>Terug naar overzicht</span>
         </Button>
-        <h2 className="text-2xl font-bold">
-          Afspraken voor {formatDate(date)}
-        </h2>
-        <p className="text-muted-foreground">
-          Beheer en wijs afspraken toe aan teams
-        </p>
+        <h1 className="text-2xl font-bold">Dagplanning: {formattedDate}</h1>
       </div>
       
-      <div className="flex gap-2">
-        <Button variant="outline" onClick={onAutoAssign}>
-          <Check className="h-4 w-4 mr-1.5" />
-          AI Toewijzing
-        </Button>
+      <div className="flex flex-wrap gap-2">
         <Button 
           variant="outline" 
-          className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 hover:text-blue-800"
+          className="h-9"
+          onClick={onAutoAssign}
+        >
+          <Brain className="mr-1.5 h-4 w-4" />
+          AI Auto-toewijzen
+        </Button>
+        <Button 
+          variant="default" 
+          className="h-9"
           onClick={onOptimizeRoutes}
           disabled={isOptimizingRoute}
         >
-          {isOptimizingRoute ? (
-            <>Optimaliseren...</>
-          ) : (
-            <>
-              <Route className="h-4 w-4 mr-1.5" />
-              Routes Optimaliseren
-            </>
-          )}
+          <Route className="mr-1.5 h-4 w-4" />
+          {isOptimizingRoute ? "Routes optimaliseren..." : "Routes optimaliseren"}
         </Button>
       </div>
     </div>
