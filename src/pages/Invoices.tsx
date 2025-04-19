@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, PlusCircle, Search, Edit2, Trash2 } from "lucide-react";
+import { Eye, PlusCircle, Search, Edit2, Trash2, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockInvoices } from "@/data/mockData";
 import { mockLeads } from "@/data/mockLeads";
@@ -29,7 +29,6 @@ import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 import { useNavigate } from "react-router-dom";
 
 const Invoices = () => {
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -52,6 +51,10 @@ const Invoices = () => {
       invoice.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleViewInvoice = (invoice: Invoice) => {
+    navigate(`/portal/invoice/${invoice.id}`);
+  };
+
   const handleEditInvoice = (invoice: Invoice) => {
     navigate(`/invoices/edit/${invoice.id}`);
   };
@@ -63,6 +66,10 @@ const Invoices = () => {
 
   const handleCreateNewInvoice = () => {
     navigate('/invoices/create');
+  };
+
+  const handleViewCustomerDashboard = (leadId: string) => {
+    navigate(`/portal/dashboard/${leadId}`);
   };
 
   return (
@@ -113,6 +120,7 @@ const Invoices = () => {
                   <TableHead>Vervaldatum</TableHead>
                   <TableHead>Bedrag</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Klantportaal</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -125,7 +133,7 @@ const Invoices = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => setSelectedInvoice(invoice)}
+                            onClick={() => handleViewInvoice(invoice)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -166,6 +174,16 @@ const Invoices = () => {
                             {statusConfig.label}
                           </Badge>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleViewCustomerDashboard(invoice.leadId)}
+                          title="Bekijk klantportaal"
+                        >
+                          <Users className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );

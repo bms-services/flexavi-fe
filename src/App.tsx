@@ -16,6 +16,8 @@ import InvoiceEdit from "./pages/InvoiceEdit";
 import Settings from "./pages/Settings";
 import Products from "./pages/Products";
 import CustomerPortal from "./pages/CustomerPortal";
+import CustomerPortalInvoice from "./pages/CustomerPortalInvoice";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/portal/quote/:id" element={<CustomerPortal />} />
+          <Route path="/portal/invoice/:id" element={<CustomerPortalInvoice />} />
+          <Route path="/portal/dashboard/:leadId" element={<CustomerDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
