@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Dialog,
@@ -13,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/leadStats";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import { Separator } from "@/components/ui/separator";
-import { Table, TableHeader, TableRow, TableBody, TableCell } from "@/components/ui/table";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 interface QuoteDetailsDialogProps {
   quote: Quote;
