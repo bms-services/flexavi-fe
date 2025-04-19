@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -55,6 +56,21 @@ const Products = () => {
     console.log("Save category:", categoryData);
   };
 
+  // Function to determine product status badge
+  const getProductStatusBadge = (product: Product) => {
+    // This is a placeholder - in a real app you'd have actual status logic
+    // For now, we'll just randomly assign statuses based on product ID
+    const statusOptions = [
+      { label: "Actief", variant: "success" as const },
+      { label: "Inactief", variant: "secondary" as const },
+      { label: "Uitverkocht", variant: "warning" as const },
+    ];
+    
+    // Simple hash function to consistently get same status for same product
+    const statusIndex = parseInt(product.id.slice(-1), 16) % statusOptions.length;
+    return statusOptions[statusIndex];
+  };
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
@@ -65,13 +81,14 @@ const Products = () => {
               Beheer al je producten en diensten op één plek
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <Button
               variant="outline"
               onClick={() => {
                 setEditingCategory(undefined);
                 setCategoryDialogOpen(true);
               }}
+              className="w-full sm:w-auto"
             >
               <FolderIcon className="mr-2 h-4 w-4" />
               Categorie
@@ -81,6 +98,7 @@ const Products = () => {
                 setEditingProduct(undefined);
                 setProductDialogOpen(true);
               }}
+              className="w-full sm:w-auto"
             >
               <PlusCircle className="mr-2 h-4 w-4" />
               Nieuw Product
@@ -113,57 +131,60 @@ const Products = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Acties</TableHead>
+                    <TableHead className="w-[100px]">Acties</TableHead>
                     <TableHead>Titel</TableHead>
                     <TableHead className="hidden md:table-cell">
                       Omschrijving
                     </TableHead>
-                    <TableHead>Eenheid</TableHead>
+                    <TableHead className="hidden sm:table-cell">Eenheid</TableHead>
                     <TableHead>Prijs</TableHead>
-                    <TableHead>BTW</TableHead>
+                    <TableHead className="hidden sm:table-cell">BTW</TableHead>
                     <TableHead>Categorie</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredProducts.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              setEditingProduct(product);
-                              setProductDialogOpen(true);
-                            }}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {product.title}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell max-w-xs truncate">
-                        {product.description}
-                      </TableCell>
-                      <TableCell>{product.unit}</TableCell>
-                      <TableCell>
-                        {formatCurrency(product.pricePerUnit)}
-                      </TableCell>
-                      <TableCell>{product.vat}%</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{product.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{product.category}</Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {filteredProducts.map((product) => {
+                    const statusBadge = getProductStatusBadge(product);
+                    return (
+                      <TableRow key={product.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                setEditingProduct(product);
+                                setProductDialogOpen(true);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {product.title}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell max-w-xs truncate">
+                          {product.description}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">{product.unit}</TableCell>
+                        <TableCell>
+                          {formatCurrency(product.pricePerUnit)}
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">{product.vat}%</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{product.category}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
