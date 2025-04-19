@@ -162,7 +162,8 @@ const Invoices = () => {
                         )}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>

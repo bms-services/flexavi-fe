@@ -163,7 +163,8 @@ const Quotes = () => {
                         )}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>
