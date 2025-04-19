@@ -181,72 +181,86 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Informatie</CardTitle>
-            <CardDescription>Belangrijke contactgegevens van de lead</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <User className="h-5 w-5 text-gray-500" />
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-900">Contact Informatie</h3>
+            <p className="text-sm text-muted-foreground">Belangrijke contactgegevens van de lead</p>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <User className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Naam</p>
+                <p className="text-sm font-medium text-muted-foreground">Naam</p>
                 <p className="font-medium">{lead.name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <Mail className="h-5 w-5 text-gray-500" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Email</p>
+                <p className="text-sm font-medium text-muted-foreground">Email</p>
                 <p className="font-medium">{lead.email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <Phone className="h-5 w-5 text-gray-500" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <Phone className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Telefoon</p>
+                <p className="text-sm font-medium text-muted-foreground">Telefoon</p>
                 <p className="font-medium">{lead.phone}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <MapPin className="h-5 w-5 text-gray-500" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Adres</p>
+                <p className="text-sm font-medium text-muted-foreground">Adres</p>
                 <p className="font-medium">{lead.address}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Lead Details</CardTitle>
-            <CardDescription>Algemene informatie over de lead</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <FileText className="h-5 w-5 text-gray-500" />
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="border-b border-gray-100 bg-gray-50/50 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-900">Lead Details</h3>
+            <p className="text-sm text-muted-foreground">Algemene informatie over de lead</p>
+          </div>
+          <div className="p-6 space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <FileText className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Bron</p>
+                <p className="text-sm font-medium text-muted-foreground">Bron</p>
                 <p className="font-medium">{lead.source}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <Calendar className="h-5 w-5 text-gray-500" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Aangemaakt op</p>
+                <p className="text-sm font-medium text-muted-foreground">Aangemaakt op</p>
                 <p className="font-medium">{formatDate(lead.createdAt)}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
-              <Calendar className="h-5 w-5 text-gray-500" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
               <div>
-                <p className="text-sm text-gray-500">Laatste update</p>
+                <p className="text-sm font-medium text-muted-foreground">Laatste update</p>
                 <p className="font-medium">{formatDate(lead.updatedAt)}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       <Card>
