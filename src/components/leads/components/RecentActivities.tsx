@@ -5,8 +5,8 @@ import { Activity } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { formatCurrency } from "@/utils/leadStats";
-import { QuoteStatusBadge } from "../badges/QuoteStatusBadge";
-import { InvoiceStatusBadge } from "../badges/InvoiceStatusBadge";
+import { Badge } from "@/components/ui/badge";
+import { useQuoteStatusBadge, useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 
 interface RecentActivitiesProps {
   quotes: Quote[];
@@ -27,9 +27,9 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({ quotes, invo
       <div className="space-y-3">
         {recentActivities.map((activity) => {
           const isQuote = 'description' in activity;
-          const status = isQuote 
-            ? <QuoteStatusBadge status={activity.status as QuoteStatus} />
-            : <InvoiceStatusBadge status={activity.status as InvoiceStatus} />;
+          const statusConfig = isQuote 
+            ? useQuoteStatusBadge((activity as Quote).status)
+            : useInvoiceStatusBadge((activity as Invoice).status);
           
           return (
             <div key={activity.id} className="flex justify-between items-center bg-white p-3 rounded-md border border-gray-100">
@@ -43,7 +43,7 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({ quotes, invo
               </div>
               <div className="text-right">
                 <p className="font-medium">{formatCurrency(activity.amount)}</p>
-                {status}
+                {statusConfig && <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>}
               </div>
             </div>
           );
