@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MainHeader } from "@/components/layout/MainHeader";
 import { MainFooter } from "@/components/layout/MainFooter";
@@ -141,15 +142,6 @@ export default function Pricing() {
       </section>
 
       <MainFooter />
-    </div>
-  );
-}
-
-function FAQ({ question, answer }: { question: string; answer: string }) {
-  return (
-    <div>
-      <h3 className="font-semibold text-lg mb-2">{question}</h3>
-      <p className="text-muted-foreground">{answer}</p>
     </div>
   );
 }
