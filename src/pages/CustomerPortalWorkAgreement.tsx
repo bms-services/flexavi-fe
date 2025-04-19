@@ -24,7 +24,16 @@ const CustomerPortalWorkAgreement = () => {
     if (id) {
       const foundAgreement = mockWorkAgreements.find(wa => wa.id === id);
       if (foundAgreement) {
-        setWorkAgreement(foundAgreement);
+        // Set default attachments if there are none in mock data
+        const agreementWithAttachments = {
+          ...foundAgreement,
+          defaultAttachments: foundAgreement.defaultAttachments || [
+            { name: "Algemene Voorwaarden.pdf", url: "/attachments/algemene-voorwaarden.pdf" },
+            { name: "Projectfoto.jpg", url: "/attachments/projectfoto.jpg" }
+          ]
+        };
+        setWorkAgreement(agreementWithAttachments);
+        
         const foundCustomer = mockLeads.find(l => l.id === foundAgreement.leadId);
         if (foundCustomer) {
           setCustomer(foundCustomer);

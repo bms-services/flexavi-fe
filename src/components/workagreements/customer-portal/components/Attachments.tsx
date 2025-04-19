@@ -28,7 +28,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
     <div className="space-y-6">
       {pdfAttachments.length > 0 && (
         <Card className="p-4">
-          <h3 className="text-sm font-medium text-gray-500 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
             <File className="h-4 w-4" />
             Documenten
           </h3>
@@ -62,7 +62,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
 
       {imageAttachments.length > 0 && (
         <Card className="p-4">
-          <h3 className="text-sm font-medium text-gray-500 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
             <FileImage className="h-4 w-4" />
             Foto's
           </h3>
