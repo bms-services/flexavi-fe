@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Users, FileText, Briefcase, CircleDollarSign, Image } from 'lucide-react';
+import { Users, FileText, CircleDollarSign, Image } from 'lucide-react';
 
 interface Step {
   icon: React.ElementType;

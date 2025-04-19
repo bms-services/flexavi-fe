@@ -6,6 +6,11 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ProjectWizardSteps } from './ProjectWizardSteps';
 import { ProjectWizardNav } from './ProjectWizardNav';
 import { useProjectWizard } from './useProjectWizard';
+import { WizardLeadStep } from './steps/WizardLeadStep';
+import { WizardQuoteStep } from './steps/WizardQuoteStep';
+import { WizardWorkAgreementStep } from './steps/WizardWorkAgreementStep';
+import { WizardInvoiceStep } from './steps/WizardInvoiceStep';
+import { WizardPhotosStep } from './steps/WizardPhotosStep';
 
 interface ProjectWizardProps {
   isOpen: boolean;
@@ -35,13 +40,35 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
     navigate(`/projects/${wizardData.projectId}`);
   };
 
+  // Render the current step content
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 0:
+        return <WizardLeadStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 1:
+        return <WizardQuoteStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 2:
+        return <WizardWorkAgreementStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 3:
+        return <WizardInvoiceStep wizardData={wizardData} setWizardData={setWizardData} />;
+      case 4:
+        return <WizardPhotosStep wizardData={wizardData} setWizardData={setWizardData} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0">
         <div className="flex min-h-[600px]">
           <ProjectWizardSteps currentStep={currentStep} />
           
-          <div className="flex-1 p-6">
+          <div className="flex-1 p-6 flex flex-col">
+            <div className="flex-1 mb-6">
+              {renderStepContent()}
+            </div>
+            
             <ProjectWizardNav 
               currentStep={currentStep} 
               onNext={goToNextStep}

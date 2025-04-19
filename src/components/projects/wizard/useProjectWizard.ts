@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Project } from '@/types/project';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface WizardData {
   projectId?: string;
@@ -13,7 +13,10 @@ export interface WizardData {
 
 export const useProjectWizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [wizardData, setWizardData] = useState<WizardData>({});
+  const [wizardData, setWizardData] = useState<WizardData>({
+    projectId: `proj-${uuidv4().slice(0, 8)}`,
+    photos: []
+  });
 
   const TOTAL_STEPS = 5;
 
@@ -29,17 +32,19 @@ export const useProjectWizard = () => {
     }
   };
 
-  const canGoNext = currentStep < TOTAL_STEPS - 1;
-  const canGoPrevious = currentStep > 0;
-  const isLastStep = currentStep === TOTAL_STEPS - 1;
+  // For lead step, next button is enabled when a lead is selected
+  const canGoNext = () => {
+    if (currentStep === 0) return !!wizardData.leadId;
+    return true;
+  };
 
   return {
     currentStep,
     goToNextStep,
     goToPreviousStep,
-    canGoNext,
-    canGoPrevious,
-    isLastStep,
+    canGoNext: canGoNext(),
+    canGoPrevious: currentStep > 0,
+    isLastStep: currentStep === TOTAL_STEPS - 1,
     wizardData,
     setWizardData,
   };
