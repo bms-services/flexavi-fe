@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Appointment } from "@/types";
-import { Clock, MapPin, User, GripVertical, Info } from "lucide-react";
+import { Clock, MapPin, User, GripVertical, Info, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { mockLeads } from "@/data/mockData";
@@ -62,6 +63,13 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
                     {appointmentTypeLabels[appointment.status]}
                   </Badge>
                 </div>
+
+                {appointment.description && (
+                  <div className="flex items-start gap-1 mb-1.5 text-xs text-muted-foreground">
+                    <FileText className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                    <p className="line-clamp-2">{appointment.description}</p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
