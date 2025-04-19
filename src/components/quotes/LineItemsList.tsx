@@ -19,9 +19,13 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   onLineItemChange,
   onAddLineItem,
   onRemoveLineItem,
-  productSuggestions,
+  productSuggestions = {},
   onProductSearch,
 }) => {
+  // Ensure lineItems and productSuggestions are always valid
+  const items = Array.isArray(lineItems) ? lineItems : [];
+  const suggestions = productSuggestions || {};
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-12 gap-2 font-medium text-sm border-b pb-2">
@@ -34,15 +38,15 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
         <div className="col-span-1"></div>
       </div>
 
-      {Array.isArray(lineItems) && lineItems.map((item, index) => (
+      {items.map((item, index) => (
         <LineItemRow
           key={item.id}
           lineItem={item}
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}
-          productSuggestions={productSuggestions[item.id] || []}
+          productSuggestions={suggestions[item.id] || []}
           onProductSearch={(title) => onProductSearch(title, item.id)}
-          showRemoveButton={lineItems.length > 1}
+          showRemoveButton={items.length > 1}
         />
       ))}
 

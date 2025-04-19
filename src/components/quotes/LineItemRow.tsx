@@ -106,6 +106,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     });
   };
 
+  // Ensure productSuggestions is always an array
+  const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
+
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
@@ -113,7 +116,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           description={lineItem.description}
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
-          productSuggestions={productSuggestions}
+          productSuggestions={suggestions}
           onProductSearch={onProductSearch}
         />
       </div>

@@ -41,7 +41,9 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
-  const hasSuggestions = Array.isArray(productSuggestions) && productSuggestions.length > 0;
+  // Ensure productSuggestions is always an array to prevent "undefined is not iterable" error
+  const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
+  const hasSuggestions = suggestions.length > 0;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -96,10 +98,13 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
             />
             <CommandEmpty>Geen producten gevonden.</CommandEmpty>
             <CommandGroup>
-              {productSuggestions.map((product, index) => (
+              {suggestions.map((product, index) => (
                 <CommandItem 
                   key={index}
-                  onSelect={() => onProductSelect(product)}
+                  onSelect={() => {
+                    onProductSelect(product);
+                    setSuggestionsOpen(false);
+                  }}
                 >
                   <div className="flex flex-col">
                     <span className="font-medium">{product.title}</span>
