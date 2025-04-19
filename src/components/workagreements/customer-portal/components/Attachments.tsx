@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FileImage, FileText, Image } from "lucide-react";
+import { FileImage, FilePdf } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface AttachmentsProps {
@@ -18,29 +18,29 @@ export const Attachments: React.FC<AttachmentsProps> = ({
     /\.(jpg|jpeg|png|gif|webp)$/i.test((file as any).name)
   );
   
-  const documentAttachments = allAttachments.filter(file => 
-    !/\.(jpg|jpeg|png|gif|webp)$/i.test((file as any).name)
+  const pdfAttachments = allAttachments.filter(file => 
+    /\.pdf$/i.test((file as any).name)
   );
 
   if (!allAttachments.length) return null;
 
   return (
     <div className="space-y-6">
-      {documentAttachments.length > 0 && (
+      {pdfAttachments.length > 0 && (
         <Card className="p-4">
           <h3 className="text-sm font-medium text-gray-500 mb-4 flex items-center gap-2">
-            <FileText className="h-4 w-4" />
+            <FilePdf className="h-4 w-4" />
             Documenten
           </h3>
           <div className="space-y-2">
-            {documentAttachments.map((attachment, index) => {
+            {pdfAttachments.map((attachment, index) => {
               const isDefault = 'url' in attachment;
               const name = isDefault ? (attachment as any).name : (attachment as File).name;
               const url = isDefault ? (attachment as any).url : '#';
               
               return (
-                <div key={`doc-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
+                <div key={`pdf-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                  <FilePdf className="h-4 w-4 text-muted-foreground" />
                   {isDefault ? (
                     <a 
                       href={url} 
@@ -82,7 +82,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Image className="h-8 w-8 text-gray-400" />
+                      <FileImage className="h-8 w-8 text-gray-400" />
                     </div>
                   )}
                 </div>
