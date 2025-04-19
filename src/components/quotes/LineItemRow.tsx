@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { QuoteLineItem } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { ProductSearch } from "./line-items/ProductSearch";
+import { QuantityInput } from "./line-items/QuantityInput";
+import { UnitSelect } from "./line-items/UnitSelect";
 
 interface LineItemRowProps {
   lineItem: QuoteLineItem;
@@ -32,13 +29,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   onChange,
   onRemove,
   showRemoveButton,
-  productSuggestions = [], // Provide default empty array
+  productSuggestions = [],
   onProductSearch,
 }) => {
-  const [title, setTitle] = useState(lineItem.description || "");
-  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
   // Format currency
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -52,30 +45,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   const calculateTotal = (quantity: number, pricePerUnit: number) => {
     return quantity * pricePerUnit;
   };
-  
-  // Handle description (product title) change
-  const handleDescriptionChange = (value: string) => {
-    setTitle(value);
-    
-    // Update line item
-    onChange({
-      ...lineItem,
-      description: value,
-    });
-    
-    // Trigger search after a short delay
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-    
-    searchTimeoutRef.current = setTimeout(() => {
-      onProductSearch(value);
-      if (value.length > 2) {
-        setSuggestionsOpen(true);
-      }
-    }, 300);
-  };
-  
+
   // Handle quantity change
   const handleQuantityChange = (value: string) => {
     const quantity = parseFloat(value) || 0;
@@ -115,12 +85,17 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       total,
     });
   };
-  
-  // Apply product from suggestion
+
+  // Handle description change
+  const handleDescriptionChange = (value: string) => {
+    onChange({
+      ...lineItem,
+      description: value,
+    });
+  };
+
+  // Handle product selection
   const handleSelectProduct = (product: any) => {
-    setTitle(product.title);
-    setSuggestionsOpen(false);
-    
     onChange({
       ...lineItem,
       description: product.title,
@@ -131,85 +106,30 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     });
   };
 
-  // Safely check if suggestions exist and have length
-  const hasSuggestions = Array.isArray(productSuggestions) && productSuggestions.length > 0;
-  
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
-        <Popover 
-          open={suggestionsOpen && hasSuggestions} 
-          onOpenChange={(open) => {
-            // Only allow opening if we have suggestions
-            if (!open || hasSuggestions) {
-              setSuggestionsOpen(open);
-            }
-          }}
-        >
-          <PopoverTrigger asChild>
-            <div className="relative">
-              <Input 
-                value={lineItem.description}
-                onChange={(e) => handleDescriptionChange(e.target.value)}
-                placeholder="Product of dienst"
-                className="w-full"
-              />
-            </div>
-          </PopoverTrigger>
-          {hasSuggestions && (
-            <PopoverContent className="w-[400px] p-0" align="start">
-              <Command>
-                <CommandInput placeholder="Zoek product..." value={title} onValueChange={handleDescriptionChange} />
-                <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-                <CommandGroup>
-                  {productSuggestions.map((product, index) => (
-                    <CommandItem 
-                      key={index}
-                      onSelect={() => handleSelectProduct(product)}
-                    >
-                      <div className="flex flex-col">
-                        <span className="font-medium">{product.title}</span>
-                        <span className="text-xs text-muted-foreground">{product.description}</span>
-                        <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          )}
-        </Popover>
+        <ProductSearch
+          description={lineItem.description}
+          onDescriptionChange={handleDescriptionChange}
+          onProductSelect={handleSelectProduct}
+          productSuggestions={productSuggestions}
+          onProductSearch={onProductSearch}
+        />
       </div>
       
       <div className="col-span-1">
-        <Input 
-          type="number" 
-          min="0" 
-          step="0.01"
-          value={lineItem.quantity.toString()}
-          onChange={(e) => handleQuantityChange(e.target.value)}
-          className="text-center"
+        <QuantityInput
+          value={lineItem.quantity}
+          onChange={handleQuantityChange}
         />
       </div>
       
       <div className="col-span-2">
-        <Select 
-          value={lineItem.unit} 
-          onValueChange={handleUnitChange}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Eenheid" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="stuk">Stuk</SelectItem>
-            <SelectItem value="m²">m²</SelectItem>
-            <SelectItem value="m³">m³</SelectItem>
-            <SelectItem value="meter">meter</SelectItem>
-            <SelectItem value="uur">Uur</SelectItem>
-            <SelectItem value="dag">Dag</SelectItem>
-            <SelectItem value="set">Set</SelectItem>
-          </SelectContent>
-        </Select>
+        <UnitSelect
+          value={lineItem.unit}
+          onChange={handleUnitChange}
+        />
       </div>
       
       <div className="col-span-1">
