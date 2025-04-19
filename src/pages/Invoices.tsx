@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import {
   Card,
@@ -18,13 +18,18 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Search } from "lucide-react";
+import { Eye, PlusCircle, Search, Edit2, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockInvoices, mockLeads } from "@/data/mockData";
 import { format, isPast, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
+import { Invoice } from "@/types";
+import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 
 const Invoices = () => {
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
     return lead ? lead.name : "Onbekend";
@@ -37,22 +42,21 @@ const Invoices = () => {
     }).format(amount);
   };
 
-  const getStatusBadge = (status: string, dueDate: string) => {
-    // If invoice is sent and past due date, mark as overdue
-    if (status === "sent" && isPast(parseISO(dueDate))) {
-      status = "overdue";
-    }
+  const filteredInvoices = mockInvoices.filter(
+    (invoice) =>
+      invoice.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getLeadName(invoice.leadId).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      invoice.id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    const statusConfig: Record<string, { label: string; variant: "default" | "outline" | "secondary" | "destructive" | "success" | "warning" }> = {
-      draft: { label: "Concept", variant: "outline" },
-      sent: { label: "Verzonden", variant: "default" },
-      paid: { label: "Betaald", variant: "success" },
-      overdue: { label: "Te laat", variant: "destructive" },
-      canceled: { label: "Geannuleerd", variant: "secondary" },
-    };
+  const handleEditInvoice = (invoice: Invoice) => {
+    // Will be implemented in the next step
+    console.log("Edit invoice:", invoice);
+  };
 
-    const config = statusConfig[status] || statusConfig.draft;
-    return <Badge variant={config.variant}>{config.label}</Badge>;
+  const handleDeleteInvoice = (invoice: Invoice) => {
+    // Will be implemented in the next step
+    console.log("Delete invoice:", invoice);
   };
 
   return (
@@ -62,7 +66,7 @@ const Invoices = () => {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Facturen</h1>
             <p className="text-muted-foreground">
-              Beheer al je facturen op één plek.
+              Beheer al je facturen op één plek
             </p>
           </div>
           <Button>
@@ -86,6 +90,8 @@ const Invoices = () => {
                   type="search"
                   placeholder="Zoek facturen..."
                   className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
@@ -94,37 +100,69 @@ const Invoices = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Acties</TableHead>
                   <TableHead>Nummer</TableHead>
                   <TableHead>Klant</TableHead>
-                  <TableHead>Uitgiftedatum</TableHead>
+                  <TableHead>Datum</TableHead>
                   <TableHead>Vervaldatum</TableHead>
                   <TableHead>Bedrag</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockInvoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
-                    <TableCell className="font-medium">
-                      {invoice.id.replace("inv-", "FACT-")}
-                    </TableCell>
-                    <TableCell>{getLeadName(invoice.leadId)}</TableCell>
-                    <TableCell>
-                      {format(new Date(invoice.createdAt), "dd-MM-yyyy", {
-                        locale: nl,
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(invoice.dueDate), "dd-MM-yyyy", {
-                        locale: nl,
-                      })}
-                    </TableCell>
-                    <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                    <TableCell>
-                      {getStatusBadge(invoice.status, invoice.dueDate)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {filteredInvoices.map((invoice) => {
+                  const statusConfig = useInvoiceStatusBadge(invoice.status);
+                  return (
+                    <TableRow key={invoice.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setSelectedInvoice(invoice)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEditInvoice(invoice)}
+                          >
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDeleteInvoice(invoice)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {invoice.id.replace("inv-", "FACT-")}
+                      </TableCell>
+                      <TableCell>{getLeadName(invoice.leadId)}</TableCell>
+                      <TableCell>
+                        {format(new Date(invoice.createdAt), "dd-MM-yyyy", {
+                          locale: nl,
+                        })}
+                      </TableCell>
+                      <TableCell>
+                        {format(new Date(invoice.dueDate), "dd-MM-yyyy", {
+                          locale: nl,
+                        })}
+                      </TableCell>
+                      <TableCell>{formatCurrency(invoice.amount)}</TableCell>
+                      <TableCell>
+                        {statusConfig && (
+                          <Badge variant={statusConfig.variant}>
+                            {statusConfig.label}
+                          </Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </CardContent>
