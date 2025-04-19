@@ -2,7 +2,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -13,23 +12,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Naam moet minimaal 2 karakters bevatten"),
-  email: z.string().email("Ongeldig email adres"),
-  phone: z.string().min(10, "Ongeldig telefoonnummer"),
-  postcode: z.string().regex(/^[1-9][0-9]{3} ?[A-Z]{2}$/i, "Ongeldige postcode"),
-  huisnummer: z.string().min(1, "Huisnummer is verplicht"),
-});
+import { createLeadSchema, type CreateLeadFormData } from "@/utils/validations";
 
 interface CreateLeadFormProps {
-  onSubmit: (values: z.infer<typeof formSchema>) => void;
+  onSubmit: (values: CreateLeadFormData) => void;
   onCancel: () => void;
 }
 
-export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCancel }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
+  onSubmit,
+  onCancel,
+}) => {
+  const form = useForm<CreateLeadFormData>({
+    resolver: zodResolver(createLeadSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -37,11 +32,17 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
       postcode: "",
       huisnummer: "",
     },
+    mode: "onBlur", // Validate on blur for better UX
   });
+
+  const handleSubmit = (data: CreateLeadFormData) => {
+    // The data is already transformed by Zod
+    onSubmit(data);
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
         <FormField
           control={form.control}
           name="name"
@@ -49,7 +50,11 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
             <FormItem>
               <FormLabel>Naam</FormLabel>
               <FormControl>
-                <Input placeholder="Volledige naam" {...field} />
+                <Input
+                  placeholder="Volledige naam"
+                  {...field}
+                  autoComplete="name"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,7 +68,12 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Email adres" {...field} />
+                <Input
+                  type="email"
+                  placeholder="Email adres"
+                  {...field}
+                  autoComplete="email"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,7 +87,12 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
             <FormItem>
               <FormLabel>Telefoonnummer</FormLabel>
               <FormControl>
-                <Input placeholder="Telefoonnummer" {...field} />
+                <Input
+                  placeholder="+31612345678"
+                  {...field}
+                  autoComplete="tel"
+                  type="tel"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,7 +107,11 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
               <FormItem className="flex-grow">
                 <FormLabel>Postcode</FormLabel>
                 <FormControl>
-                  <Input placeholder="Bijv. 1234 AB" {...field} />
+                  <Input
+                    placeholder="1234 AB"
+                    {...field}
+                    autoComplete="postal-code"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +125,11 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({ onSubmit, onCanc
               <FormItem className="w-1/3">
                 <FormLabel>Huisnummer</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nr" {...field} />
+                  <Input
+                    placeholder="42"
+                    {...field}
+                    autoComplete="address-line1"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
