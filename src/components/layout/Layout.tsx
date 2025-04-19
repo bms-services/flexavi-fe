@@ -22,7 +22,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Button
               variant="outline"
               size="icon"
-              className="fixed top-20 left-4 z-50"
+              className="fixed top-4 left-4 z-50"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -32,14 +32,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </SheetContent>
         </Sheet>
       ) : (
-        <div className="w-64 fixed inset-y-0 z-40 pt-16">
+        <div className="w-64 flex-shrink-0">
           <Sidebar />
         </div>
       )}
-      <main className={`flex-1 ${isMobile ? 'w-full' : 'ml-64'} pt-16`}>
-        {children}
+      <div className="flex-1 min-h-screen flex flex-col">
         <QuickActions />
-      </main>
+        <main className="flex-1 p-4">
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
