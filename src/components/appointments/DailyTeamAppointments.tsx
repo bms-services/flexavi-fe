@@ -30,14 +30,16 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
     e.dataTransfer.effectAllowed = "move";
   };
   
-  const handleDrop = (e: React.DragEvent, teamId: string) => {
+  const handleDrop = (e: React.DragEvent, teamId: string | null = null) => {
     e.preventDefault();
     const appointmentId = e.dataTransfer.getData("appointmentId");
     if (appointmentId) {
-      onAppointmentAssign(appointmentId, teamId);
+      onAppointmentAssign(appointmentId, teamId || "");
       toast({
-        title: "Afspraak toegewezen",
-        description: "De afspraak is succesvol toegewezen aan het team.",
+        title: teamId ? "Afspraak toegewezen" : "Afspraak teruggezet",
+        description: teamId 
+          ? "De afspraak is succesvol toegewezen aan het team."
+          : "De afspraak is teruggezet naar niet toegewezen afspraken.",
       });
     }
   };
@@ -92,6 +94,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
         date={date}
         appointments={appointments}
         onDragStart={handleDragStart}
+        onDrop={(e) => handleDrop(e)}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,7 +108,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
               onDragStart={handleDragStart}
               onGeneratePdf={generateWorklistPdf}
               isGeneratingPdf={generatingPdf === team.id}
-              onDrop={handleDrop}
+              onDrop={e => handleDrop(e, team.id)}
             />
           );
         })}
@@ -113,3 +116,4 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
     </div>
   );
 };
+
