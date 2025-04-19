@@ -61,8 +61,9 @@ const QuickActions = () => {
   return (
     <TooltipProvider>
       <div className="h-16 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50">
-        <div className="h-full px-4 flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        <div className="h-full px-4 flex items-center justify-between gap-4 max-w-7xl mx-auto">
+          {/* Quick Actions */}
+          <div className="flex-1 flex items-center gap-1 md:gap-2 overflow-x-auto scrollbar-hide max-w-[60%] sm:max-w-none">
             {actions.map((action) => (
               <Tooltip key={action.href}>
                 <TooltipTrigger asChild>
@@ -72,7 +73,7 @@ const QuickActions = () => {
                       size="icon"
                       className="rounded-full hover:bg-accent min-w-10"
                     >
-                      <action.icon className="h-5 w-5" />
+                      <action.icon className="h-4 w-4 md:h-5 md:w-5" />
                       <span className="sr-only">{action.label}</span>
                     </Button>
                   </Link>
@@ -82,8 +83,10 @@ const QuickActions = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="relative hidden sm:block w-48 lg:w-64">
+          {/* Right side controls */}
+          <div className="flex items-center gap-1 md:gap-3">
+            {/* Search - hidden on mobile */}
+            <div className="relative hidden md:block w-48 lg:w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -92,6 +95,7 @@ const QuickActions = () => {
               />
             </div>
 
+            {/* Notifications */}
             <Popover>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -99,10 +103,10 @@ const QuickActions = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full hover:bg-accent relative"
+                      className="rounded-full hover:bg-accent relative h-9 w-9 md:h-10 md:w-10"
                     >
-                      <Bell className="h-5 w-5" />
-                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
+                      <Bell className="h-4 w-4 md:h-5 md:w-5" />
+                      <span className="absolute -top-1 -right-1 h-3.5 w-3.5 md:h-4 md:w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
                         {notifications.length}
                       </span>
                       <span className="sr-only">Notificaties</span>
@@ -125,11 +129,15 @@ const QuickActions = () => {
               </PopoverContent>
             </Popover>
 
+            {/* Profile Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent gap-2">
-                  <User className="h-5 w-5" />
-                  <span className="hidden md:inline-block ml-2">John Doe</span>
+                <Button 
+                  variant="ghost" 
+                  className="rounded-full hover:bg-accent h-9 md:h-10 px-2 md:px-3"
+                >
+                  <User className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden md:inline-block ml-2 text-sm">John Doe</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
