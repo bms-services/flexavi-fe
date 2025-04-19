@@ -121,6 +121,7 @@ const Appointments = () => {
           <AppointmentsHeader 
             onNewAppointment={handleNewAppointment}
             onSettingsOpen={handleSettingsOpen}
+            teams={teams}  // Added teams prop here
           />
 
           <AppointmentsTabs
