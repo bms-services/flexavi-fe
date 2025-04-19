@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InvoiceStatus } from "@/types";
@@ -14,10 +15,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { FileText, User, MapPin, Calendar, Check, Download, CreditCard, ChevronLeft } from "lucide-react";
+import { FileText, Download, Check, ChevronLeft } from "lucide-react";
 import { InvoiceSummary } from "@/components/invoices/InvoiceSummary";
+import { CustomerDetails } from "@/components/customer-portal/invoice/CustomerDetails";
+import { InvoiceDetails } from "@/components/customer-portal/invoice/InvoiceDetails";
+import { InvoiceLineItems } from "@/components/customer-portal/invoice/InvoiceLineItems";
+import { PaymentStarted } from "@/components/customer-portal/invoice/PaymentStarted";
 
 const CustomerPortalInvoice = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,25 +80,7 @@ const CustomerPortalInvoice = () => {
   }
 
   if (paymentStarted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Card className="w-full max-w-3xl">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-green-600">Betaling gestart</CardTitle>
-            <CardDescription>
-              U wordt doorgestuurd naar onze betaalpagina.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <CreditCard className="w-16 h-16 mx-auto text-green-500 mb-4" />
-            <p>
-              Bedankt voor uw betaling. U wordt binnen enkele seconden doorgestuurd naar 
-              ons beveiligde betaalsysteem.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <PaymentStarted />;
   }
 
   return (
@@ -130,66 +115,14 @@ const CustomerPortalInvoice = () => {
           
           <CardContent className="py-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Klantgegevens</h3>
-                <div className="bg-gray-50 p-4 rounded-md space-y-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-400" />
-                    <span className="font-medium">{customer.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-400" />
-                    <span>{customer.address}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Factuur details</h3>
-                <div className="bg-gray-50 p-4 rounded-md space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    <span>Factuurdatum: {format(new Date(invoice.createdAt), "d MMMM yyyy", {
-                      locale: nl,
-                    })}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    <span>Vervaldatum: {format(new Date(invoice.dueDate), "d MMMM yyyy", {
-                      locale: nl,
-                    })}</span>
-                  </div>
-                </div>
-              </div>
+              <CustomerDetails customer={customer} />
+              <InvoiceDetails invoice={invoice} />
             </div>
             
-            <h3 className="text-sm font-medium text-gray-500 pb-2 border-b">Factuurregels</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2">Beschrijving</th>
-                    <th className="text-center py-2">Aantal</th>
-                    <th className="text-center py-2">Eenheid</th>
-                    <th className="text-right py-2">Prijs per eenheid</th>
-                    <th className="text-right py-2">BTW%</th>
-                    <th className="text-right py-2">Totaal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoice.lineItems.map((item: any) => (
-                    <tr key={item.id} className="border-b">
-                      <td className="py-2">{item.description}</td>
-                      <td className="text-center py-2">{item.quantity}</td>
-                      <td className="text-center py-2">{item.unit}</td>
-                      <td className="text-right py-2">{formatCurrency(item.pricePerUnit)}</td>
-                      <td className="text-right py-2">{item.vatRate}%</td>
-                      <td className="text-right py-2">{formatCurrency(item.total)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <InvoiceLineItems 
+              lineItems={invoice.lineItems} 
+              formatCurrency={formatCurrency}
+            />
             
             <InvoiceSummary subtotal={invoice.amount} vatRate={21} />
           </CardContent>
