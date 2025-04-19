@@ -5,6 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import QuickActions from "./QuickActions";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -37,6 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       )}
       <main className={`flex-1 ${isMobile ? 'w-full' : 'ml-64'}`}>
         {children}
+        <QuickActions />
       </main>
     </div>
   );
