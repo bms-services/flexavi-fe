@@ -13,6 +13,7 @@ interface LeadListProps {
 
 export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
   const handleCreateLead = (data: CreateLeadFormData) => {
@@ -31,7 +32,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
         <LeadActions onCreateClick={() => setIsDialogOpen(true)} />
       </div>
 
-      <LeadTable leads={leads} />
+      <LeadTable leads={leads} searchTerm={searchTerm} />
 
       <CreateLeadDialog
         isOpen={isDialogOpen}
