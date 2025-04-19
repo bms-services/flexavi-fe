@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Users, FileText, CircleDollarSign, FileSignature } from 'lucide-react';
+import { Users, FileText, CircleDollarSign, FileSignature, ClipboardList } from 'lucide-react';
 
 interface Step {
   icon: React.ElementType;
@@ -11,7 +11,7 @@ interface Step {
 const steps: Step[] = [
   { icon: Users, label: 'Klant' },
   { icon: FileText, label: 'Offerte' },
-  { icon: FileText, label: 'Werkzaamheden' },
+  { icon: ClipboardList, label: 'Werkzaamheden' },
   { icon: CircleDollarSign, label: 'Betaling' },
   { icon: FileSignature, label: 'Voorwaarden' },
 ];
@@ -24,35 +24,40 @@ export const WorkAgreementWizardSteps: React.FC<WorkAgreementWizardStepsProps> =
   currentStep,
 }) => {
   return (
-    <div className="w-64 bg-muted/50 p-6 border-r">
-      <div className="space-y-4">
-        {steps.map((step, index) => {
-          const Icon = step.icon;
-          const isActive = index === currentStep;
-          const isCompleted = index < currentStep;
+    <div className="w-72 bg-white border-r shadow-lg">
+      <div className="p-6">
+        <h2 className="text-lg font-semibold mb-6">Werkovereenkomst</h2>
+        <div className="space-y-2">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            const isActive = index === currentStep;
+            const isCompleted = index < currentStep;
 
-          return (
-            <div
-              key={step.label}
-              className={cn(
-                "flex items-center gap-3 p-3 rounded-md",
-                isActive && "bg-accent",
-                !isActive && "opacity-50"
-              )}
-            >
+            return (
               <div
+                key={step.label}
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center",
-                  isCompleted ? "bg-primary text-primary-foreground" : "bg-muted",
-                  isActive && "bg-primary text-primary-foreground"
+                  "flex items-center gap-3 p-3 rounded-lg transition-colors",
+                  isActive && "bg-primary text-primary-foreground",
+                  isCompleted && "text-muted-foreground",
+                  !isActive && !isCompleted && "opacity-50"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center",
+                    isCompleted && "bg-primary/20",
+                    isActive && "bg-primary-foreground text-primary",
+                    !isActive && !isCompleted && "bg-muted"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                </div>
+                <span className="text-sm font-medium">{step.label}</span>
               </div>
-              <span className="text-sm font-medium">{step.label}</span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

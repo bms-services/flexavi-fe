@@ -7,6 +7,9 @@ import {
   Card,
   CardContent,
   CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
 } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CustomerSearch } from '@/components/appointments/components/CustomerSearch';
@@ -15,6 +18,29 @@ import { WorkDetails } from '@/components/workagreements/forms/work-details/Work
 import { PaymentTermsForm } from '@/components/workagreements/forms/payment-terms/PaymentTermsForm';
 import { WorkAgreementExclusionsForm } from '@/components/workagreements/forms/WorkAgreementExclusionsForm';
 import { mockLeads } from '@/data/mockLeads';
+
+const stepTitles = [
+  {
+    title: "Klant selecteren",
+    description: "Selecteer een bestaande klant of voeg een nieuwe toe"
+  },
+  {
+    title: "Offerte koppelen",
+    description: "Koppel een offerte aan deze werkovereenkomst"
+  },
+  {
+    title: "Werkzaamheden",
+    description: "Beschrijf de uit te voeren werkzaamheden"
+  },
+  {
+    title: "Betalingsvoorwaarden",
+    description: "Stel de betalingsvoorwaarden in"
+  },
+  {
+    title: "Voorwaarden",
+    description: "Bekijk en pas de voorwaarden aan"
+  }
+];
 
 export const WorkAgreementWizard = () => {
   const {
@@ -99,29 +125,37 @@ export const WorkAgreementWizard = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-50">
       <WorkAgreementWizardSteps currentStep={currentStep} />
       <div className="flex-1 p-6">
-        <Card>
-          <CardContent className="pt-6">
-            {renderStepContent()}
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button
-              variant="outline"
-              onClick={goToPreviousStep}
-              disabled={!canGoPrevious}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" /> Vorige
-            </Button>
-            <Button
-              onClick={goToNextStep}
-              disabled={!canGoNext}
-            >
-              {isLastStep ? 'Voltooien' : 'Volgende'} <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardFooter>
-        </Card>
+        <div className="max-w-4xl mx-auto">
+          <Card className="shadow-lg">
+            <CardHeader className="border-b bg-muted/20">
+              <CardTitle>{stepTitles[currentStep].title}</CardTitle>
+              <CardDescription>
+                {stepTitles[currentStep].description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6">
+              {renderStepContent()}
+            </CardContent>
+            <CardFooter className="flex justify-between border-t bg-muted/20 p-6">
+              <Button
+                variant="outline"
+                onClick={goToPreviousStep}
+                disabled={!canGoPrevious}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Vorige
+              </Button>
+              <Button
+                onClick={goToNextStep}
+                disabled={!canGoNext}
+              >
+                {isLastStep ? 'Voltooien' : 'Volgende'} <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </div>
   );

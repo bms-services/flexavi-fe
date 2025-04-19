@@ -6,9 +6,7 @@ import { WorkAgreementWizard } from '@/components/workagreements/wizard/WorkAgre
 const WorkAgreementEdit = () => {
   return (
     <Layout>
-      <div className="container py-6">
-        <WorkAgreementWizard />
-      </div>
+      <WorkAgreementWizard />
     </Layout>
   );
 };
