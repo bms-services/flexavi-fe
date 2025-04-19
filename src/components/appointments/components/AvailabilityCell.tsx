@@ -1,3 +1,4 @@
+
 import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -66,11 +67,11 @@ export const AvailabilityCell = ({
           <Badge 
             variant="outline"
             className={cn(
-              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5 bg-white",
+              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
               isFullyBooked 
                 ? "border-green-700" // Dark green border when fully booked
                 : "border-blue-500",  // Blue border when not fully booked
-              hasSearchedLocation && "border-green-500",
+              hasSearchedLocation && "border-green-500 bg-green-50", // Light green background only for location matches
               "hover:border-opacity-80"
             )}
           >
