@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, FileText, Folder, Bell, Search, Settings, LogOut, User } from 'lucide-react';
@@ -92,21 +93,24 @@ const QuickActions = () => {
             </div>
 
             <Popover>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full hover:bg-accent relative"
-                  >
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
-                      {notifications.length}
-                    </span>
-                    <span className="sr-only">Notificaties</span>
-                  </Button>
-                </PopoverTrigger>
-              </TooltipTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full hover:bg-accent relative"
+                    >
+                      <Bell className="h-5 w-5" />
+                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
+                        {notifications.length}
+                      </span>
+                      <span className="sr-only">Notificaties</span>
+                    </Button>
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Notificaties</TooltipContent>
+              </Tooltip>
               <PopoverContent className="w-80 p-0" align="end">
                 <div className="p-4 space-y-4">
                   {notifications.map((notification) => (
@@ -119,7 +123,6 @@ const QuickActions = () => {
                   ))}
                 </div>
               </PopoverContent>
-              <TooltipContent>Notificaties</TooltipContent>
             </Popover>
 
             <DropdownMenu>
