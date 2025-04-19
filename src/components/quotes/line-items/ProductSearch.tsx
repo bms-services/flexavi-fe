@@ -13,14 +13,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-
-interface Product {
-  title: string;
-  description: string;
-  unit: string;
-  pricePerUnit: number;
-  vat: number;
-}
+import { Product } from "@/types/product";
 
 interface ProductSearchProps {
   description: string;
@@ -85,6 +78,11 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     };
   }, []);
 
+  // Log when suggestions change for debugging
+  useEffect(() => {
+    console.log("Product suggestions updated:", suggestions);
+  }, [suggestions]);
+
   // Ensure stable description value
   const safeDescription = description || "";
   
@@ -114,39 +112,36 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
         </div>
       </PopoverTrigger>
       
-      {/* Only render PopoverContent when we have suggestions */}
-      {shouldShowPopup && (
+      {hasSuggestions && (
         <PopoverContent className="w-[400px] p-0" align="start">
-          {hasSuggestions && (
-            <Command>
-              <CommandInput 
-                placeholder="Zoek product..." 
-                value={title} 
-                onValueChange={handleDescriptionChange} 
-                className="h-9"
-              />
-              <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-              <CommandGroup>
-                {suggestions.map((product, index) => (
-                  <CommandItem 
-                    key={`product-${index}`}
-                    onSelect={() => {
-                      onProductSelect(product);
-                      setSuggestionsOpen(false);
-                    }}
-                  >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{product.title || ''}</span>
-                      <span className="text-xs text-muted-foreground">{product.description || ''}</span>
-                      <span className="text-xs">
-                        {formatCurrency(product.pricePerUnit || 0)} per {product.unit || 'stuk'}
-                      </span>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          )}
+          <Command>
+            <CommandInput 
+              placeholder="Zoek product..." 
+              value={title} 
+              onValueChange={handleDescriptionChange} 
+              className="h-9"
+            />
+            <CommandEmpty>Geen producten gevonden.</CommandEmpty>
+            <CommandGroup>
+              {suggestions.map((product, index) => (
+                <CommandItem 
+                  key={`product-${index}-${product.id}`}
+                  onSelect={() => {
+                    onProductSelect(product);
+                    setSuggestionsOpen(false);
+                  }}
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{product.title || ''}</span>
+                    <span className="text-xs text-muted-foreground">{product.description || ''}</span>
+                    <span className="text-xs">
+                      {formatCurrency(product.pricePerUnit || 0)} per {product.unit || 'stuk'}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
         </PopoverContent>
       )}
     </Popover>

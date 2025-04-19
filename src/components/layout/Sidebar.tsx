@@ -9,6 +9,7 @@ import {
   FileCheck,
   Settings,
   LogOut,
+  Package,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,7 @@ export const Sidebar: React.FC = () => {
     { name: "Afspraken", href: "/appointments", icon: Calendar },
     { name: "Offertes", href: "/quotes", icon: FileText },
     { name: "Facturen", href: "/invoices", icon: FileCheck },
+    { name: "Producten", href: "/products", icon: Package },
     { name: "Instellingen", href: "/settings", icon: Settings },
   ];
 

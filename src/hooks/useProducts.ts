@@ -14,7 +14,17 @@ export const useProducts = () => {
     );
   };
 
+  const getProductById = (id: string): Product | undefined => {
+    return mockProducts.find(product => product.id === id);
+  };
+
+  const getAllProducts = (): Product[] => {
+    return [...mockProducts];
+  };
+
   return {
-    searchProducts
+    searchProducts,
+    getProductById,
+    getAllProducts
   };
 };

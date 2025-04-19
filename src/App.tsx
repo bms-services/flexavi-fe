@@ -13,6 +13,7 @@ import Quotes from "./pages/Quotes";
 import QuoteEdit from "./pages/QuoteEdit";
 import Invoices from "./pages/Invoices";
 import Settings from "./pages/Settings";
+import Products from "./pages/Products";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/quotes/create" element={<QuoteEdit />} />
           <Route path="/quotes/edit/:id" element={<QuoteEdit />} />
           <Route path="/invoices" element={<Invoices />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
