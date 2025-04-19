@@ -16,6 +16,7 @@ import { WorkAgreementHeader } from "@/components/workagreements/header/WorkAgre
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { useWorkAgreementForm } from "@/hooks/useWorkAgreementForm";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
+import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,6 +37,9 @@ const WorkAgreementEdit = () => {
     getProductSuggestions,
     handleSaveWorkAgreement,
     handleExclusionsChange,
+    handlePaymentMethodChange,
+    handleCashPaymentAmountChange,
+    handlePaymentInstallmentsChange,
   } = useWorkAgreementForm(id);
 
   return (
@@ -85,6 +89,23 @@ const WorkAgreementEdit = () => {
                 onProductSearch={getProductSuggestions}
               />
               <QuoteSummary subtotal={totalAmount} />
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle>Betaalvoorwaarden</CardTitle>
+              <CardDescription>Specificeer betaalmethode en betaaltermijnen</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PaymentTermsForm 
+                paymentMethod={workAgreement.paymentMethod}
+                cashPaymentAmount={workAgreement.cashPaymentAmount}
+                paymentInstallments={workAgreement.paymentInstallments}
+                onPaymentMethodChange={handlePaymentMethodChange}
+                onCashPaymentAmountChange={handleCashPaymentAmountChange}
+                onPaymentInstallmentsChange={handlePaymentInstallmentsChange}
+              />
             </CardContent>
           </Card>
 
