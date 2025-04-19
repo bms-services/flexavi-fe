@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Package } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface PackageFeature {
   id: string;
@@ -19,9 +19,21 @@ interface PackageFeature {
 export function PackageManagement() {
   const { toast } = useToast();
   const [packages, setPackages] = useState({
-    starter: { price: "29.99", name: "Starter" },
-    professional: { price: "59.99", name: "Professional" },
-    enterprise: { price: "99.99", name: "Enterprise" }
+    starter: { 
+      name: "Starter",
+      monthly: "29.99",
+      yearly: "299.99"
+    },
+    professional: { 
+      name: "Professional",
+      monthly: "59.99",
+      yearly: "599.99"
+    },
+    enterprise: { 
+      name: "Enterprise",
+      monthly: "99.99",
+      yearly: "999.99"
+    }
   });
 
   const [features, setFeatures] = useState<PackageFeature[]>([
@@ -33,10 +45,17 @@ export function PackageManagement() {
     { id: "6", name: "Prioriteit support", starter: false, professional: true, enterprise: true }
   ]);
 
-  const handlePriceChange = (packageType: keyof typeof packages, value: string) => {
+  const handlePriceChange = (
+    packageType: keyof typeof packages, 
+    interval: 'monthly' | 'yearly', 
+    value: string
+  ) => {
     setPackages(prev => ({
       ...prev,
-      [packageType]: { ...prev[packageType], price: value }
+      [packageType]: { 
+        ...prev[packageType], 
+        [interval]: value 
+      }
     }));
   };
 
@@ -63,23 +82,52 @@ export function PackageManagement() {
           <CardTitle>Pakket Prijzen</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {Object.entries(packages).map(([key, value]) => (
-              <div key={key} className="space-y-2">
-                <label className="text-sm font-medium">{value.name}</label>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">€</span>
-                  <Input
-                    type="number"
-                    value={value.price}
-                    onChange={(e) => handlePriceChange(key as keyof typeof packages, e.target.value)}
-                    className="max-w-[120px]"
-                  />
-                  <span className="text-sm">/ maand</span>
-                </div>
+          <Tabs defaultValue="monthly" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="monthly">Maandelijks</TabsTrigger>
+              <TabsTrigger value="yearly">Jaarlijks</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="monthly">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(packages).map(([key, value]) => (
+                  <div key={key} className="space-y-2">
+                    <label className="text-sm font-medium">{value.name}</label>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">€</span>
+                      <Input
+                        type="number"
+                        value={value.monthly}
+                        onChange={(e) => handlePriceChange(key as keyof typeof packages, 'monthly', e.target.value)}
+                        className="max-w-[120px]"
+                      />
+                      <span className="text-sm">/ maand</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </TabsContent>
+            
+            <TabsContent value="yearly">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {Object.entries(packages).map(([key, value]) => (
+                  <div key={key} className="space-y-2">
+                    <label className="text-sm font-medium">{value.name}</label>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">€</span>
+                      <Input
+                        type="number"
+                        value={value.yearly}
+                        onChange={(e) => handlePriceChange(key as keyof typeof packages, 'yearly', e.target.value)}
+                        className="max-w-[120px]"
+                      />
+                      <span className="text-sm">/ jaar</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
