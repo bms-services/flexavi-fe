@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +8,7 @@ import { PersonalInfoSettings } from "@/components/settings/account/PersonalInfo
 import { PasswordSettings } from "@/components/settings/account/PasswordSettings";
 import { CompanySettings } from "@/components/settings/company/CompanySettings";
 import { useToast } from "@/hooks/use-toast";
+import { DefaultAttachmentsSettings } from "@/components/settings/workagreements/DefaultAttachmentsSettings";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -32,7 +32,6 @@ const Settings = () => {
     fullBorder: "#F97316",
   });
 
-  // Wrapper function to handle the type conversion for slot settings
   const handleSlotSettingsChange = (newSettings: Record<string, number>) => {
     setSlotSettings(prevSettings => ({
       ...prevSettings,
@@ -70,6 +69,7 @@ const Settings = () => {
             <TabsTrigger value="teams">Teams</TabsTrigger>
             <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="company">Bedrijf</TabsTrigger>
+            <TabsTrigger value="workagreements">Werkovereenkomsten</TabsTrigger>
           </TabsList>
 
           <TabsContent value="appointments" className="space-y-6 mt-6">
@@ -98,6 +98,10 @@ const Settings = () => {
 
           <TabsContent value="company" className="space-y-6 mt-6">
             <CompanySettings />
+          </TabsContent>
+
+          <TabsContent value="workagreements" className="space-y-6 mt-6">
+            <DefaultAttachmentsSettings />
           </TabsContent>
         </Tabs>
       </div>

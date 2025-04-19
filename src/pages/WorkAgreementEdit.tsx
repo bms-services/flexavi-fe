@@ -17,6 +17,7 @@ import { useWorkAgreementForm } from "@/hooks/useWorkAgreementForm";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
+import { WorkAgreementAttachments } from "@/components/workagreements/forms/attachments/WorkAgreementAttachments";
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -129,6 +130,22 @@ const WorkAgreementEdit = () => {
             </CardHeader>
             <CardContent>
               <GeneralTerms />
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle>Bijlages</CardTitle>
+              <CardDescription>Voeg bestanden toe aan de werkovereenkomst</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WorkAgreementAttachments
+                attachments={workAgreement.attachments || []}
+                onAttachmentsChange={files => handleWorkAgreementFieldChange('attachments', files)}
+                defaultAttachments={[
+                  { name: 'Algemene voorwaarden.pdf', url: '/attachments/terms.pdf' }
+                ]}
+              />
             </CardContent>
           </Card>
         </div>

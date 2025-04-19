@@ -184,5 +184,6 @@ export type WorkAgreement = {
   cashPaymentAmount?: number;
   paymentInstallments?: PaymentInstallment[];
   paymentMethod?: PaymentMethod;
+  attachments?: File[];
+  defaultAttachments?: { name: string; url: string }[];
 };
-
