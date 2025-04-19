@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Mail, Phone, MapPin, Bank, FileText } from "lucide-react";
+import { Building2, Mail, Phone, MapPin, Ban, FileText } from "lucide-react";
 
 export const CompanySettings: React.FC = () => {
   return (
@@ -112,7 +112,7 @@ export const CompanySettings: React.FC = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Bank className="h-5 w-5 text-muted-foreground" />
+            <Ban className="h-5 w-5 text-muted-foreground" />
             <div>
               <CardTitle>Financiële gegevens</CardTitle>
               <CardDescription>
