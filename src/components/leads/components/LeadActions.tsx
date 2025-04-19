@@ -5,7 +5,7 @@ import { FileText, FilePlus, PlusCircle, Edit2, Calendar } from "lucide-react";
 
 export const LeadDetailActions = () => {
   return (
-    <div className="flex items-center gap-3 w-full justify-start">
+    <div className="flex items-center gap-3 w-full justify-start mt-4">
       <Button variant="outline">
         <PlusCircle className="mr-2 h-4 w-4" />
         Notitie Toevoegen
