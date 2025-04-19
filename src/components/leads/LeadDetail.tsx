@@ -1,9 +1,8 @@
-
 import React from "react";
 import { LeadDetail as LeadDetailType } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Phone, Mail, MapPin, Calendar, FileText } from "lucide-react";
+import { User, Phone, Mail, MapPin, Calendar, FileText, Activity, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { LeadStatusBadge } from "./LeadStatusBadge";
@@ -27,7 +26,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
 
   const leadStats = getLeadStats(lead.id);
 
-  // Helper function to get the status badge for quotes
   const getQuoteStatusBadge = (status: QuoteStatus | undefined) => {
     if (!status) return "Geen";
     
@@ -43,7 +41,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  // Helper function to get the status badge for invoices
   const getInvoiceStatusBadge = (status: InvoiceStatus | undefined) => {
     if (!status) return "Geen";
     
@@ -59,9 +56,16 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const activeQuotes = lead.quotes.filter(
+    quote => quote.status === 'sent' || quote.status === 'revised'
+  );
+
+  const recentActivities = [...lead.quotes, ...lead.invoices]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3);
+
   return (
     <div className="space-y-6">
-      {/* Hero Section with Quick Stats */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg shadow-sm">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-2">
@@ -109,6 +113,66 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
             </Card>
           </div>
         </div>
+
+        {activeQuotes.length > 0 && (
+          <div className="mt-6 bg-white/70 p-4 rounded-lg border border-gray-100">
+            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-amber-500" />
+              Lopende Offertes
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              {activeQuotes.map(quote => (
+                <div key={quote.id} className="bg-white p-4 rounded-md border border-gray-100">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">{quote.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(quote.createdAt), "d MMMM yyyy", { locale: nl })}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-lg text-primary">{formatCurrency(quote.amount)}</p>
+                      {getQuoteStatusBadge(quote.status)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6 bg-white/70 p-4 rounded-lg border border-gray-100">
+          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+            <Activity className="h-5 w-5 text-blue-500" />
+            Recente Activiteiten
+          </h3>
+          <div className="space-y-3">
+            {recentActivities.map((activity) => {
+              const isQuote = 'description' in activity;
+              const status = isQuote 
+                ? getQuoteStatusBadge(activity.status as QuoteStatus)
+                : getInvoiceStatusBadge(activity.status as InvoiceStatus);
+              
+              return (
+                <div key={activity.id} className="flex justify-between items-center bg-white p-3 rounded-md border border-gray-100">
+                  <div>
+                    <p className="font-medium">
+                      {isQuote ? 'Offerte:' : 'Factuur:'} {activity.description}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {format(new Date(activity.createdAt), "d MMMM yyyy", { locale: nl })}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">{formatCurrency(activity.amount)}</p>
+                    {status}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="flex gap-3 mt-6">
           <Button variant="outline">Notitie Toevoegen</Button>
           <Button variant="outline">Afspraak Plannen</Button>
@@ -116,9 +180,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
         </div>
       </div>
 
-      {/* Contact & Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Contact Information */}
         <Card>
           <CardHeader>
             <CardTitle>Contact Informatie</CardTitle>
@@ -156,7 +218,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
           </CardContent>
         </Card>
 
-        {/* Lead Details */}
         <Card>
           <CardHeader>
             <CardTitle>Lead Details</CardTitle>
@@ -188,7 +249,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
         </Card>
       </div>
 
-      {/* Tabs Section */}
       <Card>
         <Tabs defaultValue="notes" className="w-full">
           <TabsList className="w-full justify-start border-b rounded-none h-auto p-0">

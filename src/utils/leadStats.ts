@@ -15,9 +15,15 @@ export const getLeadStats = (leadId: string) => {
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )[0];
 
+  const paidInvoices = leadInvoices.filter(invoice => invoice.status === 'paid');
+  const pendingInvoices = leadInvoices.filter(invoice => 
+    ['sent', 'overdue'].includes(invoice.status)
+  );
+
   return {
     quotesValue: leadQuotes.reduce((sum, quote) => sum + quote.amount, 0),
-    invoicesValue: leadInvoices.reduce((sum, invoice) => sum + invoice.amount, 0),
+    invoicesValue: paidInvoices.reduce((sum, invoice) => sum + invoice.amount, 0),
+    pendingValue: pendingInvoices.reduce((sum, invoice) => sum + invoice.amount, 0),
     latestQuoteStatus: latestQuote?.status as QuoteStatus | undefined,
     latestInvoiceStatus: latestInvoice?.status as InvoiceStatus | undefined,
   };
