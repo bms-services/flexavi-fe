@@ -42,10 +42,10 @@ const ITEMS_PER_PAGE = 10;
 export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
-    location: "",
-    quoteStatus: "",
-    invoiceStatus: "",
-    leadStatus: "",
+    location: "all",
+    quoteStatus: "all",
+    invoiceStatus: "all",
+    leadStatus: "all",
   });
 
   const handleFilterChange = (type: string, value: string) => {
@@ -88,10 +88,10 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
       lead.address.toLowerCase().includes(searchTerm.toLowerCase());
 
     const stats = getLeadStats(lead.id);
-    const matchesLocation = !filters.location || lead.address.toLowerCase().includes(filters.location.toLowerCase());
-    const matchesLeadStatus = !filters.leadStatus || lead.status === filters.leadStatus;
-    const matchesQuoteStatus = !filters.quoteStatus || stats.latestQuoteStatus === filters.quoteStatus;
-    const matchesInvoiceStatus = !filters.invoiceStatus || stats.latestInvoiceStatus === filters.invoiceStatus;
+    const matchesLocation = filters.location === "all" || lead.address.toLowerCase().includes(filters.location.toLowerCase());
+    const matchesLeadStatus = filters.leadStatus === "all" || lead.status === filters.leadStatus;
+    const matchesQuoteStatus = filters.quoteStatus === "all" || stats.latestQuoteStatus === filters.quoteStatus;
+    const matchesInvoiceStatus = filters.invoiceStatus === "all" || stats.latestInvoiceStatus === filters.invoiceStatus;
 
     return matchesSearch && matchesLocation && matchesLeadStatus && matchesQuoteStatus && matchesInvoiceStatus;
   });

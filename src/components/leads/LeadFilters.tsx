@@ -33,7 +33,7 @@ export const LeadFilters = ({ onFilterChange, filters }: LeadFiltersProps) => {
             <SelectValue placeholder="Locatie" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle locaties</SelectItem>
+            <SelectItem value="all">Alle locaties</SelectItem>
             <SelectItem value="amsterdam">Amsterdam</SelectItem>
             <SelectItem value="rotterdam">Rotterdam</SelectItem>
             <SelectItem value="den-haag">Den Haag</SelectItem>
@@ -46,7 +46,7 @@ export const LeadFilters = ({ onFilterChange, filters }: LeadFiltersProps) => {
             <SelectValue placeholder="Lead status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle statussen</SelectItem>
+            <SelectItem value="all">Alle statussen</SelectItem>
             <SelectItem value="new">Nieuw</SelectItem>
             <SelectItem value="in-progress">In behandeling</SelectItem>
             <SelectItem value="completed">Afgerond</SelectItem>
@@ -59,7 +59,7 @@ export const LeadFilters = ({ onFilterChange, filters }: LeadFiltersProps) => {
             <SelectValue placeholder="Offerte status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle offertes</SelectItem>
+            <SelectItem value="all">Alle offertes</SelectItem>
             <SelectItem value="draft">Concept</SelectItem>
             <SelectItem value="sent">Verstuurd</SelectItem>
             <SelectItem value="accepted">Geaccepteerd</SelectItem>
@@ -72,7 +72,7 @@ export const LeadFilters = ({ onFilterChange, filters }: LeadFiltersProps) => {
             <SelectValue placeholder="Factuur status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Alle facturen</SelectItem>
+            <SelectItem value="all">Alle facturen</SelectItem>
             <SelectItem value="draft">Concept</SelectItem>
             <SelectItem value="sent">Verstuurd</SelectItem>
             <SelectItem value="paid">Betaald</SelectItem>
