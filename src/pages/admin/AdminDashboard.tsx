@@ -8,8 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Users, CreditCard, Package } from 'lucide-react';
+import { BarChart3, Users, CreditCard, Package, Handshake } from 'lucide-react';
 import { PackageManagement } from '@/components/admin/PackageManagement';
+import { PartnersManagement } from '@/components/admin/PartnersManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -38,6 +39,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="packages" className="w-full justify-start">
                   <Package className="h-4 w-4 mr-2" />
                   Pakketten
+                </TabsTrigger>
+                <TabsTrigger value="partners" className="w-full justify-start">
+                  <Handshake className="h-4 w-4 mr-2" />
+                  Partners
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -79,6 +84,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="packages" className="mt-0">
                 <PackageManagement />
+              </TabsContent>
+              
+              <TabsContent value="partners" className="mt-0">
+                <PartnersManagement />
               </TabsContent>
             </div>
           </Tabs>
