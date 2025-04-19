@@ -2,8 +2,11 @@
 import React from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { User, MapPin, FileText, Info, Clock } from "lucide-react";
+import { User, MapPin, FileText, Info, Clock, Euro } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface WorkAgreementDetailsProps {
   customer: {
@@ -16,6 +19,9 @@ interface WorkAgreementDetailsProps {
     workDescription: string;
     warranty: string;
     totalAmount: number;
+    cashPaymentAmount?: number;
+    provisions?: string[];
+    exclusions?: string[];
   };
   formatCurrency: (amount: number) => string;
   companyDetails?: {
@@ -25,6 +31,8 @@ interface WorkAgreementDetailsProps {
     phone: string;
     taxId: string;
   };
+  isEditable?: boolean;
+  onFieldChange?: (field: string, value: any) => void;
 }
 
 export const WorkAgreementDetails = ({ 
@@ -37,8 +45,33 @@ export const WorkAgreementDetails = ({
     email: "info@dakbedrijf.nl",
     phone: "020-1234567",
     taxId: "NL123456789B01"
-  }
+  },
+  isEditable = false,
+  onFieldChange
 }: WorkAgreementDetailsProps) => {
+  const handleChange = (field: string, value: any) => {
+    if (onFieldChange) {
+      onFieldChange(field, value);
+    }
+  };
+
+  const defaultProvisions = [
+    "Ter beschikking stellen stroomvoorziening 230 volt 16 amp.",
+    "Sanitaire voorzieningen",
+    "Bereikbaarheid werkplek met materieel",
+    "Oponthoud door werkzaamheden van derden worden doorberekend a €85 p/u per man"
+  ];
+
+  const defaultExclusions = [
+    "Werkzaamheden die niet genoemd zijn vallen buiten deze werkovereenkomst",
+    "Werkzaamheden aan asbesthoudende materialen",
+    "Werkzaamheden anders dan omschreven",
+    "Parkeerkosten"
+  ];
+
+  const provisions = workAgreement.provisions || defaultProvisions;
+  const exclusions = workAgreement.exclusions || defaultExclusions;
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -79,26 +112,64 @@ export const WorkAgreementDetails = ({
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-500">Totaalbedrag excl. BTW</p>
-              <p className="font-medium">{formatCurrency(workAgreement.totalAmount)}</p>
+              <Label>Totaalbedrag excl. BTW</Label>
+              {isEditable ? (
+                <Input
+                  type="number"
+                  value={workAgreement.totalAmount}
+                  onChange={(e) => handleChange("totalAmount", parseFloat(e.target.value))}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="font-medium">{formatCurrency(workAgreement.totalAmount)}</p>
+              )}
             </div>
             <div>
-              <p className="text-sm text-gray-500">BTW (21%)</p>
+              <Label>BTW (21%)</Label>
               <p className="font-medium">{formatCurrency(workAgreement.totalAmount * 0.21)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Totaalbedrag incl. BTW</p>
+              <Label>Totaalbedrag incl. BTW</Label>
               <p className="font-medium">{formatCurrency(workAgreement.totalAmount * 1.21)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Garantie</p>
-              <p className="font-medium">{workAgreement.warranty} jaar</p>
+              <Label>Garantie (jaren)</Label>
+              {isEditable ? (
+                <Input
+                  type="number"
+                  value={workAgreement.warranty}
+                  onChange={(e) => handleChange("warranty", e.target.value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="font-medium">{workAgreement.warranty} jaar</p>
+              )}
             </div>
+            {isEditable && (
+              <div>
+                <Label>Contante betaling bij oplevering (excl. BTW)</Label>
+                <Input
+                  type="number"
+                  value={workAgreement.cashPaymentAmount || 0}
+                  onChange={(e) => handleChange("cashPaymentAmount", parseFloat(e.target.value))}
+                  className="mt-1"
+                />
+              </div>
+            )}
           </div>
 
           <div>
-            <h4 className="text-sm font-medium text-gray-500 mb-2">Startdatum Werkzaamheden</h4>
-            <p>{format(new Date(workAgreement.startDate), "d MMMM yyyy", { locale: nl })}</p>
+            <Label>Startdatum Werkzaamheden</Label>
+            {isEditable ? (
+              <Input
+                type="date"
+                value={new Date(workAgreement.startDate).toISOString().split('T')[0]}
+                onChange={(e) => handleChange("startDate", e.target.value)}
+                className="mt-1"
+              />
+            ) : (
+              <p>{format(new Date(workAgreement.startDate), "d MMMM yyyy", { locale: nl })}</p>
+            )}
           </div>
         </div>
       </Card>
@@ -108,17 +179,52 @@ export const WorkAgreementDetails = ({
           <Info className="h-4 w-4" />
           Beschrijving Werkzaamheden
         </h3>
-        <p className="whitespace-pre-line">{workAgreement.workDescription}</p>
+        {isEditable ? (
+          <Textarea
+            value={workAgreement.workDescription}
+            onChange={(e) => handleChange("workDescription", e.target.value)}
+            rows={6}
+            placeholder="Beschrijf de uit te voeren werkzaamheden..."
+          />
+        ) : (
+          <p className="whitespace-pre-line">{workAgreement.workDescription}</p>
+        )}
       </Card>
 
       <Card className="p-4">
         <h3 className="text-sm font-medium text-gray-500 mb-4">Voorzieningen door Opdrachtgever</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>Ter beschikking stellen stroomvoorziening 230 volt 16 amp.</li>
-          <li>Sanitaire voorzieningen</li>
-          <li>Bereikbaarheid werkplek met materieel</li>
-          <li>Oponthoud door werkzaamheden van derden worden doorberekend a €85 p/u per man</li>
-        </ul>
+        {isEditable ? (
+          <Textarea
+            value={provisions.join('\n')}
+            onChange={(e) => handleChange("provisions", e.target.value.split('\n').filter(line => line.trim()))}
+            rows={4}
+            placeholder="Voeg voorzieningen toe (één per regel)..."
+          />
+        ) : (
+          <ul className="list-disc pl-5 space-y-1">
+            {provisions.map((provision, index) => (
+              <li key={index}>{provision}</li>
+            ))}
+          </ul>
+        )}
+      </Card>
+
+      <Card className="p-4">
+        <h3 className="text-sm font-medium text-gray-500 mb-4">Uitsluitingen</h3>
+        {isEditable ? (
+          <Textarea
+            value={exclusions.join('\n')}
+            onChange={(e) => handleChange("exclusions", e.target.value.split('\n').filter(line => line.trim()))}
+            rows={4}
+            placeholder="Voeg uitsluitingen toe (één per regel)..."
+          />
+        ) : (
+          <ul className="list-disc pl-5 space-y-1">
+            {exclusions.map((exclusion, index) => (
+              <li key={index}>{exclusion}</li>
+            ))}
+          </ul>
+        )}
       </Card>
 
       <Card className="p-4">

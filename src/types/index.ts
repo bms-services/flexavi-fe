@@ -1,4 +1,3 @@
-
 export type Lead = {
   id: string;
   name: string;
@@ -173,4 +172,6 @@ export type WorkAgreement = {
   location?: string;
   notes?: string;
   exclusions?: string[];
+  provisions?: string[];
+  cashPaymentAmount?: number;
 };
