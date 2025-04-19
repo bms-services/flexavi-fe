@@ -3,7 +3,7 @@ import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Route, Brain } from "lucide-react";
+import { ChevronLeft, Route, Bot } from "lucide-react";
 
 interface AppointmentHeaderProps {
   date: string;
@@ -23,36 +23,35 @@ export const AppointmentHeader: React.FC<AppointmentHeaderProps> = ({
   const formattedDate = format(parseISO(date), "EEEE d MMMM yyyy", { locale: nl });
   
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <Button 
           variant="ghost" 
-          className="mb-2 -ml-2 h-8 gap-1"
+          className="h-8 px-2 -ml-2 mb-2"
           onClick={onBackToOverview}
         >
-          <ChevronLeft className="h-4 w-4" />
-          <span>Terug naar overzicht</span>
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Terug naar planning
         </Button>
-        <h1 className="text-2xl font-bold">Dagplanning: {formattedDate}</h1>
+        <h1 className="text-2xl font-bold">Afspraken {formattedDate}</h1>
       </div>
-      
       <div className="flex flex-wrap gap-2">
         <Button 
           variant="outline" 
           className="h-9"
           onClick={onAutoAssign}
         >
-          <Brain className="mr-1.5 h-4 w-4" />
-          AI Auto-toewijzen
+          <Bot className="h-4 w-4 mr-2" />
+          AI verdeling
         </Button>
         <Button 
-          variant="default" 
+          variant="default"
           className="h-9"
           onClick={onOptimizeRoutes}
           disabled={isOptimizingRoute}
         >
-          <Route className="mr-1.5 h-4 w-4" />
-          {isOptimizingRoute ? "Routes optimaliseren..." : "Routes optimaliseren"}
+          <Route className="h-4 w-4 mr-2" />
+          {isOptimizingRoute ? "Optimaliseren..." : "Routes optimaliseren"}
         </Button>
       </div>
     </div>

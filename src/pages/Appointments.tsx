@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { mockAppointments } from "@/data/mockData";
@@ -135,6 +136,7 @@ const Appointments = () => {
             onTeamUpdate={handleTeamUpdate}
             onUnavailableDateAdd={handleUnavailableDateAdd}
             onUnavailableDateRemove={handleUnavailableDateRemove}
+            onAppointmentAssign={handleAppointmentAssign}
           />
         </div>
       </TooltipProvider>

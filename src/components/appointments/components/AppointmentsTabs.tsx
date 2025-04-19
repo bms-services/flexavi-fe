@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { TeamAvailabilityOverview } from "../TeamAvailabilityOverview";
 import { DailyAppointments } from "../DailyAppointments";
+import { DailyTeamAppointments } from "../DailyTeamAppointments";
 import { Appointment, TeamDetails, WorkEnvironment } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
@@ -19,6 +20,7 @@ interface AppointmentsTabsProps {
   onTeamUpdate: (team: TeamDetails) => void;
   onUnavailableDateAdd: (teamId: string, date: string) => void;
   onUnavailableDateRemove: (teamId: string, date: string) => void;
+  onAppointmentAssign?: (appointmentId: string, teamId: string) => void;
 }
 
 export const AppointmentsTabs: React.FC<AppointmentsTabsProps> = ({
@@ -32,13 +34,40 @@ export const AppointmentsTabs: React.FC<AppointmentsTabsProps> = ({
   onUnavailableDateAdd,
   onUnavailableDateRemove,
   onDateSelect,
+  onAppointmentAssign,
 }) => {
   const [showDailyView, setShowDailyView] = useState(false);
+  const [showTeamDailyView, setShowTeamDailyView] = useState(false);
 
   const handleDateClick = (date: string) => {
     onDateSelect(date);
-    setShowDailyView(true);
+    setShowTeamDailyView(true);
   };
+
+  const handleBackToOverview = () => {
+    setShowDailyView(false);
+    setShowTeamDailyView(false);
+  };
+
+  const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
+    if (onAppointmentAssign) {
+      onAppointmentAssign(appointmentId, teamId);
+    }
+  };
+
+  if (showTeamDailyView) {
+    return (
+      <div className="space-y-6">
+        <DailyTeamAppointments
+          date={selectedDate}
+          appointments={appointments.filter(app => app.date === selectedDate)}
+          teams={teams}
+          onBackToOverview={handleBackToOverview}
+          onAppointmentAssign={handleAppointmentAssign}
+        />
+      </div>
+    );
+  }
 
   if (showDailyView) {
     return (
@@ -47,7 +76,7 @@ export const AppointmentsTabs: React.FC<AppointmentsTabsProps> = ({
           <Button 
             variant="ghost" 
             className="gap-2"
-            onClick={() => setShowDailyView(false)}
+            onClick={handleBackToOverview}
           >
             <ChevronLeft className="h-4 w-4" />
             Terug naar planning
