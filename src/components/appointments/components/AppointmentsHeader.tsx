@@ -1,15 +1,18 @@
 
 import React from "react";
 import { AppointmentActions } from "./AppointmentActions";
+import { TeamDetails } from "@/types";
 
 interface AppointmentsHeaderProps {
   onNewAppointment: () => void;
   onSettingsOpen: () => void;
+  teams: TeamDetails[];
 }
 
 export const AppointmentsHeader: React.FC<AppointmentsHeaderProps> = ({
   onNewAppointment,
   onSettingsOpen,
+  teams,
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -22,7 +25,7 @@ export const AppointmentsHeader: React.FC<AppointmentsHeaderProps> = ({
       <AppointmentActions 
         onNewAppointment={onNewAppointment}
         onSettingsOpen={onSettingsOpen}
+        teams={teams}
       />
     </div>
   );
-};
