@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Check, PlusCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -127,7 +128,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       </Popover>
 
       <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
-        <DialogContent className="sm:max-w-md z-[300]">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
             <DialogDescription>
