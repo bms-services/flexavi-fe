@@ -141,7 +141,7 @@ const WorkAgreementEdit = () => {
             <CardContent>
               <WorkAgreementAttachments
                 attachments={workAgreement.attachments || []}
-                onAttachmentsChange={files => handleWorkAgreementFieldChange('attachments', files)}
+                onAttachmentsChange={(files) => handleWorkAgreementFieldChange('attachments', files as unknown as string)}
                 defaultAttachments={[
                   { name: 'Algemene voorwaarden.pdf', url: '/attachments/terms.pdf' }
                 ]}

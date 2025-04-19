@@ -9,6 +9,8 @@ import { PasswordSettings } from "@/components/settings/account/PasswordSettings
 import { CompanySettings } from "@/components/settings/company/CompanySettings";
 import { useToast } from "@/hooks/use-toast";
 import { DefaultAttachmentsSettings } from "@/components/settings/workagreements/DefaultAttachmentsSettings";
+import { QuoteAttachmentsSettings } from "@/components/settings/quotes/QuoteAttachmentsSettings";
+import { InvoiceAttachmentsSettings } from "@/components/settings/invoices/InvoiceAttachmentsSettings";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -102,6 +104,8 @@ const Settings = () => {
 
           <TabsContent value="workagreements" className="space-y-6 mt-6">
             <DefaultAttachmentsSettings />
+            <QuoteAttachmentsSettings />
+            <InvoiceAttachmentsSettings />
           </TabsContent>
         </Tabs>
       </div>
