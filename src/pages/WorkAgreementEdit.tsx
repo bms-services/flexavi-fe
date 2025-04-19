@@ -4,6 +4,7 @@ import { Layout } from '@/components/layout/Layout';
 import { useParams } from 'react-router-dom';
 import { WorkAgreementForm } from '@/components/workagreements/forms/WorkAgreementForm';
 import { WorkAgreementWizardSteps } from '@/components/workagreements/wizard/WorkAgreementWizardSteps';
+import { WorkAgreementWizard } from '@/components/workagreements/wizard/WorkAgreementWizard';
 
 const WorkAgreementEdit = () => {
   const { id } = useParams();
