@@ -57,7 +57,9 @@ export const useQuoteForm = (quoteId?: string) => {
           lineItems: Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [],
         });
         
-        setLineItems(Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [createEmptyLineItem()]);
+        setLineItems(Array.isArray(foundQuote.lineItems) && foundQuote.lineItems.length > 0 
+          ? foundQuote.lineItems 
+          : [createEmptyLineItem()]);
         
         const leads = Array.isArray(mockLeads) ? mockLeads : [];
         const customer = leads.find(l => l.id === foundQuote.leadId);
