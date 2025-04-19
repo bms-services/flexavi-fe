@@ -1,19 +1,8 @@
 
 import React from "react";
 import { LeadDetail as LeadDetailType } from "@/types";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Phone, Mail, MapPin, Calendar, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -23,6 +12,7 @@ import { NotesTab } from "./tabs/NotesTab";
 import { AppointmentsTab } from "./tabs/AppointmentsTab";
 import { QuotesTab } from "./tabs/QuotesTab";
 import { InvoicesTab } from "./tabs/InvoicesTab";
+import { getLeadStats, formatCurrency } from "@/utils/leadStats";
 
 interface LeadDetailProps {
   lead: LeadDetailType;
@@ -33,24 +23,68 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead }) => {
     return format(new Date(date), "d MMMM yyyy", { locale: nl });
   };
 
+  const leadStats = getLeadStats(lead.id);
+
   return (
     <div className="space-y-6">
-      {/* Hero Section */}
+      {/* Hero Section with Quick Stats */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg shadow-sm">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold text-gray-900">{lead.name}</h1>
             <LeadStatusBadge status={lead.status} />
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline">Notitie Toevoegen</Button>
-            <Button variant="outline">Afspraak Plannen</Button>
-            <Button>Lead Bewerken</Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="bg-white/50 border-none">
+              <CardHeader className="p-4">
+                <CardDescription>Totale Waarde</CardDescription>
+                <CardTitle className="text-2xl text-primary">
+                  {formatCurrency(leadStats.quotesValue)}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card className="bg-white/50 border-none">
+              <CardHeader className="p-4">
+                <CardDescription>Betaald</CardDescription>
+                <CardTitle className="text-2xl text-emerald-600">
+                  {formatCurrency(leadStats.invoicesValue)}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card className="bg-white/50 border-none">
+              <CardHeader className="p-4">
+                <CardDescription>Laatste Offerte</CardDescription>
+                <CardTitle className="text-lg">
+                  {leadStats.latestQuoteStatus ? (
+                    <LeadStatusBadge status={leadStats.latestQuoteStatus} />
+                  ) : (
+                    "Geen"
+                  )}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card className="bg-white/50 border-none">
+              <CardHeader className="p-4">
+                <CardDescription>Laatste Factuur</CardDescription>
+                <CardTitle className="text-lg">
+                  {leadStats.latestInvoiceStatus ? (
+                    <LeadStatusBadge status={leadStats.latestInvoiceStatus} />
+                  ) : (
+                    "Geen"
+                  )}
+                </CardTitle>
+              </CardHeader>
+            </Card>
           </div>
+        </div>
+        <div className="flex gap-3 mt-6">
+          <Button variant="outline">Notitie Toevoegen</Button>
+          <Button variant="outline">Afspraak Plannen</Button>
+          <Button>Lead Bewerken</Button>
         </div>
       </div>
 
-      {/* Contact & Status Cards */}
+      {/* Contact & Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Contact Information */}
         <Card>
