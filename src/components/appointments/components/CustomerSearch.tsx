@@ -68,7 +68,6 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
   };
 
   const handleOpenNewCustomerDialog = () => {
-    console.log("Opening new customer dialog");
     setShowNewCustomerDialog(true);
     setOpen(false);
   };
