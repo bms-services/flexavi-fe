@@ -13,7 +13,7 @@ import { DefaultAttachmentsSettings } from "@/components/settings/attachments/De
 import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
 import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
 import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
-import { CreditCard } from "lucide-react";
+import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard } from "lucide-react";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -60,7 +60,7 @@ const Settings = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="container py-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Instellingen</h1>
           <p className="text-muted-foreground">
@@ -68,78 +68,92 @@ const Settings = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="company" className="space-y-6">
-          <TabsList className="bg-background border-b w-full justify-start rounded-none h-auto p-0">
-            <TabsTrigger value="company" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Bedrijf
-            </TabsTrigger>
-            <TabsTrigger value="appointments" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Agenda
-            </TabsTrigger>
-            <TabsTrigger value="teams" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Teams
-            </TabsTrigger>
-            <TabsTrigger value="account" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Account
-            </TabsTrigger>
-            <TabsTrigger value="attachments" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Standaard bijlagen
-            </TabsTrigger>
-            <TabsTrigger value="email" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Email templates
-            </TabsTrigger>
-            <TabsTrigger value="signature" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Handtekening
-            </TabsTrigger>
-            <TabsTrigger value="subscription" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-              Betaling/abonnement
-            </TabsTrigger>
-          </TabsList>
+        <div className="flex mt-6 min-h-[calc(100vh-10rem)]">
+          <Tabs defaultValue="company" orientation="vertical" className="flex min-h-full">
+            <div className="shrink-0">
+              <TabsList className="flex flex-col h-auto space-y-1 min-w-[200px] bg-muted p-2 rounded-l-md">
+                <TabsTrigger value="company" className="w-full justify-start">
+                  <Building2 className="h-4 w-4 mr-2" />
+                  Bedrijf
+                </TabsTrigger>
+                <TabsTrigger value="appointments" className="w-full justify-start">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Agenda
+                </TabsTrigger>
+                <TabsTrigger value="teams" className="w-full justify-start">
+                  <Users2 className="h-4 w-4 mr-2" />
+                  Teams
+                </TabsTrigger>
+                <TabsTrigger value="account" className="w-full justify-start">
+                  <User className="h-4 w-4 mr-2" />
+                  Account
+                </TabsTrigger>
+                <TabsTrigger value="attachments" className="w-full justify-start">
+                  <Paperclip className="h-4 w-4 mr-2" />
+                  Standaard bijlagen
+                </TabsTrigger>
+                <TabsTrigger value="email" className="w-full justify-start">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Email templates
+                </TabsTrigger>
+                <TabsTrigger value="signature" className="w-full justify-start">
+                  <Pen className="h-4 w-4 mr-2" />
+                  Handtekening
+                </TabsTrigger>
+                <TabsTrigger value="subscription" className="w-full justify-start">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Betaling/abonnement
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-          <TabsContent value="company" className="space-y-6">
-            <CompanySettings />
-          </TabsContent>
+            <div className="flex-1 border-l bg-background ml-4 pl-6">
+              <TabsContent value="company" className="mt-0">
+                <CompanySettings />
+              </TabsContent>
+              
+              <TabsContent value="appointments" className="mt-0">
+                <TimeBlockSettings
+                  timeBlocks={timeBlocks}
+                  slotSettings={slotSettings}
+                  onTimeBlocksChange={setTimeBlocks}
+                  onSlotSettingsChange={handleSlotSettingsChange}
+                  onSave={handleSaveSlots}
+                />
+                <CalendarColorSettings
+                  colors={colors}
+                  onColorsChange={setColors}
+                  onSave={handleSaveColors}
+                />
+              </TabsContent>
+              
+              <TabsContent value="teams" className="mt-0">
+                <TeamSettings />
+              </TabsContent>
+              
+              <TabsContent value="account" className="mt-0">
+                <PersonalInfoSettings />
+                <PasswordSettings />
+              </TabsContent>
 
-          <TabsContent value="appointments" className="space-y-6">
-            <TimeBlockSettings
-              timeBlocks={timeBlocks}
-              slotSettings={slotSettings}
-              onTimeBlocksChange={setTimeBlocks}
-              onSlotSettingsChange={handleSlotSettingsChange}
-              onSave={handleSaveSlots}
-            />
-            <CalendarColorSettings
-              colors={colors}
-              onColorsChange={setColors}
-              onSave={handleSaveColors}
-            />
-          </TabsContent>
+              <TabsContent value="attachments" className="mt-0">
+                <DefaultAttachmentsSettings />
+              </TabsContent>
 
-          <TabsContent value="teams" className="space-y-6">
-            <TeamSettings />
-          </TabsContent>
+              <TabsContent value="email" className="mt-0">
+                <EmailTemplatesSettings />
+              </TabsContent>
 
-          <TabsContent value="account" className="space-y-6">
-            <PersonalInfoSettings />
-            <PasswordSettings />
-          </TabsContent>
+              <TabsContent value="signature" className="mt-0">
+                <SignatureSettings />
+              </TabsContent>
 
-          <TabsContent value="attachments" className="space-y-6">
-            <DefaultAttachmentsSettings />
-          </TabsContent>
-
-          <TabsContent value="email" className="space-y-6">
-            <EmailTemplatesSettings />
-          </TabsContent>
-
-          <TabsContent value="signature" className="space-y-6">
-            <SignatureSettings />
-          </TabsContent>
-
-          <TabsContent value="subscription" className="space-y-6">
-            <SubscriptionSettings />
-          </TabsContent>
-        </Tabs>
+              <TabsContent value="subscription" className="mt-0">
+                <SubscriptionSettings />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );
