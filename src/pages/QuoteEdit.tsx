@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, PlusCircle, Save } from "lucide-react";
+import { ChevronLeft, Save } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,18 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { CustomerSearch } from "@/components/quotes/CustomerSearch";
-import { LineItemRow } from "@/components/quotes/LineItemRow";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { QuoteDetailsForm } from "@/components/quotes/forms/QuoteDetailsForm";
+import { LineItemsList } from "@/components/quotes/LineItemsList";
+import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { mockLeads, mockQuotes } from "@/data/mockData";
 import { Lead, Quote, QuoteLineItem, QuoteStatus } from "@/types";
 import { toast } from "sonner";
@@ -55,7 +47,6 @@ const QuoteEdit = () => {
   const navigate = useNavigate();
   const isEditing = !!id;
 
-  // State for form
   const [quote, setQuote] = useState<Omit<Quote, "id" | "createdAt" | "updatedAt">>(emptyQuote);
   const [lineItems, setLineItems] = useState<QuoteLineItem[]>([createEmptyLineItem()]);
   const [selectedCustomer, setSelectedCustomer] = useState<Lead | null>(null);
@@ -67,7 +58,6 @@ const QuoteEdit = () => {
   // Load quote data when editing
   useEffect(() => {
     if (isEditing && id) {
-      // Ensure mockQuotes is an array
       const quotes = Array.isArray(mockQuotes) ? mockQuotes : [];
       const foundQuote = quotes.find(q => q.id === id);
       
@@ -83,10 +73,8 @@ const QuoteEdit = () => {
           lineItems: Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [],
         });
         
-        // Ensure lineItems is an array
         setLineItems(Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [createEmptyLineItem()]);
         
-        // Find the customer
         const leads = Array.isArray(mockLeads) ? mockLeads : [];
         const customer = leads.find(l => l.id === foundQuote.leadId);
         if (customer) {
@@ -99,19 +87,16 @@ const QuoteEdit = () => {
     }
   }, [id, isEditing, navigate]);
 
-  // Update line item
   const handleLineItemChange = (index: number, updatedItem: QuoteLineItem) => {
     const newLineItems = [...lineItems];
     newLineItems[index] = updatedItem;
     setLineItems(newLineItems);
   };
 
-  // Add new line item
   const handleAddLineItem = () => {
     setLineItems([...lineItems, createEmptyLineItem()]);
   };
 
-  // Remove line item
   const handleRemoveLineItem = (index: number) => {
     if (lineItems.length > 1) {
       const newLineItems = [...lineItems];
@@ -120,7 +105,6 @@ const QuoteEdit = () => {
     }
   };
 
-  // Handle customer selection
   const handleCustomerSelect = (customer: Lead | null) => {
     setSelectedCustomer(customer);
     if (customer) {
@@ -130,43 +114,11 @@ const QuoteEdit = () => {
     }
   };
 
-  // Save quote
-  const handleSaveQuote = () => {
-    if (!selectedCustomer) {
-      toast.error("Selecteer een klant");
-      return;
-    }
-
-    if (lineItems.some(item => !item.description || item.quantity <= 0)) {
-      toast.error("Vul alle velden van de offerteregels in");
-      return;
-    }
-
-    // Calculate final amount
-    const finalQuote = {
-      ...quote,
-      leadId: selectedCustomer.id,
-      amount: totalAmount,
-      lineItems: lineItems,
-    };
-
-    // Here we would normally save to backend
-    // For now we'll just show a success message
-    
-    if (isEditing) {
-      toast.success("Offerte bijgewerkt");
-    } else {
-      toast.success("Nieuwe offerte aangemaakt");
-    }
-    
-    console.log("Saving quote:", finalQuote);
-    navigate("/quotes");
+  const handleQuoteFieldChange = (field: string, value: string) => {
+    setQuote(prev => ({ ...prev, [field]: value }));
   };
 
-  // Mock product suggestions functionality
   const getProductSuggestions = (title: string, index: string) => {
-    // Simulate API call for product suggestions based on title
-    // In a real app, this would query your product database
     if (title.length > 2) {
       const suggestions = [
         {
@@ -192,12 +144,38 @@ const QuoteEdit = () => {
         }
       ];
       
-      // Update product suggestions state with the new suggestions for this line item
       setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
     } else {
-      // Clear suggestions if the search term is too short
       setProductSuggestions(prev => ({ ...prev, [index]: [] }));
     }
+  };
+
+  const handleSaveQuote = () => {
+    if (!selectedCustomer) {
+      toast.error("Selecteer een klant");
+      return;
+    }
+
+    if (lineItems.some(item => !item.description || item.quantity <= 0)) {
+      toast.error("Vul alle velden van de offerteregels in");
+      return;
+    }
+
+    const finalQuote = {
+      ...quote,
+      leadId: selectedCustomer.id,
+      amount: totalAmount,
+      lineItems: lineItems,
+    };
+
+    if (isEditing) {
+      toast.success("Offerte bijgewerkt");
+    } else {
+      toast.success("Nieuwe offerte aangemaakt");
+    }
+    
+    console.log("Saving quote:", finalQuote);
+    navigate("/quotes");
   };
 
   return (
@@ -237,7 +215,6 @@ const QuoteEdit = () => {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="customer">Klant</Label>
                   <CustomerSearch 
                     selectedCustomer={selectedCustomer}
                     onSelectCustomer={handleCustomerSelect}
@@ -275,127 +252,33 @@ const QuoteEdit = () => {
               <CardDescription>Vul de details van de offerte in</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="description">Omschrijving</Label>
-                  <Input
-                    id="description"
-                    value={quote.description}
-                    onChange={e => setQuote({ ...quote, description: e.target.value })}
-                    placeholder="Bijv. Dakrenovatie en isolatie"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="location">Locatie</Label>
-                    <Input
-                      id="location"
-                      value={quote.location}
-                      onChange={e => setQuote({ ...quote, location: e.target.value })}
-                      placeholder="Bijv. Amsterdam, Prinsengracht 123"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="plannedStartDate">Geplande startdatum</Label>
-                    <Input
-                      id="plannedStartDate"
-                      type="date"
-                      value={quote.plannedStartDate ? new Date(quote.plannedStartDate).toISOString().split('T')[0] : ''}
-                      onChange={e => setQuote({ ...quote, plannedStartDate: new Date(e.target.value).toISOString() })}
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={quote.status}
-                    onValueChange={(value: QuoteStatus) => setQuote({ ...quote, status: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecteer een status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Concept</SelectItem>
-                      <SelectItem value="sent">Verzonden</SelectItem>
-                      <SelectItem value="accepted">Geaccepteerd</SelectItem>
-                      <SelectItem value="rejected">Afgewezen</SelectItem>
-                      <SelectItem value="revised">Herzien</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="notes">Notities</Label>
-                  <Textarea
-                    id="notes"
-                    value={quote.notes || ""}
-                    onChange={e => setQuote({ ...quote, notes: e.target.value })}
-                    placeholder="Interne notities voor deze offerte"
-                    rows={3}
-                  />
-                </div>
-              </div>
+              <QuoteDetailsForm 
+                description={quote.description}
+                location={quote.location}
+                plannedStartDate={quote.plannedStartDate}
+                status={quote.status}
+                notes={quote.notes || ""}
+                onFieldChange={handleQuoteFieldChange}
+              />
             </CardContent>
           </Card>
 
           {/* Offerte regels */}
           <Card className="lg:col-span-3">
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <CardTitle>Offerteregels</CardTitle>
-                  <CardDescription>Voeg producten en diensten toe aan de offerte</CardDescription>
-                </div>
-                <Button onClick={handleAddLineItem}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Regel toevoegen
-                </Button>
-              </div>
+              <CardTitle>Offerteregels</CardTitle>
+              <CardDescription>Voeg producten en diensten toe aan de offerte</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-2 font-medium text-sm border-b pb-2">
-                  <div className="col-span-4">Product / Dienst</div>
-                  <div className="col-span-1 text-center">Aantal</div>
-                  <div className="col-span-2">Eenheid</div>
-                  <div className="col-span-1 text-center">BTW</div>
-                  <div className="col-span-2">Prijs per eenheid</div>
-                  <div className="col-span-1 text-right">Totaal</div>
-                  <div className="col-span-1"></div>
-                </div>
-
-                {Array.isArray(lineItems) && lineItems.map((item, index) => (
-                  <LineItemRow
-                    key={item.id}
-                    lineItem={item}
-                    onChange={updatedItem => handleLineItemChange(index, updatedItem)}
-                    onRemove={() => handleRemoveLineItem(index)}
-                    productSuggestions={productSuggestions[item.id] || []}
-                    onProductSearch={(title) => getProductSuggestions(title, item.id)}
-                    showRemoveButton={lineItems.length > 1}
-                  />
-                ))}
-
-                <div className="flex justify-end mt-6 pt-4 border-t">
-                  <div className="w-64 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Subtotaal:</span>
-                      <span>€ {totalAmount.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>BTW (21%):</span>
-                      <span>€ {(totalAmount * 0.21).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between font-bold">
-                      <span>Totaal:</span>
-                      <span>€ {(totalAmount * 1.21).toFixed(2)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <LineItemsList 
+                lineItems={lineItems}
+                onLineItemChange={handleLineItemChange}
+                onAddLineItem={handleAddLineItem}
+                onRemoveLineItem={handleRemoveLineItem}
+                productSuggestions={productSuggestions}
+                onProductSearch={getProductSuggestions}
+              />
+              <QuoteSummary subtotal={totalAmount} />
             </CardContent>
           </Card>
         </div>
