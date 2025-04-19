@@ -147,6 +147,14 @@ export type TeamDetails = {
   color: string;
 };
 
+type PaymentMethod = "bank" | "cash" | "both";
+
+type PaymentInstallment = {
+  percentage: number;
+  description: string;
+  dueType: "upfront" | "start" | "during" | "completion";
+};
+
 export type WorkAgreementStatus = 
   | "draft"
   | "sent"
@@ -174,4 +182,7 @@ export type WorkAgreement = {
   exclusions?: string[];
   provisions?: string[];
   cashPaymentAmount?: number;
+  paymentInstallments?: PaymentInstallment[];
+  paymentMethod?: PaymentMethod;
 };
+

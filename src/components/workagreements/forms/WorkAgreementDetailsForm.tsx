@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { QuoteStatus, WorkAgreementStatus, Quote } from "@/types";
+import { WorkAgreementStatus, Quote } from "@/types";
 import { mockQuotes } from "@/data/mockData";
 import { Search } from "lucide-react";
 

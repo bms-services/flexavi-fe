@@ -1,4 +1,3 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -22,6 +21,11 @@ interface WorkAgreementDetailsProps {
     cashPaymentAmount?: number;
     provisions?: string[];
     exclusions?: string[];
+    paymentMethod?: string;
+    paymentInstallments?: {
+      description: string;
+      percentage: number;
+    }[];
   };
   formatCurrency: (amount: number) => string;
   companyDetails?: {
@@ -71,6 +75,28 @@ export const WorkAgreementDetails = ({
 
   const provisions = workAgreement.provisions || defaultProvisions;
   const exclusions = workAgreement.exclusions || defaultExclusions;
+
+  const renderPaymentMethod = () => {
+    const method = workAgreement.paymentMethod;
+    if (!method) return null;
+
+    let methodText = "";
+    if (method === "bank") methodText = "Bankoverschrijving";
+    if (method === "cash") methodText = "Contante betaling";
+    if (method === "both") methodText = "Bank en contante betaling";
+
+    return (
+      <div>
+        <Label>Betaalwijze</Label>
+        <p className="font-medium">{methodText}</p>
+        {(method === "cash" || method === "both") && workAgreement.cashPaymentAmount && (
+          <p className="text-sm text-muted-foreground mt-1">
+            Contant te betalen bij oplevering: {formatCurrency(workAgreement.cashPaymentAmount)}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -246,6 +272,29 @@ export const WorkAgreementDetails = ({
           <p>
             Door ondertekening ziet u af van de wettelijke bedenktijd van 14 dagen.
           </p>
+        </div>
+      </Card>
+
+      <Card className="p-4">
+        <h3 className="text-sm font-medium text-gray-500 mb-4 Euro">
+          Betaalgegevens
+        </h3>
+        <div className="space-y-4">
+          {renderPaymentMethod()}
+          
+          {workAgreement.paymentInstallments && workAgreement.paymentInstallments.length > 0 && (
+            <div>
+              <Label>Betaaltermijnen</Label>
+              <div className="space-y-2 mt-2">
+                {workAgreement.paymentInstallments.map((installment, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span>{installment.description}</span>
+                    <span className="font-medium">{installment.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 
