@@ -1,31 +1,15 @@
 
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Plus, PlusCircle, Pencil, Trash2, FolderIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { mockProducts } from "@/data/mockProducts";
-import { Badge } from "@/components/ui/badge";
-import { ProductDialog } from "@/components/products/ProductDialog";
-import { CategoryDialog } from "@/components/products/CategoryDialog";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
+import { mockProducts } from "@/data/mockProducts";
 import { mockCategories } from "@/data/mockCategories";
+import { ProductDialog } from "@/components/products/ProductDialog";
+import { CategoryDialog } from "@/components/products/CategoryDialog";
+import { ProductsHeader } from "@/components/products/ProductsHeader";
+import { CategoriesOverview } from "@/components/products/CategoriesOverview";
+import { ProductsTable } from "@/components/products/ProductsTable";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -59,166 +43,50 @@ const Products = () => {
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Producten</h1>
-            <p className="text-muted-foreground">
-              Beheer al je producten en diensten op één plek
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingCategory(undefined);
-                setCategoryDialogOpen(true);
-              }}
-              className="w-full sm:w-auto"
-            >
-              <FolderIcon className="mr-2 h-4 w-4" />
-              Categorie
-            </Button>
-            <Button
-              onClick={() => {
-                setEditingProduct(undefined);
-                setProductDialogOpen(true);
-              }}
-              className="w-full sm:w-auto"
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Nieuw Product
-            </Button>
-          </div>
-        </div>
+        <ProductsHeader
+          onNewProduct={() => {
+            setEditingProduct(undefined);
+            setProductDialogOpen(true);
+          }}
+          onNewCategory={() => {
+            setEditingCategory(undefined);
+            setCategoryDialogOpen(true);
+          }}
+        />
 
-        {/* Categories Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Categorieën</CardTitle>
-            <CardDescription>
-              Overzicht van productcategorieën
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockCategories.map((category) => (
-                <Card key={category.id} className="overflow-hidden">
-                  <CardHeader className="p-4">
-                    <div className="flex justify-between items-center">
-                      <CardTitle className="text-lg">{category.name}</CardTitle>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setEditingCategory(category);
-                          setCategoryDialogOpen(true);
-                        }}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <CardDescription>
-                      {category.description || "Geen beschrijving"}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <CategoriesOverview
+          categories={mockCategories}
+          onEditCategory={(category) => {
+            setEditingCategory(category);
+            setCategoryDialogOpen(true);
+          }}
+        />
 
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <CardTitle>Productoverzicht</CardTitle>
-                <CardDescription>
-                  Een lijst van alle producten en diensten
-                </CardDescription>
-              </div>
-              <div className="relative w-full sm:w-auto sm:max-w-xs">
-                <Input
-                  type="search"
-                  placeholder="Zoek producten..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="w-full overflow-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Acties</TableHead>
-                    <TableHead>Titel</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Omschrijving
-                    </TableHead>
-                    <TableHead className="hidden sm:table-cell">Eenheid</TableHead>
-                    <TableHead>Prijs</TableHead>
-                    <TableHead className="hidden sm:table-cell">BTW</TableHead>
-                    <TableHead>Categorie</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredProducts.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              setEditingProduct(product);
-                              setProductDialogOpen(true);
-                            }}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {product.title}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell max-w-xs truncate">
-                        {product.description}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">{product.unit}</TableCell>
-                      <TableCell>
-                        {formatCurrency(product.pricePerUnit)}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">{product.vat}%</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{product.category}</Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        <ProductsTable
+          products={filteredProducts}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onEditProduct={(product) => {
+            setEditingProduct(product);
+            setProductDialogOpen(true);
+          }}
+          formatCurrency={formatCurrency}
+        />
+
+        <ProductDialog
+          open={productDialogOpen}
+          onOpenChange={setProductDialogOpen}
+          product={editingProduct}
+          onSave={handleSaveProduct}
+        />
+
+        <CategoryDialog
+          open={categoryDialogOpen}
+          onOpenChange={setCategoryDialogOpen}
+          category={editingCategory}
+          onSave={handleSaveCategory}
+        />
       </div>
-
-      <ProductDialog
-        open={productDialogOpen}
-        onOpenChange={setProductDialogOpen}
-        product={editingProduct}
-        onSave={handleSaveProduct}
-      />
-
-      <CategoryDialog
-        open={categoryDialogOpen}
-        onOpenChange={setCategoryDialogOpen}
-        category={editingCategory}
-        onSave={handleSaveCategory}
-      />
     </Layout>
   );
 };
