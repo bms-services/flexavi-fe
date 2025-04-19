@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { LineItemRow } from "@/components/quotes/line-items/line-item-row/LineItemRow";
+import { LineItemRow } from "@/components/quotes/LineItemRow";
 import { QuoteLineItem } from "@/types";
 
 interface LineItemsListProps {
