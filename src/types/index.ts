@@ -1,3 +1,4 @@
+
 export type Lead = {
   id: string;
   name: string;
@@ -15,6 +16,7 @@ export type LeadDetail = Lead & {
   appointments: Appointment[];
   quotes: Quote[];
   invoices: Invoice[];
+  workAgreements?: WorkAgreement[];
 };
 
 export type LeadStatus = 
@@ -144,4 +146,31 @@ export type TeamDetails = {
   type: TeamType;
   environmentId: string;
   color: string;
+};
+
+export type WorkAgreementStatus = 
+  | "draft"
+  | "sent"
+  | "signed"
+  | "completed"
+  | "cancelled";
+
+export type WorkAgreement = {
+  id: string;
+  quoteId: string;
+  leadId: string;
+  totalAmount: number;
+  description: string;
+  status: WorkAgreementStatus;
+  workDescription: string;
+  warranty: string;
+  startDate: string;
+  companySignature: string; // Our signature (pre-filled)
+  customerSignature?: string; // Customer signature
+  createdAt: string;
+  updatedAt: string;
+  lineItems: QuoteLineItem[];
+  location?: string;
+  notes?: string;
+  exclusions?: string[];
 };

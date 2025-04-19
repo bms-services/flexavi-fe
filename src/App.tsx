@@ -18,6 +18,9 @@ import Products from "./pages/Products";
 import CustomerPortal from "./pages/CustomerPortal";
 import CustomerPortalInvoice from "./pages/CustomerPortalInvoice";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import WorkAgreements from "./pages/WorkAgreements";
+import WorkAgreementEdit from "./pages/WorkAgreementEdit";
+import CustomerPortalWorkAgreement from "./pages/CustomerPortalWorkAgreement";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +43,12 @@ const App = () => (
           <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />
           <Route path="/products" element={<Products />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/workagreements" element={<WorkAgreements />} />
+          <Route path="/workagreements/create" element={<WorkAgreementEdit />} />
+          <Route path="/workagreements/edit/:id" element={<WorkAgreementEdit />} />
           <Route path="/portal/quote/:id" element={<CustomerPortal />} />
           <Route path="/portal/invoice/:id" element={<CustomerPortalInvoice />} />
+          <Route path="/portal/workagreement/:id" element={<CustomerPortalWorkAgreement />} />
           <Route path="/portal/dashboard/:leadId" element={<CustomerDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
