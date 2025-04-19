@@ -10,8 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { FileText } from "lucide-react";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import Signature from "@/components/customer/Signature";
-import QuoteDetails from "@/components/customer-portal/QuoteDetails";
-import QuoteLineItems from "@/components/customer-portal/QuoteLineItems";
+import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
+import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
 import PortalRejectedMessage from "@/components/customer-portal/PortalRejectedMessage";
 
