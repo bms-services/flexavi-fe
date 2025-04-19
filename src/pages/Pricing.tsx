@@ -1,8 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
+import { MainHeader } from "@/components/layout/MainHeader";
+import { MainFooter } from "@/components/layout/MainFooter";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export default function Pricing() {
   const plans = [
@@ -52,8 +54,53 @@ export default function Pricing() {
     },
   ];
 
+  const detailedFeatures = {
+    categories: [
+      {
+        name: "Lead Management",
+        features: [
+          { name: "Leadregistratie", starter: true, professional: true, enterprise: true },
+          { name: "Lead scoring", starter: false, professional: true, enterprise: true },
+          { name: "Geautomatiseerde lead toewijzing", starter: false, professional: true, enterprise: true },
+          { name: "Lead analytics", starter: false, professional: false, enterprise: true }
+        ]
+      },
+      {
+        name: "Agenda & Planning",
+        features: [
+          { name: "Basis agenda", starter: true, professional: true, enterprise: true },
+          { name: "Team agenda's", starter: false, professional: true, enterprise: true },
+          { name: "Route optimalisatie", starter: false, professional: true, enterprise: true },
+          { name: "Capaciteitsplanning", starter: false, professional: false, enterprise: true }
+        ]
+      },
+      {
+        name: "Offertes & Facturatie",
+        features: [
+          { name: "Basis offertes", starter: true, professional: true, enterprise: true },
+          { name: "Aangepaste templates", starter: false, professional: true, enterprise: true },
+          { name: "Automatische berekeningen", starter: false, professional: true, enterprise: true },
+          { name: "Digitaal ondertekenen", starter: false, professional: true, enterprise: true },
+          { name: "Geavanceerde prijsmodellen", starter: false, professional: false, enterprise: true }
+        ]
+      },
+      {
+        name: "Projectbeheer",
+        features: [
+          { name: "Projectoverzicht", starter: true, professional: true, enterprise: true },
+          { name: "Documentbeheer", starter: false, professional: true, enterprise: true },
+          { name: "Werkbonnen", starter: false, professional: true, enterprise: true },
+          { name: "Materiaalplanning", starter: false, professional: false, enterprise: true },
+          { name: "Projectanalytics", starter: false, professional: false, enterprise: true }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <MainHeader />
+      
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -100,6 +147,60 @@ export default function Pricing() {
             ))}
           </div>
 
+          <div className="mt-24">
+            <h2 className="text-3xl font-bold text-center mb-12">Vergelijk alle functies</h2>
+            
+            <div className="rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[300px]">Functie</TableHead>
+                    <TableHead className="text-center">Starter</TableHead>
+                    <TableHead className="text-center">Professional</TableHead>
+                    <TableHead className="text-center">Enterprise</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {detailedFeatures.categories.map((category) => (
+                    <React.Fragment key={category.name}>
+                      <TableRow>
+                        <TableCell colSpan={4} className="bg-muted/50 font-semibold">
+                          {category.name}
+                        </TableCell>
+                      </TableRow>
+                      {category.features.map((feature) => (
+                        <TableRow key={feature.name}>
+                          <TableCell>{feature.name}</TableCell>
+                          <TableCell className="text-center">
+                            {feature.starter ? (
+                              <CheckCircle className="h-5 w-5 text-primary mx-auto" />
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {feature.professional ? (
+                              <CheckCircle className="h-5 w-5 text-primary mx-auto" />
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {feature.enterprise ? (
+                              <CheckCircle className="h-5 w-5 text-primary mx-auto" />
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold mb-4">Veel gestelde vragen</h2>
             <div className="max-w-3xl mx-auto text-left space-y-8">
@@ -123,6 +224,8 @@ export default function Pricing() {
           </div>
         </div>
       </section>
+
+      <MainFooter />
     </div>
   );
 }
