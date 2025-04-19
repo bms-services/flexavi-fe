@@ -1,9 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Minus } from "lucide-react";
+import { TimeRangeInput } from "./TimeRangeInput";
 
 interface TimeBlock {
   id: number;
@@ -26,6 +26,7 @@ interface TimeBlockCardProps {
   slotSettings: SlotSettings;
   onRemove: (id: number) => void;
   onSlotChange: (blockLabel: string, teamType: string, value: number) => void;
+  onTimeChange?: (id: number, start: string, end: string) => void;
 }
 
 export const TimeBlockCard: React.FC<TimeBlockCardProps> = ({
@@ -33,7 +34,16 @@ export const TimeBlockCard: React.FC<TimeBlockCardProps> = ({
   slotSettings,
   onRemove,
   onSlotChange,
+  onTimeChange,
 }) => {
+  const handleStartTimeChange = (time: string) => {
+    onTimeChange?.(block.id, time, block.end);
+  };
+
+  const handleEndTimeChange = (time: string) => {
+    onTimeChange?.(block.id, block.start, time);
+  };
+
   return (
     <div className="space-y-4 border p-4 rounded-lg">
       <div className="flex items-center justify-between">
@@ -47,16 +57,12 @@ export const TimeBlockCard: React.FC<TimeBlockCardProps> = ({
         </Button>
       </div>
       <div className="grid gap-4">
-        <div className="flex gap-2">
-          <div className="flex-1">
-            <Label>Start tijd</Label>
-            <Input type="time" value={block.start} />
-          </div>
-          <div className="flex-1">
-            <Label>Eind tijd</Label>
-            <Input type="time" value={block.end} />
-          </div>
-        </div>
+        <TimeRangeInput
+          startTime={block.start}
+          endTime={block.end}
+          onStartTimeChange={handleStartTimeChange}
+          onEndTimeChange={handleEndTimeChange}
+        />
         <div className="space-y-2">
           <Label>Verkoop afspraken</Label>
           <Input
