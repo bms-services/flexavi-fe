@@ -1,10 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -21,52 +20,67 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, FileText } from "lucide-react";
+import { CustomerSearch } from "./CustomerSearch";
+import { Lead, AppointmentStatus } from "@/types";
 
 interface NewAppointmentFormProps {
   onSubmit: (data: any) => void;
   teams: Array<{ id: string; name: string; type: string }>;
 }
 
+const timeSlots = [
+  "09:00", "10:00", "11:00", "12:00", "13:00", 
+  "14:00", "15:00", "16:00", "17:00"
+];
+
+const appointmentTypes: { value: AppointmentStatus; label: string }[] = [
+  { value: "new_assignment", label: "Klus" },
+  { value: "warranty", label: "Garantie" },
+  { value: "quote_request", label: "Offerte aanvraag" },
+  { value: "extra_assignment", label: "Betaling ophalen" },
+];
+
 export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps) => {
+  const [selectedCustomer, setSelectedCustomer] = useState<Lead | null>(null);
+  
   const form = useForm({
     defaultValues: {
-      title: "",
       date: new Date(),
       startTime: "09:00",
-      endTime: "10:00",
       teamId: "",
+      type: "new_assignment" as AppointmentStatus,
       description: "",
-      customerName: "",
-      customerPhone: "",
-      customerEmail: "",
-      customerAddress: "",
     },
   });
 
+  const handleSubmit = (data: any) => {
+    if (!selectedCustomer) {
+      return;
+    }
+    onSubmit({
+      ...data,
+      customer: selectedCustomer,
+    });
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Titel</FormLabel>
-              <FormControl>
-                <Input placeholder="Titel van de afspraak" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <FormItem className="space-y-4">
+          <FormLabel>Klant</FormLabel>
+          <CustomerSearch
+            selectedCustomer={selectedCustomer}
+            onSelectCustomer={setSelectedCustomer}
+          />
+        </FormItem>
 
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Datum</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -93,6 +107,7 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
                       selected={field.value}
                       onSelect={field.onChange}
                       initialFocus
+                      className={cn("p-3 pointer-events-auto")}
                     />
                   </PopoverContent>
                 </Popover>
@@ -106,10 +121,26 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
             name="startTime"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Starttijd</FormLabel>
-                <FormControl>
-                  <Input type="time" {...field} />
-                </FormControl>
+                <FormLabel>Tijdstip</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecteer een tijdstip">
+                        <div className="flex items-center">
+                          <Clock className="mr-2 h-4 w-4" />
+                          {field.value}
+                        </div>
+                      </SelectValue>
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {timeSlots.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -118,14 +149,39 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
 
         <FormField
           control={form.control}
-          name="teamId"
+          name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Team</FormLabel>
+              <FormLabel>Type Afspraak</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecteer een team" />
+                    <SelectValue placeholder="Selecteer type afspraak" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {appointmentTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="teamId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Team (Optioneel)</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecteer een team (optioneel)" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -148,79 +204,24 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
             <FormItem>
               <FormLabel>Beschrijving</FormLabel>
               <FormControl>
-                <Textarea placeholder="Beschrijf de afspraak" {...field} />
+                <div className="relative">
+                  <Textarea 
+                    placeholder="Gedetailleerde omschrijving van de opdracht" 
+                    className="min-h-[100px]" 
+                    {...field} 
+                  />
+                  <FileText className="absolute right-3 top-3 h-4 w-4 opacity-50" />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="space-y-4">
-          <h3 className="font-medium">Klantgegevens</h3>
-          
-          <div className="grid gap-4">
-            <FormField
-              control={form.control}
-              name="customerName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Naam</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Naam van de klant" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="customerPhone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Telefoonnummer</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="Telefoonnummer" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="customerEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Email adres" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="customerAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Adres</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Volledig adres" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
         <div className="flex justify-end space-x-2 pt-4">
-          <Button type="submit">Afspraak Inplannen</Button>
+          <Button type="submit" disabled={!selectedCustomer}>
+            Afspraak Inplannen
+          </Button>
         </div>
       </form>
     </Form>
