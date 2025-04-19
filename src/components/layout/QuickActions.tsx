@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, FileText, Folder, Bell, Search, Settings, LogOut, User } from 'lucide-react';
@@ -17,6 +16,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const QuickActions = () => {
   const actions = [
@@ -47,11 +51,17 @@ const QuickActions = () => {
     },
   ];
 
+  const notifications = [
+    { id: 1, title: 'Nieuwe offerte', description: 'Er is een nieuwe offerte toegevoegd' },
+    { id: 2, title: 'Afspraak herinnering', description: 'Je hebt morgen een afspraak' },
+    { id: 3, title: 'Factuur betaald', description: 'Een factuur is zojuist betaald' },
+  ];
+
   return (
     <TooltipProvider>
       <div className="h-16 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50">
         <div className="h-full px-4 flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
             {actions.map((action) => (
               <Tooltip key={action.href}>
                 <TooltipTrigger asChild>
@@ -59,7 +69,7 @@ const QuickActions = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full hover:bg-accent"
+                      className="rounded-full hover:bg-accent min-w-10"
                     >
                       <action.icon className="h-5 w-5" />
                       <span className="sr-only">{action.label}</span>
@@ -71,8 +81,8 @@ const QuickActions = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-64">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="relative hidden sm:block w-48 lg:w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
@@ -80,26 +90,43 @@ const QuickActions = () => {
                 className="pl-8"
               />
             </div>
-            <Tooltip>
+
+            <Popover>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full hover:bg-accent relative"
-                >
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">3</span>
-                  <span className="sr-only">Notificaties</span>
-                </Button>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full hover:bg-accent relative"
+                  >
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center">
+                      {notifications.length}
+                    </span>
+                    <span className="sr-only">Notificaties</span>
+                  </Button>
+                </PopoverTrigger>
               </TooltipTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="p-4 space-y-4">
+                  {notifications.map((notification) => (
+                    <div key={notification.id} className="space-y-1">
+                      <h4 className="text-sm font-medium">{notification.title}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {notification.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
               <TooltipContent>Notificaties</TooltipContent>
-            </Tooltip>
+            </Popover>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent gap-2">
                   <User className="h-5 w-5" />
-                  <span className="hidden md:inline-block">John Doe</span>
+                  <span className="hidden md:inline-block ml-2">John Doe</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
