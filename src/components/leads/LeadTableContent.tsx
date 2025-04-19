@@ -13,15 +13,15 @@ import {
 import { LeadStatusBadge } from "./LeadStatusBadge";
 import { QuoteStatusBadge } from "./badges/QuoteStatusBadge";
 import { InvoiceStatusBadge } from "./badges/InvoiceStatusBadge";
-import { Lead } from "@/types";
+import { Lead, QuoteStatus, InvoiceStatus } from "@/types";
 
 interface LeadTableContentProps {
   leads: Lead[];
   getLeadStats: (leadId: string) => {
     quotesValue: number;
     invoicesValue: number;
-    latestQuoteStatus?: string;
-    latestInvoiceStatus?: string;
+    latestQuoteStatus?: QuoteStatus;
+    latestInvoiceStatus?: InvoiceStatus;
   };
   formatCurrency: (amount: number) => string;
 }
@@ -112,4 +112,4 @@ export const LeadTableContent: React.FC<LeadTableContentProps> = ({
       })}
     </>
   );
-};
+}
