@@ -9,12 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { useQuoteStatusBadge, useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
 
 interface RecentActivitiesProps {
-  quotes: Quote[];
-  invoices: Invoice[];
+  activities: (Quote | Invoice)[];
 }
 
-export const RecentActivities: React.FC<RecentActivitiesProps> = ({ quotes, invoices }) => {
-  const recentActivities = [...quotes, ...invoices]
+export const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }) => {
+  const recentActivities = activities
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3);
 
