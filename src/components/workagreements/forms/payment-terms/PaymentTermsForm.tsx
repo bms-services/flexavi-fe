@@ -2,16 +2,10 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-import { Trash2, Plus } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Plus } from "lucide-react";
+import { PaymentMethodSelect } from "./components/PaymentMethodSelect";
+import { CashPaymentInput } from "./components/CashPaymentInput";
+import { PaymentInstallmentItem } from "./components/PaymentInstallmentItem";
 
 type PaymentMethod = "bank" | "cash" | "both";
 
@@ -38,17 +32,13 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
   onCashPaymentAmountChange,
   onPaymentInstallmentsChange,
 }) => {
-  const [showCashAmount, setShowCashAmount] = useState(paymentMethod === "cash" || paymentMethod === "both");
+  const [showCashAmount, setShowCashAmount] = useState(
+    paymentMethod === "cash" || paymentMethod === "both"
+  );
 
-  const handleMethodChange = (value: string) => {
-    const method = value as PaymentMethod;
-    onPaymentMethodChange(method);
-    setShowCashAmount(method === "cash" || method === "both");
-  };
-
-  const handleCashAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = parseFloat(e.target.value);
-    onCashPaymentAmountChange(isNaN(amount) ? 0 : amount);
+  const handleMethodChange = (value: PaymentMethod) => {
+    onPaymentMethodChange(value);
+    setShowCashAmount(value === "cash" || value === "both");
   };
 
   const handleAddInstallment = () => {
@@ -69,7 +59,11 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     onPaymentInstallmentsChange(newInstallments);
   };
 
-  const handleInstallmentChange = (index: number, field: keyof PaymentInstallment, value: string | number) => {
+  const handleInstallmentChange = (
+    index: number,
+    field: keyof PaymentInstallment,
+    value: string | number
+  ) => {
     const newInstallments = [...paymentInstallments];
     if (field === 'percentage') {
       const percentage = parseFloat(value as string);
@@ -77,42 +71,29 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     } else if (field === 'description') {
       newInstallments[index][field] = value as string;
     } else if (field === 'dueType') {
-      // Ensure we only assign valid dueType values
       const dueTypeValue = value as "upfront" | "start" | "during" | "completion";
       newInstallments[index][field] = dueTypeValue;
     }
     onPaymentInstallmentsChange(newInstallments);
   };
 
-  // Calculate total percentage
-  const totalPercentage = paymentInstallments.reduce((sum, { percentage }) => sum + percentage, 0);
+  const totalPercentage = paymentInstallments.reduce(
+    (sum, { percentage }) => sum + percentage,
+    0
+  );
 
   return (
     <div className="space-y-4">
-      <div>
-        <Label>Betaalmethode</Label>
-        <Select value={paymentMethod} onValueChange={handleMethodChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Selecteer betaalmethode" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="bank">Bankoverschrijving</SelectItem>
-            <SelectItem value="cash">Contant</SelectItem>
-            <SelectItem value="both">Bank en contant</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <PaymentMethodSelect 
+        value={paymentMethod} 
+        onChange={handleMethodChange} 
+      />
 
       {showCashAmount && (
-        <div>
-          <Label>Contant te betalen bij oplevering (€)</Label>
-          <Input
-            type="number"
-            value={cashPaymentAmount || ''}
-            onChange={handleCashAmountChange}
-            placeholder="Bedrag"
-          />
-        </div>
+        <CashPaymentInput
+          value={cashPaymentAmount}
+          onChange={onCashPaymentAmountChange}
+        />
       )}
 
       <div className="space-y-2">
@@ -131,61 +112,12 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
         {paymentInstallments.length > 0 ? (
           <div>
             {paymentInstallments.map((installment, index) => (
-              <Card key={index} className="mb-2">
-                <CardContent className="pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <div className="md:col-span-2">
-                      <Label>Omschrijving</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          value={installment.description}
-                          onChange={(e) => handleInstallmentChange(index, 'description', e.target.value)}
-                          placeholder="Omschrijving"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Label>Percentage (%)</Label>
-                      <Input
-                        type="number"
-                        value={installment.percentage}
-                        onChange={(e) => handleInstallmentChange(index, 'percentage', e.target.value)}
-                        placeholder="Percentage"
-                      />
-                    </div>
-
-                    <div>
-                      <Label>Type</Label>
-                      <Select 
-                        value={installment.dueType} 
-                        onValueChange={(value) => handleInstallmentChange(index, 'dueType', value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="upfront">Vooraf</SelectItem>
-                          <SelectItem value="start">Bij aanvang</SelectItem>
-                          <SelectItem value="during">Tussentijds</SelectItem>
-                          <SelectItem value="completion">Bij oplevering</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex items-end">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemoveInstallment(index)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <PaymentInstallmentItem
+                key={index}
+                installment={installment}
+                onRemove={() => handleRemoveInstallment(index)}
+                onChange={(field, value) => handleInstallmentChange(index, field, value)}
+              />
             ))}
 
             <div className="flex justify-between text-sm mt-2">
