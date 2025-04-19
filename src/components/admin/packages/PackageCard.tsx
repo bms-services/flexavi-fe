@@ -7,7 +7,7 @@ import { PackageData } from './types';
 
 interface PackageCardProps {
   packageData: PackageData;
-  type: keyof typeof packages;
+  type: 'starter' | 'professional' | 'enterprise';
   onPriceChange: (packageType: string, field: 'monthly' | 'yearly' | 'trialDays' | 'percentage' | 'validDays', value: string) => void;
 }
 
@@ -90,3 +90,4 @@ export function PackageCard({ packageData, type, onPriceChange }: PackageCardPro
     </Card>
   );
 }
+
