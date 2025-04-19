@@ -6,7 +6,16 @@ import { parseISO, format, isToday, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ScheduleSettings } from "./AppointmentSettings";
+
+interface ScheduleSettings {
+  salesMorningSlots: number;
+  salesAfternoonSlots: number;
+  salesEveningSlots: number;
+  installationMorningSlots: number;
+  installationAfternoonSlots: number;
+  installationEveningSlots: number;
+  defaultJobDuration: string;
+}
 
 interface AppointmentStatsProps {
   appointments: Appointment[];

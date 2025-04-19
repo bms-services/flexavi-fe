@@ -4,11 +4,12 @@ import { Layout } from "@/components/layout/Layout";
 import { AppointmentCalendar } from "@/components/appointments/AppointmentCalendar";
 import { DailyAppointments } from "@/components/appointments/DailyAppointments";
 import { TeamAvailabilityOverview } from "@/components/appointments/TeamAvailabilityOverview";
+import { DailyTeamAppointments } from "@/components/appointments/DailyTeamAppointments";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, CalendarDays, Settings } from "lucide-react";
+import { PlusCircle, CalendarDays, Settings, FileText } from "lucide-react";
 import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
-import { WorkEnvironment, TeamDetails, TeamType } from "@/types";
+import { WorkEnvironment, TeamDetails, TeamType, Appointment } from "@/types";
 import { 
   Tabs, 
   TabsContent, 
@@ -17,15 +18,6 @@ import {
 } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { TeamAvailabilitySettings } from "@/components/appointments/TeamAvailabilitySettings";
 
 // Voorbeeld data voor teams en werkgebieden
 const mockEnvironments: WorkEnvironment[] = [
@@ -39,6 +31,8 @@ const Appointments = () => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
   const [activeTab, setActiveTab] = useState("planning");
+  const [isDateDetailView, setIsDateDetailView] = useState(false);
+  const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
 
   // Team state with useState hook
   const [teams, setTeams] = useState<TeamDetails[]>([
@@ -67,12 +61,13 @@ const Appointments = () => {
     defaultJobDuration: "medium"
   });
 
-  const appointmentsForSelectedDate = mockAppointments.filter(
+  const appointmentsForSelectedDate = appointments.filter(
     (a) => a.date === selectedDate
   );
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
+    setIsDateDetailView(true);
     setActiveTab("daily");
   };
 
@@ -131,11 +126,26 @@ const Appointments = () => {
   };
 
   const handleTeamNameEdit = (team: TeamDetails) => {
-    // Open a dialog or another UI for editing
-    toast({
-      title: "Team bewerken",
-      description: `Je kunt het team "${team.name}" bewerken in de instellingen.`,
-    });
+    // Prompt for new name (in a real app, use a modal)
+    const newName = prompt("Voer een nieuwe naam in voor het team:", team.name);
+    if (newName && newName.trim() && newName !== team.name) {
+      const updatedTeam = { ...team, name: newName.trim() };
+      handleTeamUpdate(updatedTeam);
+      toast({
+        title: "Team naam bijgewerkt",
+        description: `Team naam is bijgewerkt naar "${newName}".`,
+      });
+    }
+  };
+
+  const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
+    setAppointments(appointments.map(app => 
+      app.id === appointmentId ? { ...app, teamId } : app
+    ));
+  };
+
+  const handleBackToOverview = () => {
+    setIsDateDetailView(false);
   };
 
   return (
@@ -150,35 +160,6 @@ const Appointments = () => {
               </p>
             </div>
             <div className="flex gap-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="bg-white">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Planning Instellingen
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[800px]">
-                  <DialogHeader>
-                    <DialogTitle>Planning Instellingen</DialogTitle>
-                    <DialogDescription>
-                      Beheer de planning instellingen, teams en beschikbaarheid.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <TeamAvailabilitySettings 
-                    teams={teams}
-                    environments={mockEnvironments}
-                    unavailableDates={unavailableDates}
-                    onTeamUpdate={handleTeamUpdate}
-                    onUnavailableDateAdd={handleUnavailableDateAdd}
-                    onUnavailableDateRemove={handleUnavailableDateRemove}
-                    onTeamDelete={handleTeamDelete}
-                    onSlotUpdate={handleSlotUpdate}
-                    slotsConfiguration={scheduleSettings}
-                  />
-                </DialogContent>
-              </Dialog>
-              
               <Button className="bg-primary hover:bg-primary/90" onClick={handleNewAppointment}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Nieuwe Afspraak
@@ -186,46 +167,56 @@ const Appointments = () => {
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="planning" className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4" />
-                <span>Planningsoverzicht</span>
-              </TabsTrigger>
-              <TabsTrigger value="daily" className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4" />
-                <span>Dagplanning</span>
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="planning" className="space-y-6">
-              <TeamAvailabilityOverview
-                startDate={selectedDate}
-                appointments={mockAppointments}
-                teams={teams}
-                environments={mockEnvironments}
-                scheduleSettings={scheduleSettings}
-                unavailableDates={unavailableDates}
-                onTeamUpdate={handleTeamUpdate}
-                onUnavailableDateAdd={handleUnavailableDateAdd}
-                onUnavailableDateRemove={handleUnavailableDateRemove}
-              />
-            </TabsContent>
-            
-            <TabsContent value="daily" className="space-y-6">
-              <div className="grid gap-6 lg:grid-cols-2">
-                <AppointmentCalendar
-                  appointments={mockAppointments}
-                  onDateSelect={handleDateSelect}
-                  selectedDate={selectedDate}
+          {!isDateDetailView ? (
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="planning" className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  <span>Planningsoverzicht</span>
+                </TabsTrigger>
+                <TabsTrigger value="daily" className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  <span>Dagplanning</span>
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="planning" className="space-y-6">
+                <TeamAvailabilityOverview
+                  startDate={selectedDate}
+                  appointments={appointments}
+                  teams={teams}
+                  environments={mockEnvironments}
+                  scheduleSettings={scheduleSettings}
+                  unavailableDates={unavailableDates}
+                  onTeamUpdate={handleTeamUpdate}
+                  onUnavailableDateAdd={handleUnavailableDateAdd}
+                  onUnavailableDateRemove={handleUnavailableDateRemove}
                 />
-                <DailyAppointments
-                  date={selectedDate}
-                  appointments={appointmentsForSelectedDate}
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
+              </TabsContent>
+              
+              <TabsContent value="daily" className="space-y-6">
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <AppointmentCalendar
+                    appointments={appointments}
+                    onDateSelect={handleDateSelect}
+                    selectedDate={selectedDate}
+                  />
+                  <DailyAppointments
+                    date={selectedDate}
+                    appointments={appointmentsForSelectedDate}
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          ) : (
+            <DailyTeamAppointments
+              date={selectedDate}
+              appointments={appointments}
+              teams={teams}
+              onBackToOverview={handleBackToOverview}
+              onAppointmentAssign={handleAppointmentAssign}
+            />
+          )}
         </div>
       </TooltipProvider>
     </Layout>

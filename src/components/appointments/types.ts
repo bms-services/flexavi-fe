@@ -53,3 +53,27 @@ export interface InstallationTeamSectionProps {
   unavailableDates?: Record<string, string[]>;
   onTeamNameEdit?: (team: TeamDetails) => void;
 }
+
+export interface UnassignedAppointmentsProps {
+  date: string;
+  appointments: Appointment[];
+  onDragStart: (e: React.DragEvent, appointment: Appointment) => void;
+}
+
+export interface DailyTeamAppointmentsProps {
+  date: string;
+  appointments: Appointment[];
+  teams: TeamDetails[];
+  onBackToOverview: () => void;
+  onAppointmentAssign: (appointmentId: string, teamId: string) => void;
+}
+
+export interface ScheduleSettings {
+  salesMorningSlots: number;
+  salesAfternoonSlots: number;
+  salesEveningSlots: number;
+  installationMorningSlots: number;
+  installationAfternoonSlots: number;
+  installationEveningSlots: number;
+  defaultJobDuration: string;
+}
