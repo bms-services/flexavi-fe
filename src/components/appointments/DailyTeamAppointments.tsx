@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { 
   Clock, MapPin, User, Calendar, FileText, ChevronLeft, 
-  Route, Truck, FileText2, AlertTriangle, ArrowLeft, Check
+  Route, Truck, AlertTriangle, ArrowLeft, Check
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -186,7 +185,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
                       "Genereren..."
                     ) : (
                       <>
-                        <FileText2 className="h-3.5 w-3.5 mr-1.5" />
+                        <FileText className="h-3.5 w-3.5 mr-1.5" />
                         Werklijst PDF
                       </>
                     )}
