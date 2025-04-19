@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -17,6 +16,7 @@ import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { useWorkAgreementForm } from "@/hooks/useWorkAgreementForm";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
+import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -119,6 +119,16 @@ const WorkAgreementEdit = () => {
                 exclusions={workAgreement.exclusions || []}
                 onChange={handleExclusionsChange}
               />
+            </CardContent>
+          </Card>
+
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle>Algemene Voorwaarden</CardTitle>
+              <CardDescription>Algemene voorwaarden die van toepassing zijn op deze werkovereenkomst</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GeneralTerms />
             </CardContent>
           </Card>
         </div>
