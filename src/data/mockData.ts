@@ -5,3 +5,4 @@ export * from './mockQuotes';
 export * from './mockInvoices';
 export * from './getLeadDetail';
 export * from './mockProducts';
+export * from './mockProjects';
