@@ -8,7 +8,7 @@ interface QuoteLineItemsProps {
 
 export const QuoteLineItems = ({ lineItems, formatCurrency }: QuoteLineItemsProps) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="w-full min-w-[600px]">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b">

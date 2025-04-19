@@ -96,20 +96,22 @@ const CustomerPortal = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <Card className="w-full max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-4 md:py-8 px-4">
+      <div className="container mx-auto flex justify-center">
+        <Card className="w-full max-w-3xl">
           <CardHeader className="border-b pb-6">
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
               <div>
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  Offerte {quote.id.replace("quote-", "OF-")}
+                <CardTitle className="text-xl md:text-2xl flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary shrink-0" />
+                  <span className="break-all">Offerte {quote.id.replace("quote-", "OF-")}</span>
                 </CardTitle>
-                <CardDescription>{quote.description}</CardDescription>
+                <CardDescription className="mt-1">{quote.description}</CardDescription>
               </div>
               {statusBadge && (
-                <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+                <Badge variant={statusBadge.variant} className="self-start">
+                  {statusBadge.label}
+                </Badge>
               )}
             </div>
           </CardHeader>
@@ -122,10 +124,12 @@ const CustomerPortal = () => {
             />
             
             <h3 className="text-sm font-medium text-gray-500 pb-2 border-b">Offerteregels</h3>
-            <QuoteLineItems 
-              lineItems={quote.lineItems}
-              formatCurrency={formatCurrency}
-            />
+            <div className="overflow-x-auto -mx-6 px-6">
+              <QuoteLineItems 
+                lineItems={quote.lineItems}
+                formatCurrency={formatCurrency}
+              />
+            </div>
             
             <div className="border-t pt-6 mt-6">
               <h3 className="text-lg font-medium mb-4">Handtekening</h3>
@@ -136,11 +140,18 @@ const CustomerPortal = () => {
             </div>
           </CardContent>
           
-          <CardFooter className="flex justify-between space-x-4 border-t pt-6">
-            <Button variant="outline" onClick={handleReject}>
+          <CardFooter className="flex flex-col sm:flex-row justify-between gap-4 border-t pt-6">
+            <Button 
+              variant="outline" 
+              onClick={handleReject}
+              className="w-full sm:w-auto order-2 sm:order-1"
+            >
               Offerte afwijzen
             </Button>
-            <Button onClick={handleAccept}>
+            <Button 
+              onClick={handleAccept}
+              className="w-full sm:w-auto order-1 sm:order-2"
+            >
               Offerte accepteren
             </Button>
           </CardFooter>
