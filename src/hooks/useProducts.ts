@@ -9,21 +9,37 @@ export const useProducts = () => {
       return [];
     }
     
-    const normalizedQuery = query.toLowerCase().trim();
-    
-    return mockProducts.filter(product => 
-      product.title.toLowerCase().includes(normalizedQuery) ||
-      product.description.toLowerCase().includes(normalizedQuery)
-    );
+    try {
+      const normalizedQuery = query.toLowerCase().trim();
+      
+      return mockProducts.filter(product => 
+        product.title.toLowerCase().includes(normalizedQuery) ||
+        product.description.toLowerCase().includes(normalizedQuery)
+      );
+    } catch (error) {
+      console.error("Error searching products:", error);
+      return [];
+    }
   };
 
   const getProductById = (id: string): Product | undefined => {
     if (!id) return undefined;
-    return mockProducts.find(product => product.id === id);
+    
+    try {
+      return mockProducts.find(product => product.id === id);
+    } catch (error) {
+      console.error("Error getting product by ID:", error);
+      return undefined;
+    }
   };
 
   const getAllProducts = (): Product[] => {
-    return [...mockProducts];
+    try {
+      return [...mockProducts];
+    } catch (error) {
+      console.error("Error getting all products:", error);
+      return [];
+    }
   };
 
   return {

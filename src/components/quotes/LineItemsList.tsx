@@ -23,6 +23,12 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   productSuggestions = {},
   onProductSearch,
 }) => {
+  // Ensure we have a valid array of line items
+  const safeLineItems = Array.isArray(lineItems) ? lineItems : [];
+  
+  // Ensure productSuggestions is a valid object
+  const safeSuggestions = productSuggestions || {};
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-12 gap-2 font-medium text-sm border-b pb-2">
@@ -35,23 +41,28 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
         <div className="col-span-1"></div>
       </div>
 
-      {Array.isArray(lineItems) && lineItems.map((item, index) => (
-        <LineItemRow
-          key={item.id || `item-${index}`}
-          lineItem={item}
-          onChange={updatedItem => onLineItemChange(index, updatedItem)}
-          onRemove={() => onRemoveLineItem(index)}
-          productSuggestions={
-            item?.id && productSuggestions[item.id] ? productSuggestions[item.id] : []
-          }
-          onProductSearch={(title) => {
-            if (item?.id) {
-              onProductSearch(title, item.id);
-            }
-          }}
-          showRemoveButton={lineItems.length > 1}
-        />
-      ))}
+      {safeLineItems.map((item, index) => {
+        // Get suggestions for this item safely
+        const itemSuggestions = item?.id && safeSuggestions[item.id] 
+          ? safeSuggestions[item.id] 
+          : [];
+          
+        return (
+          <LineItemRow
+            key={item.id || `item-${index}`}
+            lineItem={item}
+            onChange={updatedItem => onLineItemChange(index, updatedItem)}
+            onRemove={() => onRemoveLineItem(index)}
+            productSuggestions={itemSuggestions}
+            onProductSearch={(title) => {
+              if (item?.id) {
+                onProductSearch(title, item.id);
+              }
+            }}
+            showRemoveButton={safeLineItems.length > 1}
+          />
+        );
+      })}
 
       <div className="flex justify-end">
         <Button onClick={onAddLineItem}>

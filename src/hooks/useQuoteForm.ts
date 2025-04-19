@@ -41,7 +41,7 @@ export const useQuoteForm = (quoteId?: string) => {
   const { searchProducts } = useProducts();
 
   // Calculate total amount
-  const totalAmount = lineItems.reduce((sum, item) => sum + (item.total || 0), 0);
+  const totalAmount = lineItems.reduce((sum, item) => sum + (parseFloat(String(item.total)) || 0), 0);
 
   // Load quote data when editing
   useEffect(() => {
@@ -77,8 +77,12 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const handleLineItemChange = (index: number, updatedItem: QuoteLineItem) => {
     const newLineItems = [...lineItems];
-    newLineItems[index] = updatedItem;
-    setLineItems(newLineItems);
+    
+    // Ensure the index is valid
+    if (index >= 0 && index < newLineItems.length) {
+      newLineItems[index] = updatedItem;
+      setLineItems(newLineItems);
+    }
   };
 
   const handleAddLineItem = () => {
@@ -108,17 +112,20 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const getProductSuggestions = (title: string, index: string) => {
     // Skip invalid searches
-    if (!title || title.trim().length <= 1 || !index) {
+    if (!title || typeof title !== 'string' || title.trim().length <= 1 || !index) {
       return;
     }
     
     // Get suggestions from the product hook
     const results = searchProducts(title);
     
+    // Ensure we have a valid array
+    const safeResults = Array.isArray(results) ? results : [];
+    
     // Update suggestions state with the results
     setProductSuggestions(prev => ({
       ...prev,
-      [index]: results
+      [index]: safeResults
     }));
   };
 

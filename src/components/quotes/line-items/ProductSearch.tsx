@@ -6,14 +6,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
+import { Search, Check } from "lucide-react";
 
 interface ProductSearchProps {
   description: string;
@@ -35,7 +31,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   
   // Ensure we always have valid arrays and strings
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
-  const safeDescription = description || "";
+  const safeDescription = typeof description === 'string' ? description : '';
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -92,19 +88,28 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
       </PopoverTrigger>
       
       <PopoverContent className="w-[400px] p-0" align="start">
-        <Command>
-          <CommandInput 
-            placeholder="Zoek product..." 
-            value={safeDescription} 
-            onValueChange={handleDescriptionChange} 
-            className="h-9"
+        <div className="relative">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Zoek product..."
+            value={safeDescription}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
+            className="pl-8 border-none shadow-none focus-visible:ring-0"
           />
-          <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-          <CommandGroup>
+        </div>
+
+        {suggestions.length === 0 ? (
+          <div className="py-6 text-center text-sm text-muted-foreground">
+            Geen producten gevonden.
+          </div>
+        ) : (
+          <div className="max-h-[300px] overflow-y-auto p-2">
             {suggestions.map((product) => (
-              <CommandItem 
+              <Button
                 key={product.id}
-                onSelect={() => {
+                variant="ghost"
+                className="w-full justify-start text-left px-2 py-1.5 h-auto"
+                onClick={() => {
                   onProductSelect(product);
                   setOpen(false);
                 }}
@@ -116,10 +121,10 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
                     {formatCurrency(product.pricePerUnit)} per {product.unit}
                   </span>
                 </div>
-              </CommandItem>
+              </Button>
             ))}
-          </CommandGroup>
-        </Command>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );

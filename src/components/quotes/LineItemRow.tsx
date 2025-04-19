@@ -33,13 +33,19 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   productSuggestions = [],
   onProductSearch,
 }) => {
+  // Ensure we have a valid array of product suggestions
+  const safeSuggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
+  
   // Format currency
-  const formatCurrency = (value: number) => {
+  const formatCurrency = (value: number | string) => {
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    const safeValue = isNaN(numValue) ? 0 : numValue;
+    
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
       currency: "EUR",
       minimumFractionDigits: 2,
-    }).format(value);
+    }).format(safeValue);
   };
   
   // Calculate total price
@@ -50,7 +56,8 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   // Handle quantity change
   const handleQuantityChange = (value: string) => {
     const quantity = parseFloat(value) || 0;
-    const total = calculateTotal(quantity, lineItem.pricePerUnit);
+    const pricePerUnit = parseFloat(String(lineItem.pricePerUnit)) || 0;
+    const total = calculateTotal(quantity, pricePerUnit);
     
     onChange({
       ...lineItem,
@@ -71,14 +78,15 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   const handleVatChange = (value: string) => {
     onChange({
       ...lineItem,
-      vatRate: parseInt(value),
+      vatRate: parseInt(value) || 21,
     });
   };
   
   // Handle price per unit change
   const handlePricePerUnitChange = (value: string) => {
     const pricePerUnit = parseFloat(value) || 0;
-    const total = calculateTotal(lineItem.quantity, pricePerUnit);
+    const quantity = parseFloat(String(lineItem.quantity)) || 0;
+    const total = calculateTotal(quantity, pricePerUnit);
     
     onChange({
       ...lineItem,
@@ -91,19 +99,24 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   const handleDescriptionChange = (value: string) => {
     onChange({
       ...lineItem,
-      description: value,
+      description: value || '',
     });
   };
 
   // Handle product selection
   const handleSelectProduct = (product: Product) => {
+    if (!product) return;
+    
+    const quantity = parseFloat(String(lineItem.quantity)) || 1;
+    const total = calculateTotal(quantity, product.pricePerUnit);
+    
     onChange({
       ...lineItem,
-      description: product.title,
-      unit: product.unit,
-      pricePerUnit: product.pricePerUnit,
-      total: calculateTotal(lineItem.quantity, product.pricePerUnit),
-      vatRate: product.vat,
+      description: product.title || '',
+      unit: product.unit || 'stuk',
+      pricePerUnit: product.pricePerUnit || 0,
+      total,
+      vatRate: product.vat || 21,
     });
   };
 
@@ -122,10 +135,10 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
         <ProductSearch
-          description={safeLineItem.description}
+          description={safeLineItem.description || ''}
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
-          productSuggestions={productSuggestions}
+          productSuggestions={safeSuggestions}
           onProductSearch={onProductSearch}
         />
       </div>
@@ -139,14 +152,14 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       
       <div className="col-span-2">
         <UnitSelect
-          value={safeLineItem.unit}
+          value={safeLineItem.unit || 'stuk'}
           onChange={handleUnitChange}
         />
       </div>
       
       <div className="col-span-1">
         <Select 
-          value={String(safeLineItem.vatRate || "21")}
+          value={String(safeLineItem.vatRate || 21)}
           onValueChange={handleVatChange}
         >
           <SelectTrigger>
@@ -165,7 +178,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           type="number" 
           min="0" 
           step="0.01"
-          value={String(safeLineItem.pricePerUnit || "0")}
+          value={String(safeLineItem.pricePerUnit || 0)}
           onChange={(e) => handlePricePerUnitChange(e.target.value)}
           className="text-right"
         />
