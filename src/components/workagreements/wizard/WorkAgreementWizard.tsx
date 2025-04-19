@@ -9,11 +9,12 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { CustomerSearch } from '@/components/quotes/CustomerSearch';
+import { CustomerSearch } from '@/components/appointments/components/CustomerSearch';
 import { QuoteSelector } from '@/components/workagreements/forms/quote-selector/QuoteSelector';
 import { WorkDetails } from '@/components/workagreements/forms/work-details/WorkDetails';
 import { PaymentTermsForm } from '@/components/workagreements/forms/payment-terms/PaymentTermsForm';
 import { WorkAgreementExclusionsForm } from '@/components/workagreements/forms/WorkAgreementExclusionsForm';
+import { mockLeads } from '@/data/mockLeads';
 
 export const WorkAgreementWizard = () => {
   const {
@@ -32,8 +33,10 @@ export const WorkAgreementWizard = () => {
       case 0:
         return (
           <CustomerSearch
-            selectedCustomer={workAgreement.leadId ? { id: workAgreement.leadId } : null}
-            onCustomerSelect={(customer) => 
+            selectedCustomer={workAgreement.leadId ? 
+              mockLeads.find(lead => lead.id === workAgreement.leadId) || null 
+              : null}
+            onSelectCustomer={(customer) => 
               setWorkAgreement(prev => ({ ...prev, leadId: customer?.id || "" }))
             }
           />
