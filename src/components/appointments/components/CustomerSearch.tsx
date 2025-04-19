@@ -21,10 +21,12 @@ import { Lead } from "@/types";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateCustomerForm } from "./CreateCustomerForm";
+import { useToast } from "@/hooks/use-toast";
 
 interface CustomerSearchProps {
   selectedCustomer: Lead | null;
@@ -37,12 +39,32 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [showNewCustomerDialog, setShowNewCustomerDialog] = React.useState(false);
+  const { toast } = useToast();
 
   const handleCreateNewCustomer = (customerData: Partial<Lead>) => {
     // In a real app, this would make an API call
-    console.log("Creating new customer:", customerData);
+    const newCustomer: Lead = {
+      id: `temp-${Date.now()}`, // In a real app, this would come from the backend
+      name: customerData.name || "",
+      email: customerData.email || "",
+      phone: customerData.phone || "",
+      address: customerData.address || "",
+      status: "new",
+      source: "Manual Entry",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Here we would normally make an API call to create the customer
+    // For now, we'll just simulate success
+    onSelectCustomer(newCustomer);
     setShowNewCustomerDialog(false);
-    // For now, we'll just close the dialog
+    setOpen(false);
+    
+    toast({
+      title: "Klant toegevoegd",
+      description: `${newCustomer.name} is succesvol toegevoegd.`,
+    });
   };
 
   return (
@@ -106,6 +128,9 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
+            <DialogDescription>
+              Vul de gegevens in om een nieuwe klant toe te voegen.
+            </DialogDescription>
           </DialogHeader>
           <CreateCustomerForm onSubmit={handleCreateNewCustomer} />
         </DialogContent>

@@ -1,6 +1,8 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Lead } from "@/types";
 
+const formSchema = z.object({
+  name: z.string().min(2, "Naam moet minimaal 2 karakters bevatten"),
+  email: z.string().email("Ongeldig email adres"),
+  phone: z.string().min(10, "Ongeldig telefoonnummer"),
+  address: z.string().min(5, "Voer een geldig adres in"),
+});
+
 interface CreateCustomerFormProps {
   onSubmit: (data: Partial<Lead>) => void;
 }
@@ -20,7 +29,8 @@ interface CreateCustomerFormProps {
 export const CreateCustomerForm: React.FC<CreateCustomerFormProps> = ({
   onSubmit,
 }) => {
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -29,9 +39,14 @@ export const CreateCustomerForm: React.FC<CreateCustomerFormProps> = ({
     },
   });
 
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    onSubmit(values);
+    form.reset();
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
