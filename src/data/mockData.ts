@@ -4,3 +4,4 @@ export * from './mockAppointments';
 export * from './mockQuotes';
 export * from './mockInvoices';
 export * from './getLeadDetail';
+export * from './mockProducts';

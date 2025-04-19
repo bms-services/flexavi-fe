@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Quote, QuoteLineItem, Lead } from "@/types";
 import { mockQuotes, mockLeads } from "@/data/mockData";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useProducts } from "@/hooks/useProducts";
 
 const createEmptyLineItem = (): QuoteLineItem => ({
   id: `item-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -35,6 +35,8 @@ export const useQuoteForm = (quoteId?: string) => {
   const [lineItems, setLineItems] = useState<QuoteLineItem[]>([createEmptyLineItem()]);
   const [selectedCustomer, setSelectedCustomer] = useState<Lead | null>(null);
   const [productSuggestions, setProductSuggestions] = useState<Record<string, any[]>>({});
+
+  const { searchProducts } = useProducts();
 
   // Calculate total amount
   const totalAmount = lineItems.reduce((sum, item) => sum + item.total, 0);
@@ -107,7 +109,6 @@ export const useQuoteForm = (quoteId?: string) => {
   const getProductSuggestions = (title: string, index: string) => {
     // Validate parameters to prevent undefined errors
     if (!title || !index || typeof title !== 'string' || typeof index !== 'string' || title.trim().length <= 2) {
-      // Always set an empty array for this index
       setProductSuggestions(prev => ({ 
         ...prev, 
         [index]: [] 
@@ -115,30 +116,7 @@ export const useQuoteForm = (quoteId?: string) => {
       return;
     }
     
-    // Generate suggestions based on input
-    const suggestions = [
-      {
-        title: `${title} Premium`,
-        description: `Premium versie van ${title}`,
-        unit: "stuk",
-        pricePerUnit: 150,
-        vat: 21
-      },
-      {
-        title: `${title} Standaard`,
-        description: `Standaard versie van ${title}`,
-        unit: "m²",
-        pricePerUnit: 75,
-        vat: 21
-      },
-      {
-        title: `${title} Basis`,
-        description: `Basis versie van ${title}`,
-        unit: "stuk",
-        pricePerUnit: 50,
-        vat: 21
-      }
-    ];
+    const suggestions = searchProducts(title);
     
     // Update suggestions for this specific line item
     setProductSuggestions(prev => ({ 
