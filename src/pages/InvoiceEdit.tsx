@@ -34,10 +34,26 @@ const InvoiceEdit = () => {
     handleSaveInvoice,
   } = useInvoiceForm(id);
 
+  // Calculate average VAT rate - default to 21%
+  const calculateAverageVatRate = () => {
+    if (lineItems.length === 0) return 21;
+    
+    const totalWithVat = lineItems.reduce((sum, item) => {
+      return sum + (item.total * (item.vatRate || 21)) / 100;
+    }, 0);
+    
+    return totalAmount > 0 ? Math.round((totalWithVat / totalAmount) * 100) : 21;
+  };
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <InvoiceHeader isEditing={isEditing} onSave={handleSaveInvoice} />
+        <InvoiceHeader 
+          isEditing={isEditing} 
+          onSave={handleSaveInvoice} 
+          status={invoice.status}
+          invoiceNumber={invoice.id}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <CustomerCard
@@ -77,7 +93,10 @@ const InvoiceEdit = () => {
                 productSuggestions={productSuggestions}
                 onProductSearch={getProductSuggestions}
               />
-              <InvoiceSummary subtotal={totalAmount} />
+              <InvoiceSummary 
+                subtotal={totalAmount} 
+                vatRate={calculateAverageVatRate()}
+              />
             </CardContent>
           </Card>
         </div>

@@ -1,6 +1,5 @@
 
 import { Invoice } from "@/types";
-import { v4 as uuidv4 } from "uuid";
 
 export const mockInvoices: Invoice[] = [
   {
@@ -15,7 +14,7 @@ export const mockInvoices: Invoice[] = [
     updatedAt: "2025-04-05T14:30:00Z",
     lineItems: [
       {
-        id: uuidv4(),
+        id: "line-1-1",
         description: "Dakrenovatie",
         quantity: 1,
         unit: "project",
@@ -24,7 +23,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-1-2",
         description: "Isolatiemateriaal",
         quantity: 50,
         unit: "m²",
@@ -47,7 +46,7 @@ export const mockInvoices: Invoice[] = [
     paymentDate: "2025-04-25T00:00:00Z",
     lineItems: [
       {
-        id: uuidv4(),
+        id: "line-2-1",
         description: "Zonnepanelen (320W)",
         quantity: 10,
         unit: "stuk",
@@ -56,7 +55,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-2-2",
         description: "Omvormer",
         quantity: 1,
         unit: "stuk",
@@ -78,7 +77,7 @@ export const mockInvoices: Invoice[] = [
     updatedAt: "2025-03-20T16:30:00Z",
     lineItems: [
       {
-        id: uuidv4(),
+        id: "line-3-1",
         description: "Verwijderen oude dakbedekking",
         quantity: 1,
         unit: "project",
@@ -87,7 +86,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-3-2",
         description: "Nieuwe dakpannen",
         quantity: 250,
         unit: "m²",
@@ -96,7 +95,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-3-3",
         description: "Arbeid dakleggers",
         quantity: 16,
         unit: "uur",
@@ -118,7 +117,7 @@ export const mockInvoices: Invoice[] = [
     updatedAt: "2025-04-12T10:15:00Z",
     lineItems: [
       {
-        id: uuidv4(),
+        id: "line-4-1",
         description: "Dakgoten (aluminium)",
         quantity: 25,
         unit: "m",
@@ -127,7 +126,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-4-2",
         description: "Regenpijpen",
         quantity: 4,
         unit: "stuk",
@@ -136,7 +135,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-4-3",
         description: "Installatie",
         quantity: 8,
         unit: "uur",
@@ -158,7 +157,7 @@ export const mockInvoices: Invoice[] = [
     updatedAt: "2025-04-15T09:45:00Z",
     lineItems: [
       {
-        id: uuidv4(),
+        id: "line-5-1",
         description: "Dakrenovatie",
         quantity: 1,
         unit: "project",
@@ -167,7 +166,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-5-2",
         description: "Dakisolatie",
         quantity: 120,
         unit: "m²",
@@ -176,7 +175,7 @@ export const mockInvoices: Invoice[] = [
         vatRate: 21
       },
       {
-        id: uuidv4(),
+        id: "line-5-3",
         description: "Zonnepanelen installatie",
         quantity: 1,
         unit: "project",

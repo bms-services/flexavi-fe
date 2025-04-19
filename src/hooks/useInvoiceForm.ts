@@ -17,7 +17,7 @@ export const useInvoiceForm = (invoiceId?: string) => {
 
   // State for invoice
   const [invoice, setInvoice] = useState<Invoice>({
-    id: invoiceId || `inv-${uuidv4().substring(0, 8)}`,
+    id: invoiceId || `inv-${Math.random().toString(36).substring(2, 10)}`,
     leadId: "",
     quoteId: null,
     amount: 0,
@@ -34,7 +34,7 @@ export const useInvoiceForm = (invoiceId?: string) => {
   // State for line items
   const [lineItems, setLineItems] = useState<QuoteLineItem[]>([
     {
-      id: uuidv4(),
+      id: `line-${Math.random().toString(36).substring(2, 10)}`,
       description: "",
       quantity: 1,
       unit: "stuk",
@@ -95,7 +95,7 @@ export const useInvoiceForm = (invoiceId?: string) => {
     setLineItems((prev) => [
       ...prev,
       {
-        id: uuidv4(),
+        id: `line-${Math.random().toString(36).substring(2, 10)}`,
         description: "",
         quantity: 1,
         unit: "stuk",
