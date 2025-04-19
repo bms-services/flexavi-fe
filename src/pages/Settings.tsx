@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 import { DefaultAttachmentsSettings } from "@/components/settings/attachments/DefaultAttachmentsSettings";
 import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
 import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
+import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
+import { CreditCard } from "lucide-react";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -88,6 +91,9 @@ const Settings = () => {
             <TabsTrigger value="signature" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
               Handtekening
             </TabsTrigger>
+            <TabsTrigger value="subscription" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              Betaling/abonnement
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="company" className="space-y-6">
@@ -128,6 +134,10 @@ const Settings = () => {
 
           <TabsContent value="signature" className="space-y-6">
             <SignatureSettings />
+          </TabsContent>
+
+          <TabsContent value="subscription" className="space-y-6">
+            <SubscriptionSettings />
           </TabsContent>
         </Tabs>
       </div>
