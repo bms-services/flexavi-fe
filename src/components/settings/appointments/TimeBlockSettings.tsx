@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Minus } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface TimeBlock {
   id: number;
@@ -14,9 +13,18 @@ interface TimeBlock {
   label: string;
 }
 
+interface SlotSettings {
+  salesMorningSlots: number;
+  salesAfternoonSlots: number;
+  salesEveningSlots: number;
+  installationMorningSlots: number;
+  installationAfternoonSlots: number;
+  installationEveningSlots: number;
+}
+
 interface TimeBlockSettingsProps {
   timeBlocks: TimeBlock[];
-  slotSettings: Record<string, number>;
+  slotSettings: SlotSettings;
   onTimeBlocksChange: (blocks: TimeBlock[]) => void;
   onSlotSettingsChange: (settings: Record<string, number>) => void;
   onSave: () => void;
@@ -41,6 +49,11 @@ export const TimeBlockSettings: React.FC<TimeBlockSettingsProps> = ({
 
   const handleRemoveTimeBlock = (id: number) => {
     onTimeBlocksChange(timeBlocks.filter(block => block.id !== id));
+  };
+
+  const handleSlotChange = (blockLabel: string, teamType: string, value: number) => {
+    const key = `${teamType}${blockLabel}Slots`;
+    onSlotSettingsChange({ [key]: value });
   };
 
   return (
@@ -82,12 +95,9 @@ export const TimeBlockSettings: React.FC<TimeBlockSettingsProps> = ({
                     type="number"
                     min="0"
                     max="10"
-                    value={slotSettings[`salesMorning${index + 1}Slots`] || 3}
-                    onChange={(e) =>
-                      onSlotSettingsChange({
-                        ...slotSettings,
-                        [`sales${block.label}Slots`]: parseInt(e.target.value),
-                      })
+                    value={slotSettings[`sales${block.label}Slots` as keyof SlotSettings] || 3}
+                    onChange={(e) => 
+                      handleSlotChange(block.label, "sales", parseInt(e.target.value))
                     }
                   />
                 </div>
@@ -97,12 +107,9 @@ export const TimeBlockSettings: React.FC<TimeBlockSettingsProps> = ({
                     type="number"
                     min="0"
                     max="10"
-                    value={slotSettings[`installationMorning${index + 1}Slots`] || 2}
+                    value={slotSettings[`installation${block.label}Slots` as keyof SlotSettings] || 2}
                     onChange={(e) =>
-                      onSlotSettingsChange({
-                        ...slotSettings,
-                        [`installation${block.label}Slots`]: parseInt(e.target.value),
-                      })
+                      handleSlotChange(block.label, "installation", parseInt(e.target.value))
                     }
                   />
                 </div>

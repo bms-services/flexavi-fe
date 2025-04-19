@@ -32,6 +32,14 @@ const Settings = () => {
     fullBorder: "#F97316",
   });
 
+  // Wrapper function to handle the type conversion for slot settings
+  const handleSlotSettingsChange = (newSettings: Record<string, number>) => {
+    setSlotSettings(prevSettings => ({
+      ...prevSettings,
+      ...newSettings
+    }));
+  };
+
   const handleSaveSlots = () => {
     toast({
       title: "Instellingen opgeslagen",
@@ -69,7 +77,7 @@ const Settings = () => {
               timeBlocks={timeBlocks}
               slotSettings={slotSettings}
               onTimeBlocksChange={setTimeBlocks}
-              onSlotSettingsChange={setSlotSettings}
+              onSlotSettingsChange={handleSlotSettingsChange}
               onSave={handleSaveSlots}
             />
             <CalendarColorSettings
