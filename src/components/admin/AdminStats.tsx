@@ -5,7 +5,8 @@ import { Users, CreditCard, AlertTriangle, CheckCircle, Ban, Gift } from 'lucide
 
 export function AdminStats() {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* First row */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Totaal Leden</CardTitle>
@@ -38,7 +39,8 @@ export function AdminStats() {
           <p className="text-xs text-muted-foreground">5% van totaal</p>
         </CardContent>
       </Card>
-      
+
+      {/* Second row */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Maandelijkse Omzet</CardTitle>
