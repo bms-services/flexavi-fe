@@ -22,7 +22,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   productSuggestions = {},
   onProductSearch,
 }) => {
-  // Ensure lineItems and productSuggestions are always valid
+  // Waarborg dat lineItems en productSuggestions altijd geldig zijn
   const items = Array.isArray(lineItems) ? lineItems : [];
   const suggestions = productSuggestions || {};
 
@@ -44,7 +44,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
           lineItem={item}
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}
-          productSuggestions={suggestions[item.id] || []}
+          productSuggestions={Array.isArray(suggestions[item.id]) ? suggestions[item.id] : []}
           onProductSearch={(title) => onProductSearch(title, item.id)}
           showRemoveButton={items.length > 1}
         />

@@ -105,35 +105,37 @@ export const useQuoteForm = (quoteId?: string) => {
   };
 
   const getProductSuggestions = (title: string, index: string) => {
-    if (title.length > 2) {
-      const suggestions = [
-        {
-          title: `${title} Premium`,
-          description: `Premium versie van ${title}`,
-          unit: "stuk",
-          pricePerUnit: 150,
-          vat: 21
-        },
-        {
-          title: `${title} Standaard`,
-          description: `Standaard versie van ${title}`,
-          unit: "m²",
-          pricePerUnit: 75,
-          vat: 21
-        },
-        {
-          title: `${title} Basis`,
-          description: `Basis versie van ${title}`,
-          unit: "stuk",
-          pricePerUnit: 50,
-          vat: 21
-        }
-      ];
-      
-      setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
-    } else {
+    // Check op lege input om te voorkomen dat er suggesties worden gegenereerd voor lege input
+    if (!title || title.trim().length <= 2) {
       setProductSuggestions(prev => ({ ...prev, [index]: [] }));
+      return;
     }
+    
+    const suggestions = [
+      {
+        title: `${title} Premium`,
+        description: `Premium versie van ${title}`,
+        unit: "stuk",
+        pricePerUnit: 150,
+        vat: 21
+      },
+      {
+        title: `${title} Standaard`,
+        description: `Standaard versie van ${title}`,
+        unit: "m²",
+        pricePerUnit: 75,
+        vat: 21
+      },
+      {
+        title: `${title} Basis`,
+        description: `Basis versie van ${title}`,
+        unit: "stuk",
+        pricePerUnit: 50,
+        vat: 21
+      }
+    ];
+    
+    setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
   };
 
   const handleSaveQuote = () => {

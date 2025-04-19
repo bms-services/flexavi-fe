@@ -96,24 +96,26 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
 
   // Handle product selection
   const handleSelectProduct = (product: any) => {
+    if (!product) return;
+    
     onChange({
       ...lineItem,
-      description: product.title,
-      unit: product.unit,
-      pricePerUnit: product.pricePerUnit,
-      total: calculateTotal(lineItem.quantity, product.pricePerUnit),
-      vatRate: product.vat,
+      description: product.title || "",
+      unit: product.unit || "stuk",
+      pricePerUnit: product.pricePerUnit || 0,
+      total: calculateTotal(lineItem.quantity, product.pricePerUnit || 0),
+      vatRate: product.vat || 21,
     });
   };
 
-  // Ensure productSuggestions is always an array
+  // Waarborg dat productSuggestions altijd een array is
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
 
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
         <ProductSearch
-          description={lineItem.description}
+          description={lineItem.description || ""}
           onDescriptionChange={handleDescriptionChange}
           onProductSelect={handleSelectProduct}
           productSuggestions={suggestions}

@@ -41,7 +41,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Ensure productSuggestions is always an array to prevent "undefined is not iterable" error
+  // Waarborg dat productSuggestions altijd een array is om "undefined is not iterable" fout te voorkomen
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
   const hasSuggestions = suggestions.length > 0;
 
@@ -62,14 +62,19 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     }
     
     searchTimeoutRef.current = setTimeout(() => {
-      onProductSearch(value);
-      if (value.length > 2) {
-        setSuggestionsOpen(true);
+      if (value && value.trim().length > 0) {
+        onProductSearch(value);
+        if (value.length > 2) {
+          setSuggestionsOpen(true);
+        }
+      } else {
+        // Als de input leeg is, sluiten we de suggesties
+        setSuggestionsOpen(false);
       }
     }, 300);
   };
 
-  // Force close suggestions when unmounted
+  // Maak de timeout schoon bij unmount
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
@@ -78,6 +83,9 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     };
   }, []);
 
+  // Voorkom renderproblemen door veilige waarden vast te stellen
+  const safeDescription = description || "";
+  
   return (
     <Popover 
       open={suggestionsOpen && hasSuggestions} 
@@ -90,7 +98,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
       <PopoverTrigger asChild>
         <div className="relative">
           <Input 
-            value={description}
+            value={safeDescription}
             onChange={(e) => handleDescriptionChange(e.target.value)}
             placeholder="Product of dienst"
             className="w-full"
