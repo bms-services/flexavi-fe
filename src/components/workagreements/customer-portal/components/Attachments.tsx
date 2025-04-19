@@ -1,6 +1,6 @@
 
 import React from "react";
-import { FileImage, FilePdf } from "lucide-react";
+import { FileImage, File } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface AttachmentsProps {
@@ -29,7 +29,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
       {pdfAttachments.length > 0 && (
         <Card className="p-4">
           <h3 className="text-sm font-medium text-gray-500 mb-4 flex items-center gap-2">
-            <FilePdf className="h-4 w-4" />
+            <File className="h-4 w-4" />
             Documenten
           </h3>
           <div className="space-y-2">
@@ -40,7 +40,7 @@ export const Attachments: React.FC<AttachmentsProps> = ({
               
               return (
                 <div key={`pdf-${index}`} className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                  <FilePdf className="h-4 w-4 text-muted-foreground" />
+                  <File className="h-4 w-4 text-muted-foreground" />
                   {isDefault ? (
                     <a 
                       href={url} 
