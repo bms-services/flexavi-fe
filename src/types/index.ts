@@ -1,3 +1,4 @@
+
 export type Lead = {
   id: string;
   name: string;
@@ -82,6 +83,9 @@ export type Quote = {
   status: QuoteStatus;
   createdAt: string;
   updatedAt: string;
+  location?: string;
+  plannedStartDate?: string;
+  notes?: string;
 };
 
 export type QuoteStatus = 
