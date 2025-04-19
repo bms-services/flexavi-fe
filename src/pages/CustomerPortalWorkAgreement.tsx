@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useWorkAgreementStatusBadge } from "@/hooks/useWorkAgreementStatusBadge";
 import { ArrowLeft, Check } from "lucide-react";
-import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import { WorkAgreementDetails } from "@/components/workagreements/customer-portal/WorkAgreementDetails";
-import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import Signature from "@/components/customer/Signature";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
 
@@ -112,11 +110,6 @@ const CustomerPortalWorkAgreement = () => {
               />
             </CardContent>
           </Card>
-
-          <Attachments 
-            attachments={workAgreement.attachments}
-            defaultAttachments={workAgreement.defaultAttachments}
-          />
 
           <Card>
             <CardContent className="p-6 space-y-6">
