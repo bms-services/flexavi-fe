@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -27,6 +28,9 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <div className="flex items-center justify-center mb-4">
+            <Logo />
+          </div>
           <div className="flex items-center gap-2">
             <LogIn className="h-5 w-5 text-primary" />
             <CardTitle>Inloggen</CardTitle>

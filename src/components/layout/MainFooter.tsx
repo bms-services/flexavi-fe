@@ -1,5 +1,5 @@
-
 import { Link } from "react-router-dom";
+import { Logo } from "@/components/ui/logo";
 
 export const MainFooter = () => {
   return (
@@ -7,8 +7,8 @@ export const MainFooter = () => {
       <div className="container mx-auto max-w-6xl px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4">DakLeadHub</h3>
-            <p className="text-muted-foreground text-sm">
+            <Logo />
+            <p className="text-muted-foreground text-sm mt-4">
               Het complete platform voor dakdekkersbedrijven
             </p>
           </div>
