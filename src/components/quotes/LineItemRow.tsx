@@ -130,11 +130,14 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       vatRate: product.vat,
     });
   };
+
+  // Safely check if suggestions exist and have length
+  const hasSuggestions = Array.isArray(productSuggestions) && productSuggestions.length > 0;
   
   return (
     <div className="grid grid-cols-12 gap-2 items-center">
       <div className="col-span-4">
-        <Popover open={suggestionsOpen && productSuggestions.length > 0} onOpenChange={setSuggestionsOpen}>
+        <Popover open={suggestionsOpen && hasSuggestions} onOpenChange={setSuggestionsOpen}>
           <PopoverTrigger asChild>
             <div className="relative">
               <Input 
@@ -150,7 +153,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
               <CommandInput placeholder="Zoek product..." value={title} onValueChange={handleDescriptionChange} />
               <CommandEmpty>Geen producten gevonden.</CommandEmpty>
               <CommandGroup>
-                {productSuggestions.map((product, index) => (
+                {(productSuggestions || []).map((product, index) => (
                   <CommandItem 
                     key={index}
                     onSelect={() => handleSelectProduct(product)}

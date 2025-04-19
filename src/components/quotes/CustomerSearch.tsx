@@ -105,7 +105,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                 </div>
               </CommandEmpty>
               <CommandGroup>
-                {mockLeads.map((customer) => (
+                {(mockLeads || []).map((customer) => (
                   <CommandItem
                     key={customer.id}
                     value={customer.name}
