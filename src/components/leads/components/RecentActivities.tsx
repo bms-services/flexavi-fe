@@ -1,21 +1,28 @@
 
-import React from "react";
-import { Quote, Invoice, QuoteStatus, InvoiceStatus } from "@/types";
+import React, { useState } from "react";
+import { Quote, Invoice } from "@/types";
 import { Activity } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { formatCurrency } from "@/utils/leadStats";
 import { Badge } from "@/components/ui/badge";
 import { useQuoteStatusBadge, useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
+import { QuoteDetailsDialog } from "../dialogs/QuoteDetailsDialog";
 
 interface RecentActivitiesProps {
   activities: (Quote | Invoice)[];
 }
 
 export const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }) => {
+  const [selectedActivity, setSelectedActivity] = useState<Quote | Invoice | null>(null);
+  
   const recentActivities = activities
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3);
+
+  const handleClick = (activity: Quote | Invoice) => {
+    setSelectedActivity(activity);
+  };
 
   return (
     <div className="mt-6 bg-white/70 p-4 rounded-lg border border-gray-100">
@@ -31,7 +38,11 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }
             : useInvoiceStatusBadge((activity as Invoice).status);
           
           return (
-            <div key={activity.id} className="flex justify-between items-center bg-white p-3 rounded-md border border-gray-100">
+            <div
+              key={activity.id}
+              className="flex justify-between items-center bg-white p-3 rounded-md border border-gray-100 cursor-pointer hover:border-primary/50 transition-colors"
+              onClick={() => handleClick(activity)}
+            >
               <div>
                 <p className="font-medium">
                   {isQuote ? 'Offerte:' : 'Factuur:'} {activity.description}
@@ -48,6 +59,14 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }
           );
         })}
       </div>
+
+      {selectedActivity && 'description' in selectedActivity && (
+        <QuoteDetailsDialog
+          quote={selectedActivity as Quote}
+          open={Boolean(selectedActivity)}
+          onOpenChange={(open) => !open && setSelectedActivity(null)}
+        />
+      )}
     </div>
   );
 };

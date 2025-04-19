@@ -1,17 +1,20 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Quote } from "@/types";
 import { formatCurrency } from "@/utils/leadStats";
 import { Clock } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { QuoteStatusBadge } from "../badges/QuoteStatusBadge";
+import { QuoteDetailsDialog } from "../dialogs/QuoteDetailsDialog";
 
 interface ActiveQuotesProps {
   quotes: Quote[];
 }
 
 export const ActiveQuotes: React.FC<ActiveQuotesProps> = ({ quotes }) => {
+  const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
+  
   const activeQuotes = quotes.filter(
     quote => quote.status === 'sent' || quote.status === 'revised'
   );
@@ -26,7 +29,11 @@ export const ActiveQuotes: React.FC<ActiveQuotesProps> = ({ quotes }) => {
       </h3>
       <div className="grid gap-4 md:grid-cols-2">
         {activeQuotes.map(quote => (
-          <div key={quote.id} className="bg-white p-4 rounded-md border border-gray-100">
+          <div
+            key={quote.id}
+            className="bg-white p-4 rounded-md border border-gray-100 cursor-pointer hover:border-primary/50 transition-colors"
+            onClick={() => setSelectedQuote(quote)}
+          >
             <div className="flex justify-between items-start">
               <div>
                 <p className="font-medium">{quote.description}</p>
@@ -44,6 +51,14 @@ export const ActiveQuotes: React.FC<ActiveQuotesProps> = ({ quotes }) => {
           </div>
         ))}
       </div>
+
+      {selectedQuote && (
+        <QuoteDetailsDialog
+          quote={selectedQuote}
+          open={Boolean(selectedQuote)}
+          onOpenChange={(open) => !open && setSelectedQuote(null)}
+        />
+      )}
     </div>
   );
 };
