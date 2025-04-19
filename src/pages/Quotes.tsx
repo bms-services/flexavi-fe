@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -51,6 +50,10 @@ const Quotes = () => {
       getLeadName(quote.leadId).toLowerCase().includes(searchTerm.toLowerCase()) ||
       quote.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleViewQuote = (quote: Quote) => {
+    navigate(`/portal/quote/${quote.id}`);
+  };
 
   const handleEditQuote = (quote: Quote) => {
     navigate(`/quotes/edit/${quote.id}`);
@@ -127,7 +130,7 @@ const Quotes = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => setSelectedQuote(quote)}
+                            onClick={() => handleViewQuote(quote)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -175,14 +178,6 @@ const Quotes = () => {
           </CardContent>
         </Card>
       </div>
-
-      {selectedQuote && (
-        <QuoteDetailsDialog
-          quote={selectedQuote}
-          open={Boolean(selectedQuote)}
-          onOpenChange={(open) => !open && setSelectedQuote(null)}
-        />
-      )}
     </Layout>
   );
 };
