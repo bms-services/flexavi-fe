@@ -1,19 +1,15 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { mockInvoices } from "@/data/mockInvoices";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, FileText, ArrowUpCircle, AlertCircle } from "lucide-react";
-import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
-import { InvoiceStatus } from "@/types";
+import { mockInvoices } from "@/data/mockInvoices";
+import { PlanCard } from "./components/PlanCard";
+import { InvoiceHistory } from "./components/InvoiceHistory";
+import { CurrentPlan } from "./components/CurrentPlan";
+import { CancelSubscription } from "./components/CancelSubscription";
 
 export const SubscriptionSettings = () => {
   const { toast } = useToast();
   const [currentPlan, setCurrentPlan] = useState("basic");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const plans = [
     { 
@@ -86,178 +82,33 @@ export const SubscriptionSettings = () => {
     });
   };
 
-  const recentInvoices = mockInvoices.slice(0, 5);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('nl-NL');
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(amount);
-  };
+  const currentPlanDetails = plans.find(p => p.id === currentPlan);
 
   return (
     <div className="space-y-8">
-      <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-background">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-primary" />
-              <div>
-                <CardTitle>Huidig abonnement</CardTitle>
-                <CardDescription>
-                  {plans.find(p => p.id === currentPlan)?.name} plan
-                </CardDescription>
-              </div>
-            </div>
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 hover:bg-primary/20">
-              {plans.find(p => p.id === currentPlan)?.price}/{plans.find(p => p.id === currentPlan)?.period}
-            </Badge>
-          </div>
-        </CardHeader>
-      </Card>
+      <CurrentPlan
+        name={currentPlanDetails?.name || ""}
+        price={currentPlanDetails?.price || ""}
+        period={currentPlanDetails?.period || ""}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map((plan) => (
-          <Card 
-            key={plan.id} 
-            className={`relative overflow-hidden transition-all duration-200 hover:shadow-lg ${
-              plan.isCurrent 
-                ? 'border-primary ring-1 ring-primary/20' 
-                : 'hover:border-primary/20'
-            }`}
-          >
-            {plan.isCurrent && (
-              <div className="absolute -right-12 top-6 rotate-45 bg-primary text-primary-foreground px-12 py-1 text-sm font-medium">
-                Actief
-              </div>
-            )}
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center justify-between">
-                <span>{plan.name}</span>
-                <Badge variant="outline" className={
-                  plan.isCurrent ? 'bg-primary/10 text-primary border-primary/30' : 'bg-secondary text-secondary-foreground'
-                }>
-                  {plan.price}/{plan.period}
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3 min-h-[280px]">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <span className="text-primary mt-0.5">✓</span>
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-            <CardFooter className="pt-4 border-t bg-muted/50">
-              <Button 
-                className={`w-full ${
-                  plan.isCurrent 
-                    ? 'bg-muted text-muted-foreground hover:bg-muted/80 cursor-default'
-                    : ''
-                }`}
-                onClick={() => handleUpgrade(plan.id)}
-                disabled={plan.isCurrent}
-                variant={plan.isCurrent ? "outline" : "default"}
-              >
-                <ArrowUpCircle className="mr-2 h-4 w-4" />
-                {plan.isCurrent ? 'Huidig plan' : 'Upgrade'}
-              </Button>
-            </CardFooter>
-          </Card>
+          <PlanCard
+            key={plan.id}
+            {...plan}
+            onUpgrade={handleUpgrade}
+          />
         ))}
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <div>
-              <CardTitle>Factuurgeschiedenis</CardTitle>
-              <CardDescription>
-                Bekijk en download je eerdere facturen
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Factuurnr.</TableHead>
-                  <TableHead>Datum</TableHead>
-                  <TableHead>Bedrag</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actie</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentInvoices.map((invoice) => {
-                  const statusBadge = useInvoiceStatusBadge(invoice.status as InvoiceStatus);
-                  return (
-                    <TableRow key={invoice.id} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">
-                        {invoice.id.replace('inv-', 'FACT-')}
-                      </TableCell>
-                      <TableCell>{formatDate(invoice.createdAt)}</TableCell>
-                      <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                      <TableCell>
-                        <Badge variant={statusBadge.variant}>
-                          {statusBadge.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => window.open(`/portal/invoice/${invoice.id}`, '_blank')}
-                        >
-                          Bekijken
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+      <InvoiceHistory
+        invoices={mockInvoices.slice(0, 5)}
+      />
 
-          {recentInvoices.length === 0 && (
-            <div className="py-6 text-center text-muted-foreground">
-              Geen facturen gevonden.
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className="border-destructive/30">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-destructive" />
-            <CardTitle className="text-destructive">Abonnement opzeggen</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Bij opzegging blijft je abonnement actief tot het einde van de huidige facturatieperiode.
-            Je kunt altijd weer een nieuw abonnement afsluiten.
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Button 
-            variant="destructive" 
-            onClick={handleCancelSubscription}
-            className="flex items-center"
-          >
-            <AlertCircle className="mr-2 h-4 w-4" />
-            Abonnement opzeggen
-          </Button>
-        </CardFooter>
-      </Card>
+      <CancelSubscription
+        onCancel={handleCancelSubscription}
+      />
     </div>
   );
 };
