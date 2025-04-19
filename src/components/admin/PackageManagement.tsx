@@ -1,13 +1,12 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Package, PercentCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PackageCard } from './packages/PackageCard';
+import type { PackageData, PackageFeature } from './packages/types';
 
 interface PackageFeature {
   id: string;
@@ -19,7 +18,7 @@ interface PackageFeature {
 
 export function PackageManagement() {
   const { toast } = useToast();
-  const [packages, setPackages] = useState({
+  const [packages, setPackages] = useState<Record<string, PackageData>>({
     starter: { 
       name: "Starter",
       monthly: "29.99",
@@ -62,7 +61,7 @@ export function PackageManagement() {
   ]);
 
   const handlePriceChange = (
-    packageType: keyof typeof packages, 
+    packageType: string, 
     field: 'monthly' | 'yearly' | 'trialDays' | 'percentage' | 'validDays', 
     value: string
   ) => {
@@ -100,121 +99,34 @@ export function PackageManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Pakket Prijzen en Instellingen</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Package className="h-6 w-6" />
+            Pakket Prijzen en Instellingen
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="monthly" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="monthly">Maandelijks</TabsTrigger>
-              <TabsTrigger value="yearly">Jaarlijks</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="monthly">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(packages).map(([key, value]) => (
-                  <div key={key} className="space-y-4 p-4 border rounded-lg">
-                    <label className="text-sm font-medium">{value.name}</label>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm">€</span>
-                      <Input
-                        type="number"
-                        value={value.monthly}
-                        onChange={(e) => handlePriceChange(key as keyof typeof packages, 'monthly', e.target.value)}
-                        className="max-w-[120px]"
-                      />
-                      <span className="text-sm">/ maand</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Gratis proefperiode</label>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          value={value.trialDays}
-                          onChange={(e) => handlePriceChange(key as keyof typeof packages, 'trialDays', e.target.value)}
-                          className="max-w-[80px]"
-                        />
-                        <span className="text-sm">dagen</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Korting</label>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          value={value.discount.percentage}
-                          onChange={(e) => handlePriceChange(key as keyof typeof packages, 'percentage', e.target.value)}
-                          className="max-w-[80px]"
-                        />
-                        <span className="text-sm">%</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          value={value.discount.validDays}
-                          onChange={(e) => handlePriceChange(key as keyof typeof packages, 'validDays', e.target.value)}
-                          className="max-w-[80px]"
-                        />
-                        <span className="text-sm">dagen geldig</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="yearly">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(packages).map(([key, value]) => (
-                  <div key={key} className="space-y-4 p-4 border rounded-lg">
-                    <label className="text-sm font-medium">{value.name}</label>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm">€</span>
-                      <Input
-                        type="number"
-                        value={value.yearly}
-                        onChange={(e) => handlePriceChange(key as keyof typeof packages, 'yearly', e.target.value)}
-                        className="max-w-[120px]"
-                      />
-                      <span className="text-sm">/ jaar</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Korting</label>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          value={value.discount.percentage}
-                          onChange={(e) => handlePriceChange(key as keyof typeof packages, 'percentage', e.target.value)}
-                          className="max-w-[80px]"
-                        />
-                        <span className="text-sm">%</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          type="number"
-                          value={value.discount.validDays}
-                          onChange={(e) => handlePriceChange(key as keyof typeof packages, 'validDays', e.target.value)}
-                          className="max-w-[80px]"
-                        />
-                        <span className="text-sm">dagen geldig</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(packages).map(([key, value]) => (
+              <PackageCard
+                key={key}
+                packageData={value}
+                type={key as keyof typeof packages}
+                onPriceChange={handlePriceChange}
+              />
+            ))}
+          </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Pakket Features</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <PercentCircle className="h-6 w-6" />
+            Pakket Features
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -252,7 +164,8 @@ export function PackageManagement() {
               ))}
             </TableBody>
           </Table>
-          <div className="mt-4 flex justify-end">
+
+          <div className="mt-6 flex justify-end">
             <Button onClick={handleSave}>Wijzigingen opslaan</Button>
           </div>
         </CardContent>
