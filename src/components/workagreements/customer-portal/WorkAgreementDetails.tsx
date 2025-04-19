@@ -1,8 +1,7 @@
-
 import React from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { FileText, Info, Paperclip, FilePdf, FileImage, Image } from "lucide-react";
+import { FileText, Info, Paperclip, FileImage, Image } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { CompanyDetails } from "./components/CompanyDetails";
@@ -93,7 +92,7 @@ export const WorkAgreementDetails = ({
   // Helper function to get the appropriate icon for a file
   const getFileIcon = (filename: string) => {
     if (isPdfFile(filename)) {
-      return <FilePdf className="h-4 w-4 text-red-500" />;
+      return <FileText className="h-4 w-4 text-red-500" />;
     } else if (isImageFile(filename)) {
       return <FileImage className="h-4 w-4 text-blue-500" />;
     } else {
