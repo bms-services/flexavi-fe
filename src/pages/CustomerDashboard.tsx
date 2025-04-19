@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -86,98 +85,114 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <header className="bg-white border-b shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Home className="h-5 w-5 text-primary" />
-              <h1 className="text-xl font-bold">Klant Portal</h1>
+            <div className="flex items-center gap-3">
+              <Home className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-bold text-gray-900">Klant Portal</h1>
             </div>
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              <span>{customer.name}</span>
+            <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-full">
+              <User className="h-5 w-5 text-primary" />
+              <span className="font-medium">{customer.name}</span>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        <Card>
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        <Card className="border-none shadow-lg bg-gradient-to-br from-primary/5 to-primary/10">
           <CardHeader>
-            <CardTitle>Welkom, {customer.name}</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl">Welkom, {customer.name}</CardTitle>
+            <CardDescription className="text-base">
               Bekijk uw offertes, facturen en projectvoortgang
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="bg-gray-50 p-4 rounded-lg text-center">
-                <FileText className="h-8 w-8 mx-auto mb-2 text-blue-500" />
-                <p className="text-2xl font-bold">{customerQuotes.length}</p>
-                <p className="text-sm text-gray-500">Offertes</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg text-center">
-                <FileCheck className="h-8 w-8 mx-auto mb-2 text-green-500" />
-                <p className="text-2xl font-bold">{customerInvoices.length}</p>
-                <p className="text-sm text-gray-500">Facturen</p>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg text-center">
-                <Image className="h-8 w-8 mx-auto mb-2 text-purple-500" />
-                <p className="text-2xl font-bold">{jobPhotos.length}</p>
-                <p className="text-sm text-gray-500">Projectfoto's</p>
-              </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              <Card className="bg-white/50 backdrop-blur-sm border-none shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="bg-primary/10 inline-flex p-3 rounded-full mb-4">
+                      <FileText className="h-8 w-8 text-primary" />
+                    </div>
+                    <p className="text-3xl font-bold mb-1">{customerQuotes.length}</p>
+                    <p className="text-sm text-gray-500">Offertes</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/50 backdrop-blur-sm border-none shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="bg-green-50 inline-flex p-3 rounded-full mb-4">
+                      <FileCheck className="h-8 w-8 text-green-500" />
+                    </div>
+                    <p className="text-3xl font-bold mb-1">{customerInvoices.length}</p>
+                    <p className="text-sm text-gray-500">Facturen</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/50 backdrop-blur-sm border-none shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <div className="bg-purple-50 inline-flex p-3 rounded-full mb-4">
+                      <Image className="h-8 w-8 text-purple-500" />
+                    </div>
+                    <p className="text-3xl font-bold mb-1">{jobPhotos.length}</p>
+                    <p className="text-sm text-gray-500">Projectfoto's</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="invoices">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="invoices">Facturen</TabsTrigger>
-            <TabsTrigger value="quotes">Offertes</TabsTrigger>
-            <TabsTrigger value="photos">Projectfoto's</TabsTrigger>
+        <Tabs defaultValue="invoices" className="space-y-6">
+          <TabsList className="bg-white/50 backdrop-blur-sm p-1 shadow-md">
+            <TabsTrigger value="invoices" className="flex-1">Facturen</TabsTrigger>
+            <TabsTrigger value="quotes" className="flex-1">Offertes</TabsTrigger>
+            <TabsTrigger value="photos" className="flex-1">Projectfoto's</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="invoices" className="mt-4">
-            <Card>
+          <TabsContent value="invoices">
+            <Card className="border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Uw facturen</CardTitle>
-                <CardDescription>
-                  Overzicht van al uw facturen
-                </CardDescription>
+                <CardDescription>Overzicht van al uw facturen</CardDescription>
               </CardHeader>
               <CardContent>
                 {customerInvoices.length === 0 ? (
-                  <p className="text-center py-4 text-gray-500">Geen facturen gevonden</p>
+                  <p className="text-center py-8 text-gray-500">Geen facturen gevonden</p>
                 ) : (
                   <div className="space-y-4">
                     {customerInvoices.map(invoice => {
                       const statusBadge = useInvoiceStatusBadge(invoice.status);
                       return (
-                        <div key={invoice.id} className="border rounded-lg p-4">
+                        <div key={invoice.id} className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="font-medium">{invoice.id.replace("inv-", "FACT-")}</h3>
-                              <p className="text-sm text-gray-500">{invoice.description}</p>
-                              <div className="flex items-center gap-4 mt-2">
+                              <h3 className="font-medium text-lg">{invoice.id.replace("inv-", "FACT-")}</h3>
+                              <p className="text-gray-500 mt-1">{invoice.description}</p>
+                              <div className="flex items-center gap-6 mt-3">
                                 <div className="flex items-center text-sm text-gray-500">
-                                  <Calendar className="h-4 w-4 mr-1" />
+                                  <Calendar className="h-4 w-4 mr-2" />
                                   {format(new Date(invoice.createdAt), "dd-MM-yyyy", { locale: nl })}
                                 </div>
-                                <div className="flex items-center text-sm text-gray-500">
-                                  <CreditCard className="h-4 w-4 mr-1" />
+                                <div className="flex items-center text-sm font-medium">
+                                  <CreditCard className="h-4 w-4 mr-2" />
                                   {formatCurrency(invoice.amount)}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-2">
+                            <div className="flex flex-col items-end gap-3">
                               {statusBadge && (
                                 <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
                               )}
                               <Link to={`/portal/invoice/${invoice.id}`}>
-                                <Button size="sm" variant="outline">
+                                <Button size="sm" variant="outline" className="gap-2">
                                   Bekijken
-                                  <ArrowRight className="ml-2 h-4 w-4" />
+                                  <ArrowRight className="h-4 w-4" />
                                 </Button>
                               </Link>
                             </div>
@@ -191,46 +206,44 @@ const CustomerDashboard = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="quotes" className="mt-4">
-            <Card>
+          <TabsContent value="quotes">
+            <Card className="border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Uw offertes</CardTitle>
-                <CardDescription>
-                  Overzicht van al uw offertes
-                </CardDescription>
+                <CardDescription>Overzicht van al uw offertes</CardDescription>
               </CardHeader>
               <CardContent>
                 {customerQuotes.length === 0 ? (
-                  <p className="text-center py-4 text-gray-500">Geen offertes gevonden</p>
+                  <p className="text-center py-8 text-gray-500">Geen offertes gevonden</p>
                 ) : (
                   <div className="space-y-4">
                     {customerQuotes.map(quote => {
                       const statusBadge = useQuoteStatusBadge(quote.status);
                       return (
-                        <div key={quote.id} className="border rounded-lg p-4">
+                        <div key={quote.id} className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="font-medium">{quote.id.replace("quote-", "OF-")}</h3>
-                              <p className="text-sm text-gray-500">{quote.description}</p>
-                              <div className="flex items-center gap-4 mt-2">
+                              <h3 className="font-medium text-lg">{quote.id.replace("quote-", "OF-")}</h3>
+                              <p className="text-gray-500 mt-1">{quote.description}</p>
+                              <div className="flex items-center gap-6 mt-3">
                                 <div className="flex items-center text-sm text-gray-500">
-                                  <Calendar className="h-4 w-4 mr-1" />
+                                  <Calendar className="h-4 w-4 mr-2" />
                                   {format(new Date(quote.createdAt), "dd-MM-yyyy", { locale: nl })}
                                 </div>
-                                <div className="flex items-center text-sm text-gray-500">
-                                  <CreditCard className="h-4 w-4 mr-1" />
+                                <div className="flex items-center text-sm font-medium">
+                                  <CreditCard className="h-4 w-4 mr-2" />
                                   {formatCurrency(quote.amount)}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-2">
+                            <div className="flex flex-col items-end gap-3">
                               {statusBadge && (
                                 <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
                               )}
                               <Link to={`/portal/quote/${quote.id}`}>
-                                <Button size="sm" variant="outline">
+                                <Button size="sm" variant="outline" className="gap-2">
                                   Bekijken
-                                  <ArrowRight className="ml-2 h-4 w-4" />
+                                  <ArrowRight className="h-4 w-4" />
                                 </Button>
                               </Link>
                             </div>
@@ -244,26 +257,26 @@ const CustomerDashboard = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="photos" className="mt-4">
-            <Card>
+          <TabsContent value="photos">
+            <Card className="border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Projectfoto's</CardTitle>
-                <CardDescription>
-                  Foto's van de voortgang van uw project
-                </CardDescription>
+                <CardDescription>Foto's van de voortgang van uw project</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {jobPhotos.map(photo => (
-                    <div key={photo.id} className="border rounded-lg overflow-hidden">
-                      <img 
-                        src={photo.url} 
-                        alt={photo.title} 
-                        className="w-full h-48 object-cover"
-                      />
-                      <div className="p-3">
-                        <h3 className="font-medium">{photo.title}</h3>
-                        <p className="text-sm text-gray-500">
+                    <div key={photo.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                      <div className="aspect-video">
+                        <img 
+                          src={photo.url} 
+                          alt={photo.title} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-medium text-lg">{photo.title}</h3>
+                        <p className="text-sm text-gray-500 mt-1">
                           {format(new Date(photo.date), "d MMMM yyyy", { locale: nl })}
                         </p>
                       </div>
