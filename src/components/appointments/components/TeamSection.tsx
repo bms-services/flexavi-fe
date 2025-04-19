@@ -6,7 +6,7 @@ import { DateHeader } from "./DateHeader";
 import { AvailabilityCell } from "./AvailabilityCell";
 import { TeamSectionProps } from "../types";
 import { Button } from "@/components/ui/button";
-import { AlertOctagon } from "lucide-react";
+import { AlertOctagon, List } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -46,6 +46,37 @@ export const TeamSection = ({
     return unavailableDates[teamId]?.includes(date);
   };
 
+  // Calculate statistics for each date
+  const getDateStatistics = (date: string) => {
+    let totalScheduled = 0;
+    let totalCapacity = 0;
+
+    teams.forEach(team => {
+      if (!isTeamUnavailableOnDate(team.id, date)) {
+        timeSlots.forEach(slot => {
+          const maxSlots = getMaxSlots(team.type, slot.label);
+          totalCapacity += maxSlots;
+
+          const scheduledCount = appointments.filter(app => {
+            const hour = parseInt(app.startTime.split(":")[0]);
+            return app.date === date && 
+                   app.teamId === team.id && 
+                   hour >= slot.start && 
+                   hour < slot.end;
+          }).length;
+
+          totalScheduled += scheduledCount;
+        });
+      }
+    });
+
+    return {
+      scheduled: totalScheduled,
+      capacity: totalCapacity,
+      available: totalCapacity - totalScheduled
+    };
+  };
+
   return (
     <Card className="overflow-hidden">
       <div className="bg-muted/50 p-4 rounded-t-lg border-b flex items-center justify-between">
@@ -70,6 +101,45 @@ export const TeamSection = ({
             </div>
           </div>
 
+          {/* Statistics Row */}
+          <div className="grid grid-cols-[200px,1fr] border-t bg-muted/5">
+            <div className="p-3 flex items-center gap-2 border-r">
+              <List className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">
+                Totaal Overzicht
+              </span>
+            </div>
+            <div className="grid grid-cols-5">
+              {dates.map(date => {
+                const stats = getDateStatistics(date);
+                return (
+                  <div key={date} className="p-2 space-y-1 border-l">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="text-center text-sm">
+                          <span className="font-medium text-primary">
+                            {stats.scheduled}/{stats.capacity}
+                          </span>
+                          <div className="text-xs text-muted-foreground">
+                            {stats.available} beschikbaar
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="text-sm">
+                          <p>Ingepland: {stats.scheduled}</p>
+                          <p>Capaciteit: {stats.capacity}</p>
+                          <p>Beschikbaar: {stats.available}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Teams Grid */}
           {teams.map(team => (
             <div key={team.id} className="grid grid-cols-[200px,1fr] border-t hover:bg-muted/5">
               <div className="p-3 flex items-center gap-2 border-r">
