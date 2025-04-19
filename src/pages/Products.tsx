@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -123,6 +122,7 @@ const Products = () => {
                     <TableHead>Prijs</TableHead>
                     <TableHead>BTW</TableHead>
                     <TableHead>Categorie</TableHead>
+                    <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -158,6 +158,9 @@ const Products = () => {
                       <TableCell>{product.vat}%</TableCell>
                       <TableCell>
                         <Badge variant="outline">{product.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{product.category}</Badge>
                       </TableCell>
                     </TableRow>
                   ))}
