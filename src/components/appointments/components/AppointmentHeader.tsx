@@ -3,7 +3,7 @@ import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, CalculatorIcon, Route, Brain } from "lucide-react";
+import { ChevronLeft, Route, Brain } from "lucide-react";
 
 interface AppointmentHeaderProps {
   date: string;
