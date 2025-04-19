@@ -55,11 +55,11 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     }
     
     searchTimeoutRef.current = setTimeout(() => {
-      if (value && value.trim().length > 0) {
+      if (value && value.trim().length > 1) {
         if (typeof onProductSearch === 'function') {
           onProductSearch(value);
         }
-        if (value.length > 2) {
+        if (value.length > 1) {
           setSuggestionsOpen(true);
         }
       } else {
@@ -77,11 +77,6 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
       }
     };
   }, []);
-
-  // Log when suggestions change for debugging
-  useEffect(() => {
-    console.log("Product suggestions updated:", suggestions);
-  }, [suggestions]);
 
   // Ensure stable description value
   const safeDescription = description || "";

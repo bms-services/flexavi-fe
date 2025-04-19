@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { LineItemRow } from "@/components/quotes/LineItemRow";
 import { QuoteLineItem } from "@/types";
+import { Product } from "@/types/product";
 
 interface LineItemsListProps {
   lineItems: QuoteLineItem[];
   onLineItemChange: (index: number, updatedItem: QuoteLineItem) => void;
   onAddLineItem: () => void;
   onRemoveLineItem: (index: number) => void;
-  productSuggestions: Record<string, any[]>;
+  productSuggestions: Record<string, Product[]>;
   onProductSearch: (title: string, index: string) => void;
 }
 
@@ -52,9 +53,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}
           productSuggestions={
-            item?.id && suggestions[item.id] && Array.isArray(suggestions[item.id]) 
-              ? suggestions[item.id] 
-              : []
+            item?.id && suggestions[item.id] ? suggestions[item.id] : []
           }
           onProductSearch={(title) => {
             if (item?.id) {

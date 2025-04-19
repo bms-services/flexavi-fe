@@ -4,7 +4,9 @@ import { Product } from "@/types/product";
 
 export const useProducts = () => {
   const searchProducts = (query: string): Product[] => {
-    if (!query || query.trim().length < 2) return [];
+    if (!query || typeof query !== 'string' || query.trim().length < 2) {
+      return [];
+    }
     
     const normalizedQuery = query.toLowerCase().trim();
     
@@ -15,6 +17,7 @@ export const useProducts = () => {
   };
 
   const getProductById = (id: string): Product | undefined => {
+    if (!id) return undefined;
     return mockProducts.find(product => product.id === id);
   };
 

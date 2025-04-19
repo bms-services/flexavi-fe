@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { Quote, QuoteLineItem, Lead } from "@/types";
 import { mockQuotes, mockLeads } from "@/data/mockData";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useProducts } from "@/hooks/useProducts";
+import { Product } from "@/types/product";
 
 const createEmptyLineItem = (): QuoteLineItem => ({
   id: `item-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -34,7 +36,7 @@ export const useQuoteForm = (quoteId?: string) => {
   const [quote, setQuote] = useState<Omit<Quote, "id" | "createdAt" | "updatedAt">>(emptyQuote);
   const [lineItems, setLineItems] = useState<QuoteLineItem[]>([createEmptyLineItem()]);
   const [selectedCustomer, setSelectedCustomer] = useState<Lead | null>(null);
-  const [productSuggestions, setProductSuggestions] = useState<Record<string, any[]>>({});
+  const [productSuggestions, setProductSuggestions] = useState<Record<string, Product[]>>({});
 
   const { searchProducts } = useProducts();
 
@@ -108,7 +110,11 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const getProductSuggestions = (title: string, index: string) => {
     // Validate parameters to prevent undefined errors
-    if (!title || !index || typeof title !== 'string' || typeof index !== 'string' || title.trim().length <= 2) {
+    if (!title || !index || typeof title !== 'string' || typeof index !== 'string') {
+      return;
+    }
+    
+    if (title.trim().length <= 1) {
       setProductSuggestions(prev => ({ 
         ...prev, 
         [index]: [] 
@@ -118,10 +124,10 @@ export const useQuoteForm = (quoteId?: string) => {
     
     const suggestions = searchProducts(title);
     
-    // Update suggestions for this specific line item
+    // Always ensure we set a valid array for this line item
     setProductSuggestions(prev => ({ 
       ...prev, 
-      [index]: suggestions 
+      [index]: Array.isArray(suggestions) ? suggestions : [] 
     }));
   };
 

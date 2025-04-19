@@ -1,6 +1,7 @@
 
 import React from "react";
 import { QuoteLineItem } from "@/types";
+import { Product } from "@/types/product";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
@@ -20,7 +21,7 @@ interface LineItemRowProps {
   onChange: (updatedLineItem: QuoteLineItem) => void;
   onRemove: () => void;
   showRemoveButton: boolean;
-  productSuggestions: any[];
+  productSuggestions: Product[];
   onProductSearch: (title: string) => void;
 }
 
@@ -95,7 +96,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   };
 
   // Handle product selection
-  const handleSelectProduct = (product: any) => {
+  const handleSelectProduct = (product: Product) => {
     if (!product) return;
     
     onChange({
@@ -157,7 +158,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
       
       <div className="col-span-1">
         <Select 
-          value={(safeLineItem.vatRate?.toString() || "21")}
+          value={String(safeLineItem.vatRate || "21")}
           onValueChange={handleVatChange}
         >
           <SelectTrigger>
@@ -176,14 +177,14 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           type="number" 
           min="0" 
           step="0.01"
-          value={safeLineItem.pricePerUnit.toString()}
+          value={String(safeLineItem.pricePerUnit || "0")}
           onChange={(e) => handlePricePerUnitChange(e.target.value)}
           className="text-right"
         />
       </div>
       
       <div className="col-span-1 text-right font-medium">
-        {formatCurrency(safeLineItem.total)}
+        {formatCurrency(safeLineItem.total || 0)}
       </div>
       
       <div className="col-span-1 flex justify-center">
