@@ -1,3 +1,4 @@
+
 export type Lead = {
   id: string;
   name: string;
@@ -81,6 +82,7 @@ export type QuoteLineItem = {
   unit: string;
   pricePerUnit: number;
   total: number;
+  vatRate?: number; // Added VAT rate property as optional
 };
 
 export type Quote = {

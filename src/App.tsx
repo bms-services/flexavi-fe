@@ -10,6 +10,7 @@ import Leads from "./pages/Leads";
 import LeadDetails from "./pages/LeadDetails";
 import Appointments from "./pages/Appointments";
 import Quotes from "./pages/Quotes";
+import QuoteEdit from "./pages/QuoteEdit";
 import Invoices from "./pages/Invoices";
 import Settings from "./pages/Settings";
 
@@ -27,6 +28,8 @@ const App = () => (
           <Route path="/leads/:id" element={<LeadDetails />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/quotes" element={<Quotes />} />
+          <Route path="/quotes/create" element={<QuoteEdit />} />
+          <Route path="/quotes/edit/:id" element={<QuoteEdit />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />

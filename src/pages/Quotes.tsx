@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import {
   Card,
@@ -30,6 +31,7 @@ import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 const Quotes = () => {
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
@@ -51,13 +53,16 @@ const Quotes = () => {
   );
 
   const handleEditQuote = (quote: Quote) => {
-    // Will be implemented in the next step
-    console.log("Edit quote:", quote);
+    navigate(`/quotes/edit/${quote.id}`);
   };
 
   const handleDeleteQuote = (quote: Quote) => {
     // Will be implemented in the next step
     console.log("Delete quote:", quote);
+  };
+
+  const handleCreateQuote = () => {
+    navigate("/quotes/create");
   };
 
   return (
@@ -70,7 +75,7 @@ const Quotes = () => {
               Beheer al je offertes op één plek
             </p>
           </div>
-          <Button>
+          <Button onClick={handleCreateQuote}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Nieuwe Offerte
           </Button>
