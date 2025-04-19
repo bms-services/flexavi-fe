@@ -82,50 +82,48 @@ export const AvailabilityCell = ({
           </Badge>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
-          <div className="space-y-2">
+      <HoverCardContent className="w-72 p-3" align="start">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between border-b pb-2">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <p className="font-medium">
+              <p className="text-sm font-medium">
                 {format(parseISO(date), "EEEE d MMMM", { locale: nl })}
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <p>{timeSlot.start}:00 - {timeSlot.end}:00</p>
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              <span>{timeSlot.start}:00 - {timeSlot.end}:00</span>
             </div>
           </div>
 
           {dateAppointments.length > 0 ? (
-            <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">Geplande afspraken:</p>
+            <div className="space-y-2">
               {dateAppointments.map((app, idx) => (
-                <div key={idx} className="space-y-2 border-l-2 border-primary pl-3">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <p className="font-medium">{app.title}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <p className="text-sm">{app.startTime} - {app.endTime}</p>
-                  </div>
-                  {app.location && (
-                    <div className="flex items-start gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
-                      <p className="text-sm">{app.location}</p>
+                <div key={idx} className="flex items-start gap-2 text-sm border-l-2 border-primary pl-2">
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium">{app.title}</p>
+                      <Badge variant="secondary" className="text-xs">
+                        {appointmentTypeLabels[app.status]}
+                      </Badge>
                     </div>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary">
-                      {appointmentTypeLabels[app.status]}
-                    </Badge>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      <span>{app.startTime} - {app.endTime}</span>
+                    </div>
+                    {app.location && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <MapPin className="h-3 w-3" />
+                        <span>{app.location}</span>
+                      </div>
+                    )}
+                    {app.description && (
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {app.description}
+                      </p>
+                    )}
                   </div>
-                  {app.description && (
-                    <p className="text-sm text-muted-foreground">
-                      {app.description}
-                    </p>
-                  )}
                 </div>
               ))}
             </div>
@@ -136,7 +134,7 @@ export const AvailabilityCell = ({
           )}
           
           <p className={cn(
-            "text-sm font-medium",
+            "text-sm font-medium border-t pt-2",
             isFullyBooked ? "text-destructive" : "text-primary"
           )}>
             {isFullyBooked 
