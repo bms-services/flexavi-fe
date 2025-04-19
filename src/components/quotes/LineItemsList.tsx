@@ -22,7 +22,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   productSuggestions = {},
   onProductSearch,
 }) => {
-  // Waarborg dat lineItems en productSuggestions altijd geldig zijn
+  // Zorg ervoor dat lineItems en productSuggestions altijd geldige waarden hebben
   const items = Array.isArray(lineItems) ? lineItems : [];
   const suggestions = productSuggestions || {};
 
@@ -40,7 +40,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
 
       {items.map((item, index) => (
         <LineItemRow
-          key={item.id}
+          key={item.id || `item-${index}`}
           lineItem={item}
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}

@@ -107,10 +107,12 @@ export const useQuoteForm = (quoteId?: string) => {
   const getProductSuggestions = (title: string, index: string) => {
     // Check op lege input om te voorkomen dat er suggesties worden gegenereerd voor lege input
     if (!title || title.trim().length <= 2) {
+      // Zorg ervoor dat we altijd een array instellen, zelfs als het een lege is
       setProductSuggestions(prev => ({ ...prev, [index]: [] }));
       return;
     }
     
+    // Genereer suggesties op basis van de input
     const suggestions = [
       {
         title: `${title} Premium`,
@@ -135,6 +137,7 @@ export const useQuoteForm = (quoteId?: string) => {
       }
     ];
     
+    // Update de suggesties voor deze specifieke line item
     setProductSuggestions(prev => ({ ...prev, [index]: suggestions }));
   };
 

@@ -41,7 +41,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Waarborg dat productSuggestions altijd een array is om "undefined is not iterable" fout te voorkomen
+  // Zorg ervoor dat productSuggestions altijd een array is
   const suggestions = Array.isArray(productSuggestions) ? productSuggestions : [];
   const hasSuggestions = suggestions.length > 0;
 
@@ -90,7 +90,9 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     <Popover 
       open={suggestionsOpen && hasSuggestions} 
       onOpenChange={(open) => {
-        if (!open || hasSuggestions) {
+        if (!open || !hasSuggestions) {
+          setSuggestionsOpen(false);
+        } else {
           setSuggestionsOpen(open);
         }
       }}
