@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Lead } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { LeadTable } from "./LeadTable";
-import { LeadSearch } from "./LeadSearch";
 import { LeadActions } from "./LeadActions";
 import { CreateLeadDialog } from "./CreateLeadDialog";
 import { CreateLeadFormData } from "@/utils/validations";
@@ -13,7 +12,6 @@ interface LeadListProps {
 }
 
 export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
@@ -29,15 +27,11 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-        <LeadSearch 
-          searchTerm={searchTerm} 
-          onSearchChange={setSearchTerm} 
-        />
+      <div className="flex justify-end">
         <LeadActions onCreateClick={() => setIsDialogOpen(true)} />
       </div>
 
-      <LeadTable leads={leads} searchTerm={searchTerm} />
+      <LeadTable leads={leads} />
 
       <CreateLeadDialog
         isOpen={isDialogOpen}
