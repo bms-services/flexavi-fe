@@ -67,7 +67,7 @@ export const WizardInvoiceStep: React.FC<WizardInvoiceStepProps> = ({
                 onClick={() => handleInvoiceSelect(invoice)}
               >
                 <div className="font-medium">Factuur #{invoice.id}</div>
-                <div className="text-sm text-muted-foreground">€{invoice.totalAmount.toFixed(2)}</div>
+                <div className="text-sm text-muted-foreground">€{invoice.amount.toFixed(2)}</div>
                 <div className="text-sm text-muted-foreground">
                   {new Date(invoice.createdAt).toLocaleDateString()}
                 </div>

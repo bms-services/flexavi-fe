@@ -57,7 +57,6 @@ export const WizardLeadStep: React.FC<WizardLeadStepProps> = ({
     handleLeadSelect(newLead);
     setIsCreateLeadOpen(false);
     toast({
-      title: "Lead aangemaakt",
       description: "De lead is succesvol toegevoegd aan het project"
     });
   };
