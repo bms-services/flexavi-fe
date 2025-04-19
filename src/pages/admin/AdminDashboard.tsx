@@ -16,68 +16,65 @@ export default function AdminDashboard() {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="container mx-auto py-6 px-4">
         <AdminHeader title="Admin Dashboard" />
         
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-background border-b w-full justify-start rounded-none h-auto p-0">
-            <TabsTrigger 
-              value="overview" 
-              className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary"
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Overzicht
-            </TabsTrigger>
-            <TabsTrigger 
-              value="members" 
-              className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Leden
-            </TabsTrigger>
-            <TabsTrigger 
-              value="subscriptions" 
-              className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary"
-            >
-              <CreditCard className="h-4 w-4 mr-2" />
-              Abonnementen
-            </TabsTrigger>
-          </TabsList>
+        <div className="flex mt-6 min-h-[calc(100vh-10rem)]">
+          <Tabs defaultValue="overview" orientation="vertical" className="flex min-h-full">
+            <div className="shrink-0">
+              <TabsList className="flex flex-col h-auto space-y-1 min-w-[200px] bg-muted p-2 rounded-l-md">
+                <TabsTrigger value="overview" className="w-full justify-start">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Overzicht
+                </TabsTrigger>
+                <TabsTrigger value="members" className="w-full justify-start">
+                  <Users className="h-4 w-4 mr-2" />
+                  Leden
+                </TabsTrigger>
+                <TabsTrigger value="subscriptions" className="w-full justify-start">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Abonnementen
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-          <TabsContent value="overview" className="space-y-6">
-            <AdminStats />
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Omzet Overzicht</CardTitle>
-                <Select
-                  value={timeRange}
-                  onValueChange={(value) => setTimeRange(value)}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Selecteer periode" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="week">Deze week</SelectItem>
-                    <SelectItem value="month">Deze maand</SelectItem>
-                    <SelectItem value="quarter">Dit kwartaal</SelectItem>
-                    <SelectItem value="year">Dit jaar</SelectItem>
-                  </SelectContent>
-                </Select>
-              </CardHeader>
-              <CardContent>
-                <RevenueChart timeRange={timeRange} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="members">
-            <RecentMembers />
-          </TabsContent>
-          
-          <TabsContent value="subscriptions">
-            <SubscriptionOverview />
-          </TabsContent>
-        </Tabs>
+            <div className="flex-1 border-l bg-background ml-4 pl-6">
+              <TabsContent value="overview" className="mt-0">
+                <AdminStats />
+                <Card className="mt-6">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Omzet Overzicht</CardTitle>
+                    <Select
+                      value={timeRange}
+                      onValueChange={(value) => setTimeRange(value)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Selecteer periode" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="week">Deze week</SelectItem>
+                        <SelectItem value="month">Deze maand</SelectItem>
+                        <SelectItem value="quarter">Dit kwartaal</SelectItem>
+                        <SelectItem value="year">Dit jaar</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </CardHeader>
+                  <CardContent>
+                    <RevenueChart timeRange={timeRange} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="members" className="mt-0">
+                <RecentMembers />
+              </TabsContent>
+              
+              <TabsContent value="subscriptions" className="mt-0">
+                <SubscriptionOverview />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );
