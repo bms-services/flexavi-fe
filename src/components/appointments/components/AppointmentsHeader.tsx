@@ -29,3 +29,4 @@ export const AppointmentsHeader: React.FC<AppointmentsHeaderProps> = ({
       />
     </div>
   );
+};
