@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Plus, PlusCircle, Pencil, Trash2, Category } from "lucide-react";
+import { Plus, PlusCircle, Pencil, Trash2, FolderIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockProducts } from "@/data/mockProducts";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +74,7 @@ const Products = () => {
                 setCategoryDialogOpen(true);
               }}
             >
-              <Category className="mr-2 h-4 w-4" />
+              <FolderIcon className="mr-2 h-4 w-4" />
               Categorie
             </Button>
             <Button
