@@ -105,9 +105,9 @@ export const useQuoteForm = (quoteId?: string) => {
   };
 
   const getProductSuggestions = (title: string, index: string) => {
-    // Check if input is empty to prevent generating suggestions for empty input
-    if (!title || !index || title.trim().length <= 2) {
-      // Always set an array, even if it's empty
+    // Validate parameters to prevent undefined errors
+    if (!title || !index || typeof title !== 'string' || typeof index !== 'string' || title.trim().length <= 2) {
+      // Always set an empty array for this index
       setProductSuggestions(prev => ({ 
         ...prev, 
         [index]: [] 

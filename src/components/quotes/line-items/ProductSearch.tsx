@@ -63,7 +63,9 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     
     searchTimeoutRef.current = setTimeout(() => {
       if (value && value.trim().length > 0) {
-        onProductSearch(value);
+        if (typeof onProductSearch === 'function') {
+          onProductSearch(value);
+        }
         if (value.length > 2) {
           setSuggestionsOpen(true);
         }
@@ -86,11 +88,12 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   // Ensure stable description value
   const safeDescription = description || "";
   
-  // Don't render CommandInput and CommandGroup if there are no suggestions
-  // This prevents the "undefined is not iterable" error
+  // Only show popup content if we have suggestions and the popup is open
+  const shouldShowPopup = suggestionsOpen && hasSuggestions;
+  
   return (
     <Popover 
-      open={suggestionsOpen && hasSuggestions} 
+      open={shouldShowPopup} 
       onOpenChange={(open) => {
         // Only open if we have suggestions
         if (!open || !hasSuggestions) {
@@ -110,36 +113,40 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
           />
         </div>
       </PopoverTrigger>
-      {hasSuggestions && (
+      
+      {/* Only render PopoverContent when we have suggestions */}
+      {shouldShowPopup && (
         <PopoverContent className="w-[400px] p-0" align="start">
-          <Command>
-            <CommandInput 
-              placeholder="Zoek product..." 
-              value={title} 
-              onValueChange={handleDescriptionChange} 
-              className="h-9"
-            />
-            <CommandEmpty>Geen producten gevonden.</CommandEmpty>
-            {suggestions.length > 0 && (
+          {hasSuggestions && (
+            <Command>
+              <CommandInput 
+                placeholder="Zoek product..." 
+                value={title} 
+                onValueChange={handleDescriptionChange} 
+                className="h-9"
+              />
+              <CommandEmpty>Geen producten gevonden.</CommandEmpty>
               <CommandGroup>
                 {suggestions.map((product, index) => (
                   <CommandItem 
-                    key={index}
+                    key={`product-${index}`}
                     onSelect={() => {
                       onProductSelect(product);
                       setSuggestionsOpen(false);
                     }}
                   >
                     <div className="flex flex-col">
-                      <span className="font-medium">{product.title}</span>
-                      <span className="text-xs text-muted-foreground">{product.description}</span>
-                      <span className="text-xs">{formatCurrency(product.pricePerUnit)} per {product.unit}</span>
+                      <span className="font-medium">{product.title || ''}</span>
+                      <span className="text-xs text-muted-foreground">{product.description || ''}</span>
+                      <span className="text-xs">
+                        {formatCurrency(product.pricePerUnit || 0)} per {product.unit || 'stuk'}
+                      </span>
                     </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
-            )}
-          </Command>
+            </Command>
+          )}
         </PopoverContent>
       )}
     </Popover>

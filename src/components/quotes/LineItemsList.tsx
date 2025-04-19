@@ -26,6 +26,13 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   const items = Array.isArray(lineItems) ? lineItems : [];
   const suggestions = productSuggestions || {};
 
+  // Safe product search function that validates parameters
+  const handleProductSearch = (title: string, itemId: string) => {
+    if (typeof onProductSearch === 'function' && title && itemId) {
+      onProductSearch(title, itemId);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-12 gap-2 font-medium text-sm border-b pb-2">
@@ -45,13 +52,13 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
           onChange={updatedItem => onLineItemChange(index, updatedItem)}
           onRemove={() => onRemoveLineItem(index)}
           productSuggestions={
-            item.id && suggestions[item.id] && Array.isArray(suggestions[item.id]) 
+            item?.id && suggestions[item.id] && Array.isArray(suggestions[item.id]) 
               ? suggestions[item.id] 
               : []
           }
           onProductSearch={(title) => {
-            if (item.id) {
-              onProductSearch(title, item.id);
+            if (item?.id) {
+              handleProductSearch(title, item.id);
             }
           }}
           showRemoveButton={items.length > 1}

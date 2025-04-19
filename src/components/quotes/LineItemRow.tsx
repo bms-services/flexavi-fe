@@ -122,9 +122,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     ...lineItem
   };
 
-  // Handle product search
+  // Handle product search with safety checks
   const handleProductSearch = (title: string) => {
-    if (typeof onProductSearch === 'function') {
+    if (typeof onProductSearch === 'function' && title) {
       onProductSearch(title);
     }
   };
