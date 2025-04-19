@@ -27,6 +27,7 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Landing from "./pages/Landing";
 import Pricing from "./pages/Pricing";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/portal/invoice/:id" element={<CustomerPortalInvoice />} />
           <Route path="/portal/workagreement/:id" element={<CustomerPortalWorkAgreement />} />
           <Route path="/portal/dashboard/:leadId" element={<CustomerDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
