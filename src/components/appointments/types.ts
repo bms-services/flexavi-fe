@@ -1,3 +1,4 @@
+
 import { Appointment, TeamDetails, WorkEnvironment } from "@/types";
 
 export interface TeamAvailabilityOverviewProps {
@@ -23,6 +24,7 @@ export interface TeamSectionProps {
   searchLocation?: string;
   unavailableDates?: Record<string, string[]>;
   onTeamNameEdit?: (team: TeamDetails) => void;
+  onDateClick?: (date: string) => void;
 }
 
 export interface DateHeaderProps {
