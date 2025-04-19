@@ -16,6 +16,8 @@ interface WorkAgreementDetailsProps {
   customer: {
     name: string;
     address: string;
+    email: string;
+    phone: string;
   };
   workAgreement: {
     createdAt: string;
@@ -77,7 +79,12 @@ export const WorkAgreementDetails: React.FC<WorkAgreementDetailsProps> = ({
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <CompanyDetails companyDetails={companyDetails} />
-        <CustomerInfoCard customer={customer} />
+        <CustomerInfoCard customer={{
+          name: customer.name,
+          address: customer.address,
+          email: customer.email || "customer@example.com",
+          phone: customer.phone || "06-12345678"
+        }} />
       </div>
 
       <AgreementDetails workAgreement={workAgreement} formatCurrency={formatCurrency} />

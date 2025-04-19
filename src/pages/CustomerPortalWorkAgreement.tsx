@@ -101,7 +101,12 @@ const CustomerPortalWorkAgreement = () => {
           <Card>
             <CardContent className="p-6">
               <WorkAgreementDetails 
-                customer={customer}
+                customer={{
+                  name: customer.name,
+                  address: customer.address,
+                  email: customer.email,
+                  phone: customer.phone
+                }}
                 workAgreement={workAgreement}
                 formatCurrency={formatCurrency}
               />
