@@ -44,7 +44,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
   const handleCreateNewCustomer = (customerData: Partial<Lead>) => {
     // In a real app, this would make an API call
     const newCustomer: Lead = {
-      id: `temp-${Date.now()}`, // In a real app, this would come from the backend
+      id: `temp-${Date.now()}`,
       name: customerData.name || "",
       email: customerData.email || "",
       phone: customerData.phone || "",
@@ -55,8 +55,6 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       updatedAt: new Date().toISOString(),
     };
 
-    // Here we would normally make an API call to create the customer
-    // For now, we'll just simulate success
     onSelectCustomer(newCustomer);
     setShowNewCustomerDialog(false);
     setOpen(false);
@@ -69,7 +67,6 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
 
   const handleOpenNewCustomerDialog = () => {
     setShowNewCustomerDialog(true);
-    setOpen(false);
   };
 
   return (
@@ -86,7 +83,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
             <User className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0">
+        <PopoverContent className="w-[400px] p-0" side="bottom" align="start">
           <Command>
             <CommandInput placeholder="Zoek een klant..." />
             <CommandList>
@@ -96,7 +93,6 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                   <Button
                     variant="outline"
                     onClick={handleOpenNewCustomerDialog}
-                    type="button"
                     className="mt-2"
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
@@ -132,7 +128,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       </Popover>
 
       <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md z-[300]">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
             <DialogDescription>
