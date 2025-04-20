@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import Signature from "@/components/customer/Signature";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Mail } from "lucide-react";
@@ -11,16 +9,42 @@ import { Upload, Mail } from "lucide-react";
 export const SignatureSettings = () => {
   const { toast } = useToast();
   const [documentSignature, setDocumentSignature] = useState<string | null>(null);
-  const [emailSignature, setEmailSignature] = useState(`
-Met vriendelijke groet,
+  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
 
-[Naam]
-[Functie]
-
-[Bedrijfsnaam]
-[Telefoonnummer]
-[E-mailadres]
-[Website]`);
+  const defaultEmailSignature = `
+    <table style="font-family: Arial, sans-serif; color: #333333; font-size: 14px; line-height: 1.6; width: 100%; max-width: 600px; margin: 0; padding: 0; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 20px 0;">
+          ${companyLogo ? `<img src="${companyLogo}" alt="[Bedrijfsnaam]" style="max-width: 200px; height: auto; margin-bottom: 15px;" />` : ''}
+          <div style="border-top: 2px solid #2563eb; margin: 15px 0;"></div>
+          <p style="margin: 0;">Met vriendelijke groet,</p>
+          <p style="margin: 5px 0; font-weight: bold;">[Naam]</p>
+          <p style="margin: 0; color: #666;">[Functie]</p>
+          <div style="margin: 15px 0;">
+            <table style="border-collapse: collapse;">
+              <tr>
+                <td style="padding: 2px 0;"><strong>[Bedrijfsnaam]</strong></td>
+              </tr>
+              <tr>
+                <td style="padding: 2px 0;"><span style="color: #666;">T:</span> [Telefoonnummer]</td>
+              </tr>
+              <tr>
+                <td style="padding: 2px 0;"><span style="color: #666;">E:</span> [E-mailadres]</td>
+              </tr>
+              <tr>
+                <td style="padding: 2px 0;"><span style="color: #666;">W:</span> <a href="[Website]" style="color: #2563eb; text-decoration: none;">[Website]</a></td>
+              </tr>
+            </table>
+          </div>
+          <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
+            <p style="margin: 0; font-size: 12px; color: #666;">
+              Dit e-mailbericht is uitsluitend bestemd voor de geadresseerde(n).
+            </p>
+          </div>
+        </td>
+      </tr>
+    </table>
+  `;
 
   const handleDocumentSignatureChange = (signatureData: string | null) => {
     setDocumentSignature(signatureData);
@@ -30,10 +54,6 @@ Met vriendelijke groet,
         description: "Je handtekening is succesvol opgeslagen.",
       });
     }
-  };
-
-  const handleEmailSignatureChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEmailSignature(e.target.value);
   };
 
   const saveEmailSignature = () => {
@@ -81,22 +101,15 @@ Met vriendelijke groet,
             <div>
               <CardTitle>E-mail Handtekening</CardTitle>
               <CardDescription>
-                Maak je standaard e-mail handtekening voor alle uitgaande e-mails
+                Professionele e-mail handtekening met bedrijfslogo
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email-signature">E-mail handtekening</Label>
-              <Textarea
-                id="email-signature"
-                value={emailSignature}
-                onChange={handleEmailSignatureChange}
-                className="min-h-[200px] font-mono"
-                placeholder="Voer je e-mail handtekening in..."
-              />
+            <div className="border rounded-lg p-4 bg-white">
+              <div dangerouslySetInnerHTML={{ __html: defaultEmailSignature }} />
             </div>
             <div className="text-sm text-muted-foreground">
               <p>Beschikbare variabelen:</p>

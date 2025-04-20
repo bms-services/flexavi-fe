@@ -1,14 +1,32 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Mail, Phone, MapPin, Ban, FileText } from "lucide-react";
+import { Building2, Mail, Phone, MapPin, Ban, FileText, Upload } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const CompanySettings: React.FC = () => {
+  const { toast } = useToast();
+  const [logo, setLogo] = useState<string | null>(null);
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogo(reader.result as string);
+        toast({
+          title: "Logo geüpload",
+          description: "Het bedrijfslogo is succesvol geüpload.",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -24,6 +42,42 @@ export const CompanySettings: React.FC = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <Label htmlFor="company-logo">Bedrijfslogo</Label>
+            <div className="flex items-start gap-4">
+              {logo && (
+                <div className="w-32 h-32 relative border rounded-lg overflow-hidden">
+                  <img
+                    src={logo}
+                    alt="Bedrijfslogo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label
+                  htmlFor="logo-upload"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md cursor-pointer hover:bg-primary/90"
+                >
+                  <Upload className="h-4 w-4" />
+                  Logo uploaden
+                </Label>
+                <Input
+                  id="logo-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleLogoUpload}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Upload een PNG of JPG bestand (max 2MB)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="company-name">Bedrijfsnaam</Label>
