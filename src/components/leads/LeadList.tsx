@@ -9,9 +9,17 @@ import { CreateLeadFormData } from "@/utils/validations";
 
 interface LeadListProps {
   leads: Lead[];
+  currentPage?: number;
+  itemsPerPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
-export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
+export const LeadList: React.FC<LeadListProps> = ({ 
+  leads,
+  currentPage = 1,
+  itemsPerPage = 10,
+  onPageChange = () => {}
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
@@ -32,7 +40,13 @@ export const LeadList: React.FC<LeadListProps> = ({ leads }) => {
         <LeadActions onCreateClick={() => setIsDialogOpen(true)} />
       </div>
 
-      <LeadTable leads={leads} searchTerm={searchTerm} />
+      <LeadTable 
+        leads={leads} 
+        searchTerm={searchTerm} 
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        onPageChange={onPageChange}
+      />
 
       <CreateLeadDialog
         isOpen={isDialogOpen}

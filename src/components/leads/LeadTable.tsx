@@ -17,12 +17,18 @@ import { getLeadStats, formatCurrency } from "@/utils/leadStats";
 interface LeadTableProps {
   leads: Lead[];
   searchTerm: string;
+  currentPage?: number;
+  itemsPerPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
-const ITEMS_PER_PAGE = 10;
-
-export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+export const LeadTable: React.FC<LeadTableProps> = ({ 
+  leads, 
+  searchTerm,
+  currentPage = 1,
+  itemsPerPage = 10,
+  onPageChange = () => {} 
+}) => {
   const [filters, setFilters] = useState({
     location: "",
     quoteStatus: "all",
@@ -32,7 +38,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
 
   const handleFilterChange = (type: string, value: string) => {
     setFilters(prev => ({ ...prev, [type]: value }));
-    setCurrentPage(1);
+    onPageChange(1); // Reset to first page when filters change
   };
 
   const filteredLeads = leads.filter((lead) => {
@@ -51,9 +57,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
     return matchesSearch && matchesLocation && matchesLeadStatus && matchesQuoteStatus && matchesInvoiceStatus;
   });
 
-  const totalPages = Math.ceil(filteredLeads.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedLeads = filteredLeads.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedLeads = filteredLeads.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="space-y-4">
@@ -100,7 +106,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ leads, searchTerm }) => {
       <LeadTablePagination 
         currentPage={currentPage}
         totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={onPageChange}
       />
     </div>
   );

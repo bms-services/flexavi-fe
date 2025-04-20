@@ -46,7 +46,7 @@ export const WizardLeadStep: React.FC<WizardLeadStepProps> = ({
       email: data.email,
       phone: data.phone,
       address: `${data.postcode} ${data.huisnummer}`,
-      status: 'new',
+      status: 'new_lead', // Changed from "new" to "new_lead"
       source: 'Manual Entry',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()

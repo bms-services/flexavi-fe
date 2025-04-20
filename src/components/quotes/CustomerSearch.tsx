@@ -52,7 +52,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       email: customerData.email || "",
       phone: customerData.phone || "",
       address: customerData.address || "",
-      status: "new",
+      status: "new_lead", // Changed from "new" to "new_lead"
       source: "Manual Entry",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
