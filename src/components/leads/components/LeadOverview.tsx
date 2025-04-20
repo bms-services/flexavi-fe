@@ -23,13 +23,13 @@ export const LeadOverview: React.FC<LeadOverviewProps> = ({ lead }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        <WozValueCard address={lead.address} />
-        <LeadLocationMap address={lead.address} />
+        <ActiveQuotes quotes={lead.quotes} />
+        <RecentActivities activities={[...lead.quotes, ...lead.invoices]} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        <ActiveQuotes quotes={lead.quotes} />
-        <RecentActivities activities={[...lead.quotes, ...lead.invoices]} />
+        <WozValueCard address={lead.address} />
+        <LeadLocationMap address={lead.address} />
       </div>
 
       <LeadMedia leadId={lead.id} />
@@ -37,3 +37,4 @@ export const LeadOverview: React.FC<LeadOverviewProps> = ({ lead }) => {
     </div>
   );
 };
+
