@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, FileText } from "lucide-react";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
@@ -76,9 +76,30 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   onRescheduleReasonChange,
   onRescheduleSave,
 }) => {
-  const hasDigitalQuote = !!digitalQuote;
-  const hasDigitalInvoice = !!digitalInvoice;
-  const hasDigitalAgreement = !!digitalAgreement;
+  // Local state for digital documents in this example (In real app: fetch/save via API)
+  const [localDigitalQuote, setLocalDigitalQuote] = useState<ReceiptData | undefined>(digitalQuote);
+  const [localDigitalInvoice, setLocalDigitalInvoice] = useState<ReceiptData | undefined>(digitalInvoice);
+  const [localDigitalAgreement, setLocalDigitalAgreement] = useState<ReceiptData | undefined>(digitalAgreement);
+
+  // Triggered when upload-modal returns parsed data
+  const handleQuoteResult = (data: ReceiptData) => {
+    setLocalDigitalQuote(data);
+    if (onQuoteResult) onQuoteResult(data);
+  };
+
+  const handleInvoiceResult = (data: ReceiptData) => {
+    setLocalDigitalInvoice(data);
+    if (onInvoiceResult) onInvoiceResult(data);
+  };
+
+  const handleAgreementResult = (data: ReceiptData) => {
+    setLocalDigitalAgreement(data);
+    if (onAgreementResult) onAgreementResult(data);
+  };
+
+  const hasDigitalQuote = !!localDigitalQuote;
+  const hasDigitalInvoice = !!localDigitalInvoice;
+  const hasDigitalAgreement = !!localDigitalAgreement;
 
   const {
     processModalOpen,
@@ -152,9 +173,9 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
               {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
                 <div className="grid gap-2 sm:grid-cols-3">
-                  {hasDigitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
-                  {hasDigitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
-                  {hasDigitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
+                  {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
+                  {hasDigitalInvoice && <DigitalQuoteDisplay quote={localDigitalInvoice!} title="Factuur" />}
+                  {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
@@ -174,23 +195,23 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 hasDigitalQuote={hasDigitalQuote}
                 hasDigitalInvoice={hasDigitalInvoice}
                 hasDigitalAgreement={hasDigitalAgreement}
-                digitalQuote={digitalQuote}
-                digitalInvoice={digitalInvoice}
-                digitalAgreement={digitalAgreement}
+                digitalQuote={localDigitalQuote}
+                digitalInvoice={localDigitalInvoice}
+                digitalAgreement={localDigitalAgreement}
                 onCreateQuote={onCreateQuote}
                 onOpenUploadQuote={onOpenUploadQuote}
                 uploadQuoteDialogOpen={uploadQuoteDialogOpen}
-                onQuoteResult={onQuoteResult}
+                onQuoteResult={handleQuoteResult}
                 onCloseUploadQuote={onCloseUploadQuote}
                 onCreateInvoice={onCreateInvoice}
                 onOpenUploadInvoice={onOpenUploadInvoice}
                 uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
-                onInvoiceResult={onInvoiceResult}
+                onInvoiceResult={handleInvoiceResult}
                 onCloseUploadInvoice={onCloseUploadInvoice}
                 onCreateAgreement={onCreateAgreement}
                 onOpenUploadAgreement={onOpenUploadAgreement}
                 uploadAgreementDialogOpen={uploadAgreementDialogOpen}
-                onAgreementResult={onAgreementResult}
+                onAgreementResult={handleAgreementResult}
                 onCloseUploadAgreement={onCloseUploadAgreement}
                 onOpenProcessModal={handleOpenProcessModal}
               />
