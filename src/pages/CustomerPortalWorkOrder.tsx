@@ -1,15 +1,24 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { ArrowLeft, CalendarRange, Clipboard, MapPin } from "lucide-react";
+import { ArrowLeft, FileText, Edit, Pen, Image, CreditCard, FileText as FileTextIcon } from "lucide-react";
 import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
 import { Badge } from "@/components/ui/badge";
+import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
+import { CustomerInfoCard } from "@/components/workagreements/customer-portal/components/CustomerInfoCard";
+import { AgreementDetails } from "@/components/workagreements/customer-portal/components/AgreementDetails";
+import { WorkDescription } from "@/components/workagreements/customer-portal/components/WorkDescription";
+import { ProvisionsCard } from "@/components/workagreements/customer-portal/components/ProvisionsCard";
+import { ExclusionsCard } from "@/components/workagreements/customer-portal/components/ExclusionsCard";
+import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
+import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
+import { PaymentDetails } from "@/components/workagreements/customer-portal/components/PaymentDetails";
+import Signature from "@/components/customer/Signature";
+import { toast } from "sonner";
 
-// Mock data for testing - in real app this would come from API
 const mockWorkOrder = {
   id: "WO-001",
   description: "Installatie zonnepanelen",
@@ -39,12 +48,35 @@ const CustomerPortalWorkOrder = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [workOrder, setWorkOrder] = useState<any>(null);
+  const [signature, setSignature] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate API call
     setWorkOrder(mockWorkOrder);
     setLoading(false);
   }, [id]);
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(amount);
+  };
+
+  const handleSignatureChange = (signatureData: string | null) => {
+    setSignature(signatureData);
+  };
+
+  const handleSign = () => {
+    if (!signature) {
+      toast.error("Plaats eerst uw handtekening");
+      return;
+    }
+    toast.success("Werkopdracht succesvol ondertekend");
+  };
+
+  const handleRevisionRequest = () => {
+    toast.success("Revisie verzoek verzonden");
+  };
 
   if (loading) {
     return (
@@ -66,6 +98,23 @@ const CustomerPortalWorkOrder = () => {
     );
   }
 
+  const companyDetails = {
+    name: "Mijn Dakbedrijf B.V.",
+    address: "Dakstraat 10, 1234 AB Amsterdam",
+    email: "info@dakbedrijf.nl",
+    phone: "020-1234567",
+    taxId: "NL123456789B01",
+    bankName: "ING Bank",
+    iban: "NL91INGB0123456789"
+  };
+
+  const customerInfo = {
+    name: "John Doe",
+    address: workOrder.address,
+    email: "john@example.com",
+    phone: "06-12345678"
+  };
+
   return (
     <CustomerPortalLayout
       title={`Werkopdracht ${workOrder.id}`}
@@ -84,57 +133,106 @@ const CustomerPortalWorkOrder = () => {
           {getStatusBadge(workOrder.status)}
         </div>
 
-        <Card className="p-6 space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Clipboard className="h-4 w-4 text-primary" />
-                Omschrijving
+        <div className="grid gap-6 md:grid-cols-2">
+          <CompanyDetails companyDetails={companyDetails} />
+          <CustomerInfoCard customer={customerInfo} />
+        </div>
+
+        <div className="space-y-6">
+          <AgreementDetails 
+            workAgreement={{
+              totalAmount: 2800.50,
+              startDate: workOrder.plannedStartDate,
+              warranty: "10"
+            }}
+            formatCurrency={formatCurrency}
+          />
+
+          <WorkDescription description={workOrder.notes} />
+
+          <ProvisionsCard provisions={[
+            "Ter beschikking stellen stroomvoorziening 230 volt 16 amp.",
+            "Sanitaire voorzieningen",
+            "Bereikbaarheid werkplek met materieel",
+            "Oponthoud door werkzaamheden van derden worden doorberekend a €85 p/u per man"
+          ]} />
+
+          <ExclusionsCard exclusions={[
+            "Werkzaamheden die niet genoemd zijn vallen buiten deze werkovereenkomst",
+            "Werkzaamheden aan asbesthoudende materialen",
+            "Werkzaamheden anders dan omschreven",
+            "Parkeerkosten"
+          ]} />
+
+          <Attachments 
+            defaultAttachments={[
+              { 
+                name: "Werkopdracht.pdf", 
+                url: "https://example.com/workorder.pdf" 
+              },
+              { 
+                name: "Situatiefoto.jpg", 
+                url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop" 
+              }
+            ]} 
+          />
+
+          <GeneralTerms />
+
+          <PaymentDetails 
+            workAgreement={{
+              paymentMethod: "bank",
+              paymentInstallments: [
+                { description: "Aanbetaling", percentage: 30 },
+                { description: "Bij oplevering", percentage: 70 }
+              ]
+            }}
+            formatCurrency={formatCurrency}
+          />
+
+          {!workOrder.customerSignature && (
+            <Card className="p-6 space-y-4">
+              <h3 className="font-medium flex items-center gap-2">
+                <FileTextIcon className="h-4 w-4 text-primary" />
+                Handtekening
               </h3>
-              <p className="text-muted-foreground">
-                {workOrder.description}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                Locatie
-              </h3>
-              <p className="text-muted-foreground">
-                {workOrder.address}
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-medium mb-2 flex items-center gap-2">
-              <CalendarRange className="h-4 w-4 text-primary" />
-              Planning
-            </h3>
-            <p className="text-muted-foreground">
-              Gepland op {format(new Date(workOrder.plannedStartDate), "EEEE d MMMM yyyy", { locale: nl })}
-            </p>
-          </div>
-
-          {workOrder.notes && (
-            <div>
-              <h3 className="font-medium mb-2">Details Werkzaamheden</h3>
-              <p className="text-muted-foreground whitespace-pre-line">
-                {workOrder.notes}
-              </p>
-            </div>
+              <Signature onSignatureChange={handleSignatureChange} />
+              <div className="flex justify-end gap-4">
+                <Button
+                  variant="outline"
+                  onClick={handleRevisionRequest}
+                  className="gap-2"
+                >
+                  <Edit className="h-4 w-4" />
+                  Revisie Verzoeken
+                </Button>
+                <Button
+                  onClick={handleSign}
+                  className="gap-2"
+                >
+                  <Pen className="h-4 w-4" />
+                  Ondertekenen
+                </Button>
+              </div>
+            </Card>
           )}
 
-          {workOrder.customerNotes && (
-            <div>
-              <h3 className="font-medium mb-2">Uw Notities</h3>
-              <p className="text-muted-foreground whitespace-pre-line">
-                {workOrder.customerNotes}
-              </p>
-            </div>
+          {workOrder.customerSignature && (
+            <Card className="p-6">
+              <h3 className="font-medium mb-4 flex items-center gap-2">
+                <FileTextIcon className="h-4 w-4 text-primary" />
+                Handtekening
+              </h3>
+              <div className="bg-muted rounded-lg p-4">
+                <img 
+                  src={workOrder.customerSignature} 
+                  alt="Handtekening" 
+                  className="max-h-40 mx-auto"
+                />
+              </div>
+            </Card>
           )}
-        </Card>
+        </div>
       </div>
     </CustomerPortalLayout>
   );
