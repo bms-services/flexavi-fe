@@ -4,7 +4,6 @@ import { QuoteStatus } from "@/types";
 import { mockQuotes } from "@/data/mockQuotes";
 import { mockLeads } from "@/data/mockLeads";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import Signature from "@/components/customer/Signature";
 import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
@@ -12,6 +11,8 @@ import PortalRejectedMessage from "@/components/customer-portal/PortalRejectedMe
 import { QuotePortalHeader } from "@/components/customer-portal/quote/QuotePortalHeader";
 import { QuoteRevisionDialog } from "@/components/customer-portal/quote/QuoteRevisionDialog";
 import { QuoteActions } from "@/components/customer-portal/quote/QuoteActions";
+import { QuotePortalLoading } from "@/components/customer-portal/quote/QuotePortalLoading";
+import { QuoteSignatureSection } from "@/components/customer-portal/quote/QuoteSignatureSection";
 
 const CustomerPortal = () => {
   const { id } = useParams<{ id: string }>();
@@ -63,11 +64,7 @@ const CustomerPortal = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Laden...</p>
-      </div>
-    );
+    return <QuotePortalLoading />;
   }
 
   if (!quote || !customer) {
@@ -124,13 +121,7 @@ const CustomerPortal = () => {
                 />
               </div>
               
-              <div className="border-t pt-6 mt-6">
-                <h3 className="text-lg font-medium mb-4">Handtekening</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Om deze offerte te accepteren, plaats uw handtekening hieronder en klik op 'Accepteren'.
-                </p>
-                <Signature onSignatureChange={setSignature} />
-              </div>
+              <QuoteSignatureSection onSignatureChange={setSignature} />
             </CardContent>
             
             <CardFooter>
