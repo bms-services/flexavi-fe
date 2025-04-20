@@ -113,7 +113,7 @@ const Settings = () => {
                 </TabsTrigger>
                 <TabsTrigger value="subscription" className="w-full justify-start">
                   <CreditCard className="h-4 w-4 mr-2" />
-                  Betaling/abonnement
+                  Mijn abonnement
                 </TabsTrigger>
                 <TabsTrigger value="workagreements" className="w-full justify-start">
                   <FileText className="h-4 w-4 mr-2" />
