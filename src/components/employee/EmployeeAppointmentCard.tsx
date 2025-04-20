@@ -103,7 +103,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   };
   return <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition max-w-full">
       <div className="relative">
-        <CardHeader className="pb-5 pt-4 px-4 sm:px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
+        <CardHeader className="pb-2 pt-4 px-4 sm:px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
           <div className="flex flex-col items-start gap-2 min-w-0">
             <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
