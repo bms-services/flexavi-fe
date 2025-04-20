@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Appointment } from "@/types";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
@@ -27,6 +28,21 @@ interface DigitalDocsState {
     agreement?: ReceiptData;
   }
 }
+
+// DEMO data voor geschiedenis! (Voor een echte implementatie moet je dit uit de database/API halen)
+const DUMMY_HISTORY = {
+  "1": [
+    { date: "2025-04-12", reason: "Offerte uitgebracht" },
+    { date: "2025-04-15", reason: "Afspraak verzet door klant" }
+  ],
+  "2": [
+    { date: "2025-04-10", reason: "Eerste intakegesprek" },
+    { date: "2025-04-13", reason: "Afspraak bevestigd" }
+  ],
+  "3": [
+    { date: "2025-04-05", reason: "Klant gebeld na offerteaanvraag" }
+  ]
+};
 
 export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments, dayLabel }) => {
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState<string | null>(null);
@@ -118,7 +134,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const getLead = (leadId: string) => mockLeads.find(l => l.id === leadId);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white w-full">
       <div className="flex items-center gap-2 px-4 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-5 w-5 text-roof-600" />
         <h2 className="text-base sm:text-lg font-semibold text-roof-700">
@@ -134,17 +150,23 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
           <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-2 sm:p-4 grid gap-4 max-w-full">
+        <div className="p-2 sm:p-4 grid gap-5 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
-            
+            const historyEntries = DUMMY_HISTORY[lead?.id || ""] || [];
+            const rescheduleReason = rescheduleInfo[app.id]?.reason;
+
             return (
               <RoofingAppointmentCard
                 key={app.id}
                 app={app}
-                lead={lead}
+                lead={lead || {}}
                 onMapOpen={handleMapOpen}
                 onProcess={() => handleProcessAppointment(app.id)}
+                onHistory={lead ? () => handleViewHistory(lead.id) : undefined}
+                onReschedule={() => openRescheduleModal(app.id)}
+                rescheduleReason={rescheduleReason}
+                historyEntries={historyEntries}
               />
             );
           })}
