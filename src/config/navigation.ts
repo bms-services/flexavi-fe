@@ -11,6 +11,7 @@ import {
   Shield,
   Handshake,
   Receipt,
+  Route,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -29,6 +30,7 @@ export const navigationItems: NavItem[] = [
     ],
   },
   { name: "Projecten", href: "/projects", icon: Briefcase },
+  { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Producten", href: "/products", icon: Package },
   { name: "Partners", href: "/partners", icon: Handshake },
   { name: "Instellingen", href: "/settings", icon: Settings },

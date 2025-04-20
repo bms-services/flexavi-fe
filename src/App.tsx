@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,6 +30,7 @@ import Landing from "./pages/Landing";
 import Pricing from "./pages/Pricing";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Partners from "./pages/Partners";
+import Pipeline from "./pages/Pipeline";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +62,7 @@ const App = () => (
           <Route path="/workagreements/edit/:id" element={<WorkAgreementEdit />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/pipeline" element={<Pipeline />} />
           <Route path="/portal/quote/:id" element={<CustomerPortal />} />
           <Route path="/portal/invoice/:id" element={<CustomerPortalInvoice />} />
           <Route path="/portal/workagreement/:id" element={<CustomerPortalWorkAgreement />} />
