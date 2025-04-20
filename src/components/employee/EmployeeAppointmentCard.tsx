@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Info, filePlus, upload, calendarPlus } from "lucide-react";
+import { Calendar, FileText, Info, FilePlus, Upload, CalendarPlus } from "lucide-react";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
@@ -75,9 +75,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   onRescheduleReasonChange,
   onRescheduleSave
 }) => {
-  const hasDigitalQuote = !!digitalQuote;
-  const hasDigitalInvoice = !!digitalInvoice;
-  const hasDigitalAgreement = !!digitalAgreement;
   const [processModalOpen, setProcessModalOpen] = React.useState(false);
   const [processReason, setProcessReason] = React.useState("");
   const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
@@ -135,14 +132,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           )}
 
           <div className="px-6 pb-6 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Beschrijving */}
               <div className="mb-4 flex-1">
                 <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
                 <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
               </div>
               {/* Documenten */}
-              <div className="flex-1 mt-4 md:mt-0">
+              <div className="flex-1">
                 <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
                 {digitalQuote || digitalInvoice || digitalAgreement ? (
                   <div className="grid gap-2 sm:grid-cols-3">
@@ -159,65 +156,41 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               </div>
             </div>
 
-            {/* Nieuw: sectie knoppen - 7 opties */}
+            {/* Verwerk knop sectie met 4 knoppen */}
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
-              {/* Offerte */}
+              {/* Maak offerte & upload offerte */}
               <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#9b87f5] border-[#9b87f5] hover:bg-[#f7f4fd]"
+                className="justify-start px-4 py-3 font-semibold text-[#9b87f5] border border-[#9b87f5] hover:bg-[#f7f4fd]"
                 onClick={onCreateQuote}
               >
-                <FileText className="mr-2 text-[#9b87f5]" />
+                <FilePlus className="mr-2 text-[#9b87f5]" />
                 Maak offerte & upload offerte
               </Button>
+
+              {/* Maak factuur & upload factuur */}
               <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#9b87f5] border-[#9b87f5] hover:bg-[#f7f4fd]"
-                onClick={onOpenUploadQuote}
-              >
-                <FileText className="mr-2 text-[#9b87f5]" />
-                Upload offerte
-              </Button>
-              {/* Factuur */}
-              <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#0EA5E9] border-[#0EA5E9] hover:bg-[#e7f6fd]"
+                className="justify-start px-4 py-3 font-semibold text-[#0EA5E9] border border-[#0EA5E9] hover:bg-[#e7f6fd]"
                 onClick={onCreateInvoice}
               >
-                <FileText className="mr-2 text-[#0EA5E9]" />
+                <FilePlus className="mr-2 text-[#0EA5E9]" />
                 Maak factuur & upload factuur
               </Button>
+
+              {/* Maak werkopdracht & upload werkopdracht */}
               <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#0EA5E9] border-[#0EA5E9] hover:bg-[#e7f6fd]"
-                onClick={onOpenUploadInvoice}
-              >
-                <FileText className="mr-2 text-[#0EA5E9]" />
-                Upload factuur
-              </Button>
-              {/* Werkovereenkomst */}
-              <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#7E69AB] border-[#7E69AB] hover:bg-[#f3f1fa]"
+                className="justify-start px-4 py-3 font-semibold text-[#7E69AB] border border-[#7E69AB] hover:bg-[#f3f1fa]"
                 onClick={onCreateAgreement}
               >
-                <FileText className="mr-2 text-[#7E69AB]" />
+                <FilePlus className="mr-2 text-[#7E69AB]" />
                 Maak werkopdracht & upload werkopdracht
               </Button>
-              <Button
-                variant="outline"
-                className="justify-start px-4 py-3 font-semibold text-[#7E69AB] border-[#7E69AB] hover:bg-[#f3f1fa]"
-                onClick={onOpenUploadAgreement}
-              >
-                <FileText className="mr-2 text-[#7E69AB]" />
-                Upload werkopdracht
-              </Button>
+
               {/* Verwerk afspraak */}
               <Button
                 className="justify-start px-4 py-3 font-semibold text-white bg-[#9b87f5] hover:bg-[#7E69AB]"
                 onClick={handleOpenProcessModal}
               >
-                <Calendar className="mr-2" />
+                <CalendarPlus className="mr-2" />
                 Verwerk afspraak
               </Button>
             </div>
