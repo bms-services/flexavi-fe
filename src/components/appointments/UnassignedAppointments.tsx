@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Appointment } from "@/types";
@@ -84,6 +85,13 @@ export const UnassignedAppointments: React.FC<UnassignedAppointmentsProps> = ({
                         </Badge>
                       </div>
                       
+                      {appointment.description && (
+                        <div className="flex items-start gap-1 mb-1.5 text-xs text-muted-foreground">
+                          <FileText className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                          <p className="line-clamp-2">{appointment.description}</p>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
