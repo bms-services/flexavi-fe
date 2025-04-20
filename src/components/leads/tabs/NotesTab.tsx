@@ -77,6 +77,11 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
       }),
     ],
     content: '',
+    editorProps: {
+      attributes: {
+        class: 'focus:outline-none min-h-[120px]',
+      },
+    },
   });
 
   const handleAddNote = () => {
@@ -118,7 +123,7 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
         <CardContent>
           <div className="border rounded-md p-3">
             <EditorMenu editor={editor} />
-            <EditorContent editor={editor} className="min-h-[120px] prose prose-sm max-w-none" />
+            <EditorContent editor={editor} className="prose prose-sm max-w-none" />
           </div>
         </CardContent>
         <CardFooter className="flex justify-end">

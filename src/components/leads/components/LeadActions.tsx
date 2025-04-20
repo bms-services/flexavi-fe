@@ -86,7 +86,17 @@ export const LeadDetailActions = () => {
           // Scroll to the notes editor
           editorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 200);
+      }, 300); // Increased timeout to ensure tab content is fully loaded
+    } else {
+      // If we can't find an inactive tab, it might already be active
+      // In that case, just try to focus the editor directly
+      setTimeout(() => {
+        const editorDiv = document.querySelector('.ProseMirror');
+        if (editorDiv) {
+          (editorDiv as HTMLElement).focus();
+          editorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     }
   };
 
