@@ -35,7 +35,11 @@ export const QuickActionsList = () => {
     {
       icon: Calendar,
       label: 'Afspraak maken',
-      href: '/appointments/new',
+      href: '/appointments',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate('/appointments');
+      },
     },
     {
       icon: FileText,
