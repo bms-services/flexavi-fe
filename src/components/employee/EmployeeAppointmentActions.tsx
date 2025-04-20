@@ -1,18 +1,17 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Info, Calendar } from "lucide-react";
+import { Info, Calendar, FileText } from "lucide-react";
+import { SheetTrigger } from "@/components/ui/sheet";
 
 interface EmployeeAppointmentActionsProps {
   onViewHistory: () => void;
   onOpenRescheduleModal: () => void;
-  onOpenProcessModal: () => void;
 }
 
 export const EmployeeAppointmentActions: React.FC<EmployeeAppointmentActionsProps> = ({
   onViewHistory,
   onOpenRescheduleModal,
-  onOpenProcessModal,
 }) => (
   <div className="flex gap-2 flex-wrap">
     <Button
@@ -33,13 +32,14 @@ export const EmployeeAppointmentActions: React.FC<EmployeeAppointmentActionsProp
       <Calendar className="h-4 w-4 mr-1" />
       Verzetten
     </Button>
-    <Button
-      size="sm"
-      className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white"
-      onClick={onOpenProcessModal}
-    >
-      <Info className="h-4 w-4 mr-1" />
-      Verwerken
-    </Button>
+    <SheetTrigger asChild>
+      <Button
+        size="sm"
+        className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white"
+      >
+        <FileText className="h-4 w-4 mr-1" />
+        Verwerken
+      </Button>
+    </SheetTrigger>
   </div>
 );

@@ -1,16 +1,14 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, FileText, Info } from "lucide-react";
-import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
+import { Calendar, FileText } from "lucide-react";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
 import { RescheduleDialog } from "./RescheduleDialog";
 import { Appointment } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet } from "@/components/ui/sheet";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
-import { Button } from "@/components/ui/button";
 import { useAppointmentProcess } from "./useAppointmentProcess";
 import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
 import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
@@ -169,38 +167,39 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             </div>
           </div>
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
-            <EmployeeAppointmentActions
-              onViewHistory={onViewHistory}
-              onOpenRescheduleModal={onOpenRescheduleModal}
-              onOpenProcessModal={handleOpenProcessModal}
-            />
+            <Sheet>
+              <EmployeeAppointmentActions
+                onViewHistory={onViewHistory}
+                onOpenRescheduleModal={onOpenRescheduleModal}
+              />
+              <EmployeeAppointmentSheet
+                hasDigitalQuote={hasDigitalQuote}
+                hasDigitalInvoice={hasDigitalInvoice}
+                hasDigitalAgreement={hasDigitalAgreement}
+                digitalQuote={digitalQuote}
+                digitalInvoice={digitalInvoice}
+                digitalAgreement={digitalAgreement}
+                onCreateQuote={onCreateQuote}
+                onOpenUploadQuote={onOpenUploadQuote}
+                uploadQuoteDialogOpen={uploadQuoteDialogOpen}
+                onQuoteResult={onQuoteResult}
+                onCloseUploadQuote={onCloseUploadQuote}
+                onCreateInvoice={onCreateInvoice}
+                onOpenUploadInvoice={onOpenUploadInvoice}
+                uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
+                onInvoiceResult={onInvoiceResult}
+                onCloseUploadInvoice={onCloseUploadInvoice}
+                onCreateAgreement={onCreateAgreement}
+                onOpenUploadAgreement={onOpenUploadAgreement}
+                uploadAgreementDialogOpen={uploadAgreementDialogOpen}
+                onAgreementResult={onAgreementResult}
+                onCloseUploadAgreement={onCloseUploadAgreement}
+                onOpenProcessModal={handleOpenProcessModal}
+              />
+            </Sheet>
           </div>
         </div>
       </CardContent>
-      <EmployeeAppointmentSheet
-        hasDigitalQuote={hasDigitalQuote}
-        hasDigitalInvoice={hasDigitalInvoice}
-        hasDigitalAgreement={hasDigitalAgreement}
-        digitalQuote={digitalQuote}
-        digitalInvoice={digitalInvoice}
-        digitalAgreement={digitalAgreement}
-        onCreateQuote={onCreateQuote}
-        onOpenUploadQuote={onOpenUploadQuote}
-        uploadQuoteDialogOpen={uploadQuoteDialogOpen}
-        onQuoteResult={onQuoteResult}
-        onCloseUploadQuote={onCloseUploadQuote}
-        onCreateInvoice={onCreateInvoice}
-        onOpenUploadInvoice={onOpenUploadInvoice}
-        uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
-        onInvoiceResult={onInvoiceResult}
-        onCloseUploadInvoice={onCloseUploadInvoice}
-        onCreateAgreement={onCreateAgreement}
-        onOpenUploadAgreement={onOpenUploadAgreement}
-        uploadAgreementDialogOpen={uploadAgreementDialogOpen}
-        onAgreementResult={onAgreementResult}
-        onCloseUploadAgreement={onCloseUploadAgreement}
-        onOpenProcessModal={handleOpenProcessModal}
-      />
       <RescheduleDialog
         open={rescheduleModalOpen}
         reason={rescheduleReason}
