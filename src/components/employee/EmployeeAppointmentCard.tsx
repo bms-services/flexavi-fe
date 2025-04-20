@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, FileText } from "lucide-react";
@@ -13,6 +12,7 @@ import { useAppointmentProcess } from "./useAppointmentProcess";
 import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
 import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
 import { Sheet } from "@/components/ui/sheet";
+import { AppointmentDetailsCard } from "./AppointmentDetailsCard";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -132,70 +132,39 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       </CardHeader>
       <CardContent className="p-0">
         <div className="p-0">
-          {lead && (
-            <div className="px-4 pt-3 pb-2">
-              <LeadInfoCard
-                lead={lead}
-                onMapOpen={onMapOpen}
-                historyEntries={historyEntries}
-                notes={notities}
-                isRescheduled={isRescheduled}
-                rescheduleReason={rescheduleReason}
-                compact
-              />
-            </div>
-          )}
-          <div className="px-4 pb-3 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 flex flex-col space-y-1">
-              <div>
-                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Tijdsbestek</span>
-                <span className="text-[13px] text-[#0A8AD0] font-medium">
-                  {app.date} · {app.startTime} - {app.endTime}
-                </span>
+          <div className="px-4 pt-3 pb-3">
+            <div className="flex flex-col gap-4 md:flex-row md:gap-3">
+              <div className="flex-1 min-w-[220px] h-full">
+                <LeadInfoCard
+                  lead={lead}
+                  onMapOpen={onMapOpen}
+                  historyEntries={historyEntries}
+                  notes={notities}
+                  isRescheduled={isRescheduled}
+                  rescheduleReason={rescheduleReason}
+                  compact={true}
+                />
               </div>
-              <div>
-                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Locatie</span>
-                <button
-                  onClick={() => onMapOpen(app.location || "")}
-                  className="text-[13px] font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent p-0 m-0"
-                  tabIndex={0}
-                  type="button"
-                >
-                  <span>{app.location}</span>
-                  <span className="ml-1">
-                    <svg
-                      className="inline h-4 w-4 text-[#33C3F0]"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M21 10.5a8.38 8.38 0 0 1-1.9 5.4l-6.11 7.61a2 2 0 0 1-3.1 0L3 15.91A8.38 8.38 0 0 1 1 10.5 9 9 0 1 1 21 10.5z" />
-                      <circle cx="12" cy="10.5" r="2.25" />
-                    </svg>
-                  </span>
-                </button>
+              <div className="flex-1 min-w-[200px] h-full flex">
+                <AppointmentDetailsCard app={app} onMapOpen={onMapOpen} />
               </div>
-              <div>
-                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Beschrijving</span>
-                <span className="block text-[13px] text-[#1A1F2C]">{app.description}</span>
-              </div>
-            </div>
-
-            <div className="flex-1 min-w-[180px]">
-              <h4 className="text-[11px] font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
-              {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
-                <div className="grid gap-2 sm:grid-cols-3">
-                  {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
-                  {hasDigitalInvoice && <DigitalQuoteDisplay quote={localDigitalInvoice!} title="Factuur" />}
-                  {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
+              <div className="flex-1 min-w-[200px] h-full flex flex-col">
+                <div className="bg-[#F1F0FB] rounded-xl p-3 border flex flex-col h-full">
+                  <h4 className="text-[11px] font-semibold text-[#0A8AD0] uppercase mb-2">Documenten</h4>
+                  {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
+                    <div className="grid gap-2 grid-cols-1 md:grid-cols-1">
+                      {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
+                      {hasDigitalInvoice && <DigitalQuoteDisplay quote={localDigitalInvoice!} title="Factuur" />}
+                      {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center py-4 text-[#0A8AD0] h-full">
+                      <FileText className="h-8 w-8 text-[#0A8AD0] mb-1" />
+                      <span className="text-xs">Geen digitale documenten beschikbaar</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center text-center py-5 text-[#0A8AD0]">
-                  <FileText className="h-8 w-8 text-[#0A8AD0] mb-1" />
-                  <span className="text-xs">Geen digitale documenten beschikbaar</span>
-                </div>
-              )}
+              </div>
             </div>
           </div>
           <Separator className="my-2" />
@@ -255,4 +224,3 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     </Card>
   );
 };
-
