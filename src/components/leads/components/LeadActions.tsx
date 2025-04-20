@@ -143,7 +143,7 @@ export const LeadDetailActions = () => {
             });
             setIsEditDialogOpen(false);
           }}
-          editMode={true}
+          // Removed the editMode prop as it doesn't exist in the interface
           leadId={leadId}
         />
       </Dialog>
