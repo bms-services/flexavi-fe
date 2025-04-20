@@ -9,6 +9,7 @@ import { AppointmentTypeSelection } from "./form/AppointmentTypeSelection";
 import { TeamSelection } from "./form/TeamSelection";
 import { DescriptionField } from "./form/DescriptionField";
 import { Lead, AppointmentStatus } from "@/types";
+import { addDays, format } from "date-fns";
 
 interface NewAppointmentFormProps {
   onSubmit: (data: any) => void;
@@ -25,8 +26,7 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
       teamId: "",
       type: "quote_request" as AppointmentStatus,
       description: "",
-      additionalDates: [],
-      additionalTimes: [],
+      additionalDateRanges: [],
     },
   });
 
@@ -47,17 +47,26 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
       }
     ];
     
-    // Add additional dates if present
-    if (data.additionalDates && data.additionalDates.length > 0) {
-      data.additionalDates.forEach((date: Date, index: number) => {
-        appointments.push({
-          date,
-          startTime: data.additionalTimes[index] || data.startTime, // Use main time as fallback
-          teamId: data.teamId,
-          type: data.type,
-          description: data.description,
-          customer: selectedCustomer,
-        });
+    // Add additional date ranges if present
+    if (data.additionalDateRanges && data.additionalDateRanges.length > 0) {
+      data.additionalDateRanges.forEach((range: any) => {
+        if (range.startDate && range.endDate) {
+          // Get all dates between start and end (inclusive)
+          let currentDate = new Date(range.startDate);
+          const endDate = new Date(range.endDate);
+          
+          while (currentDate <= endDate) {
+            appointments.push({
+              date: new Date(currentDate),
+              startTime: range.time || data.startTime, // Use main time as fallback
+              teamId: data.teamId,
+              type: data.type,
+              description: data.description,
+              customer: selectedCustomer,
+            });
+            currentDate = addDays(currentDate, 1);
+          }
+        }
       });
     }
     

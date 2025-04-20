@@ -15,9 +15,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { mockLeads } from "@/data/mockLeads";
-import { cn } from "@/lib/utils";
-import { Lead } from "@/types";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +22,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { mockLeads } from "@/data/mockLeads";
+import { cn } from "@/lib/utils";
+import { Lead } from "@/types";
 import { CreateCustomerForm } from "./CreateCustomerForm";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,7 +49,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       email: customerData.email || "",
       phone: customerData.phone || "",
       address: customerData.address || "",
-      status: "new_lead", // Changed from "new" to "new_lead"
+      status: "new_lead",
       source: "Manual Entry",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -126,6 +126,17 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                   </CommandItem>
                 ))}
               </CommandGroup>
+              <div className="p-2 border-t">
+                <Button
+                  variant="outline"
+                  onClick={handleOpenNewCustomerDialog}
+                  type="button"
+                  className="w-full"
+                >
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Nieuwe klant toevoegen
+                </Button>
+              </div>
             </CommandList>
           </Command>
         </PopoverContent>
