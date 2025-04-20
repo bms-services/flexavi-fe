@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { RescheduleDialog } from "./RescheduleDialog";
 import { Appointment } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { AppointmentProcessModal } from "./AppointmentProcessModal";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -78,6 +78,33 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!digitalInvoice;
   const hasDigitalAgreement = !!digitalAgreement;
   
+  // State for new modal
+  const [processModalOpen, setProcessModalOpen] = React.useState(false);
+  const [processReason, setProcessReason] = React.useState("");
+  const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
+  const [processTaskDescription, setProcessTaskDescription] = React.useState("");
+  const [processing, setProcessing] = React.useState(false);
+
+  const handleOpenProcessModal = () => setProcessModalOpen(true);
+  const handleCloseProcessModal = () => {
+    setProcessModalOpen(false);
+    setProcessReason("");
+    setProcessTaskChecked(false);
+    setProcessTaskDescription("");
+    setProcessing(false);
+  }
+  const handleProcessSubmit = () => {
+    setProcessing(true);
+    // Hier kun je een API-call doen om de reden en optionele taak op te slaan.
+    setTimeout(() => {
+      setProcessing(false);
+      setProcessModalOpen(false);
+      setProcessReason("");
+      setProcessTaskChecked(false);
+      setProcessTaskDescription("");
+    }, 1200);
+  };
+
   return (
     <Card className="shadow-sm border-l-4 border-l-roof-500 bg-white">
       <CardHeader className="pb-2 pt-4 px-4 flex flex-row items-center gap-2 border-b">
@@ -94,7 +121,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       
       <CardContent className="p-0">
         <div className="p-4 grid gap-4 sm:grid-cols-2">
-          {/* Customer Info Section */}
           {lead && (
             <div className="bg-gray-50 p-3 rounded-md sm:col-span-2">
               <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between">
@@ -120,7 +146,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             </div>
           )}
 
-          {/* Appointment Details */}
           <div className="space-y-2">
             <div className="flex flex-col gap-1">
               <div className="flex justify-between">
@@ -154,7 +179,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             )}
           </div>
 
-          {/* Digital Documents Section */}
           <div className="space-y-2">
             {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
               <div className="space-y-2">
@@ -176,7 +200,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           </div>
         </div>
 
-        {/* Action Buttons - Now in a slide-in drawer */}
         <div className="border-t p-3 flex justify-end">
           <div className="flex gap-2">
             <Button 
@@ -203,125 +226,138 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               <SheetTrigger asChild>
                 <Button 
                   size="sm"
-                  className="text-xs bg-roof-500 hover:bg-roof-600"
+                  className="text-xs bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-semibold"
                 >
                   <FilePlus className="h-3.5 w-3.5 mr-1" />
-                  Documenten
+                  Verwerken
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:max-w-md">
-                <SheetHeader>
-                  <SheetTitle>Document acties</SheetTitle>
-                  <SheetDescription>
-                    Creëer of upload documenten voor deze afspraak
-                  </SheetDescription>
-                </SheetHeader>
-                
-                <div className="mt-6 space-y-6">
-                  {/* Offerte Group */}
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-roof-500" />
-                      Offerte
-                    </h3>
-                    <Separator />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onCreateQuote}
-                        className="justify-start"
-                      >
-                        <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
-                        Maak Offerte
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onOpenUploadQuote}
-                        className="justify-start"
-                      >
-                        <Upload className="h-4 w-4 mr-2 text-roof-500" />
-                        Upload Offerte
-                      </Button>
-                    </div>
-                    {hasDigitalQuote && (
-                      <div className="pl-2 border-l-2 border-roof-200 mt-2">
-                        <p className="text-xs text-muted-foreground">Huidige offerte:</p>
-                        <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />
-                      </div>
-                    )}
-                  </div>
+              <SheetContent side="right" className="w-full sm:max-w-md flex flex-col justify-between h-full px-0">
+                <div className="p-6 pt-7">
+                  <SheetHeader>
+                    <SheetTitle>Document acties</SheetTitle>
+                    <SheetDescription>
+                      Creëer of upload documenten voor deze afspraak
+                    </SheetDescription>
+                  </SheetHeader>
                   
-                  {/* Factuur Group */}
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-roof-500" />
-                      Factuur
-                    </h3>
-                    <Separator />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onCreateInvoice}
-                        className="justify-start"
-                      >
-                        <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
-                        Maak Factuur
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onOpenUploadInvoice}
-                        className="justify-start"
-                      >
-                        <Upload className="h-4 w-4 mr-2 text-roof-500" />
-                        Upload Factuur
-                      </Button>
-                    </div>
-                    {hasDigitalInvoice && (
-                      <div className="pl-2 border-l-2 border-roof-200 mt-2">
-                        <p className="text-xs text-muted-foreground">Huidige factuur:</p>
-                        <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />
+                  <div className="mt-6 space-y-6">
+                    {/* Offerte Group */}
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-medium flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-roof-500" />
+                        Offerte
+                      </h3>
+                      <Separator />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onCreateQuote}
+                          className="justify-start"
+                        >
+                          <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
+                          Maak Offerte
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onOpenUploadQuote}
+                          className="justify-start"
+                        >
+                          <Upload className="h-4 w-4 mr-2 text-roof-500" />
+                          Upload Offerte
+                        </Button>
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Werkovereenkomst Group */}
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-roof-500" />
-                      Werkovereenkomst
-                    </h3>
-                    <Separator />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onCreateAgreement}
-                        className="justify-start"
-                      >
-                        <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
-                        Maak Overeenkomst
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onOpenUploadAgreement}
-                        className="justify-start"
-                      >
-                        <Upload className="h-4 w-4 mr-2 text-roof-500" />
-                        Upload Overeenkomst
-                      </Button>
+                      {hasDigitalQuote && (
+                        <div className="pl-2 border-l-2 border-roof-200 mt-2">
+                          <p className="text-xs text-muted-foreground">Huidige offerte:</p>
+                          <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />
+                        </div>
+                      )}
                     </div>
-                    {hasDigitalAgreement && (
-                      <div className="pl-2 border-l-2 border-roof-200 mt-2">
-                        <p className="text-xs text-muted-foreground">Huidige overeenkomst:</p>
-                        <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />
+                    
+                    {/* Factuur Group */}
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-medium flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-roof-500" />
+                        Factuur
+                      </h3>
+                      <Separator />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onCreateInvoice}
+                          className="justify-start"
+                        >
+                          <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
+                          Maak Factuur
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onOpenUploadInvoice}
+                          className="justify-start"
+                        >
+                          <Upload className="h-4 w-4 mr-2 text-roof-500" />
+                          Upload Factuur
+                        </Button>
                       </div>
-                    )}
+                      {hasDigitalInvoice && (
+                        <div className="pl-2 border-l-2 border-roof-200 mt-2">
+                          <p className="text-xs text-muted-foreground">Huidige factuur:</p>
+                          <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Werkovereenkomst Group */}
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-medium flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-roof-500" />
+                        Werkovereenkomst
+                      </h3>
+                      <Separator />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onCreateAgreement}
+                          className="justify-start"
+                        >
+                          <FilePlus className="h-4 w-4 mr-2 text-roof-500" />
+                          Maak Overeenkomst
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={onOpenUploadAgreement}
+                          className="justify-start"
+                        >
+                          <Upload className="h-4 w-4 mr-2 text-roof-500" />
+                          Upload Overeenkomst
+                        </Button>
+                      </div>
+                      {hasDigitalAgreement && (
+                        <div className="pl-2 border-l-2 border-roof-200 mt-2">
+                          <p className="text-xs text-muted-foreground">Huidige overeenkomst:</p>
+                          <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />
+                        </div>
+                      )}
+                    </div>
                   </div>
+                </div>
+                <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
+                  <Button
+                    className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-bold py-2 px-4 rounded-lg shadow transition"
+                    onClick={handleOpenProcessModal}
+                    size="lg"
+                  >
+                    <Info className="h-5 w-5 mr-2" />
+                    Afspraak verwerken
+                  </Button>
+                  <p className="text-xs text-gray-500 mt-2">Verwerk deze afspraak direct als niet-afgerond</p>
                 </div>
               </SheetContent>
             </Sheet>
@@ -337,7 +373,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         onSave={onRescheduleSave}
       />
 
-      {/* Upload Dialogs */}
       <ReceiptUploadDialog
         open={uploadQuoteDialogOpen}
         onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()}
@@ -352,6 +387,19 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         open={uploadAgreementDialogOpen}
         onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()}
         onResult={onAgreementResult}
+      />
+
+      <AppointmentProcessModal
+        open={processModalOpen}
+        reason={processReason}
+        onReasonChange={setProcessReason}
+        taskChecked={processTaskChecked}
+        onTaskCheckedChange={setProcessTaskChecked}
+        taskDescription={processTaskDescription}
+        onTaskDescriptionChange={setProcessTaskDescription}
+        onCancel={handleCloseProcessModal}
+        onSubmit={handleProcessSubmit}
+        loading={processing}
       />
     </Card>
   );
