@@ -47,3 +47,4 @@ export const AppointmentDetailsCard: React.FC<AppointmentDetailsCardProps> = ({
       <span className="block text-[13px] text-[#1A1F2C]">{app.description}</span>
     </div>
   </div>
+);
