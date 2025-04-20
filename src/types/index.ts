@@ -63,6 +63,7 @@ export type Appointment = {
   teamId: string;
   teamType: TeamType;
   location?: string; // Added location property as optional
+  order?: number;    // Added order property as optional for route optimization
   createdAt: string;
   updatedAt: string;
 };
