@@ -28,8 +28,8 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
   selectedDate,
   scheduleSettings,
 }) => {
-  // Generate next 7 days for overview (changed from 5)
-  const daysToShow = Array.from({ length: 7 }, (_, i) => {
+  // Generate next 5 days for overview
+  const daysToShow = Array.from({ length: 5 }, (_, i) => {
     const date = addDays(parseISO(selectedDate), i);
     return format(date, 'yyyy-MM-dd');
   });
@@ -84,7 +84,7 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
     <div className="grid grid-cols-1 gap-4">
       <Card>
         <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {daysToShow.map((date) => (
               <div 
                 key={date}
