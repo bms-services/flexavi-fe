@@ -14,11 +14,13 @@ import { ReceiptData } from './types/quickActions';
 interface ReceiptUploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onResult?: (data: ReceiptData) => void;
 }
 
 export const ReceiptUploadDialog: React.FC<ReceiptUploadDialogProps> = ({
   open,
   onOpenChange,
+  onResult,
 }) => {
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [uploadedImage, setUploadedImage] = React.useState<string | null>(null);
@@ -71,6 +73,11 @@ export const ReceiptUploadDialog: React.FC<ReceiptUploadDialogProps> = ({
   };
 
   const handleSave = () => {
+    // Call onResult callback if provided
+    if (onResult) {
+      onResult(receiptData);
+    }
+    
     onOpenChange(false);
     setReceiptData({
       company: '',

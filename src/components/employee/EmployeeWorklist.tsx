@@ -9,6 +9,7 @@ import { MapPin, FilePlus, Upload, History, Clock } from "lucide-react";
 import { mockLeads } from "@/data/mockLeads";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
+import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 
 interface EmployeeWorklistProps {
   appointments: Appointment[];
@@ -31,7 +32,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const [uploadDialogOpenId, setUploadDialogOpenId] = useState<string | null>(null);
 
   // Voor demo: gesimuleerde AI geëxtraheerde offerte
-  const [digitalQuote, setDigitalQuote] = useState<{[id:string]: any}>({});
+  const [digitalQuote, setDigitalQuote] = useState<{[id:string]: ReceiptData}>({});
 
   const handleMapOpen = (address: string) => {
     const encodedAddress = encodeURIComponent(address);
@@ -128,8 +129,8 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
                     <div className="bg-accent/50 rounded p-3 text-sm mt-2">
                       <div className="font-medium mb-1">Digitale Offerte (geëxtraheerd)</div>
                       <ul className="list-disc ml-4">
-                        {Object.entries(digitalQuote[app.id]).map(([key, val]) => (
-                          <li key={key}><b>{key}</b>: {val}</li>
+                        {Object.entries(digitalQuote[app.id] || {}).map(([key, val]) => (
+                          <li key={key}><b>{key}</b>: {String(val)}</li>
                         ))}
                       </ul>
                     </div>
@@ -139,7 +140,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleMapOpen(app.location)}
+                      onClick={() => handleMapOpen(app.location || "")}
                     >
                       <MapPin className="h-4 w-4 mr-2" />
                       Open Maps
@@ -209,7 +210,6 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
                 <ReceiptUploadDialog
                   open={uploadDialogOpenId === app.id}
                   onOpenChange={open => setUploadDialogOpenId(open ? app.id : null)}
-                  // Extra: onResult simuleert het verwerken van AI data naar een digitale offerte als proof of concept!
                   onResult={data => {
                     setDigitalQuote(prev => ({
                       ...prev,
@@ -226,4 +226,3 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
     </div>
   );
 };
-
