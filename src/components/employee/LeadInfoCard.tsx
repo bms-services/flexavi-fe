@@ -1,6 +1,8 @@
 
 import React from "react";
-import { User, Info, History, FileText, Phone, Mail, MapPin } from "lucide-react";
+// Alleen icons die we mogen gebruiken:
+import { columns3 } from "lucide-react"; // Dummy import: geen gebruikte lucide-react icons toegestaan volgens lijst!
+// Voor nu GEEN icons, strakker en netter!
 
 interface LeadInfoCardProps {
   lead: {
@@ -8,12 +10,13 @@ interface LeadInfoCardProps {
     address: string;
     phone: string;
     email: string;
+    appointmentDateTime?: string; // voeg datum/tijd toe indien beschikbaar
   };
   historyEntries?: { type: string; description: string; date: string }[];
   notes?: string[];
   isRescheduled?: boolean;
   rescheduleReason?: string;
-  showMapButton?: boolean; // nieuw, default false
+  showMapButton?: boolean; // mag weg
 }
 
 export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
@@ -22,91 +25,95 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   notes = [],
   isRescheduled = false,
   rescheduleReason,
-  showMapButton = false
 }) => {
   return (
-    <div className="bg-[#F1F0FB] rounded-xl p-5 mb-4 border">
-      {/* NAAM + ADRES */}
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0">
-          <User className="h-6 w-6 text-[#0EA5E9]" />
+    <div className="bg-[#F1F0FB] rounded-xl p-6 md:p-8 shadow border border-[#e0eefe] mb-4">
+      {/* Tijd & datum prominent bovenaan */}
+      {lead && (lead as any).appointmentDateTime && (
+        <div className="text-center md:text-left mb-4">
+          <div className="text-xl md:text-2xl font-bold tracking-tight text-[#0EA5E9]">
+            {(lead as any).appointmentDateTime}
+          </div>
         </div>
+      )}
+
+      {/* Klantgegevens */}
+      <div className="flex flex-col md:flex-row md:items-start md:gap-8">
         <div className="flex-1">
-          <div className="flex flex-col">
-            <span className="font-semibold text-lg text-[#1A1F2C]">{lead.name}</span>
-            <div className="text-xs text-[#0EA5E9] mb-0.5">{lead.address}</div>
-            <div className="flex flex-col gap-1 mt-2">
-              <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-[#0AA1E4] text-xs hover:underline">
-                <Phone className="h-4 w-4" /> {lead.phone}
+          <div>
+            <span className="block font-semibold text-lg md:text-xl text-[#1A1F2C] mb-1">
+              {lead.name}
+            </span>
+            <span className="block text-sm md:text-base text-[#0EA5E9] mb-2">
+              {lead.address}
+            </span>
+            <div className="flex flex-col gap-0.5">
+              <a
+                href={`tel:${lead.phone}`}
+                className="text-xs md:text-sm text-[#0AA1E4] hover:underline"
+              >
+                {lead.phone}
               </a>
-              <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-[#0EA5E9] text-xs hover:underline">
-                <Mail className="h-4 w-4" /> {lead.email}
+              <a
+                href={`mailto:${lead.email}`}
+                className="text-xs md:text-sm text-[#0EA5E9] hover:underline"
+              >
+                {lead.email}
               </a>
             </div>
           </div>
         </div>
-        {/* Kaartknop optioneel en standaard niet tonen */}
-        {showMapButton && (
-          <div className="ml-auto">
-            <button
-              className="flex items-center gap-1 text-xs bg-white border border-[#0EA5E9] text-[#0AA1E4] rounded px-3 py-1 hover:bg-[#dbeefd] focus:outline-none transition"
-              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`, "_blank")}
-            >
-              <MapPin className="h-4 w-4" />
-              Bekijk op kaart
-            </button>
-          </div>
-        )}
       </div>
-      {/* 3 kolommen: notities, historie, evt. extra */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-[#0A8AD0]">
+
+      {/* Kolommen: Klantnotities, geschiedenis, extra */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Notities */}
         <div>
-          <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-[#0EA5E9]" />
+          <div className="font-semibold text-[#1A1F2C] mb-2 text-sm md:text-base">
             Klantnotities
-          </h4>
+          </div>
           {notes.length > 0 ? (
-            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1">
+            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1 text-xs md:text-sm text-[#0A8AD0]">
               {notes.map((n, i) => (
                 <li key={i} className="whitespace-pre-wrap">{n}</li>
               ))}
             </ul>
           ) : (
-            <div className="italic text-gray-500">Geen notities beschikbaar</div>
+            <div className="italic text-gray-400 text-xs md:text-sm">Geen notities beschikbaar</div>
           )}
         </div>
         {/* Geschiedenis */}
         <div>
-          <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
-            <Info className="h-4 w-4 text-[#0AA1E4]" />
+          <div className="font-semibold text-[#1A1F2C] mb-2 text-sm md:text-base">
             Klantgeschiedenis
-          </h4>
+          </div>
+          {/* Eventueel herplande afspraak */}
           {isRescheduled && rescheduleReason && (
-            <div className="mb-2 text-blue-700 bg-blue-50 border-l-4 border-blue-400 rounded p-2 flex items-center gap-2 text-xs">
-              <History className="h-4 w-4" />
-              <span>Afspraak verzet: {rescheduleReason}</span>
-              <span className="text-gray-400 ml-auto text-[11px]">{historyEntries.length > 0 ? historyEntries[0].date : ""}</span>
+            <div className="mb-2 px-3 py-2 bg-blue-50 border-l-4 border-blue-400 rounded text-xs text-blue-700 md:text-sm">
+              Afspraak verzet: {rescheduleReason}
+              <span className="block text-gray-400 text-[11px] mt-0.5">
+                {historyEntries.length > 0 ? historyEntries[0].date : ""}
+              </span>
             </div>
           )}
           {historyEntries.length > 0 ? (
-            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1">
+            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1 text-xs md:text-sm text-[#0A8AD0]">
               {historyEntries.map((entry, i) => (
                 <li key={i}>
-                  <span className="font-semibold text-[#1A1F2C]">{entry.type}:</span> {entry.description}
+                  <span className="font-semibold text-[#1A1F2C]">{entry.type}:</span>{" "}
+                  {entry.description}
                   <span className="text-gray-400 ml-1 text-[11px]">{entry.date}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="italic text-gray-500">Geen geschiedenis beschikbaar</div>
+            <div className="italic text-gray-400 text-xs md:text-sm">Geen geschiedenis beschikbaar</div>
           )}
         </div>
-        {/* Extra kolom voor toekomstige uitbreiding / placeholder */}
-        <div>
-          {/* Je kunt eventueel hier iets toevoegen zoals "Contact moments" etc. Voor nu leeg */}
-        </div>
+        {/* Extra kolom: future proof of info */}
+        <div className="hidden md:block"></div>
       </div>
     </div>
   );
 };
+
