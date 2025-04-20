@@ -2,10 +2,20 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { AddPartnerDialog } from './partners/AddPartnerDialog';
 
 export function PartnersManagement() {
+  const mockPartner = {
+    name: "Marketing Bureau XYZ",
+    description: "Professionele marketing diensten",
+    benefits: [
+      { id: "1", text: "20% korting op alle diensten" },
+      { id: "2", text: "Gratis marketing scan" }
+    ],
+    website: "https://xyz-marketing.nl",
+    phone: "+31612345678"
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -22,24 +32,24 @@ export function PartnersManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>Partner Naam</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Korting</TableHead>
+                <TableHead>Website</TableHead>
+                <TableHead>Telefoon</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actie</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell>Marketing Bureau XYZ</TableCell>
-                <TableCell>Marketing</TableCell>
-                <TableCell>20%</TableCell>
+                <TableCell>{mockPartner.name}</TableCell>
+                <TableCell>{mockPartner.website}</TableCell>
+                <TableCell>{mockPartner.phone}</TableCell>
                 <TableCell>
                   <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
                     Actief
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="sm">Bewerken</Button>
+                  <AddPartnerDialog isEdit partner={mockPartner} />
                 </TableCell>
               </TableRow>
             </TableBody>
