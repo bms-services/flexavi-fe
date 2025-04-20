@@ -116,14 +116,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   };
 
   return (
-    <Card className="shadow-md border border-[#D6BCFA] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
+    <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
       <CardHeader className="pb-4 pt-4 px-6 border-b bg-[#F1F0FB]">
         <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-[#9b87f5]" />
+          <Calendar className="h-5 w-5 text-[#0EA5E9]" />
           <CardTitle className="text-xl font-bold text-[#1A1F2C]">{app.title}</CardTitle>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-0">
         <div className="p-0">
           {lead && (
@@ -139,11 +139,11 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           <div className="px-6 pb-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6 mb-5">
               <div>
-                <span className="block text-xs font-semibold text-[#8E9196] mb-1">Tijdsbestek</span>
-                <span className="text-sm text-[#6E59A5] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
+                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Tijdsbestek</span>
+                <span className="text-sm text-[#0A8AD0] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
               </div>
               <div>
-                <span className="block text-xs font-semibold text-[#8E9196] mb-1">Locatie</span>
+                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Locatie</span>
                 <button
                   onClick={() => onMapOpen(app.location || "")}
                   className="text-sm font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent"
@@ -157,13 +157,13 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 </button>
               </div>
               <div>
-                <span className="block text-xs font-semibold text-[#8E9196] mb-1">Beschrijving</span>
+                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
                 <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
               </div>
             </div>
             <Separator />
             <div className="mt-5">
-              <h4 className="text-xs font-semibold text-[#8E9196] uppercase mb-1">Documenten</h4>
+              <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
               {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
                 <div className="grid gap-2 sm:grid-cols-3">
                   {hasDigitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
@@ -171,8 +171,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                   {hasDigitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center text-center py-7 text-[#8E9196]">
-                  <FileText className="h-10 w-10 text-gray-300 mb-2" />
+                <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
+                  <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
                   <span className="text-xs">Geen digitale documenten beschikbaar</span>
                 </div>
               )}
@@ -185,7 +185,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 variant="outline"
                 size="sm"
                 onClick={onViewHistory}
-                className="text-xs font-semibold"
+                className="text-xs font-semibold text-[#0A8AD0]"
               >
                 <Info className="h-4 w-4 mr-1" />
                 Geschiedenis
@@ -194,7 +194,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 variant="outline"
                 size="sm"
                 onClick={onOpenRescheduleModal}
-                className="text-xs font-semibold"
+                className="text-xs font-semibold text-[#0A8AD0]"
               >
                 <Calendar className="h-4 w-4 mr-1" />
                 Verzetten
@@ -203,7 +203,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 <SheetTrigger asChild>
                   <Button
                     size="sm"
-                    className="text-xs font-bold bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+                    className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white"
                   >
                     <FileText className="h-4 w-4 mr-1" />
                     Verwerken
@@ -224,7 +224,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                   </div>
                   <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
                     <Button
-                      className="w-full bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-bold py-2 px-4 rounded-lg shadow transition"
+                      className="w-full bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white font-bold py-2 px-4 rounded-lg shadow transition"
                       onClick={handleOpenProcessModal}
                       size="lg"
                     >

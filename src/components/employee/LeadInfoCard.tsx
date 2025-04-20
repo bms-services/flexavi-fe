@@ -28,18 +28,18 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
     <div className="bg-[#F1F0FB] rounded-xl p-5 mb-4 border">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
         <div className="flex-1 flex items-center gap-3">
-          <User className="h-6 w-6 text-[#9b87f5]" />
+          <User className="h-6 w-6 text-[#0EA5E9]" />
           <div>
             <span className="font-semibold text-lg text-[#1A1F2C]">{lead.name}</span>
-            <div className="text-xs text-[#6E59A5]">{lead.address}</div>
+            <div className="text-xs text-[#0EA5E9]">{lead.address}</div>
           </div>
         </div>
         <div className="flex-1 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-[#7E69AB] text-sm hover:underline">
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-[#0AA1E4] text-sm hover:underline">
             <Phone className="h-4 w-4" />
             {lead.phone}
           </a>
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-[#9b87f5] text-sm hover:underline">
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-[#0EA5E9] text-sm hover:underline">
             <Mail className="h-4 w-4" />
             {lead.email}
           </a>
@@ -47,17 +47,17 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
       </div>
       <div className="mt-3 flex items-center gap-2">
         <button
-          className="flex items-center gap-1 text-xs bg-white border border-[#D6BCFA] text-[#7E69AB] rounded px-3 py-1 hover:bg-[#eef3fc] focus:outline-none transition"
+          className="flex items-center gap-1 text-xs bg-white border border-[#0EA5E9] text-[#0AA1E4] rounded px-3 py-1 hover:bg-[#dbeefd] focus:outline-none transition"
           onClick={() => onMapOpen(lead.address)}
         >
           <MapPin className="h-4 w-4" />
           Bekijk op kaart
         </button>
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-[#6E59A5]">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-[#0A8AD0]">
         <div>
           <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-[#9b87f5]" />
+            <FileText className="h-4 w-4 text-[#0EA5E9]" />
             Klantnotities
           </h4>
           {notes.length > 0 ? (
@@ -72,11 +72,11 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
         </div>
         <div>
           <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
-            <Info className="h-4 w-4 text-[#33C3F0]" />
+            <Info className="h-4 w-4 text-[#0AA1E4]" />
             Klantgeschiedenis
           </h4>
           {isRescheduled && rescheduleReason && (
-            <div className="mb-2 text-amber-700 bg-amber-50 border-l-4 border-amber-400 rounded p-2 flex items-center gap-2 text-xs">
+            <div className="mb-2 text-blue-700 bg-blue-50 border-l-4 border-blue-400 rounded p-2 flex items-center gap-2 text-xs">
               <History className="h-4 w-4" />
               <span>Afspraak verzet: {rescheduleReason}</span>
               <span className="text-gray-400 ml-auto text-[11px]">{historyEntries.length > 0 ? historyEntries[0].date : ""}</span>
@@ -99,3 +99,4 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
     </div>
   );
 };
+
