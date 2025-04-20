@@ -45,18 +45,20 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
   };
 
   return (
-    <div className="h-[calc(100vh-12rem)] w-full bg-card rounded-lg border shadow-sm overflow-hidden">
+    <div className="h-[calc(100vh-12rem)] w-full bg-card rounded-lg border shadow-sm">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <ScrollArea className="h-full w-full">
-          <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4 p-4 h-full ${!isMobile ? 'min-w-max' : ''}`}>
-            {pipeline.stages.sort((a, b) => a.order - b.order).map((stage) => (
-              <PipelineStageComponent
-                key={stage.id}
-                stage={stage}
-                items={items}
-                onAddItem={onAddItem}
-              />
-            ))}
+        <ScrollArea className="h-full">
+          <div className="min-w-max p-4">
+            <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
+              {pipeline.stages.sort((a, b) => a.order - b.order).map((stage) => (
+                <PipelineStageComponent
+                  key={stage.id}
+                  stage={stage}
+                  items={items}
+                  onAddItem={onAddItem}
+                />
+              ))}
+            </div>
           </div>
         </ScrollArea>
       </DragDropContext>
