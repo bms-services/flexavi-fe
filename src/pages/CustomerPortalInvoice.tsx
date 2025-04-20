@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InvoiceStatus } from "@/types";
@@ -24,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
+import { toast } from "sonner";
 
 const CustomerPortalInvoice = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,6 +50,26 @@ const CustomerPortalInvoice = () => {
   }, [id]);
 
   const statusBadge = useInvoiceStatusBadge(invoice?.status as InvoiceStatus);
+
+  // Add missing function to handle invoice download
+  const handleDownloadInvoice = () => {
+    toast.success("Factuur wordt gedownload...", {
+      description: "Het bestand wordt automatisch gedownload naar uw apparaat."
+    });
+    // In a real application, this would trigger an actual download
+    console.log("Downloading invoice:", invoice?.id);
+  };
+
+  // Add missing function to handle payment start
+  const handleStartPayment = () => {
+    toast.info("Betaling wordt gestart...", {
+      description: "U wordt doorgestuurd naar onze beveiligde betaalomgeving."
+    });
+    // Simulate a redirect to payment gateway
+    setTimeout(() => {
+      setPaymentStarted(true);
+    }, 1500);
+  };
 
   const demoAttachments = [
     { name: "Situatie foto's.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
