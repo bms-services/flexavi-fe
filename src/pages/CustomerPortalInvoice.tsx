@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InvoiceStatus } from "@/types";
@@ -8,10 +7,8 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
@@ -21,6 +18,12 @@ import { CustomerDetails } from "@/components/customer-portal/invoice/CustomerDe
 import { InvoiceDetails } from "@/components/customer-portal/invoice/InvoiceDetails";
 import { InvoiceLineItems } from "@/components/customer-portal/invoice/InvoiceLineItems";
 import { PaymentStarted } from "@/components/customer-portal/invoice/PaymentStarted";
+import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
+import { formatCurrency } from "@/utils/format";
+import { Separator } from "@/components/ui/separator";
+import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
+import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
+import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 
 const CustomerPortalInvoice = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,36 +49,33 @@ const CustomerPortalInvoice = () => {
 
   const statusBadge = useInvoiceStatusBadge(invoice?.status as InvoiceStatus);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
-  const handleStartPayment = () => {
-    setPaymentStarted(true);
-    console.log("Starting payment for invoice:", invoice?.id);
-  };
-
-  const handleDownloadInvoice = () => {
-    console.log("Downloading invoice:", invoice?.id);
-    alert("Factuur wordt gedownload als PDF.");
-  };
+  const demoAttachments = [
+    { name: "Situatie foto's.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
+    { name: "Materiaal specificaties.jpg", url: "https://source.unsplash.com/random/800x600/?material" },
+    { name: "Algemene voorwaarden.pdf", url: "#" }
+  ];
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Laden...</p>
-      </div>
+      <CustomerPortalLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </CustomerPortalLayout>
     );
   }
 
   if (!invoice || !customer) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Factuur niet gevonden.</p>
-      </div>
+      <CustomerPortalLayout>
+        <div className="flex items-center justify-center py-12">
+          <Card className="max-w-md w-full">
+            <CardContent className="py-12 text-center">
+              <p className="text-lg text-gray-600">Factuur niet gevonden.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </CustomerPortalLayout>
     );
   }
 
@@ -84,8 +84,11 @@ const CustomerPortalInvoice = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <CustomerPortalLayout
+      title="Factuur Details"
+      subtitle="Bekijk en beheer uw factuur"
+    >
+      <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <Button 
             variant="ghost" 
@@ -96,16 +99,16 @@ const CustomerPortalInvoice = () => {
             Terug naar overzicht
           </Button>
         </div>
-        
-        <Card className="w-full max-w-4xl mx-auto">
-          <CardHeader className="border-b pb-6">
+
+        <Card className="border shadow-md bg-white">
+          <CardHeader className="border-b pb-6 bg-gradient-to-r from-primary/10 to-primary/5">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-2xl flex items-center gap-2">
+                <h2 className="text-2xl font-semibold flex items-center gap-2">
                   <FileText className="h-5 w-5 text-primary" />
                   Factuur {invoice.id.replace("inv-", "FACT-")}
-                </CardTitle>
-                <CardDescription>{invoice.description}</CardDescription>
+                </h2>
+                <p className="text-muted-foreground mt-1">{invoice.description}</p>
               </div>
               {statusBadge && (
                 <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
@@ -113,21 +116,40 @@ const CustomerPortalInvoice = () => {
             </div>
           </CardHeader>
           
-          <CardContent className="py-6 space-y-6">
+          <CardContent className="py-8 space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <CustomerDetails customer={customer} />
               <InvoiceDetails invoice={invoice} />
             </div>
             
-            <InvoiceLineItems 
-              lineItems={invoice.lineItems} 
-              formatCurrency={formatCurrency}
-            />
+            <Separator className="my-8" />
+            
+            <div>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Specificatie</h3>
+              <div className="bg-gray-50 rounded-lg p-6 overflow-x-auto">
+                <InvoiceLineItems 
+                  lineItems={invoice.lineItems}
+                  formatCurrency={formatCurrency}
+                />
+              </div>
+            </div>
             
             <InvoiceSummary subtotal={invoice.amount} vatRate={21} />
+            
+            <Separator className="my-8" />
+            
+            <WarrantySection 
+              warranty="Op alle installatie werkzaamheden geven wij 5 jaar garantie. Op de gebruikte materialen is de fabrieksgarantie van toepassing."
+            />
+            
+            <Attachments 
+              defaultAttachments={demoAttachments}
+            />
+            
+            <GeneralTerms />
           </CardContent>
           
-          <CardFooter className="flex justify-between space-x-4 border-t pt-6">
+          <CardFooter className="flex justify-between space-x-4 border-t py-6 bg-gray-50">
             <Button variant="outline" onClick={handleDownloadInvoice}>
               <Download className="mr-2 h-4 w-4" />
               Download factuur
@@ -141,7 +163,7 @@ const CustomerPortalInvoice = () => {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </CustomerPortalLayout>
   );
 };
 
