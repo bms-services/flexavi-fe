@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AppointmentHeader } from "./components/AppointmentHeader";
 import { TeamAppointmentCard } from "./components/TeamAppointmentCard";
 import { UnassignedAppointments } from "./UnassignedAppointments";
-import { optimizeRoutes as optimizeRoutesUtil } from "./utils/routeOptimization";
+import { optimizeRoutes as optimizeRoutesUtil } from "./utils/route-optimization";
 
 interface DailyTeamAppointmentsProps {
   date: string;
