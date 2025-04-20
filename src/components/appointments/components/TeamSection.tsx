@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isToday, parseISO } from "date-fns";
@@ -22,7 +23,8 @@ export const TeamSection = ({
   searchLocation,
   unavailableDates = {},
   onTeamNameEdit,
-  onDateClick
+  onDateClick,
+  isMobile
 }: TeamSectionProps) => {
   const timeSlots = [
     { label: "Ochtend", start: 8, end: 13 },
@@ -83,10 +85,10 @@ export const TeamSection = ({
           <h2 className="text-lg font-semibold">{title}</h2>
         </div>
       </div>
-      <CardContent className="p-4">
+      <CardContent className="p-0 md:p-4">
         <div className="rounded-lg border overflow-hidden">
-          <div className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] bg-muted/30">
-            <div className="p-3 font-medium border-r">Team</div>
+          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] bg-muted/30">
+            <div className="p-2 md:p-3 font-medium border-r">Team</div>
             <div className="grid grid-cols-7">
               {dates.map(date => (
                 <DateHeader 
@@ -94,30 +96,31 @@ export const TeamSection = ({
                   date={date} 
                   isToday={isToday(parseISO(date))}
                   onDateClick={onDateClick}
+                  isMobile={isMobile}
                 />
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] border-t bg-muted/5">
-            <div className="p-3 flex items-center gap-2 border-r">
-              <List className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-muted-foreground">
-                Totaal Overzicht
+          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t bg-muted/5">
+            <div className="p-2 md:p-3 flex items-center gap-1 md:gap-2 border-r">
+              <List className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
+              <span className="text-xs md:text-sm font-medium text-muted-foreground truncate">
+                Totaal
               </span>
             </div>
             <div className="grid grid-cols-7">
               {dates.map(date => {
                 const stats = getDateStatistics(date);
                 return (
-                  <div key={date} className="p-2 space-y-1 border-l">
+                  <div key={date} className="p-1 md:p-2 space-y-1 border-l">
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="text-center text-sm">
+                        <div className="text-center text-xs md:text-sm">
                           <span className="font-medium text-primary">
                             {stats.scheduled}/{stats.capacity}
                           </span>
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-xs text-muted-foreground hidden md:block">
                             {stats.available} beschikbaar
                           </div>
                         </div>
@@ -137,15 +140,15 @@ export const TeamSection = ({
           </div>
 
           {teams.map(team => (
-            <div key={team.id} className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] border-t hover:bg-muted/5">
-              <div className="p-3 flex items-center gap-2 border-r">
+            <div key={team.id} className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t hover:bg-muted/5">
+              <div className="p-2 md:p-3 flex items-start md:items-center gap-1 md:gap-2 border-r">
                 <div 
-                  className="w-2.5 h-2.5 rounded-full" 
+                  className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full mt-1 md:mt-0" 
                   style={{ backgroundColor: team.color }}
                 />
                 <Button 
                   variant="ghost" 
-                  className="h-auto px-2 py-0.5 font-medium hover:bg-transparent hover:underline"
+                  className="h-auto px-1 md:px-2 py-0.5 text-xs md:text-sm font-medium hover:bg-transparent hover:underline truncate"
                   onClick={() => onTeamNameEdit && onTeamNameEdit(team)}
                 >
                   {team.name}
@@ -153,14 +156,14 @@ export const TeamSection = ({
               </div>
               <div className="grid grid-cols-7">
                 {dates.map(date => (
-                  <div key={date} className="p-2 space-y-2 border-l relative">
+                  <div key={date} className="p-1 md:p-2 space-y-1 md:space-y-2 border-l relative">
                     {isTeamUnavailableOnDate(team.id, date) ? (
-                      <div className="flex flex-col items-center justify-center h-full py-3">
+                      <div className="flex flex-col items-center justify-center h-full py-1 md:py-3">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className="flex flex-col items-center text-orange-500">
-                              <AlertOctagon className="h-5 w-5 mb-1" />
-                              <span className="text-xs">Niet beschikbaar</span>
+                              <AlertOctagon className="h-4 w-4 md:h-5 md:w-5 mb-0.5 md:mb-1" />
+                              <span className="text-[10px] md:text-xs">Niet beschikbaar</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
@@ -178,6 +181,7 @@ export const TeamSection = ({
                           appointments={appointments}
                           maxSlots={getMaxSlots(team.type, slot.label)}
                           searchLocation={searchLocation}
+                          isMobile={isMobile}
                         />
                       ))
                     )}

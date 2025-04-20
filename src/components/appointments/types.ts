@@ -6,24 +6,19 @@ export interface TeamAvailabilityOverviewProps {
   appointments: Appointment[];
   teams: TeamDetails[];
   environments: WorkEnvironment[];
-  scheduleSettings: any;
+  scheduleSettings: {
+    salesMorningSlots: number;
+    salesAfternoonSlots: number;
+    salesEveningSlots: number;
+    installationMorningSlots: number;
+    installationAfternoonSlots: number;
+    installationEveningSlots: number;
+    defaultJobDuration: string;
+  };
   unavailableDates: Record<string, string[]>;
-  onTeamUpdate: (team: TeamDetails) => void;
-  onUnavailableDateAdd: (teamId: string, date: string) => void;
-  onUnavailableDateRemove: (teamId: string, date: string) => void;
-  onDateClick?: (date: string) => void;
-}
-
-export interface TeamSectionProps {
-  title: string;
-  icon: React.ReactNode;
-  teams: TeamDetails[];
-  dates: string[];
-  appointments: Appointment[];
-  scheduleSettings: any;
-  searchLocation?: string;
-  unavailableDates?: Record<string, string[]>;
-  onTeamNameEdit?: (team: TeamDetails) => void;
+  onTeamUpdate?: (team: TeamDetails) => void;
+  onUnavailableDateAdd?: (teamId: string, date: string) => void;
+  onUnavailableDateRemove?: (teamId: string, date: string) => void;
   onDateClick?: (date: string) => void;
 }
 
@@ -31,6 +26,7 @@ export interface DateHeaderProps {
   date: string;
   isToday: boolean;
   onDateClick?: (date: string) => void;
+  isMobile?: boolean;
 }
 
 export interface AvailabilityCellProps {
@@ -44,6 +40,28 @@ export interface AvailabilityCellProps {
   appointments: Appointment[];
   maxSlots: number;
   searchLocation?: string;
+  isMobile?: boolean;
+}
+
+export interface TeamSectionProps {
+  title: string;
+  icon: React.ReactNode;
+  teams: TeamDetails[];
+  dates: string[];
+  appointments: Appointment[];
+  scheduleSettings: {
+    salesMorningSlots: number;
+    salesAfternoonSlots: number;
+    salesEveningSlots: number;
+    installationMorningSlots: number;
+    installationAfternoonSlots: number;
+    installationEveningSlots: number;
+  };
+  searchLocation?: string;
+  unavailableDates?: Record<string, string[]>;
+  onTeamNameEdit?: (team: TeamDetails) => void;
+  onDateClick?: (date: string) => void;
+  isMobile?: boolean;
 }
 
 export interface InstallationTeamSectionProps {
@@ -56,28 +74,5 @@ export interface InstallationTeamSectionProps {
   unavailableDates?: Record<string, string[]>;
   onTeamNameEdit?: (team: TeamDetails) => void;
   onDateClick?: (date: string) => void;
-}
-
-export interface UnassignedAppointmentsProps {
-  date: string;
-  appointments: Appointment[];
-  onDragStart: (e: React.DragEvent, appointment: Appointment) => void;
-}
-
-export interface DailyTeamAppointmentsProps {
-  date: string;
-  appointments: Appointment[];
-  teams: TeamDetails[];
-  onBackToOverview: () => void;
-  onAppointmentAssign: (appointmentId: string, teamId: string) => void;
-}
-
-export interface ScheduleSettings {
-  salesMorningSlots: number;
-  salesAfternoonSlots: number;
-  salesEveningSlots: number;
-  installationMorningSlots: number;
-  installationAfternoonSlots: number;
-  installationEveningSlots: number;
-  defaultJobDuration: string;
+  isMobile?: boolean;
 }

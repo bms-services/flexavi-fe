@@ -29,7 +29,8 @@ export const AvailabilityCell = ({
   timeSlot, 
   appointments, 
   maxSlots,
-  searchLocation 
+  searchLocation,
+  isMobile
 }: AvailabilityCellProps) => {
   const count = appointments.filter(app => {
     const hour = parseInt(app.startTime.split(":")[0]);
@@ -67,7 +68,7 @@ export const AvailabilityCell = ({
           <Badge 
             variant="outline"
             className={cn(
-              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
+              "w-full justify-between gap-0.5 md:gap-1 cursor-pointer transition-colors text-[10px] md:text-sm px-1 py-0.5 md:px-3 md:py-1.5",
               isFullyBooked 
                 ? "border-green-700" // Dark green border when fully booked
                 : "border-blue-500",  // Blue border when not fully booked
@@ -75,9 +76,13 @@ export const AvailabilityCell = ({
               "hover:border-opacity-80"
             )}
           >
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {timeSlot.start}:00
+            <span className="flex items-center gap-0.5 md:gap-1.5">
+              <Clock className="h-2.5 w-2.5 md:h-3.5 md:w-3.5" />
+              {isMobile ? (
+                <span>{timeSlot.start}u</span>
+              ) : (
+                <span>{timeSlot.start}:00</span>
+              )}
             </span>
             <span className="font-medium">{count}/{maxSlots}</span>
           </Badge>

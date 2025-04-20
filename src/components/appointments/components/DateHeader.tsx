@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { DateHeaderProps } from "../types";
 import { Button } from "@/components/ui/button";
 
-export const DateHeader = ({ date, isToday, onDateClick }: DateHeaderProps) => {
+export const DateHeader = ({ date, isToday, onDateClick, isMobile }: DateHeaderProps) => {
   return (
     <Button
       variant="ghost"
@@ -16,10 +16,12 @@ export const DateHeader = ({ date, isToday, onDateClick }: DateHeaderProps) => {
       )}
       onClick={() => onDateClick?.(date)}
     >
-      <div className="font-medium">
-        {format(parseISO(date), "EEE", { locale: nl })}
+      <div className="font-medium truncate">
+        {isMobile 
+          ? format(parseISO(date), "E", { locale: nl }) 
+          : format(parseISO(date), "EEE", { locale: nl })}
       </div>
-      <div className="text-muted-foreground">
+      <div className="text-muted-foreground text-[10px] md:text-xs">
         {format(parseISO(date), "d MMM", { locale: nl })}
       </div>
     </Button>

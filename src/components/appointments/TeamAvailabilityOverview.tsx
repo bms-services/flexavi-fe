@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { format, parseISO, addDays, startOfWeek } from "date-fns";
 import { Users, Building2, Search, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
@@ -8,6 +9,8 @@ import { TeamAvailabilityOverviewProps } from "./types";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { TeamDetails } from "@/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +34,7 @@ export const TeamAvailabilityOverview = ({
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
   const [editingTeam, setEditingTeam] = useState<TeamDetails | null>(null);
+  const isMobile = useIsMobile();
   const daysToShow = 7;
 
   const dates = Array.from({ length: daysToShow }, (_, i) => {
@@ -59,8 +63,8 @@ export const TeamAvailabilityOverview = ({
   };
 
   return (
-    <div className="space-y-6 overflow-x-auto pb-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between min-w-[800px]">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
@@ -108,34 +112,38 @@ export const TeamAvailabilityOverview = ({
         </div>
       </div>
 
-      <div className="min-w-[800px]">
-        <TeamSection
-          title="Verkoopteams"
-          icon={<Users className="h-5 w-5 text-primary" />}
-          teams={salesTeams}
-          dates={dates}
-          appointments={appointments}
-          scheduleSettings={scheduleSettings}
-          searchLocation={searchLocation}
-          unavailableDates={unavailableDates}
-          onTeamNameEdit={handleTeamNameEdit}
-          onDateClick={onDateClick}
-        />
-      </div>
-      
-      <div className="min-w-[800px]">
-        <InstallationTeamSection
-          title="Uitvoerende Teams"
-          icon={<Building2 className="h-5 w-5 text-primary" />}
-          teams={installationTeams}
-          dates={dates}
-          appointments={appointments}
-          searchLocation={searchLocation}
-          unavailableDates={unavailableDates}
-          onTeamNameEdit={handleTeamNameEdit}
-          onDateClick={onDateClick}
-        />
-      </div>
+      <ScrollArea className="w-full overflow-auto pb-4">
+        <div className="min-w-[600px]">
+          <TeamSection
+            title="Verkoopteams"
+            icon={<Users className="h-5 w-5 text-primary" />}
+            teams={salesTeams}
+            dates={dates}
+            appointments={appointments}
+            scheduleSettings={scheduleSettings}
+            searchLocation={searchLocation}
+            unavailableDates={unavailableDates}
+            onTeamNameEdit={handleTeamNameEdit}
+            onDateClick={onDateClick}
+            isMobile={isMobile}
+          />
+        </div>
+        
+        <div className="min-w-[600px] mt-6">
+          <InstallationTeamSection
+            title="Uitvoerende Teams"
+            icon={<Building2 className="h-5 w-5 text-primary" />}
+            teams={installationTeams}
+            dates={dates}
+            appointments={appointments}
+            searchLocation={searchLocation}
+            unavailableDates={unavailableDates}
+            onTeamNameEdit={handleTeamNameEdit}
+            onDateClick={onDateClick}
+            isMobile={isMobile}
+          />
+        </div>
+      </ScrollArea>
     </div>
   );
 };
