@@ -2,7 +2,7 @@
 import React from "react";
 import { Appointment, TeamType } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
-import { parseISO, format, isToday, addDays } from "date-fns";
+import { parseISO, format, isToday, addDays, startOfWeek, endOfWeek } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -28,9 +28,11 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
   selectedDate,
   scheduleSettings,
 }) => {
-  // Generate next 5 days for overview
-  const daysToShow = Array.from({ length: 5 }, (_, i) => {
-    const date = addDays(parseISO(selectedDate), i);
+  // Generate days for the current week (Monday to Sunday)
+  const daysToShow = Array.from({ length: 7 }, (_, i) => {
+    // Get the start of the week (Monday) for the selected date
+    const weekStart = startOfWeek(parseISO(selectedDate), { weekStartsOn: 1 });
+    const date = addDays(weekStart, i);
     return format(date, 'yyyy-MM-dd');
   });
 
@@ -84,7 +86,7 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
     <div className="grid grid-cols-1 gap-4">
       <Card>
         <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
             {daysToShow.map((date) => (
               <div 
                 key={date}
