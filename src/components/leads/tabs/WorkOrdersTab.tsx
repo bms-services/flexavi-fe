@@ -1,6 +1,6 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
 import {
   Card,
   CardContent,
@@ -68,9 +68,18 @@ const getStatusBadge = (status: WorkOrder["status"]) => {
 };
 
 export const WorkOrdersTab: React.FC<WorkOrdersTabProps> = ({ leadId }) => {
-  const navigate = useNavigate();
-  const workOrders = mockWorkOrders; // In a real app, fetch work orders for this lead
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const workOrders = mockWorkOrders;
 
+  const totalPages = Math.ceil(workOrders.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentWorkOrders = workOrders
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(startIndex, endIndex);
+
+  const navigate = useNavigate();
   const handleCreateWorkOrder = () => {
     navigate(`/projects/create?leadId=${leadId}`);
   };
@@ -102,24 +111,19 @@ export const WorkOrdersTab: React.FC<WorkOrdersTabProps> = ({ leadId }) => {
               Nog geen werkopdrachten voor deze lead.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Titel</TableHead>
-                  <TableHead>Datum Aangemaakt</TableHead>
-                  <TableHead>Geplande Datum</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Adres</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {workOrders
-                  .sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )
-                  .map((workOrder) => (
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Titel</TableHead>
+                    <TableHead>Datum Aangemaakt</TableHead>
+                    <TableHead>Geplande Datum</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Adres</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentWorkOrders.map((workOrder) => (
                     <TableRow key={workOrder.id} 
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => navigate(`/projects/${workOrder.id}`)}
@@ -143,8 +147,14 @@ export const WorkOrdersTab: React.FC<WorkOrdersTabProps> = ({ leadId }) => {
                       </TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+              <LeadTablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
           )}
         </CardContent>
       </Card>

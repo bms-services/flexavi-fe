@@ -1,7 +1,7 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Quote } from "@/types";
 import { Button } from "@/components/ui/button";
+import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
 import {
   Card,
   CardContent,
@@ -41,12 +41,15 @@ const getStatusBadge = (status: Quote["status"]) => {
 };
 
 export const QuotesTab: React.FC<QuotesTabProps> = ({ quotes, leadId }) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  
+  const totalPages = Math.ceil(quotes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentQuotes = quotes
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(startIndex, endIndex);
 
   return (
     <div className="space-y-6">
@@ -75,26 +78,21 @@ export const QuotesTab: React.FC<QuotesTabProps> = ({ quotes, leadId }) => {
               Nog geen offertes voor deze lead.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nummer</TableHead>
-                  <TableHead>Datum</TableHead>
-                  <TableHead>Bedrag</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Beschrijving
-                  </TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {quotes
-                  .sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )
-                  .map((quote) => (
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nummer</TableHead>
+                    <TableHead>Datum</TableHead>
+                    <TableHead>Bedrag</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Beschrijving
+                    </TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentQuotes.map((quote) => (
                     <TableRow key={quote.id}>
                       <TableCell>
                         <span className="font-medium text-primary">
@@ -115,8 +113,14 @@ export const QuotesTab: React.FC<QuotesTabProps> = ({ quotes, leadId }) => {
                       <TableCell>{getStatusBadge(quote.status)}</TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+              <LeadTablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
           )}
         </CardContent>
       </Card>

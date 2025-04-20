@@ -1,7 +1,7 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Invoice } from "@/types";
 import { Button } from "@/components/ui/button";
+import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
 import {
   Card,
   CardContent,
@@ -29,11 +29,9 @@ interface InvoicesTabProps {
   leadId: string;
 }
 
-export const InvoicesTab: React.FC<InvoicesTabProps> = ({
-  invoices,
-  leadId,
-}) => {
-  const navigate = useNavigate();
+export const InvoicesTab: React.FC<InvoicesTabProps> = ({ invoices, leadId }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -45,6 +43,13 @@ export const InvoicesTab: React.FC<InvoicesTabProps> = ({
   const handleCreateInvoice = () => {
     navigate(`/invoices/create?leadId=${leadId}`);
   };
+
+  const totalPages = Math.ceil(invoices.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentInvoices = invoices
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(startIndex, endIndex);
 
   return (
     <div className="space-y-6">
@@ -73,24 +78,19 @@ export const InvoicesTab: React.FC<InvoicesTabProps> = ({
               Nog geen facturen voor deze lead.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nummer</TableHead>
-                  <TableHead>Datum</TableHead>
-                  <TableHead>Bedrag</TableHead>
-                  <TableHead className="hidden md:table-cell">Vervaldatum</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {invoices
-                  .sort(
-                    (a, b) =>
-                      new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime()
-                  )
-                  .map((invoice) => {
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nummer</TableHead>
+                    <TableHead>Datum</TableHead>
+                    <TableHead>Bedrag</TableHead>
+                    <TableHead className="hidden md:table-cell">Vervaldatum</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentInvoices.map((invoice) => {
                     const statusConfig = useInvoiceStatusBadge(invoice.status);
                     
                     return (
@@ -126,8 +126,14 @@ export const InvoicesTab: React.FC<InvoicesTabProps> = ({
                       </TableRow>
                     );
                   })}
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+              <LeadTablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
+            </>
           )}
         </CardContent>
       </Card>

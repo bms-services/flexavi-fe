@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { mockProjects } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { ProjectStatusBadge } from "@/components/projects/ProjectStatusBadge";
@@ -8,13 +7,21 @@ import { nl } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
+import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
 
 interface ProjectsTabProps {
   leadId: string;
 }
 
 export const ProjectsTab: React.FC<ProjectsTabProps> = ({ leadId }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const leadProjects = mockProjects.filter(project => project.leads.includes(leadId));
+  
+  const totalPages = Math.ceil(leadProjects.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProjects = leadProjects.slice(startIndex, endIndex);
 
   if (leadProjects.length === 0) {
     return (
@@ -32,7 +39,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ leadId }) => {
 
   return (
     <div className="space-y-4">
-      {leadProjects.map((project) => (
+      {currentProjects.map((project) => (
         <div
           key={project.id}
           className="bg-white rounded-lg border p-6 hover:shadow-md transition-shadow"
@@ -59,6 +66,11 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ leadId }) => {
           </div>
         </div>
       ))}
+      <LeadTablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };
