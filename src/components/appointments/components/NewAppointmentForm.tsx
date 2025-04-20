@@ -20,11 +20,13 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
   
   const form = useForm({
     defaultValues: {
-      date: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
       startTime: "09:00",
       teamId: "",
       type: "quote_request" as AppointmentStatus,
       description: "",
+      additionalRanges: [],
     },
   });
 
