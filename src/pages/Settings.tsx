@@ -13,7 +13,8 @@ import { DefaultAttachmentsSettings } from "@/components/settings/attachments/De
 import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
 import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
 import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
-import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard } from "lucide-react";
+import { PermissionsSettings } from "@/components/settings/permissions/PermissionsSettings";
+import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield } from "lucide-react";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -84,6 +85,10 @@ const Settings = () => {
                   <Users2 className="h-4 w-4 mr-2" />
                   Teams
                 </TabsTrigger>
+                <TabsTrigger value="permissions" className="w-full justify-start">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Rechten
+                </TabsTrigger>
                 <TabsTrigger value="account" className="w-full justify-start">
                   <User className="h-4 w-4 mr-2" />
                   Account
@@ -129,6 +134,10 @@ const Settings = () => {
               
               <TabsContent value="teams" className="mt-0">
                 <TeamSettings />
+              </TabsContent>
+              
+              <TabsContent value="permissions" className="mt-0">
+                <PermissionsSettings />
               </TabsContent>
               
               <TabsContent value="account" className="mt-0">
