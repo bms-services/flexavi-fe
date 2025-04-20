@@ -70,7 +70,6 @@ export const LeadDetailActions = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isWorkOrderDialogOpen, setIsWorkOrderDialogOpen] = useState(false);
   
-  // Get the lead ID from the URL
   const leadId = window.location.pathname.split('/').pop() || '';
 
   const handleAddNote = () => {
@@ -90,47 +89,60 @@ export const LeadDetailActions = () => {
   };
 
   const handleScheduleAppointment = () => {
-    // Navigate to appointments page with lead ID
     navigate(`/appointments/create?leadId=${leadId}`);
   };
 
   const handleCreateQuote = () => {
-    // Navigate to quotes page with lead ID
     navigate(`/quotes/create?leadId=${leadId}`);
   };
 
   const handleCreateInvoice = () => {
-    // Navigate to invoices page with lead ID
     navigate(`/invoices/create?leadId=${leadId}`);
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-3 w-full justify-start mt-4">
-      <Button variant="outline" onClick={handleAddNote}>
+    <div className="flex flex-wrap items-center gap-2 w-full bg-white p-4 shadow-sm rounded-lg mb-6">
+      <Button 
+        variant="outline" 
+        onClick={handleAddNote}
+        className="flex-shrink-0"
+      >
         <PlusCircle className="mr-2 h-4 w-4" />
-        Notitie Toevoegen
+        Notitie
       </Button>
       
-      <Button variant="outline" onClick={handleScheduleAppointment}>
+      <Button 
+        variant="outline" 
+        onClick={handleScheduleAppointment}
+        className="flex-shrink-0"
+      >
         <Calendar className="mr-2 h-4 w-4" />
-        Afspraak Plannen
+        Afspraak
       </Button>
       
-      <Button variant="outline" onClick={handleCreateQuote}>
+      <Button 
+        variant="outline" 
+        onClick={handleCreateQuote}
+        className="flex-shrink-0"
+      >
         <FilePlus className="mr-2 h-4 w-4" />
-        Offerte maken
+        Offerte
       </Button>
       
-      <Button variant="outline" onClick={handleCreateInvoice}>
+      <Button 
+        variant="outline" 
+        onClick={handleCreateInvoice}
+        className="flex-shrink-0"
+      >
         <FileText className="mr-2 h-4 w-4" />
-        Factuur maken
+        Factuur
       </Button>
       
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogTrigger asChild>
-          <Button>
+          <Button className="flex-shrink-0">
             <Edit2 className="mr-2 h-4 w-4" />
-            Lead Bewerken
+            Bewerken
           </Button>
         </DialogTrigger>
         <CreateLeadDialog
@@ -143,16 +155,18 @@ export const LeadDetailActions = () => {
             });
             setIsEditDialogOpen(false);
           }}
-          // Removed the editMode prop as it doesn't exist in the interface
           leadId={leadId}
         />
       </Dialog>
       
       <Dialog open={isWorkOrderDialogOpen} onOpenChange={setIsWorkOrderDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="ml-auto bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 border-emerald-200">
+          <Button 
+            variant="outline" 
+            className="flex-shrink-0 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 border-emerald-200"
+          >
             <Briefcase className="mr-2 h-4 w-4" />
-            Werkopdracht maken
+            Werkopdracht
           </Button>
         </DialogTrigger>
         <CreateWorkOrderDialog

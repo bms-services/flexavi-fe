@@ -6,6 +6,7 @@ import { LeadDetail } from "@/components/leads/LeadDetail";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ExternalLink } from "lucide-react";
 import { getLeadDetail } from "@/data/mockData";
+import { LeadDetailActions } from "@/components/leads/components/LeadActions";
 
 const LeadDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,26 +32,26 @@ const LeadDetails = () => {
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <Button variant="ghost" onClick={() => navigate("/leads")}>
-          <ChevronLeft className="mr-2 h-4 w-4" />
-          Terug naar leads
-        </Button>
-
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight">{leadDetail.name}</h1>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline"
-              onClick={() => navigate(`/portal/dashboard/${leadDetail.id}`)}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Bekijk klant portaal
-            </Button>
-            <Button variant="outline">Bewerken</Button>
-          </div>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" onClick={() => navigate("/leads")}>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Terug naar leads
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => navigate(`/portal/dashboard/${leadDetail.id}`)}
+          >
+            <ExternalLink className="mr-2 h-4 w-4" />
+            Bekijk klant portaal
+          </Button>
         </div>
 
-        <LeadDetail lead={leadDetail} />
+        <LeadDetailActions />
+
+        <div className="space-y-6">
+          <h1 className="text-3xl font-bold tracking-tight">{leadDetail.name}</h1>
+          <LeadDetail lead={leadDetail} />
+        </div>
       </div>
     </Layout>
   );
