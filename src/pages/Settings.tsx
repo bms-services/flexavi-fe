@@ -7,6 +7,7 @@ import { TeamSettings } from "@/components/settings/teams/TeamSettings";
 import { PersonalInfoSettings } from "@/components/settings/account/PersonalInfoSettings";
 import { PasswordSettings } from "@/components/settings/account/PasswordSettings";
 import { CompanySettings } from "@/components/settings/company/CompanySettings";
+import { DomainSettings } from "@/components/settings/company/DomainSettings";
 import { useToast } from "@/hooks/use-toast";
 import { DefaultAttachmentsSettings } from "@/components/settings/attachments/DefaultAttachmentsSettings";
 import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
@@ -119,6 +120,9 @@ const Settings = () => {
             <div className="flex-1 border-l bg-background ml-4 pl-6">
               <TabsContent value="company" className="mt-0">
                 <CompanySettings />
+                <div className="mt-6">
+                  <DomainSettings />
+                </div>
               </TabsContent>
               
               <TabsContent value="appointments" className="mt-0">
