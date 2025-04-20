@@ -219,7 +219,83 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                     </SheetHeader>
 
                     <div className="mt-6 space-y-6">
-                      {/* Offerte/Factuur/Werkovereenkomst acties kunnen hier (niet gewijzigd) */}
+                      {/* Offerte sectie */}
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
+                          Offerte
+                        </h3>
+                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCreateQuote}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Creëer offerte
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onOpenUploadQuote}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Upload offerte
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Factuur sectie */}
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
+                          Factuur
+                        </h3>
+                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCreateInvoice}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Creëer factuur
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onOpenUploadInvoice}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Upload factuur
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Werkovereenkomst sectie */}
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
+                          Werkovereenkomst
+                        </h3>
+                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onCreateAgreement}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Creëer overeenkomst
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onOpenUploadAgreement}
+                            className="text-[#0EA5E9] border-[#0EA5E9]"
+                          >
+                            Upload overeenkomst
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
