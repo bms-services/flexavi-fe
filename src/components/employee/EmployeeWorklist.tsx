@@ -130,11 +130,11 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
 
   return (
     <div>
-      <h2 className="text-lg font-semibold px-6 pt-6">{dayLabel} - Werklijst</h2>
+      <h2 className="text-xl font-bold px-6 pt-6 mb-3 text-roof-700/90">{dayLabel} - Werklijst</h2>
       {appointments.length === 0 ? (
-        <div className="text-center text-muted-foreground py-8">Geen afspraken gepland voor deze dag.</div>
+        <div className="text-center text-muted-foreground py-10 text-base">Geen afspraken gepland voor deze dag.</div>
       ) : (
-        <div className="px-6 py-4 space-y-4">
+        <div className="px-4 py-2 space-y-5">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];

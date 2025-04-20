@@ -73,88 +73,91 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   onRescheduleSave,
 }) => {
   return (
-    <Card key={app.id} className="mb-2 relative">
-      <CardHeader>
-        <CardTitle className="text-base leading-tight flex items-center gap-2">
+    <Card key={app.id} className="mb-4 shadow-sm border-2 border-muted bg-white/95 hover:shadow-lg transition-shadow relative overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between bg-roof-100/80 border-b pb-2">
+        <CardTitle className="text-lg leading-tight flex items-center gap-2 font-semibold">
           {app.title}
           {isRescheduled && (
-            <span className="ml-2 px-2 py-1 rounded bg-warning text-xs text-warning-foreground flex items-center gap-1">
+            <span className="ml-2 px-2 py-1 rounded bg-warning text-xs text-warning-foreground flex items-center gap-1 animate-pulse">
               <Clock className="w-3 h-3" />Verzet
             </span>
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-5 pt-3">
+
         {lead && (
-          <div className="mb-2 p-2 rounded bg-gray-50 border flex flex-col sm:flex-row gap-2 sm:justify-between">
+          <div className="mb-2 px-4 py-3 rounded-md bg-roof-50 border flex flex-col sm:flex-row gap-2 sm:justify-between items-start sm:items-center shadow-sm">
             <div>
-              <div className="text-sm font-medium">{lead.name}</div>
+              <div className="text-sm font-semibold text-roof-700">{lead.name}</div>
               <div className="text-xs text-muted-foreground">{lead.address}</div>
             </div>
-            <div className="flex flex-col text-xs mt-1 sm:mt-0 gap-1">
-              <span><b>Tel:</b> {lead.phone}</span>
-              <span><b>Email:</b> {lead.email}</span>
+            <div className="flex flex-col text-xs mt-1 sm:mt-0 gap-0.5">
+              <span><b>Tel:</b> <a href={`tel:${lead.phone}`} className="hover:underline hover:text-primary">{lead.phone}</a></span>
+              <span><b>Email:</b> <a href={`mailto:${lead.email}`} className="hover:underline hover:text-primary">{lead.email}</a></span>
             </div>
           </div>
         )}
 
-        <div className="space-y-1">
+        <div className="space-y-1.5 px-1">
           <div className="text-sm"><strong>Beschrijving:</strong> {app.description}</div>
           <div className="text-sm"><strong>Datum:</strong> {app.date}</div>
           <div className="text-sm"><strong>Tijd:</strong> {app.startTime} - {app.endTime}</div>
           <div className="text-sm"><strong>Locatie:</strong> {app.location}</div>
           {isRescheduled && (
-            <div className="text-sm text-warning mt-2">
+            <div className="text-sm text-warning font-medium mt-2">
               <b>Reden verzet:</b> {rescheduleReason}
             </div>
           )}
         </div>
 
-        {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} />}
-        {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur (digitaal)" />}
-        {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst (digitaal)" />}
+        <div className="flex flex-col gap-2">
+          {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte (digitaal)" />}
+          {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur (digitaal)" />}
+          {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst (digitaal)" />}
+        </div>
 
-        <div className="flex flex-wrap gap-2 mt-4">
-          <Button variant="outline" size="sm" onClick={() => onMapOpen(app.location || "")}>
+        <div className="flex flex-wrap gap-2 mt-3 border-t pt-3">
+          <Button variant="outline" size="sm" onClick={() => onMapOpen(app.location || "")} className="hover-scale">
             <MapPin className="h-4 w-4 mr-2" />
             Open Maps
           </Button>
           
           {/* Offerte knoppen */}
-          <Button variant="outline" size="sm" onClick={onCreateQuote}>
+          <Button variant="outline" size="sm" onClick={onCreateQuote} className="hover-scale">
             <FilePlus className="h-4 w-4 mr-2" />
             Maak Offerte
           </Button>
-          <Button variant="outline" size="sm" onClick={onOpenUploadQuote}>
+          <Button variant="outline" size="sm" onClick={onOpenUploadQuote} className="hover-scale">
             <Upload className="h-4 w-4 mr-2" />
             Upload Offerte
           </Button>
 
           {/* Factuur knoppen */}
-          <Button variant="outline" size="sm" onClick={onCreateInvoice}>
+          <Button variant="outline" size="sm" onClick={onCreateInvoice} className="hover-scale">
             <FilePlus className="h-4 w-4 mr-2" />
             Maak Factuur
           </Button>
-          <Button variant="outline" size="sm" onClick={onOpenUploadInvoice}>
+          <Button variant="outline" size="sm" onClick={onOpenUploadInvoice} className="hover-scale">
             <Upload className="h-4 w-4 mr-2" />
             Upload Factuur
           </Button>
 
           {/* Werkovereenkomst knoppen */}
-          <Button variant="outline" size="sm" onClick={onCreateAgreement}>
+          <Button variant="outline" size="sm" onClick={onCreateAgreement} className="hover-scale">
             <FilePlus className="h-4 w-4 mr-2" />
             Maak Werkovereenkomst
           </Button>
-          <Button variant="outline" size="sm" onClick={onOpenUploadAgreement}>
+          <Button variant="outline" size="sm" onClick={onOpenUploadAgreement} className="hover-scale">
             <Upload className="h-4 w-4 mr-2" />
             Upload Werkovereenkomst
           </Button>
 
-          <Button variant="outline" size="sm" onClick={onViewHistory}>
+          <Button variant="outline" size="sm" onClick={onViewHistory} className="hover-scale">
             <History className="h-4 w-4 mr-2" />
             Bekijk Geschiedenis
           </Button>
-          <Button variant="outline" size="sm" onClick={onOpenRescheduleModal}>
+          <Button variant="outline" size="sm" onClick={onOpenRescheduleModal} className="hover-scale">
             <Clock className="h-4 w-4 mr-2" />
             Verzetten
           </Button>
