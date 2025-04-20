@@ -2,6 +2,7 @@
 import React from "react";
 import { BlockCard } from "./BlockCard";
 import { NotesHistory, HistoryEntry } from "./NotesHistory";
+import { EmployeeAppointmentDocuments } from "./EmployeeAppointmentDocuments";
 import { User, MapPin, Phone, Mail, Calendar, FileText } from "lucide-react";
 import { Appointment } from "@/types";
 
