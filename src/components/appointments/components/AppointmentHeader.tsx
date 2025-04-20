@@ -9,7 +9,7 @@ import { RouteOptimizationModal } from "./RouteOptimizationModal";
 interface AppointmentHeaderProps {
   date: string;
   onBackToOverview: () => void;
-  onOptimizeRoutes: () => void;
+  onOptimizeRoutes: (type: "all" | "assigned" | "unassigned") => void;
   onAutoAssign: () => void;
   isOptimizingRoute: boolean;
 }
@@ -27,9 +27,7 @@ export const AppointmentHeader: React.FC<AppointmentHeaderProps> = ({
   });
 
   const handleOptimizeRoutes = (type: "all" | "assigned" | "unassigned") => {
-    // Here we would handle the different optimization types
-    // For now, we'll just call the existing optimization function
-    onOptimizeRoutes();
+    onOptimizeRoutes(type);
     setModalOpen(false);
   };
 
@@ -51,6 +49,15 @@ export const AppointmentHeader: React.FC<AppointmentHeaderProps> = ({
         >
           <Route className="h-4 w-4 mr-2" />
           {isOptimizingRoute ? "Optimaliseren..." : "Routes optimaliseren"}
+        </Button>
+        <Button 
+          variant="outline" 
+          className="h-9" 
+          onClick={onAutoAssign}
+          disabled={isOptimizingRoute}
+        >
+          <Bot className="h-4 w-4 mr-2" />
+          Auto-Toewijzen
         </Button>
       </div>
 
