@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
 interface EmployeeAppointmentCardProps {
   app: Appointment;
   lead: any;
@@ -40,6 +41,7 @@ interface EmployeeAppointmentCardProps {
   onRescheduleReasonChange: (val: string) => void;
   onRescheduleSave: () => void;
 }
+
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -101,48 +103,48 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-  return <Card className="shadow-md border border-[#00254D] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
+  return <Card className="shadow-md border border-gray-300 bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition">
       <div className="relative">
-        <CardHeader className="pb-5 pt-4 px-6 border-b-0 flex flex-row justify-between items-center text-white rounded-t-2xl bg-slate-200">
+        <CardHeader className="pb-5 pt-4 px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-[#EFF7FF]">
           <div className="flex flex-col items-start gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-900">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
             </span>
-            <div className="text-lg font-bold">
+            <div className="text-lg font-bold text-gray-900">
               {app.date} · {app.startTime} - {app.endTime}
             </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="border-none shadow-none bg-transparent hover:bg-white/20 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition" aria-label="Meer acties">
+              <Button variant="ghost" size="icon" className="border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
                 <MoreHorizontal className="w-6 h-6" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[200px] bg-white rounded-xl border border-[#00254D] shadow-lg p-1" style={{
+            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" style={{
             color: "#00254D"
           }}>
-              <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadQuote} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onOpenUploadQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <Upload className="mr-2 w-4 h-4" /> Offerte uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateInvoice} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onCreateInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <FilePlus className="mr-2 w-4 h-4" /> Factuur maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadInvoice} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onOpenUploadInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <Upload className="mr-2 w-4 h-4" /> Factuur uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateAgreement} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onCreateAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <FilePlus className="mr-2 w-4 h-4" /> Werkopdracht maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenRescheduleModal} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={onOpenRescheduleModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <CalendarPlus className="mr-2 w-4 h-4" /> Afspraak verzetten
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e6f0fc] font-medium">
+              <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <Info className="mr-2 w-4 h-4" /> Verwerk afspraak
               </DropdownMenuItem>
             </DropdownMenuContent>
