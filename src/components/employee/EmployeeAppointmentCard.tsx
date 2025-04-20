@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-
 interface EmployeeAppointmentCardProps {
   app: Appointment;
   lead: any;
@@ -41,7 +40,6 @@ interface EmployeeAppointmentCardProps {
   onRescheduleReasonChange: (val: string) => void;
   onRescheduleSave: () => void;
 }
-
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -78,16 +76,13 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
   const [processTaskDescription, setProcessTaskDescription] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
-
   const notities = ["Klant wil graag volgende week extra opties besproken krijgen.", "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland."];
   const historyEntries = isRescheduled && rescheduleReason ? [{
     type: "Afspraak verzet",
     description: rescheduleReason,
     date: app.date
   }] : [];
-
   const afspraakOmschrijving = app.description || "Hier komt duidelijk te staan wat we er precies moeten doen";
-
   const handleOpenProcessModal = () => setProcessModalOpen(true);
   const handleCloseProcessModal = () => {
     setProcessModalOpen(false);
@@ -106,12 +101,11 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-
   return <Card className="shadow-md border border-[#00254D] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
       <div className="relative">
-        <CardHeader className="pb-5 pt-4 px-6 border-b-0 bg-[#00254D] flex flex-row justify-between items-center text-white rounded-t-2xl">
+        <CardHeader className="pb-5 pt-4 px-6 border-b-0 flex flex-row justify-between items-center text-white rounded-t-2xl bg-slate-200">
           <div className="flex flex-col items-start gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-900">
               Geplande afspraak
             </span>
             <div className="text-lg font-bold">
@@ -156,17 +150,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         </CardHeader>
       </div>
       <CardContent className="p-0">
-        {lead && (
-          <LeadInfoCard
-            lead={lead}
-            isRescheduled={isRescheduled}
-            rescheduleReason={rescheduleReason}
-            historyEntries={historyEntries}
-            notes={notities}
-            showMapButton={true}
-            description={afspraakOmschrijving}
-          />
-        )}
+        {lead && <LeadInfoCard lead={lead} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} description={afspraakOmschrijving} />}
       </CardContent>
       <ReceiptUploadDialog open={uploadQuoteDialogOpen} onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()} onResult={onQuoteResult} />
       <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
