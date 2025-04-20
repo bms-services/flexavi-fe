@@ -2,7 +2,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { Clock } from "lucide-react";
 
 interface RescheduleDialogProps {
   open: boolean;
@@ -19,11 +19,11 @@ export const RescheduleDialog: React.FC<RescheduleDialogProps> = ({
   onCancel,
   onSave
 }) => (
-  <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onCancel()}>
+  <Dialog open={open} onOpenChange={o => o ? undefined : onCancel()}>
     <DialogContent className="sm:max-w-md">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
-          <RotateCcw className="h-5 w-5 text-amber-500" />
+          <Clock className="h-5 w-5 text-amber-500" />
           Afspraak verzetten
         </DialogTitle>
         <DialogDescription>

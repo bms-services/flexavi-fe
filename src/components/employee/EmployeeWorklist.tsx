@@ -1,10 +1,10 @@
 
 import React, { useState } from "react";
 import { Appointment } from "@/types";
+import { EmployeeAppointmentCard } from "./EmployeeAppointmentCard";
+import { mockLeads } from "@/data/mockLeads";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { CalendarDays } from "lucide-react";
-import { mockLeads } from "@/data/mockLeads";
-import { RoofingAppointmentCard } from "./RoofingAppointmentCard";
 
 interface EmployeeWorklistProps {
   appointments: Appointment[];
@@ -28,21 +28,6 @@ interface DigitalDocsState {
     agreement?: ReceiptData;
   }
 }
-
-// DEMO data voor geschiedenis! (Voor een echte implementatie moet je dit uit de database/API halen)
-const DUMMY_HISTORY = {
-  "1": [
-    { date: "2025-04-12", reason: "Offerte uitgebracht" },
-    { date: "2025-04-15", reason: "Afspraak verzet door klant" }
-  ],
-  "2": [
-    { date: "2025-04-10", reason: "Eerste intakegesprek" },
-    { date: "2025-04-13", reason: "Afspraak bevestigd" }
-  ],
-  "3": [
-    { date: "2025-04-05", reason: "Klant gebeld na offerteaanvraag" }
-  ]
-};
 
 export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments, dayLabel }) => {
   const [rescheduleModalOpen, setRescheduleModalOpen] = useState<string | null>(null);
@@ -92,23 +77,34 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
-  const handleProcessAppointment = (appointmentId: string) => {
-    console.log("Verwerken van afspraak:", appointmentId);
-    // TODO: Implementeer verwerking logica, hier zouden we later AppointmentProcessModal kunnen openen
-  };
-
   const handleCreateQuote = (leadId: string) => {
-    window.location.href = `/quotes/create?leadId=${leadId}`;
+    // @ts-ignore
+    import("react-router-dom").then(({ useNavigate }) => {
+      const navigate = useNavigate();
+      navigate('/quotes/create', { state: { leadId } });
+    });
   };
   const handleCreateInvoice = (leadId: string) => {
-    window.location.href = `/invoices/create?leadId=${leadId}`;
+    // @ts-ignore
+    import("react-router-dom").then(({ useNavigate }) => {
+      const navigate = useNavigate();
+      navigate('/invoices/create', { state: { leadId } });
+    });
   };
   const handleCreateAgreement = (leadId: string) => {
-    window.location.href = `/workagreements/create?leadId=${leadId}`;
+    // @ts-ignore
+    import("react-router-dom").then(({ useNavigate }) => {
+      const navigate = useNavigate();
+      navigate('/workagreements/create', { state: { leadId } });
+    });
   };
 
   const handleViewHistory = (leadId: string) => {
-    window.location.href = `/leads/${leadId}`;
+    // @ts-ignore
+    import("react-router-dom").then(({ useNavigate }) => {
+      const navigate = useNavigate();
+      navigate(`/leads/${leadId}`);
+    });
   };
 
   const openRescheduleModal = (appointmentId: string) => {
@@ -134,10 +130,10 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const getLead = (leadId: string) => mockLeads.find(l => l.id === leadId);
 
   return (
-    <div className="bg-white w-full">
-      <div className="flex items-center gap-2 px-4 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
+    <div className="bg-white">
+      <div className="flex items-center gap-2 px-6 py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-5 w-5 text-roof-600" />
-        <h2 className="text-base sm:text-lg font-semibold text-roof-700">
+        <h2 className="text-lg font-semibold text-roof-700">
           {dayLabel} - Werklijst
         </h2>
       </div>
@@ -150,23 +146,48 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
           <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-2 sm:p-4 grid gap-5 max-w-full">
+        <div className="p-4 grid gap-4 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
-            const historyEntries = DUMMY_HISTORY[lead?.id || ""] || [];
-            const rescheduleReason = rescheduleInfo[app.id]?.reason;
+            const isRescheduled = rescheduledStatus[app.id];
+            const rescheduleModalVisible = rescheduleModalOpen === app.id;
+            const reason = rescheduleInfo[app.id]?.reason || rescheduleReason;
+
+            const uploadState = uploadDialogOpen[app.id] || { quote: false, invoice: false, agreement: false };
+            const docs = digitalDocs[app.id] || {};
 
             return (
-              <RoofingAppointmentCard
+              <EmployeeAppointmentCard
                 key={app.id}
                 app={app}
-                lead={lead || {}}
+                lead={lead}
+                isRescheduled={isRescheduled}
+                rescheduleReason={reason}
+                rescheduleModalOpen={rescheduleModalVisible}
+                digitalQuote={docs.quote}
+                digitalInvoice={docs.invoice}
+                digitalAgreement={docs.agreement}
                 onMapOpen={handleMapOpen}
-                onProcess={() => handleProcessAppointment(app.id)}
-                onHistory={lead ? () => handleViewHistory(lead.id) : undefined}
-                onReschedule={() => openRescheduleModal(app.id)}
-                rescheduleReason={rescheduleReason}
-                historyEntries={historyEntries}
+                onCreateQuote={() => handleCreateQuote(app.leadId)}
+                onOpenUploadQuote={() => handleOpenUploadDialog(app.id, "quote")}
+                uploadQuoteDialogOpen={uploadState.quote}
+                onQuoteResult={data => handleDigitalDocResult(app.id, "quote", data)}
+                onCloseUploadQuote={() => handleCloseUploadDialog(app.id, "quote")}
+                onCreateInvoice={() => handleCreateInvoice(app.leadId)}
+                onOpenUploadInvoice={() => handleOpenUploadDialog(app.id, "invoice")}
+                uploadInvoiceDialogOpen={uploadState.invoice}
+                onInvoiceResult={data => handleDigitalDocResult(app.id, "invoice", data)}
+                onCloseUploadInvoice={() => handleCloseUploadDialog(app.id, "invoice")}
+                onCreateAgreement={() => handleCreateAgreement(app.leadId)}
+                onOpenUploadAgreement={() => handleOpenUploadDialog(app.id, "agreement")}
+                uploadAgreementDialogOpen={uploadState.agreement}
+                onAgreementResult={data => handleDigitalDocResult(app.id, "agreement", data)}
+                onCloseUploadAgreement={() => handleCloseUploadDialog(app.id, "agreement")}
+                onViewHistory={() => handleViewHistory(app.leadId)}
+                onOpenRescheduleModal={() => openRescheduleModal(app.id)}
+                onCloseRescheduleModal={() => setRescheduleModalOpen(null)}
+                onRescheduleReasonChange={setRescheduleReason}
+                onRescheduleSave={handleRescheduleSave}
               />
             );
           })}

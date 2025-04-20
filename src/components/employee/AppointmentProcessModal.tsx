@@ -33,7 +33,7 @@ export const AppointmentProcessModal: React.FC<AppointmentProcessModalProps> = (
     <DialogContent className="sm:max-w-lg">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
-          <Info className="h-5 w-5 text-[#0EA5E9]" />
+          <Info className="h-5 w-5 text-[#9b87f5]" />
           Afspraak verwerken
         </DialogTitle>
         <DialogDescription>
@@ -45,7 +45,7 @@ export const AppointmentProcessModal: React.FC<AppointmentProcessModalProps> = (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Reden</label>
           <textarea
-            className="w-full border rounded-md p-3 text-sm min-h-[80px] focus:border-[#0EA5E9] focus:ring focus:ring-[#E5DEFF] transition"
+            className="w-full border rounded-md p-3 text-sm min-h-[80px] focus:border-[#9b87f5] focus:ring focus:ring-[#E5DEFF] transition"
             placeholder="Vul hier de reden in..."
             value={reason}
             onChange={e => onReasonChange(e.target.value)}
@@ -59,17 +59,17 @@ export const AppointmentProcessModal: React.FC<AppointmentProcessModalProps> = (
             type="checkbox"
             checked={taskChecked}
             onChange={e => onTaskCheckedChange(e.target.checked)}
-            className="accent-[#0EA5E9] h-4 w-4 rounded border-gray-300 focus:ring-[#0EA5E9]"
+            className="accent-[#9b87f5] h-4 w-4 rounded border-gray-300 focus:ring-[#9b87f5]"
           />
           <label htmlFor="process-task-checkbox" className="ml-2 text-sm text-gray-800 select-none flex gap-1">
-            <ListTodo className="h-4 w-4 text-[#0EA5E9]" /> Taak maken voor opvolgen
+            <ListTodo className="h-4 w-4 text-[#9b87f5]" /> Taak maken voor opvolgen
           </label>
         </div>
         {taskChecked && (
           <div>
             <input
               type="text"
-              className="w-full border rounded-md p-2 text-sm focus:border-[#0EA5E9] focus:ring focus:ring-[#E5DEFF] transition"
+              className="w-full border rounded-md p-2 text-sm focus:border-[#9b87f5] focus:ring focus:ring-[#E5DEFF] transition"
               placeholder="Wat moet er worden opgevolgd? (optioneel)"
               value={taskDescription}
               onChange={e => onTaskDescriptionChange(e.target.value)}
@@ -81,7 +81,7 @@ export const AppointmentProcessModal: React.FC<AppointmentProcessModalProps> = (
       <DialogFooter className="mt-4 flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-2">
         <Button variant="outline" type="button" onClick={onCancel} className="sm:mr-2">Annuleren</Button>
         <Button 
-          className="w-full sm:w-auto bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white font-semibold"
+          className="w-full sm:w-auto bg-[#9b87f5] hover:bg-[#7E69AB] text-white font-semibold"
           disabled={!reason.trim() || loading}
           onClick={onSubmit}
         >
