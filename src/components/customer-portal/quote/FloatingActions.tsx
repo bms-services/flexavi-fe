@@ -15,11 +15,11 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
   onReject,
 }) => {
   return (
-    <div className="sticky top-6 p-6">
-      <div className="bg-white rounded-lg shadow-lg border p-4 flex flex-col gap-3">
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="bg-white rounded-lg shadow-lg border px-4 py-3 flex gap-3">
         <Button 
           onClick={onAccept}
-          className="bg-primary hover:bg-primary/90 text-white w-full"
+          className="bg-primary hover:bg-primary/90 text-white min-w-[140px]"
         >
           <Check className="w-4 h-4 mr-2" />
           Accepteren
@@ -28,7 +28,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
         <Button 
           variant="outline"
           onClick={onRequestRevision}
-          className="w-full"
+          className="min-w-[140px]"
         >
           <Edit className="w-4 h-4 mr-2" />
           Revisie aanvragen
@@ -37,7 +37,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
         <Button 
           variant="outline"
           onClick={onReject}
-          className="w-full hover:bg-destructive hover:text-white"
+          className="min-w-[140px] hover:bg-destructive hover:text-white"
         >
           <X className="w-4 h-4 mr-2" />
           Weigeren

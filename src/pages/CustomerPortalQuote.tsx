@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -84,27 +85,21 @@ const CustomerPortalQuote = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        <div className="w-[80%]">
-          <div className="p-4">
-            <QuotePortalContent
-              quote={quote}
-              customer={customer}
-              companyDetails={companyDetails}
-              demoAttachments={demoAttachments}
-            />
-          </div>
-        </div>
-        
-        <div className="w-[20%]">
-          <FloatingActions
-            onAccept={handleAccept}
-            onRequestRevision={handleRevisionRequest}
-            onReject={handleReject}
-          />
-        </div>
+    <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="max-w-4xl mx-auto p-4">
+        <QuotePortalContent
+          quote={quote}
+          customer={customer}
+          companyDetails={companyDetails}
+          demoAttachments={demoAttachments}
+        />
       </div>
+
+      <FloatingActions
+        onAccept={handleAccept}
+        onRequestRevision={handleRevisionRequest}
+        onReject={handleReject}
+      />
 
       <QuoteRevisionDialog
         open={revisionDialogOpen}
