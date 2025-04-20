@@ -1,6 +1,6 @@
 
 import React from "react";
-import { User, Phone, Mail, MapPin, Info, History, Note } from "lucide-react";
+import { User, Phone, Mail, MapPin, Info, History, note } from "lucide-react";
 
 interface LeadInfoCardProps {
   lead: {
@@ -57,7 +57,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <h4 className="text-xs font-semibold text-[#1A1F2C] mb-1 flex items-center gap-1">
-            <Note className="h-4 w-4 text-[#9b87f5]" />
+            <note className="h-4 w-4 text-[#9b87f5]" />
             Klantnotities & geschiedenis
           </h4>
           {isRescheduled && rescheduleReason && (
@@ -96,3 +96,4 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
     </div>
   );
 };
+
