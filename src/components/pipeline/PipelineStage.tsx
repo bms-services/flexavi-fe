@@ -23,7 +23,7 @@ export const PipelineStage: React.FC<PipelineStageProps> = ({
   const stageItems = items.filter((item) => item.stageId === stage.id);
 
   return (
-    <Card className={`${isMobile ? 'w-full' : 'w-[300px]'} flex-shrink-0 h-fit max-h-full transition-shadow hover:shadow-md`}>
+    <Card className={`${isMobile ? 'w-full' : 'w-[280px] shrink-0'} flex-shrink-0 h-fit max-h-full transition-shadow hover:shadow-md`}>
       <CardHeader className="pb-2 relative space-y-0" style={{ borderLeft: `4px solid ${stage.color}` }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ export const PipelineStage: React.FC<PipelineStageProps> = ({
       <Droppable droppableId={stage.id} type="pipelineItem">
         {(provided, snapshot) => (
           <CardContent
-            className={`p-2 min-h-[150px] space-y-2 transition-colors ${
+            className={`p-2 min-h-[150px] max-h-[60vh] overflow-y-auto space-y-2 transition-colors ${
               snapshot.isDraggingOver ? 'bg-accent/50' : ''
             }`}
             ref={provided.innerRef}

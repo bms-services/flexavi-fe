@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 
 // Sample data for demonstration
-const samplePipelines: Pipeline[] = [
+const samplePipelines: PipelineType[] = [
   {
     id: "pipeline-1",
     name: "Sales Pijplijn",
@@ -89,7 +89,7 @@ const Pipeline = () => {
   const selectedPipeline = pipelines.find(p => p.id === selectedPipelineId) || pipelines[0];
   
   // Pipeline management functions
-  const handlePipelineUpdate = (updatedPipeline: Pipeline) => {
+  const handlePipelineUpdate = (updatedPipeline: PipelineType) => {
     setPipelines(pipelines.map(p => 
       p.id === updatedPipeline.id ? updatedPipeline : p
     ));
@@ -106,7 +106,7 @@ const Pipeline = () => {
     toast.success("Pijplijn bijgewerkt");
   };
   
-  const handlePipelineCreate = (newPipeline: Pipeline) => {
+  const handlePipelineCreate = (newPipeline: PipelineType) => {
     // If new pipeline has default set to true, set others to false
     let updatedPipelines = [...pipelines];
     if (newPipeline.isDefault) {
@@ -170,7 +170,7 @@ const Pipeline = () => {
   
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="container py-6 space-y-6 max-w-full">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h1 className="text-3xl font-bold tracking-tight">Pijplijn</h1>
