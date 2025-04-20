@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, FilePlus, Upload, History, Clock } from "lucide-react";
-import { Dialog } from "@/components/ui/dialog";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
@@ -16,18 +15,30 @@ interface EmployeeAppointmentCardProps {
   isRescheduled: boolean;
   rescheduleReason: string;
   rescheduleModalOpen: boolean;
-  digitalQuote: ReceiptData | undefined;
+  digitalQuote?: ReceiptData;
+  digitalInvoice?: ReceiptData;
+  digitalAgreement?: ReceiptData;
   onMapOpen: (address: string) => void;
   onCreateQuote: () => void;
   onOpenUploadQuote: () => void;
+  uploadQuoteDialogOpen: boolean;
+  onQuoteResult: (data: ReceiptData) => void;
+  onCloseUploadQuote: () => void;
+  onCreateInvoice: () => void;
+  onOpenUploadInvoice: () => void;
+  uploadInvoiceDialogOpen: boolean;
+  onInvoiceResult: (data: ReceiptData) => void;
+  onCloseUploadInvoice: () => void;
+  onCreateAgreement: () => void;
+  onOpenUploadAgreement: () => void;
+  uploadAgreementDialogOpen: boolean;
+  onAgreementResult: (data: ReceiptData) => void;
+  onCloseUploadAgreement: () => void;
   onViewHistory: () => void;
   onOpenRescheduleModal: () => void;
   onCloseRescheduleModal: () => void;
   onRescheduleReasonChange: (val: string) => void;
   onRescheduleSave: () => void;
-  onUploadDialogChange: (open: boolean) => void;
-  uploadDialogOpen: boolean;
-  onQuoteResult: (data: ReceiptData) => void;
 }
 
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
@@ -37,17 +48,29 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   rescheduleReason,
   rescheduleModalOpen,
   digitalQuote,
+  digitalInvoice,
+  digitalAgreement,
   onMapOpen,
   onCreateQuote,
   onOpenUploadQuote,
+  uploadQuoteDialogOpen,
+  onQuoteResult,
+  onCloseUploadQuote,
+  onCreateInvoice,
+  onOpenUploadInvoice,
+  uploadInvoiceDialogOpen,
+  onInvoiceResult,
+  onCloseUploadInvoice,
+  onCreateAgreement,
+  onOpenUploadAgreement,
+  uploadAgreementDialogOpen,
+  onAgreementResult,
+  onCloseUploadAgreement,
   onViewHistory,
   onOpenRescheduleModal,
   onCloseRescheduleModal,
   onRescheduleReasonChange,
   onRescheduleSave,
-  onUploadDialogChange,
-  uploadDialogOpen,
-  onQuoteResult,
 }) => {
   return (
     <Card key={app.id} className="mb-2 relative">
@@ -88,6 +111,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         </div>
 
         {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} />}
+        {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur (digitaal)" />}
+        {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst (digitaal)" />}
 
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => onMapOpen(app.location || "")}>
@@ -102,6 +127,25 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             <Upload className="h-4 w-4 mr-2" />
             Upload Offerte
           </Button>
+
+          <Button variant="outline" size="sm" onClick={onCreateInvoice}>
+            <FilePlus className="h-4 w-4 mr-2" />
+            Maak factuur
+          </Button>
+          <Button variant="outline" size="sm" onClick={onOpenUploadInvoice}>
+            <Upload className="h-4 w-4 mr-2" />
+            Upload factuur
+          </Button>
+
+          <Button variant="outline" size="sm" onClick={onCreateAgreement}>
+            <FilePlus className="h-4 w-4 mr-2" />
+            Maak werkovereenkomst
+          </Button>
+          <Button variant="outline" size="sm" onClick={onOpenUploadAgreement}>
+            <Upload className="h-4 w-4 mr-2" />
+            Upload werkovereenkomst
+          </Button>
+
           <Button variant="outline" size="sm" onClick={onViewHistory}>
             <History className="h-4 w-4 mr-2" />
             Bekijk Geschiedenis
@@ -122,9 +166,19 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       />
 
       <ReceiptUploadDialog
-        open={uploadDialogOpen}
-        onOpenChange={onUploadDialogChange}
+        open={uploadQuoteDialogOpen}
+        onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()}
         onResult={onQuoteResult}
+      />
+      <ReceiptUploadDialog
+        open={uploadInvoiceDialogOpen}
+        onOpenChange={open => open ? onOpenUploadInvoice() : onCloseUploadInvoice()}
+        onResult={onInvoiceResult}
+      />
+      <ReceiptUploadDialog
+        open={uploadAgreementDialogOpen}
+        onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()}
+        onResult={onAgreementResult}
       />
     </Card>
   );
