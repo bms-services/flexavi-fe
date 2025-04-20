@@ -15,7 +15,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({
   onReject,
 }) => {
   return (
-    <div className="fixed top-6 right-6 w-[20%] z-50">
+    <div className="sticky top-6 p-6">
       <div className="bg-white rounded-lg shadow-lg border p-4 flex flex-col gap-3">
         <Button 
           onClick={onAccept}
