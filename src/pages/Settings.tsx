@@ -79,10 +79,6 @@ const Settings = () => {
                   <Building2 className="h-4 w-4 mr-2" />
                   Bedrijf
                 </TabsTrigger>
-                <TabsTrigger value="appointments" className="w-full justify-start">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Agenda
-                </TabsTrigger>
                 <TabsTrigger value="teams" className="w-full justify-start">
                   <Users2 className="h-4 w-4 mr-2" />
                   Teams
@@ -94,6 +90,10 @@ const Settings = () => {
                 <TabsTrigger value="permissions" className="w-full justify-start">
                   <Shield className="h-4 w-4 mr-2" />
                   Rechten
+                </TabsTrigger>
+                <TabsTrigger value="appointments" className="w-full justify-start">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Agenda
                 </TabsTrigger>
                 <TabsTrigger value="account" className="w-full justify-start">
                   <User className="h-4 w-4 mr-2" />
