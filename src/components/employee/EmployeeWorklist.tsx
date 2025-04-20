@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { Appointment } from "@/types";
-import { EmployeeAppointmentCard } from "./EmployeeAppointmentCard";
-import { mockLeads } from "@/data/mockLeads";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { CalendarDays } from "lucide-react";
+import { mockLeads } from "@/data/mockLeads";
+import { RoofingAppointmentCard } from "./RoofingAppointmentCard";
 
 interface EmployeeWorklistProps {
   appointments: Appointment[];
@@ -77,7 +76,11 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
-  // let navigatie via callback van buitenaf doen, want useNavigate geeft error in event-handlers buiten component
+  const handleProcessAppointment = (appointmentId: string) => {
+    console.log("Verwerken van afspraak:", appointmentId);
+    // TODO: Implementeer verwerking logica, hier zouden we later AppointmentProcessModal kunnen openen
+  };
+
   const handleCreateQuote = (leadId: string) => {
     window.location.href = `/quotes/create?leadId=${leadId}`;
   };
@@ -134,45 +137,14 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
         <div className="p-2 sm:p-4 grid gap-4 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
-            const isRescheduled = rescheduledStatus[app.id];
-            const rescheduleModalVisible = rescheduleModalOpen === app.id;
-            const reason = rescheduleInfo[app.id]?.reason || rescheduleReason;
-
-            const uploadState = uploadDialogOpen[app.id] || { quote: false, invoice: false, agreement: false };
-            const docs = digitalDocs[app.id] || {};
-
+            
             return (
-              <EmployeeAppointmentCard
+              <RoofingAppointmentCard
                 key={app.id}
                 app={app}
                 lead={lead}
-                isRescheduled={isRescheduled}
-                rescheduleReason={reason}
-                rescheduleModalOpen={rescheduleModalVisible}
-                digitalQuote={docs.quote}
-                digitalInvoice={docs.invoice}
-                digitalAgreement={docs.agreement}
                 onMapOpen={handleMapOpen}
-                onCreateQuote={() => handleCreateQuote(app.leadId)}
-                onOpenUploadQuote={() => handleOpenUploadDialog(app.id, "quote")}
-                uploadQuoteDialogOpen={uploadState.quote}
-                onQuoteResult={data => handleDigitalDocResult(app.id, "quote", data)}
-                onCloseUploadQuote={() => handleCloseUploadDialog(app.id, "quote")}
-                onCreateInvoice={() => handleCreateInvoice(app.leadId)}
-                onOpenUploadInvoice={() => handleOpenUploadDialog(app.id, "invoice")}
-                uploadInvoiceDialogOpen={uploadState.invoice}
-                onInvoiceResult={data => handleDigitalDocResult(app.id, "invoice", data)}
-                onCloseUploadInvoice={() => handleCloseUploadDialog(app.id, "invoice")}
-                onCreateAgreement={() => handleCreateAgreement(app.leadId)}
-                onOpenUploadAgreement={() => handleOpenUploadDialog(app.id, "agreement")}
-                uploadAgreementDialogOpen={uploadState.agreement}
-                onAgreementResult={data => handleDigitalDocResult(app.id, "agreement", data)}
-                onCloseUploadAgreement={() => handleCloseUploadDialog(app.id, "agreement")}
-                onViewHistory={() => handleViewHistory(app.leadId)}
-                onOpenRescheduleModal={() => openRescheduleModal(app.id)}
-                onCloseRescheduleModal={() => setRescheduleModalOpen(null)}
-                onRescheduleReasonChange={setRescheduleReason}
-                onRescheduleSave={handleRescheduleSave}
+                onProcess={() => handleProcessAppointment(app.id)}
               />
             );
           })}
