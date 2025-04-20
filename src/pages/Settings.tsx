@@ -14,8 +14,9 @@ import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplat
 import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
 import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
 import { PermissionsSettings } from "@/components/settings/permissions/PermissionsSettings";
-import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield } from "lucide-react";
+import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield, FileText } from "lucide-react";
 import { EmployeeSettings } from "@/components/settings/employees/EmployeeSettings";
+import { WorkAgreementSettingsForm } from "@/components/settings/workagreements/WorkAgreementSettingsForm";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -114,6 +115,10 @@ const Settings = () => {
                   <CreditCard className="h-4 w-4 mr-2" />
                   Betaling/abonnement
                 </TabsTrigger>
+                <TabsTrigger value="workagreements" className="w-full justify-start">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Werkovereenkomsten
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -171,6 +176,10 @@ const Settings = () => {
 
               <TabsContent value="subscription" className="mt-0">
                 <SubscriptionSettings />
+              </TabsContent>
+
+              <TabsContent value="workagreements" className="mt-0">
+                <WorkAgreementSettingsForm />
               </TabsContent>
             </div>
           </Tabs>
