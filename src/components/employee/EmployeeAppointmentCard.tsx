@@ -1,18 +1,15 @@
 import React, { useState } from "react";
+import { Calendar, FileText, MapPin, User, Phone, Mail, History } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, FileText } from "lucide-react";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
 import { RescheduleDialog } from "./RescheduleDialog";
 import { Appointment } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import { AppointmentProcessModal } from "./AppointmentProcessModal";
-import { LeadInfoCard } from "./LeadInfoCard";
-import { useAppointmentProcess } from "./useAppointmentProcess";
 import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
 import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
 import { Sheet } from "@/components/ui/sheet";
-import { AppointmentDetailsCard } from "./AppointmentDetailsCard";
+import { AppointmentProcessModal } from "./AppointmentProcessModal";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -46,6 +43,64 @@ interface EmployeeAppointmentCardProps {
   onRescheduleSave: () => void;
 }
 
+// --- NEW Helper: Kolom-card style
+function BlockCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={
+        "bg-[#F6FBFF] border border-[#B8D8FF] rounded-2xl px-4 py-4 shadow-sm flex flex-col gap-3 " +
+        (className || "")
+      }
+      style={{ minWidth: 0 }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// --- NEW: Notities en Geschiedenis compact block
+function NotesHistory({
+  notes,
+  historyEntries,
+}: { notes: string[]; historyEntries: { type: string; description: string; date: string }[] }) {
+  return (
+    <div className="flex flex-col sm:flex-row gap-3 mt-3 w-full">
+      <div className="flex-1">
+        <div className="flex items-center gap-1 mb-1 text-sm font-semibold text-[#2196F3]">
+          <FileText className="h-4 w-4" /> Notities
+        </div>
+        {notes.length > 0 ? (
+          <ul className="list-disc pl-4 text-[13px] text-[#222]">
+            {notes.map((n, i) => (
+              <li key={i} className="whitespace-pre-wrap">{n}</li>
+            ))}
+          </ul>
+        ) : (
+          <span className="italic text-gray-400 text-[13px]">Geen notities</span>
+        )}
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-1 mb-1 text-sm font-semibold text-[#2196F3]">
+          <History className="h-4 w-4" /> Geschiedenis
+        </div>
+        {historyEntries.length > 0 ? (
+          <ul className="list-disc pl-4 text-[13px] text-[#222]">
+            {historyEntries.map((entry, i) => (
+              <li key={i}>
+                <span className="font-semibold">{entry.type}</span>: {entry.description}{" "}
+                <span className="text-gray-400 text-[12px]">{entry.date}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span className="italic text-gray-400 text-[13px]">Geen geschiedenis</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Redesign Main Card
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -85,12 +140,10 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     setLocalDigitalQuote(data);
     if (onQuoteResult) onQuoteResult(data);
   };
-
   const handleInvoiceResult = (data: ReceiptData) => {
     setLocalDigitalInvoice(data);
     if (onInvoiceResult) onInvoiceResult(data);
   };
-
   const handleAgreementResult = (data: ReceiptData) => {
     setLocalDigitalAgreement(data);
     if (onAgreementResult) onAgreementResult(data);
@@ -100,108 +153,157 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!localDigitalInvoice;
   const hasDigitalAgreement = !!localDigitalAgreement;
 
-  const {
-    processModalOpen,
-    processReason,
-    setProcessReason,
-    processTaskChecked,
-    setProcessTaskChecked,
-    processTaskDescription,
-    setProcessTaskDescription,
-    processing,
-    handleOpenProcessModal,
-    handleCloseProcessModal,
-    handleProcessSubmit,
-  } = useAppointmentProcess();
-
-  const notities = [
+  // Mock notes/history for demo - you can pass in as props
+  const notes = [
     "Klant wil graag volgende week extra opties besproken krijgen.",
-    "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland.",
   ];
   const historyEntries = isRescheduled && rescheduleReason
     ? [{ type: "Afspraak verzet", description: rescheduleReason, date: app.date }]
     : [];
 
+  // --- Card header styling
   return (
-    <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
-      <CardHeader className="py-2 px-4 border-b bg-[#F1F0FB]">
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-[#0EA5E9]" />
-          <CardTitle className="text-lg font-bold text-[#1A1F2C]">{app.title}</CardTitle>
-        </div>
+    <Card className="border-[#B8D8FF] bg-[#F8FAFC] rounded-3xl overflow-hidden shadow flex flex-col w-full">
+      {/* Header */}
+      <CardHeader className="rounded-t-3xl border-2 border-[#B8D8FF] bg-[#F4F9FE] px-6 py-3 border-b flex flex-row items-center gap-2 border-t-0 border-x-0">
+        <Calendar className="h-6 w-6 text-[#189BE7]" />
+        <CardTitle className="text-xl font-bold text-[#1366b2]"> {app.title} </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="p-0">
-          <div className="px-4 pt-3 pb-3">
-            <div className="flex flex-col gap-4 md:flex-row md:gap-3">
-              <div className="flex-1 min-w-[220px] h-full">
-                <LeadInfoCard
-                  lead={lead}
-                  onMapOpen={onMapOpen}
-                  historyEntries={historyEntries}
-                  notes={notities}
-                  isRescheduled={isRescheduled}
-                  rescheduleReason={rescheduleReason}
-                  compact={true}
-                />
+
+      {/* Main Content in 3 blocks */}
+      <CardContent className="bg-white p-6 pt-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Kolom 1: Klant */}
+          <BlockCard className="col-span-1">
+            <div className="flex items-center gap-2 mb-1">
+              <User className="h-6 w-6 text-[#189BE7]" />
+              <span className="font-bold text-lg text-[#183d5c]">{lead?.name}</span>
+            </div>
+            <div className="flex flex-col gap-1 text-[#4496D1] text-[15px] mb-2">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                <span>{lead?.address}</span>
               </div>
-              <div className="flex-1 min-w-[200px] h-full flex">
-                <AppointmentDetailsCard app={app} onMapOpen={onMapOpen} />
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4" />
+                <span>{lead?.phone}</span>
               </div>
-              <div className="flex-1 min-w-[200px] h-full flex flex-col">
-                <div className="bg-[#F1F0FB] rounded-xl p-3 border flex flex-col h-full">
-                  <h4 className="text-[11px] font-semibold text-[#0A8AD0] uppercase mb-2">Documenten</h4>
-                  {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
-                    <div className="grid gap-2 grid-cols-1 md:grid-cols-1">
-                      {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
-                      {hasDigitalInvoice && <DigitalQuoteDisplay quote={localDigitalInvoice!} title="Factuur" />}
-                      {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-center py-4 text-[#0A8AD0] h-full">
-                      <FileText className="h-8 w-8 text-[#0A8AD0] mb-1" />
-                      <span className="text-xs">Geen digitale documenten beschikbaar</span>
-                    </div>
-                  )}
-                </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <span>{lead?.email}</span>
               </div>
             </div>
-          </div>
-          <Separator className="my-2" />
-          <div className="border-t bg-[#FAF9FD] px-3 py-2 flex justify-end">
-            <Sheet>
-              <EmployeeAppointmentActions
-                onViewHistory={onViewHistory}
-                onOpenRescheduleModal={onOpenRescheduleModal}
-              />
-              <EmployeeAppointmentSheet
-                hasDigitalQuote={hasDigitalQuote}
-                hasDigitalInvoice={hasDigitalInvoice}
-                hasDigitalAgreement={hasDigitalAgreement}
-                digitalQuote={localDigitalQuote}
-                digitalInvoice={localDigitalInvoice}
-                digitalAgreement={localDigitalAgreement}
-                onCreateQuote={onCreateQuote}
-                onOpenUploadQuote={onOpenUploadQuote}
-                uploadQuoteDialogOpen={uploadQuoteDialogOpen}
-                onQuoteResult={handleQuoteResult}
-                onCloseUploadQuote={onCloseUploadQuote}
-                onCreateInvoice={onCreateInvoice}
-                onOpenUploadInvoice={onOpenUploadInvoice}
-                uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
-                onInvoiceResult={handleInvoiceResult}
-                onCloseUploadInvoice={onCloseUploadInvoice}
-                onCreateAgreement={onCreateAgreement}
-                onOpenUploadAgreement={onOpenUploadAgreement}
-                uploadAgreementDialogOpen={uploadAgreementDialogOpen}
-                onAgreementResult={handleAgreementResult}
-                onCloseUploadAgreement={onCloseUploadAgreement}
-                onOpenProcessModal={handleOpenProcessModal}
-              />
-            </Sheet>
-          </div>
+            <button
+              onClick={() => onMapOpen(lead?.address || "")}
+              className="w-full flex items-center justify-center gap-2 rounded-md border border-[#189BE7] text-[#2196F3] px-3 py-1 mt-1 mb-2 font-medium bg-white hover:bg-[#E6F2FC] transition"
+              type="button"
+            >
+              <MapPin className="h-4 w-4" />
+              Bekijk op kaart
+            </button>
+
+            {/* Notities en geschiedenis compact */}
+            <NotesHistory notes={notes} historyEntries={historyEntries} />
+          </BlockCard>
+
+          {/* Kolom 2: Tijdsbestek, locatie, beschrijving */}
+          <BlockCard className="col-span-1">
+            {/* Tijdsbestek */}
+            <div className="mb-2">
+              <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
+                <Calendar className="h-4 w-4" />
+                Tijdsbestek
+              </span>
+              <span className="text-[15px] text-[#183d5c] font-medium">
+                {app.date} · {app.startTime} - {app.endTime}
+              </span>
+            </div>
+            {/* Locatie */}
+            <div className="mb-2">
+              <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
+                <MapPin className="h-4 w-4" />
+                Locatie
+              </span>
+              <span
+                className="text-[15px] text-[#2196F3] font-medium hover:underline cursor-pointer flex items-center gap-1"
+                onClick={() => onMapOpen(app.location || "")}
+                tabIndex={0}
+                role="button"
+              >
+                {app.location}
+                <MapPin className="inline h-4 w-4 text-[#2196F3] ml-1" />
+              </span>
+            </div>
+            {/* Beschrijving */}
+            <div>
+              <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
+                <FileText className="h-4 w-4" />
+                Beschrijving
+              </span>
+              <span className="block text-[15px] text-[#222]">{app.description}</span>
+            </div>
+          </BlockCard>
+
+          {/* Kolom 3: Documenten */}
+          <BlockCard className="col-span-1 items-center">
+            <h4 className="uppercase text-xs text-[#189BE7] font-bold mb-1 tracking-wider text-center">
+              Documenten
+            </h4>
+            {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
+              <div className="w-full grid gap-2 grid-cols-1">
+                {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
+                {hasDigitalInvoice && <DigitalQuoteDisplay quote={localDigitalInvoice!} title="Factuur" />}
+                {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-center py-7 text-[#189BE7] h-full">
+                <FileText className="h-10 w-10 mb-2" />
+                <span className="text-sm">Geen digitale documenten beschikbaar</span>
+              </div>
+            )}
+          </BlockCard>
         </div>
       </CardContent>
+
+      {/* Actions (Geschiedenis / Verzetten / Verwerken) */}
+      <div className="bg-[#F8FAFC] border-t px-2 py-2 flex flex-wrap md:flex-nowrap justify-end gap-3 mt-2 w-full">
+        <div className="grow flex flex-row justify-end gap-2">
+          <EmployeeAppointmentActions
+            onViewHistory={onViewHistory}
+            onOpenRescheduleModal={onOpenRescheduleModal}
+          />
+        </div>
+        <div className="grow-0">
+          <Sheet>
+            <EmployeeAppointmentSheet
+              hasDigitalQuote={hasDigitalQuote}
+              hasDigitalInvoice={hasDigitalInvoice}
+              hasDigitalAgreement={hasDigitalAgreement}
+              digitalQuote={localDigitalQuote}
+              digitalInvoice={localDigitalInvoice}
+              digitalAgreement={localDigitalAgreement}
+              onCreateQuote={onCreateQuote}
+              onOpenUploadQuote={onOpenUploadQuote}
+              uploadQuoteDialogOpen={uploadQuoteDialogOpen}
+              onQuoteResult={handleQuoteResult}
+              onCloseUploadQuote={onCloseUploadQuote}
+              onCreateInvoice={onCreateInvoice}
+              onOpenUploadInvoice={onOpenUploadInvoice}
+              uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
+              onInvoiceResult={handleInvoiceResult}
+              onCloseUploadInvoice={onCloseUploadInvoice}
+              onCreateAgreement={onCreateAgreement}
+              onOpenUploadAgreement={onOpenUploadAgreement}
+              uploadAgreementDialogOpen={uploadAgreementDialogOpen}
+              onAgreementResult={handleAgreementResult}
+              onCloseUploadAgreement={onCloseUploadAgreement}
+              onOpenProcessModal={() => {}} // If needed
+            />
+          </Sheet>
+        </div>
+      </div>
+
+      {/* Dialogs */}
       <RescheduleDialog
         open={rescheduleModalOpen}
         reason={rescheduleReason}
@@ -210,16 +312,16 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         onSave={onRescheduleSave}
       />
       <AppointmentProcessModal
-        open={processModalOpen}
-        reason={processReason}
-        onReasonChange={setProcessReason}
-        taskChecked={processTaskChecked}
-        onTaskCheckedChange={setProcessTaskChecked}
-        taskDescription={processTaskDescription}
-        onTaskDescriptionChange={setProcessTaskDescription}
-        onCancel={handleCloseProcessModal}
-        onSubmit={handleProcessSubmit}
-        loading={processing}
+        open={false}
+        reason={""}
+        onReasonChange={() => {}}
+        taskChecked={false}
+        onTaskCheckedChange={() => {}}
+        taskDescription={""}
+        onTaskDescriptionChange={() => {}}
+        onCancel={() => {}}
+        onSubmit={() => {}}
+        loading={false}
       />
     </Card>
   );
