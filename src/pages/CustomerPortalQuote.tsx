@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -21,6 +20,7 @@ import { GeneralTerms } from "@/components/workagreements/customer-portal/compon
 import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { Separator } from "@/components/ui/separator";
+import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
 
 const CustomerPortalQuote = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,12 +45,15 @@ const CustomerPortalQuote = () => {
 
   const statusBadge = useQuoteStatusBadge(quote?.status);
 
-  // Sample mockup attachments for demonstration
-  const demoAttachments = [
-    { name: "Situatie dakkapel.jpg", url: "https://source.unsplash.com/random/800x600/?roof" },
-    { name: "Materiaal voorbeelden.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
-    { name: "Algemene voorwaarden.pdf", url: "#" }
-  ];
+  const companyDetails = {
+    name: "Mijn Dakbedrijf B.V.",
+    address: "Dakstraat 10, 1234 AB Amsterdam",
+    email: "info@dakbedrijf.nl",
+    phone: "020-1234567",
+    taxId: "NL123456789B01",
+    bankName: "ING Bank",
+    iban: "NL00 INGB 0000 0000 00"
+  };
 
   if (loading) {
     return (
@@ -110,11 +113,14 @@ const CustomerPortalQuote = () => {
           </CardHeader>
           
           <CardContent className="py-8 space-y-8">
-            <QuoteDetails 
-              customer={customer} 
-              quote={quote} 
-              formatCurrency={formatCurrency}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CompanyDetails companyDetails={companyDetails} />
+              <QuoteDetails 
+                customer={customer} 
+                quote={quote} 
+                formatCurrency={formatCurrency}
+              />
+            </div>
             
             <Separator className="my-8" />
             

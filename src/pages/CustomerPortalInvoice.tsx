@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InvoiceStatus } from "@/types";
@@ -26,6 +25,7 @@ import { GeneralTerms } from "@/components/workagreements/customer-portal/compon
 import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { toast } from "sonner";
+import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
 
 const CustomerPortalInvoice = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +34,16 @@ const CustomerPortalInvoice = () => {
   const [customer, setCustomer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [paymentStarted, setPaymentStarted] = useState(false);
+
+  const companyDetails = {
+    name: "Mijn Dakbedrijf B.V.",
+    address: "Dakstraat 10, 1234 AB Amsterdam",
+    email: "info@dakbedrijf.nl",
+    phone: "020-1234567",
+    taxId: "NL123456789B01",
+    bankName: "ING Bank",
+    iban: "NL00 INGB 0000 0000 00"
+  };
 
   useEffect(() => {
     if (id) {
@@ -51,21 +61,17 @@ const CustomerPortalInvoice = () => {
 
   const statusBadge = useInvoiceStatusBadge(invoice?.status as InvoiceStatus);
 
-  // Add missing function to handle invoice download
   const handleDownloadInvoice = () => {
     toast.success("Factuur wordt gedownload...", {
       description: "Het bestand wordt automatisch gedownload naar uw apparaat."
     });
-    // In a real application, this would trigger an actual download
     console.log("Downloading invoice:", invoice?.id);
   };
 
-  // Add missing function to handle payment start
   const handleStartPayment = () => {
     toast.info("Betaling wordt gestart...", {
       description: "U wordt doorgestuurd naar onze beveiligde betaalomgeving."
     });
-    // Simulate a redirect to payment gateway
     setTimeout(() => {
       setPaymentStarted(true);
     }, 1500);
@@ -140,8 +146,8 @@ const CustomerPortalInvoice = () => {
           
           <CardContent className="py-8 space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CompanyDetails companyDetails={companyDetails} />
               <CustomerDetails customer={customer} />
-              <InvoiceDetails invoice={invoice} />
             </div>
             
             <Separator className="my-8" />
