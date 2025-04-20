@@ -6,12 +6,12 @@ import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
 import { RescheduleDialog } from "./RescheduleDialog";
 import { Appointment } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import { Sheet } from "@/components/ui/sheet";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { useAppointmentProcess } from "./useAppointmentProcess";
 import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
 import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
+import { Sheet } from "@/components/ui/sheet";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -80,7 +80,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!digitalInvoice;
   const hasDigitalAgreement = !!digitalAgreement;
 
-  // Use custom hook for process state
   const {
     processModalOpen,
     processReason,
@@ -95,7 +94,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     handleProcessSubmit,
   } = useAppointmentProcess();
 
-  // Dummy notes/historie, unchanged
   const notities = [
     "Klant wil graag volgende week extra opties besproken krijgen.",
     "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland.",
