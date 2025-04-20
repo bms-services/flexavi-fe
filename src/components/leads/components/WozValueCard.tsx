@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Home, Info, Building, Square, CalendarRange } from "lucide-react";
+import { Home, Info, Building, Square, CalendarRange, Wallet } from "lucide-react";
 import { 
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatCurrency } from "@/utils/format";
 
 interface WozValueCardProps {
   address: string;
@@ -20,6 +21,17 @@ interface PropertyInfo {
   livingArea: number;
   lastAssessmentDate: string;
 }
+
+const calculateRequiredSalary = (wozValue: string): number => {
+  // Remove currency formatting and convert to number
+  const value = Number(wozValue.replace(/[^0-9.-]+/g, ""));
+  
+  // Dutch mortgage rules typically allow 4-4.5x annual gross salary
+  // Using 4.2x as a conservative middle ground
+  const requiredSalary = value / 4.2;
+  
+  return requiredSalary;
+};
 
 export const WozValueCard: React.FC<WozValueCardProps> = ({ address }) => {
   const [propertyInfo, setPropertyInfo] = useState<PropertyInfo | null>(null);
@@ -70,6 +82,10 @@ export const WozValueCard: React.FC<WozValueCardProps> = ({ address }) => {
     );
   }
 
+  const requiredSalary = propertyInfo?.wozValue 
+    ? calculateRequiredSalary(propertyInfo.wozValue)
+    : null;
+
   return (
     <Card className="p-4">
       <div className="flex items-center justify-between mb-4">
@@ -94,6 +110,25 @@ export const WozValueCard: React.FC<WozValueCardProps> = ({ address }) => {
           <div className="bg-primary/5 p-4 rounded-lg">
             <div className="text-2xl font-bold text-primary">{propertyInfo.wozValue}</div>
             <p className="text-xs text-muted-foreground mt-1">Peildatum: {new Date(propertyInfo.lastAssessmentDate).toLocaleDateString('nl-NL')}</p>
+            {requiredSalary && (
+              <div className="mt-3 flex items-center gap-2 text-sm">
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="font-medium">Benodigd bruto jaarsalaris</p>
+                  <p className="text-muted-foreground">{formatCurrency(requiredSalary)}</p>
+                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-xs">Gebaseerd op een hypotheek van 4.2x het bruto jaarsalaris. Dit is een indicatie; de werkelijke leencapaciteit hangt af van meerdere factoren.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
