@@ -13,11 +13,13 @@ import { WorkAgreementStatus } from "@/types";
 interface StatusSelectProps {
   status: WorkAgreementStatus;
   onStatusChange: (value: WorkAgreementStatus) => void;
+  disabled?: boolean;
 }
 
 export const StatusSelect: React.FC<StatusSelectProps> = ({
   status,
   onStatusChange,
+  disabled = false
 }) => {
   return (
     <div>
@@ -25,6 +27,7 @@ export const StatusSelect: React.FC<StatusSelectProps> = ({
       <Select
         value={status}
         onValueChange={(value: WorkAgreementStatus) => onStatusChange(value)}
+        disabled={disabled}
       >
         <SelectTrigger>
           <SelectValue placeholder="Selecteer een status" />

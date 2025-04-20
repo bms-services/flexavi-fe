@@ -10,6 +10,7 @@ interface WorkDetailsProps {
   warranty: string;
   startDate: string;
   onFieldChange: (field: string, value: string) => void;
+  disabled?: boolean;
 }
 
 export const WorkDetails: React.FC<WorkDetailsProps> = ({
@@ -18,6 +19,7 @@ export const WorkDetails: React.FC<WorkDetailsProps> = ({
   warranty,
   startDate,
   onFieldChange,
+  disabled = false
 }) => {
   return (
     <div className="space-y-4">
@@ -28,6 +30,7 @@ export const WorkDetails: React.FC<WorkDetailsProps> = ({
           value={description}
           onChange={e => onFieldChange("description", e.target.value)}
           placeholder="Bijv. Dakrenovatie en isolatie - Werkovereenkomst"
+          disabled={disabled}
         />
       </div>
       
@@ -39,6 +42,7 @@ export const WorkDetails: React.FC<WorkDetailsProps> = ({
           onChange={e => onFieldChange("workDescription", e.target.value)}
           placeholder="Beschrijf de uit te voeren werkzaamheden"
           rows={4}
+          disabled={disabled}
         />
       </div>
       
@@ -52,6 +56,7 @@ export const WorkDetails: React.FC<WorkDetailsProps> = ({
             max="30"
             value={warranty}
             onChange={e => onFieldChange("warranty", e.target.value)}
+            disabled={disabled}
           />
         </div>
         
@@ -62,6 +67,7 @@ export const WorkDetails: React.FC<WorkDetailsProps> = ({
             type="date"
             value={startDate ? new Date(startDate).toISOString().split('T')[0] : ''}
             onChange={e => onFieldChange("startDate", new Date(e.target.value).toISOString())}
+            disabled={disabled}
           />
         </div>
       </div>

@@ -44,7 +44,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
       {
         percentage: 25,
         description: "Betaling",
-        dueType: "upfront"
+        dueType: "upfront" as "upfront" | "start" | "during" | "completion"
       }
     ];
     onPaymentInstallmentsChange(newInstallments);

@@ -10,6 +10,7 @@ interface QuoteSelectorProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   onQuoteSelect: (quote: Quote) => void;
+  disabled?: boolean;
 }
 
 export const QuoteSelector: React.FC<QuoteSelectorProps> = ({
@@ -18,6 +19,7 @@ export const QuoteSelector: React.FC<QuoteSelectorProps> = ({
   searchTerm,
   onSearchChange,
   onQuoteSelect,
+  disabled = false
 }) => {
   return (
     <div className="space-y-2">
@@ -28,6 +30,7 @@ export const QuoteSelector: React.FC<QuoteSelectorProps> = ({
           className="pl-8"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
+          disabled={disabled}
         />
       </div>
       <div className="border rounded-md h-32 overflow-y-auto">
@@ -41,7 +44,7 @@ export const QuoteSelector: React.FC<QuoteSelectorProps> = ({
               <div 
                 key={q.id} 
                 className={`p-2 hover:bg-gray-50 cursor-pointer ${quote?.id === q.id ? 'bg-primary/5 border-l-4 border-primary' : ''}`}
-                onClick={() => onQuoteSelect(q)}
+                onClick={() => !disabled && onQuoteSelect(q)}
               >
                 <div className="font-medium">
                   {q.id.replace("quote-", "OF-")}
