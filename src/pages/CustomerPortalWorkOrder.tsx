@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { ArrowLeft, FileText, Edit, Pen, Image, CreditCard, FileText as FileTextIcon } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
-import { Badge } from "@/components/ui/badge";
 import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
 import { CustomerInfoCard } from "@/components/workagreements/customer-portal/components/CustomerInfoCard";
 import { AgreementDetails } from "@/components/workagreements/customer-portal/components/AgreementDetails";
@@ -16,7 +10,8 @@ import { ExclusionsCard } from "@/components/workagreements/customer-portal/comp
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { PaymentDetails } from "@/components/workagreements/customer-portal/components/PaymentDetails";
-import Signature from "@/components/customer/Signature";
+import { WorkOrderHeader } from "@/components/customer-portal/workorders/components/WorkOrderHeader";
+import { SignatureSection } from "@/components/customer-portal/workorders/components/SignatureSection";
 import { toast } from "sonner";
 
 const mockWorkOrder = {
@@ -30,22 +25,8 @@ const mockWorkOrder = {
   customerNotes: "Graag parkeren op de oprit"
 };
 
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "planned":
-      return <Badge className="bg-yellow-500 hover:bg-yellow-600">Gepland</Badge>;
-    case "in_progress":
-      return <Badge className="bg-blue-500 hover:bg-blue-600">In Uitvoering</Badge>;
-    case "completed":
-      return <Badge className="bg-green-500 hover:bg-green-600">Afgerond</Badge>;
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-};
-
 const CustomerPortalWorkOrder = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [workOrder, setWorkOrder] = useState<any>(null);
   const [signature, setSignature] = useState<string | null>(null);
@@ -121,17 +102,7 @@ const CustomerPortalWorkOrder = () => {
       subtitle="Details van de geplande werkzaamheden"
     >
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)}
-            className="gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Terug
-          </Button>
-          {getStatusBadge(workOrder.status)}
-        </div>
+        <WorkOrderHeader workOrderId={workOrder.id} status={workOrder.status} />
 
         <div className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2">
@@ -190,48 +161,12 @@ const CustomerPortalWorkOrder = () => {
             formatCurrency={formatCurrency}
           />
 
-          {!workOrder.customerSignature && (
-            <Card className="p-6 space-y-4">
-              <h3 className="font-medium flex items-center gap-2">
-                <FileTextIcon className="h-4 w-4 text-primary" />
-                Handtekening
-              </h3>
-              <Signature onSignatureChange={handleSignatureChange} />
-              <div className="flex justify-end gap-4">
-                <Button
-                  variant="outline"
-                  onClick={handleRevisionRequest}
-                  className="gap-2"
-                >
-                  <Edit className="h-4 w-4" />
-                  Revisie Verzoeken
-                </Button>
-                <Button
-                  onClick={handleSign}
-                  className="gap-2"
-                >
-                  <Pen className="h-4 w-4" />
-                  Ondertekenen
-                </Button>
-              </div>
-            </Card>
-          )}
-
-          {workOrder.customerSignature && (
-            <Card className="p-6">
-              <h3 className="font-medium mb-4 flex items-center gap-2">
-                <FileTextIcon className="h-4 w-4 text-primary" />
-                Handtekening
-              </h3>
-              <div className="bg-muted rounded-lg p-4">
-                <img 
-                  src={workOrder.customerSignature} 
-                  alt="Handtekening" 
-                  className="max-h-40 mx-auto"
-                />
-              </div>
-            </Card>
-          )}
+          <SignatureSection
+            customerSignature={workOrder.customerSignature}
+            onSignatureChange={handleSignatureChange}
+            onSign={handleSign}
+            onRevisionRequest={handleRevisionRequest}
+          />
         </div>
       </div>
     </CustomerPortalLayout>
