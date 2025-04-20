@@ -26,8 +26,8 @@ const Pipeline = () => {
   
   return (
     <Layout>
-      <div className="container py-6 space-y-6 w-full max-w-full overflow-hidden">
-        <div className="flex flex-col gap-4">
+      <div className="container mx-auto py-6 space-y-6 w-full max-w-full overflow-hidden">
+        <div className="flex flex-col gap-4 overflow-hidden">
           <PipelineHeader 
             pipelines={pipelines}
             selectedPipelineId={selectedPipelineId}
