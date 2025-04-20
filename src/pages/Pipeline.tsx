@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { PipelineBoard } from "@/components/pipeline/PipelineBoard";
@@ -82,7 +81,6 @@ const Pipeline = () => {
   const [pipelines, setPipelines] = useState<PipelineType[]>(samplePipelines);
   const [items, setItems] = useState<PipelineItem[]>(sampleItems);
   const [selectedPipelineId, setSelectedPipelineId] = useState<string>(samplePipelines[0].id);
-  
   const [managePipelineOpen, setManagePipelineOpen] = useState(false);
   const [createPipelineOpen, setCreatePipelineOpen] = useState(false);
   const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
@@ -172,9 +170,9 @@ const Pipeline = () => {
   
   return (
     <Layout>
-      <div className="container py-6">
-        <div className="flex flex-col gap-6">
-          <div className="flex justify-between items-center">
+      <div className="container py-6 space-y-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <h1 className="text-3xl font-bold tracking-tight">Pijplijn</h1>
             <PipelineSelector 
               pipelines={pipelines}

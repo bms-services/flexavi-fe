@@ -13,7 +13,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
   item,
   isDragging,
 }) => {
-  // Get the appropriate icon based on the object type
   const getItemIcon = () => {
     switch (item.objectType) {
       case "lead":
@@ -30,10 +29,19 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
   };
 
   return (
-    <Card className={`${isDragging ? 'opacity-70' : ''} hover:bg-accent transition-colors cursor-pointer`}>
+    <Card 
+      className={`
+        ${isDragging ? 'opacity-70 rotate-3 scale-105' : ''} 
+        hover:bg-accent hover:-translate-y-0.5 
+        transition-all duration-200 
+        cursor-move
+      `}
+    >
       <CardContent className="p-3">
         <div className="flex items-center gap-2">
-          {getItemIcon()}
+          <span className="text-muted-foreground">
+            {getItemIcon()}
+          </span>
           <span className="text-sm font-medium truncate">{item.name}</span>
         </div>
       </CardContent>

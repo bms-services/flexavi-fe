@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Pipeline } from "@/types/pipeline";
+import type { Pipeline } from "@/types/pipeline";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Plus, Settings } from "lucide-react";
@@ -21,7 +21,7 @@ export const PipelineSelector: React.FC<PipelineSelectorProps> = ({
   onManagePipelines,
 }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <Select value={selectedPipelineId} onValueChange={onSelectPipeline}>
         <SelectTrigger className="w-[240px]">
           <SelectValue placeholder="Selecteer een pijplijn" />
@@ -35,15 +35,19 @@ export const PipelineSelector: React.FC<PipelineSelectorProps> = ({
         </SelectContent>
       </Select>
       
-      <Button variant="outline" size="sm" onClick={onCreatePipeline}>
-        <Plus className="h-4 w-4 mr-2" />
-        Nieuwe pijplijn
-      </Button>
-      
-      <Button variant="outline" size="sm" onClick={onManagePipelines}>
-        <Settings className="h-4 w-4 mr-2" />
-        Beheer pijplijnen
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={onCreatePipeline}>
+          <Plus className="h-4 w-4 mr-2" />
+          <span className="hidden sm:inline">Nieuwe pijplijn</span>
+          <span className="sm:hidden">Nieuw</span>
+        </Button>
+        
+        <Button variant="outline" size="sm" onClick={onManagePipelines}>
+          <Settings className="h-4 w-4 mr-2" />
+          <span className="hidden sm:inline">Beheer pijplijnen</span>
+          <span className="sm:hidden">Beheer</span>
+        </Button>
+      </div>
     </div>
   );
 };
