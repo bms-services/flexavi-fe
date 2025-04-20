@@ -33,6 +33,7 @@ export const navigationItems: NavItem[] = [
   { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Producten", href: "/products", icon: Package },
   { name: "Partners", href: "/partners", icon: Handshake },
+  { name: "Medewerker Planning", href: "/employee/planning", icon: Calendar },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
