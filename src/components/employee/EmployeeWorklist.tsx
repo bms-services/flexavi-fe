@@ -4,6 +4,7 @@ import { Appointment } from "@/types";
 import { EmployeeAppointmentCard } from "./EmployeeAppointmentCard";
 import { mockLeads } from "@/data/mockLeads";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
+import { CalendarDays } from "lucide-react";
 
 interface EmployeeWorklistProps {
   appointments: Appointment[];
@@ -129,12 +130,23 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const getLead = (leadId: string) => mockLeads.find(l => l.id === leadId);
 
   return (
-    <div>
-      <h2 className="text-xl font-bold px-6 pt-6 mb-3 text-roof-700/90">{dayLabel} - Werklijst</h2>
+    <div className="bg-white">
+      <div className="flex items-center gap-2 px-6 py-4 border-b bg-white sticky top-0 z-10">
+        <CalendarDays className="h-5 w-5 text-roof-600" />
+        <h2 className="text-lg font-semibold text-roof-700">
+          {dayLabel} - Werklijst
+        </h2>
+      </div>
+      
       {appointments.length === 0 ? (
-        <div className="text-center text-muted-foreground py-10 text-base">Geen afspraken gepland voor deze dag.</div>
+        <div className="py-16 text-center">
+          <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+            <CalendarDays className="h-8 w-8 text-gray-400" />
+          </div>
+          <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
+        </div>
       ) : (
-        <div className="px-4 py-2 space-y-5">
+        <div className="p-4 grid gap-4 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];

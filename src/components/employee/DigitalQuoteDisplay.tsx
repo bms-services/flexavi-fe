@@ -1,6 +1,7 @@
 
 import React from "react";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
+import { FileText } from "lucide-react";
 
 interface DigitalQuoteDisplayProps {
   quote: ReceiptData;
@@ -9,16 +10,21 @@ interface DigitalQuoteDisplayProps {
 
 export const DigitalQuoteDisplay: React.FC<DigitalQuoteDisplayProps> = ({ 
   quote, 
-  title = "Offerte (digitaal)" 
+  title = "Document" 
 }) => (
-  <div className="bg-accent/30 border border-accent rounded-md p-3 text-sm mt-1 shadow-sm">
-    <div className="font-medium mb-1 text-accent-foreground flex items-center gap-2">
-      <span className="text-xs bg-accent px-2 py-0.5 rounded font-semibold">{title}</span>
+  <div className="bg-gray-50 border rounded-md p-3 text-sm shadow-sm hover:bg-gray-100 transition-colors">
+    <div className="flex items-center gap-2 mb-1.5">
+      <FileText className="h-3.5 w-3.5 text-roof-500" />
+      <span className="text-xs font-medium text-roof-600">{title}</span>
     </div>
-    <ul className="list-disc ml-4 text-xs text-muted-foreground mt-1">
+    
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
       {Object.entries(quote || {}).map(([key, val]) => (
-        <li key={key}><b>{key}:</b> {String(val)}</li>
+        <div key={key} className="text-xs overflow-hidden text-ellipsis">
+          <span className="font-medium text-gray-500">{key}:</span>{" "}
+          <span className="text-gray-700">{String(val)}</span>
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 );
