@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 interface NavLinkProps extends NavItem {
   isActive: boolean;
@@ -11,6 +12,7 @@ interface NavLinkProps extends NavItem {
 
 export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, children, isActive }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   
   if (children) {
     return (
@@ -33,7 +35,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
         </button>
         
         {isOpen && (
-          <div className="pl-8 mt-1 space-y-1">
+          <div className="mt-1 space-y-1">
             {children.map((child) => (
               <Link
                 key={child.name}
