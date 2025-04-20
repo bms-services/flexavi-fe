@@ -11,6 +11,8 @@ import { Attachments } from "@/components/workagreements/customer-portal/compone
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { PaymentDetails } from "@/components/workagreements/customer-portal/components/PaymentDetails";
 import { WorkOrderHeader } from "@/components/customer-portal/workorders/components/WorkOrderHeader";
+import { WorkOrderDetails } from "@/components/customer-portal/workorders/components/WorkOrderDetails";
+import { PaymentSection } from "@/components/customer-portal/workorders/components/PaymentSection";
 import { SignatureSection } from "@/components/customer-portal/workorders/components/SignatureSection";
 import { toast } from "sonner";
 
@@ -104,70 +106,24 @@ const CustomerPortalWorkOrder = () => {
       <div className="space-y-6">
         <WorkOrderHeader workOrderId={workOrder.id} status={workOrder.status} />
 
-        <div className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <CompanyDetails companyDetails={companyDetails} />
-            <CustomerInfoCard customer={customerInfo} />
-          </div>
-
-          <AgreementDetails 
-            workAgreement={{
-              totalAmount: 2800.50,
-              startDate: workOrder.plannedStartDate,
-              warranty: "10"
-            }}
-            formatCurrency={formatCurrency}
-          />
-
-          <WorkDescription description={workOrder.notes} />
-
-          <ProvisionsCard provisions={[
-            "Ter beschikking stellen stroomvoorziening 230 volt 16 amp.",
-            "Sanitaire voorzieningen",
-            "Bereikbaarheid werkplek met materieel",
-            "Oponthoud door werkzaamheden van derden worden doorberekend a €85 p/u per man"
-          ]} />
-
-          <ExclusionsCard exclusions={[
-            "Werkzaamheden die niet genoemd zijn vallen buiten deze werkovereenkomst",
-            "Werkzaamheden aan asbesthoudende materialen",
-            "Werkzaamheden anders dan omschreven",
-            "Parkeerkosten"
-          ]} />
-
-          <Attachments 
-            defaultAttachments={[
-              { 
-                name: "Werkopdracht.pdf", 
-                url: "https://example.com/workorder.pdf" 
-              },
-              { 
-                name: "Situatiefoto.jpg", 
-                url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop" 
-              }
-            ]} 
-          />
-
-          <GeneralTerms />
-
-          <PaymentDetails 
-            workAgreement={{
-              paymentMethod: "bank",
-              paymentInstallments: [
-                { description: "Aanbetaling", percentage: 30 },
-                { description: "Bij oplevering", percentage: 70 }
-              ]
-            }}
-            formatCurrency={formatCurrency}
-          />
-
-          <SignatureSection
-            customerSignature={workOrder.customerSignature}
-            onSignatureChange={handleSignatureChange}
-            onSign={handleSign}
-            onRevisionRequest={handleRevisionRequest}
-          />
+        <div className="grid gap-6 md:grid-cols-2">
+          <CompanyDetails companyDetails={companyDetails} />
+          <CustomerInfoCard customer={customerInfo} />
         </div>
+
+        <WorkOrderDetails 
+          description={workOrder.notes}
+          customerNotes={workOrder.customerNotes}
+        />
+
+        <PaymentSection totalAmount={2800.50} />
+
+        <SignatureSection
+          customerSignature={workOrder.customerSignature}
+          onSignatureChange={handleSignatureChange}
+          onSign={handleSign}
+          onRevisionRequest={handleRevisionRequest}
+        />
       </div>
     </CustomerPortalLayout>
   );
