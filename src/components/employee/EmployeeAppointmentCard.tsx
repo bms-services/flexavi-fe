@@ -129,12 +129,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         <div className="p-0">
           {lead && (
             <LeadInfoCard
-              lead={lead}
+              lead={{
+                ...lead,
+                appointmentDateTime: `${app.date} · ${app.startTime} - ${app.endTime}`
+              }}
               isRescheduled={isRescheduled}
               rescheduleReason={rescheduleReason}
               historyEntries={historyEntries}
               notes={notities}
-              showMapButton={false}
             />
           )}
           <div className="px-6 pb-6">

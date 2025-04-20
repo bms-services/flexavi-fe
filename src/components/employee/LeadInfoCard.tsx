@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Calendar, MapPin, Phone, Mail, NoteText, History } from "lucide-react";
+import { Calendar, MapPin, Phone, Mail, FileText, History } from "lucide-react";
 
 interface LeadInfoCardProps {
   lead: {
@@ -14,6 +14,7 @@ interface LeadInfoCardProps {
   notes?: string[];
   isRescheduled?: boolean;
   rescheduleReason?: string;
+  showMapButton?: boolean;
 }
 
 export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
@@ -22,6 +23,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   notes = [],
   isRescheduled = false,
   rescheduleReason,
+  showMapButton = false,
 }) => {
   return (
     <section className="bg-[#F1F0FB] rounded-2xl p-5 sm:p-8 shadow border border-[#e0eefe] w-full max-w-3xl mx-auto animate-fade-in">
@@ -61,7 +63,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
         {/* Notities */}
         <div className="bg-white/70 rounded-lg px-4 py-3 shadow flex flex-col h-full">
           <div className="flex items-center gap-2 mb-2">
-            <NoteText className="w-4 h-4 text-[#7E69AB]" />
+            <FileText className="w-4 h-4 text-[#7E69AB]" />
             <span className="font-semibold text-[#221F26] text-sm md:text-base">Klantnotities</span>
           </div>
           {notes.length > 0 ? (
@@ -118,4 +120,3 @@ const UserIcon = () => (
     <path d="M6 20c0-2.21 3.582-4 6-4s6 1.79 6 4" />
   </svg>
 );
-
