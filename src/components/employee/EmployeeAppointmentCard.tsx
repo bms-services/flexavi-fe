@@ -165,16 +165,19 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         onSave={onRescheduleSave}
       />
 
+      {/* Offerte Upload Modal */}
       <ReceiptUploadDialog
         open={uploadQuoteDialogOpen}
         onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()}
         onResult={onQuoteResult}
       />
+      {/* Factuur Upload Modal */}
       <ReceiptUploadDialog
         open={uploadInvoiceDialogOpen}
         onOpenChange={open => open ? onOpenUploadInvoice() : onCloseUploadInvoice()}
         onResult={onInvoiceResult}
       />
+      {/* Werkovereenkomst Upload Modal */}
       <ReceiptUploadDialog
         open={uploadAgreementDialogOpen}
         onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()}
