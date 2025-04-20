@@ -6,6 +6,9 @@ import { LeadStats } from "./LeadStats";
 import { ActiveQuotes } from "./ActiveQuotes";
 import { RecentActivities } from "./RecentActivities";
 import { LeadDetailActions } from "./LeadActions";
+import { WozValueCard } from "./WozValueCard";
+import { LeadLocationMap } from "./LeadLocationMap";
+import { LeadMedia } from "./LeadMedia";
 
 interface LeadOverviewProps {
   lead: LeadDetail;
@@ -19,8 +22,17 @@ export const LeadOverview: React.FC<LeadOverviewProps> = ({ lead }) => {
         <LeadStats lead={lead} />
       </div>
 
-      <ActiveQuotes quotes={lead.quotes} />
-      <RecentActivities activities={[...lead.quotes, ...lead.invoices]} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <WozValueCard address={lead.address} />
+        <LeadLocationMap address={lead.address} />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <ActiveQuotes quotes={lead.quotes} />
+        <RecentActivities activities={[...lead.quotes, ...lead.invoices]} />
+      </div>
+
+      <LeadMedia leadId={lead.id} />
       <LeadDetailActions />
     </div>
   );

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Note } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
@@ -11,24 +10,100 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusCircle, MessageSquare } from "lucide-react";
+import { PlusCircle, MessageSquare, Bold, Italic, List, ListOrdered } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { nl } from "date-fns/locale";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import { useToast } from "@/hooks/use-toast";
 
 interface NotesTabProps {
   notes: Note[];
   leadId: string;
 }
 
+// TipTap editor menu component
+const EditorMenu = ({ editor }: { editor: any }) => {
+  if (!editor) return null;
+
+  return (
+    <div className="border-b mb-4 pb-2 flex gap-1">
+      <Button
+        type="button"
+        size="icon"
+        variant={editor.isActive('bold') ? 'default' : 'outline'}
+        onClick={() => editor.chain().focus().toggleBold().run()}
+      >
+        <Bold className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        size="icon"
+        variant={editor.isActive('italic') ? 'default' : 'outline'}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+      >
+        <Italic className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        size="icon"
+        variant={editor.isActive('bulletList') ? 'default' : 'outline'}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      >
+        <List className="h-4 w-4" />
+      </Button>
+      <Button
+        type="button"
+        size="icon"
+        variant={editor.isActive('orderedList') ? 'default' : 'outline'}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      >
+        <ListOrdered className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
+
 export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
-  const [newNote, setNewNote] = useState("");
+  const { toast } = useToast();
+  const [allNotes, setAllNotes] = useState<Note[]>(notes);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'Typ hier je notitie...',
+      }),
+    ],
+    content: '',
+  });
 
   const handleAddNote = () => {
-    if (!newNote.trim()) return;
+    if (!editor || editor.isEmpty) return;
     
-    // In a real app, this would send the note to a backend
-    alert("Notitie toevoegen functionaliteit moet nog worden geïmplementeerd");
-    setNewNote("");
+    const content = editor.getHTML();
+    
+    // Create a new note object
+    const newNote: Note = {
+      id: `note-${Date.now()}`,
+      leadId,
+      content,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    // Update state with the new note
+    setAllNotes([newNote, ...allNotes]);
+    
+    // Reset the editor
+    editor.commands.clearContent();
+    
+    // Show success toast
+    toast({
+      title: "Notitie toegevoegd",
+      description: "De notitie is succesvol toegevoegd.",
+    });
   };
 
   return (
@@ -41,15 +116,13 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Textarea
-            placeholder="Typ hier je notitie..."
-            value={newNote}
-            onChange={(e) => setNewNote(e.target.value)}
-            rows={4}
-          />
+          <div className="border rounded-md p-3">
+            <EditorMenu editor={editor} />
+            <EditorContent editor={editor} className="min-h-[120px] prose prose-sm max-w-none" />
+          </div>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button onClick={handleAddNote}>
+          <Button onClick={handleAddNote} disabled={!editor || editor.isEmpty}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Notitie Toevoegen
           </Button>
@@ -58,13 +131,13 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
 
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Notitiegeschiedenis</h3>
-        {notes.length === 0 ? (
+        {allNotes.length === 0 ? (
           <p className="text-muted-foreground">
             Nog geen notities voor deze lead.
           </p>
         ) : (
           <div className="space-y-4">
-            {notes
+            {allNotes
               .sort(
                 (a, b) =>
                   new Date(b.createdAt).getTime() -
@@ -91,7 +164,10 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{note.content}</p>
+                    <div 
+                      className="prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: note.content }} 
+                    />
                   </CardContent>
                 </Card>
               ))}
