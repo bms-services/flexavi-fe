@@ -10,6 +10,12 @@ import { TeamSelection } from "./form/TeamSelection";
 import { DescriptionField } from "./form/DescriptionField";
 import { Lead, AppointmentStatus } from "@/types";
 import { addDays, format } from "date-fns";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface NewAppointmentFormProps {
   onSubmit: (data: any) => void;
@@ -81,7 +87,7 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 max-h-[70vh] overflow-y-auto p-1">
         <div className="space-y-4">
           <CustomerSearch
             selectedCustomer={selectedCustomer}

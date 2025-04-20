@@ -86,10 +86,10 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
             <User className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0">
+        <PopoverContent className="w-[400px] p-0" align="start">
           <Command>
             <CommandInput placeholder="Zoek een klant..." />
-            <CommandList>
+            <CommandList className="max-h-[200px] overflow-y-auto">
               <CommandEmpty>
                 <div className="flex flex-col items-center justify-center p-4 gap-2">
                   <p>Geen klanten gevonden.</p>
