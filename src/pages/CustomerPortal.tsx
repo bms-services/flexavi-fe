@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { QuoteStatus } from "@/types";
@@ -75,8 +76,12 @@ const CustomerPortal = () => {
   if (!quote || !customer) {
     return (
       <CustomerPortalLayout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
+        <div className="flex items-center justify-center py-12">
+          <Card className="max-w-md w-full">
+            <CardContent className="py-12 text-center">
+              <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
+            </CardContent>
+          </Card>
         </div>
       </CustomerPortalLayout>
     );
@@ -109,43 +114,41 @@ const CustomerPortal = () => {
       title="Offerte Details" 
       subtitle="Bekijk en beheer uw offerte"
     >
-      <div className="py-6 md:py-12 px-4">
-        <div className="container mx-auto flex justify-center">
-          <Card className="w-full max-w-3xl border shadow-md">
-            <CardHeader className="border-b pb-6 bg-white">
-              <QuotePortalHeader
-                quoteId={quote.id}
-                description={quote.description}
-                status={quote.status as QuoteStatus}
-              />
-            </CardHeader>
+      <div className="max-w-3xl mx-auto">
+        <Card className="border shadow-md overflow-hidden">
+          <CardHeader className="border-b pb-6 bg-white">
+            <QuotePortalHeader
+              quoteId={quote.id}
+              description={quote.description}
+              status={quote.status as QuoteStatus}
+            />
+          </CardHeader>
+          
+          <CardContent className="py-6 space-y-6 bg-white">
+            <QuoteDetails 
+              customer={customer}
+              quote={quote}
+              formatCurrency={formatCurrency}
+            />
             
-            <CardContent className="py-6 space-y-6 bg-white">
-              <QuoteDetails 
-                customer={customer}
-                quote={quote}
+            <h3 className="text-sm font-medium text-gray-500 pb-2 border-b mt-8">Offerteregels</h3>
+            <div className="overflow-x-auto -mx-6 px-6">
+              <QuoteLineItems 
+                lineItems={quote.lineItems}
                 formatCurrency={formatCurrency}
               />
-              
-              <h3 className="text-sm font-medium text-gray-500 pb-2 border-b mt-8">Offerteregels</h3>
-              <div className="overflow-x-auto -mx-6 px-6">
-                <QuoteLineItems 
-                  lineItems={quote.lineItems}
-                  formatCurrency={formatCurrency}
-                />
-              </div>
-              
-              <QuoteSignatureSection onSignatureChange={setSignature} />
-            </CardContent>
+            </div>
             
-            <CardFooter className="bg-white border-t">
-              <QuoteActions
-                onRevisionRequest={() => setIsRevisionDialogOpen(true)}
-                onAccept={handleAccept}
-              />
-            </CardFooter>
-          </Card>
-        </div>
+            <QuoteSignatureSection onSignatureChange={setSignature} />
+          </CardContent>
+          
+          <CardFooter className="bg-white border-t py-4">
+            <QuoteActions
+              onRevisionRequest={() => setIsRevisionDialogOpen(true)}
+              onAccept={handleAccept}
+            />
+          </CardFooter>
+        </Card>
       </div>
 
       <QuoteRevisionDialog

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -5,6 +6,9 @@ import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 import { mockInvoices } from "@/data/mockInvoices";
 import { WorkOrdersList } from '@/components/customer-portal/workorders/WorkOrdersList';
 import { CustomerPortalLayout } from '@/components/customer-portal/layout/CustomerPortalLayout';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { FileText, ChevronRight, Clipboard, CreditCard } from 'lucide-react';
 
 // Mock data for work orders
 const mockWorkOrders = [
@@ -25,6 +29,8 @@ const mockWorkOrders = [
 ];
 
 const CustomerDashboard = () => {
+  const navigate = useNavigate();
+  
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
@@ -32,82 +38,121 @@ const CustomerDashboard = () => {
     }).format(amount);
   };
 
+  const handleNavigateToQuote = (id: string) => {
+    navigate(`/portal/quote/${id}`);
+  };
+
+  const handleNavigateToInvoice = (id: string) => {
+    navigate(`/portal/invoice/${id}`);
+  };
+
   return (
-    <CustomerPortalLayout>
-      <div className="py-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <Card className="border shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="bg-white border-b">
-                <CardTitle className="text-xl text-primary">Werkopdrachten</CardTitle>
-                <CardDescription>
-                  Overzicht van al uw werkopdrachten
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="bg-white pt-6">
-                <WorkOrdersList workOrders={mockWorkOrders} />
-              </CardContent>
-            </Card>
+    <CustomerPortalLayout
+      title="Mijn Dashboard"
+      subtitle="Bekijk uw lopende offertes, facturen en werkzaamheden"
+    >
+      <div className="space-y-8">
+        {/* Welkom kaart */}
+        <Card className="border shadow-sm bg-gradient-to-r from-primary/5 to-white">
+          <CardContent className="pt-6">
+            <h2 className="text-xl font-semibold mb-2">Welkom bij uw persoonlijke portaal</h2>
+            <p className="text-muted-foreground mb-4">
+              Via dit dashboard kunt u uw offertes, facturen en werkzaamheden bekijken en beheren.
+              Heeft u vragen? Neem gerust contact met ons op.
+            </p>
+            <Button variant="outline" className="mt-2">Contact Opnemen</Button>
+          </CardContent>
+        </Card>
 
-            <Card className="border shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="bg-white border-b">
-                <CardTitle className="text-xl text-primary">Offertes</CardTitle>
-                <CardDescription>
-                  Bekijk en beheer uw offertes
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="bg-white pt-6">
-                <div className="space-y-4">
-                  {mockQuotes.slice(0, 3).map((quote) => (
-                    <div
-                      key={quote.id}
-                      className="p-4 border rounded-lg hover:border-primary hover:shadow-md transition-all cursor-pointer bg-white"
-                      onClick={() => window.location.href = `/portal/quote/${quote.id}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium text-primary">{quote.description}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Offerte #{quote.id.replace("quote-", "")}
-                          </p>
-                        </div>
-                        <p className="font-medium">{formatCurrency(quote.amount)}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+        {/* Lopende Werkopdrachten */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center">
+              <Clipboard className="mr-2 h-5 w-5 text-primary" />
+              Lopende Werkzaamheden
+            </h2>
+            <Button variant="ghost" size="sm" className="text-primary">
+              Alle Werkzaamheden <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+          <WorkOrdersList workOrders={mockWorkOrders} />
+        </div>
 
-            <Card className="border shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="bg-white border-b">
-                <CardTitle className="text-xl text-primary">Facturen</CardTitle>
-                <CardDescription>
-                  Bekijk en beheer uw facturen
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="bg-white pt-6">
-                <div className="space-y-4">
-                  {mockInvoices.slice(0, 3).map((invoice) => (
-                    <div
-                      key={invoice.id}
-                      className="p-4 border rounded-lg hover:border-primary hover:shadow-md transition-all cursor-pointer bg-white"
-                      onClick={() => window.location.href = `/portal/invoice/${invoice.id}`}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-medium text-primary">{invoice.description}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Factuur #{invoice.id.replace("invoice-", "")}
-                          </p>
-                        </div>
-                        <p className="font-medium">{formatCurrency(invoice.amount)}</p>
-                      </div>
+        {/* Recente Offertes */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center">
+              <FileText className="mr-2 h-5 w-5 text-primary" />
+              Recente Offertes
+            </h2>
+            <Button variant="ghost" size="sm" className="text-primary">
+              Alle Offertes <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {mockQuotes.slice(0, 3).map((quote) => (
+              <Card 
+                key={quote.id}
+                className="border shadow-sm hover:shadow-md transition-all cursor-pointer"
+                onClick={() => handleNavigateToQuote(quote.id)}
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">
+                    Offerte #{quote.id.replace("quote-", "")}
+                  </CardTitle>
+                  <CardDescription>{quote.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-4 pt-0">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(quote.createdAt).toLocaleDateString('nl-NL')}
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    <div className="font-medium text-primary">
+                      {formatCurrency(quote.amount)}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Recente Facturen */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center">
+              <CreditCard className="mr-2 h-5 w-5 text-primary" />
+              Recente Facturen
+            </h2>
+            <Button variant="ghost" size="sm" className="text-primary">
+              Alle Facturen <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {mockInvoices.slice(0, 3).map((invoice) => (
+              <Card 
+                key={invoice.id}
+                className="border shadow-sm hover:shadow-md transition-all cursor-pointer"
+                onClick={() => handleNavigateToInvoice(invoice.id)}
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">
+                    Factuur #{invoice.id.replace("invoice-", "")}
+                  </CardTitle>
+                  <CardDescription>{invoice.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-4 pt-0">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(invoice.createdAt).toLocaleDateString('nl-NL')}
+                    </div>
+                    <div className="font-medium text-primary">
+                      {formatCurrency(invoice.amount)}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
