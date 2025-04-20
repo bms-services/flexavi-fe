@@ -20,7 +20,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[13px] font-medium transition-colors outline-none",
+            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none", // Changed from text-[13px] to text-[14px]
             "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
             "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sidebar-accent"
           )}
@@ -41,7 +41,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
                 key={child.name}
                 to={child.href}
                 className={cn(
-                  "flex items-center px-2 py-1.5 rounded-md text-[13px] transition-colors outline-none",
+                  "flex items-center px-2 py-1.5 rounded-md text-[14px] transition-colors outline-none", // Changed from text-[13px] to text-[14px]
                   location.pathname === child.href
                     ? "bg-sidebar-accent/30 text-sidebar-foreground font-medium"
                     : "text-sidebar-foreground/80 hover:bg-sidebar-accent/20 hover:text-sidebar-foreground"
@@ -61,7 +61,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
     <Link
       to={href}
       className={cn(
-        "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[13px] font-medium transition-colors outline-none",
+        "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none", // Changed from text-[13px] to text-[14px]
         isActive
           ? "bg-sidebar-accent text-white"
           : "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
@@ -76,4 +76,3 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
     </Link>
   );
 };
-
