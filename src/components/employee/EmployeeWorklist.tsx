@@ -77,34 +77,19 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
+  // let navigatie via callback van buitenaf doen, want useNavigate geeft error in event-handlers buiten component
   const handleCreateQuote = (leadId: string) => {
-    // @ts-ignore
-    import("react-router-dom").then(({ useNavigate }) => {
-      const navigate = useNavigate();
-      navigate('/quotes/create', { state: { leadId } });
-    });
+    window.location.href = `/quotes/create?leadId=${leadId}`;
   };
   const handleCreateInvoice = (leadId: string) => {
-    // @ts-ignore
-    import("react-router-dom").then(({ useNavigate }) => {
-      const navigate = useNavigate();
-      navigate('/invoices/create', { state: { leadId } });
-    });
+    window.location.href = `/invoices/create?leadId=${leadId}`;
   };
   const handleCreateAgreement = (leadId: string) => {
-    // @ts-ignore
-    import("react-router-dom").then(({ useNavigate }) => {
-      const navigate = useNavigate();
-      navigate('/workagreements/create', { state: { leadId } });
-    });
+    window.location.href = `/workagreements/create?leadId=${leadId}`;
   };
 
   const handleViewHistory = (leadId: string) => {
-    // @ts-ignore
-    import("react-router-dom").then(({ useNavigate }) => {
-      const navigate = useNavigate();
-      navigate(`/leads/${leadId}`);
-    });
+    window.location.href = `/leads/${leadId}`;
   };
 
   const openRescheduleModal = (appointmentId: string) => {
@@ -131,9 +116,9 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
 
   return (
     <div className="bg-white">
-      <div className="flex items-center gap-2 px-6 py-4 border-b bg-white sticky top-0 z-10">
+      <div className="flex items-center gap-2 px-4 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-5 w-5 text-roof-600" />
-        <h2 className="text-lg font-semibold text-roof-700">
+        <h2 className="text-base sm:text-lg font-semibold text-roof-700">
           {dayLabel} - Werklijst
         </h2>
       </div>
@@ -146,7 +131,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
           <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-4 grid gap-4 max-w-full">
+        <div className="p-2 sm:p-4 grid gap-4 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];
