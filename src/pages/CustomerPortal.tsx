@@ -15,6 +15,11 @@ import { QuoteRevisionDialog } from "@/components/customer-portal/quote/QuoteRev
 import { QuoteActions } from "@/components/customer-portal/quote/QuoteActions";
 import { QuotePortalLoading } from "@/components/customer-portal/quote/QuotePortalLoading";
 import { QuoteSignatureSection } from "@/components/customer-portal/quote/QuoteSignatureSection";
+import { formatCurrency } from "@/utils/format";
+import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
+import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
+import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
+import { Separator } from "@/components/ui/separator";
 
 const CustomerPortal = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,13 +45,6 @@ const CustomerPortal = () => {
     }
     setLoading(false);
   }, [id]);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
 
   const handleAccept = () => {
     if (!signature) {
@@ -109,14 +107,21 @@ const CustomerPortal = () => {
     );
   }
 
+  // Sample mockup attachments for demonstration
+  const demoAttachments = [
+    { name: "Situatie dakkapel.jpg", url: "https://source.unsplash.com/random/800x600/?roof" },
+    { name: "Materiaal voorbeelden.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
+    { name: "Algemene voorwaarden.pdf", url: "#" }
+  ];
+
   return (
     <CustomerPortalLayout 
       title="Offerte Details" 
       subtitle="Bekijk en beheer uw offerte"
     >
-      <div className="max-w-3xl mx-auto">
-        <Card className="border shadow-md overflow-hidden">
-          <CardHeader className="border-b pb-6 bg-white">
+      <div className="max-w-4xl mx-auto">
+        <Card className="border shadow-md overflow-hidden bg-white">
+          <CardHeader className="border-b pb-6 bg-gradient-to-r from-primary/10 to-primary/5">
             <QuotePortalHeader
               quoteId={quote.id}
               description={quote.description}
@@ -124,25 +129,43 @@ const CustomerPortal = () => {
             />
           </CardHeader>
           
-          <CardContent className="py-6 space-y-6 bg-white">
+          <CardContent className="py-8 space-y-8">
             <QuoteDetails 
               customer={customer}
               quote={quote}
               formatCurrency={formatCurrency}
             />
             
-            <h3 className="text-sm font-medium text-gray-500 pb-2 border-b mt-8">Offerteregels</h3>
-            <div className="overflow-x-auto -mx-6 px-6">
-              <QuoteLineItems 
-                lineItems={quote.lineItems}
-                formatCurrency={formatCurrency}
-              />
+            <Separator className="my-8" />
+            
+            <div>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Specificatie</h3>
+              <div className="bg-gray-50 rounded-lg p-6 overflow-x-auto">
+                <QuoteLineItems 
+                  lineItems={quote.lineItems}
+                  formatCurrency={formatCurrency}
+                />
+              </div>
             </div>
+            
+            <Separator className="my-8" />
+            
+            <WarrantySection 
+              warranty="Op alle installatie werkzaamheden geven wij 5 jaar garantie. Op de gebruikte materialen is de fabrieksgarantie van toepassing."
+            />
+            
+            <Attachments 
+              defaultAttachments={demoAttachments}
+            />
+            
+            <GeneralTerms />
+            
+            <Separator className="my-8" />
             
             <QuoteSignatureSection onSignatureChange={setSignature} />
           </CardContent>
           
-          <CardFooter className="bg-white border-t py-4">
+          <CardFooter className="bg-gray-50 border-t py-6">
             <QuoteActions
               onRevisionRequest={() => setIsRevisionDialogOpen(true)}
               onAccept={handleAccept}
