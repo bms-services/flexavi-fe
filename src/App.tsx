@@ -31,6 +31,7 @@ import Pricing from "./pages/Pricing";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Partners from "./pages/Partners";
 import Pipeline from "./pages/Pipeline";
+import CustomerPortalQuote from "./pages/CustomerPortalQuote";
 
 const queryClient = new QueryClient();
 
@@ -63,7 +64,7 @@ const App = () => (
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/pipeline" element={<Pipeline />} />
-          <Route path="/portal/quote/:id" element={<CustomerPortal />} />
+          <Route path="/portal/quote/:id" element={<CustomerPortalQuote />} />
           <Route path="/portal/invoice/:id" element={<CustomerPortalInvoice />} />
           <Route path="/portal/workagreement/:id" element={<CustomerPortalWorkAgreement />} />
           <Route path="/portal/dashboard/:leadId" element={<CustomerDashboard />} />
