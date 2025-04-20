@@ -72,7 +72,14 @@ export const RoofingAppointmentCard: React.FC<RoofingAppointmentCardProps> = ({
       max-w-full
     `}
   >
-    {/* Klantinformatie */}
+    {/* 1. Datum & Tijd van afspraak */}
+    <SectionTitle icon={<Calendar className="h-5 w-5 text-[#7E69AB]" />} label="Afspraakdatum & tijd" />
+    <div className="flex flex-col gap-2 mb-3">
+      <span className="font-medium text-lg">{app.date}</span>
+      <span className="text-xs text-[#8E9196]">{app.startTime} - {app.endTime}</span>
+    </div>
+
+    {/* 2. Klantnaam, contact informatie, volledig adres */}
     <SectionTitle icon={<User className="h-5 w-5 text-[#7E69AB]" />} label="Klantinformatie" />
     <div className="flex flex-col md:flex-row gap-4 md:gap-10 items-start md:items-center">
       <div className="flex flex-col gap-1 min-w-[220px]">
@@ -94,6 +101,7 @@ export const RoofingAppointmentCard: React.FC<RoofingAppointmentCardProps> = ({
           <div><b>Bron:</b> {lead.source || "-"}</div>
         </div>
       </div>
+      {/* Adres */}
       <div className="flex-1 flex flex-col items-start">
         <span className="flex gap-2 items-center text-[#7E69AB] text-sm font-semibold">
           <MapPin className="h-5 w-5 mr-1" />
@@ -108,13 +116,9 @@ export const RoofingAppointmentCard: React.FC<RoofingAppointmentCardProps> = ({
       </div>
     </div>
 
-    {/* Afspraak Details */}
+    {/* 3. Uitgebreide afspraak info */}
     <SectionTitle icon={<FileText className="h-5 w-5 text-[#7E69AB]" />} label="Uitgebreide afspraakinformatie" />
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <InfoField icon={<Calendar className="h-4 w-4 text-[#7E69AB]" />} label="Datum & tijd">
-        <span className="font-medium">{app.date}</span>
-        <span className="text-xs text-[#8E9196]">{app.startTime} - {app.endTime}</span>
-      </InfoField>
       <InfoField icon={<Home className="h-4 w-4 text-[#7E69AB]" />} label="Type dak">
         <span>{lead?.roofType || "Onbekend"}</span>
       </InfoField>
@@ -124,27 +128,19 @@ export const RoofingAppointmentCard: React.FC<RoofingAppointmentCardProps> = ({
       <InfoField icon={<Wrench className="h-4 w-4 text-[#7E69AB]" />} label="Gewenste werkzaamheden">
         <span>{lead?.desiredWork || "Niet ingevuld"}</span>
       </InfoField>
+      <InfoField icon={<FileText className="h-4 w-4 text-[#7E69AB]" />} label="Omschrijving">
+        <span className="whitespace-pre-line">{app.description || "-"}</span>
+      </InfoField>
     </div>
-
-    {/* Omschrijving */}
-    <div className="mt-2 mb-4">
-      <div className="flex items-center gap-1 text-xs font-semibold text-[#8E9196] uppercase mb-1">
-        <FileText className="h-4 w-4" />
-        Afspraak omschrijving
+    {rescheduleReason && (
+      <div className="mt-3 py-2 px-3 text-xs bg-amber-50 border-l-4 border-amber-400 rounded text-[#eb9e34] flex items-center gap-2">
+        <History className="h-4 w-4" />
+        <b>Afspraak verzet:</b>
+        <span>{rescheduleReason}</span>
       </div>
-      <div className="text-sm text-[#1A1F2C] whitespace-pre-line bg-[#F8F7FD] rounded-xl p-4 border border-[#eee] shadow-inner min-h-[48px]">
-        {app.description || "-"}
-      </div>
-      {rescheduleReason && (
-        <div className="mt-3 py-2 px-3 text-xs bg-amber-50 border-l-4 border-amber-400 rounded text-[#eb9e34] flex items-center gap-2">
-          <History className="h-4 w-4" />
-          <b>Afspraak verzet:</b>
-          <span>{rescheduleReason}</span>
-        </div>
-      )}
-    </div>
+    )}
 
-    {/* Klantgeschiedenis */}
+    {/* 4. Klantgeschiedenis */}
     <SectionTitle icon={<History className="h-4 w-4 text-[#7E69AB]" />} label="Klantgeschiedenis" />
     <div className="flex flex-col gap-1 mb-2">
       {historyEntries && historyEntries.length > 0 ? (
