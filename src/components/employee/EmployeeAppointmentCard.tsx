@@ -1,7 +1,5 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Calendar, FileText, Info } from "lucide-react";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
@@ -12,6 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
+import { Button } from "@/components/ui/button";
+import { useAppointmentProcess } from "./useAppointmentProcess";
+import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
+import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -80,14 +82,22 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!digitalInvoice;
   const hasDigitalAgreement = !!digitalAgreement;
 
-  // State for process modal
-  const [processModalOpen, setProcessModalOpen] = React.useState(false);
-  const [processReason, setProcessReason] = React.useState("");
-  const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
-  const [processTaskDescription, setProcessTaskDescription] = React.useState("");
-  const [processing, setProcessing] = React.useState(false);
+  // Use custom hook for process state
+  const {
+    processModalOpen,
+    processReason,
+    setProcessReason,
+    processTaskChecked,
+    setProcessTaskChecked,
+    processTaskDescription,
+    setProcessTaskDescription,
+    processing,
+    handleOpenProcessModal,
+    handleCloseProcessModal,
+    handleProcessSubmit,
+  } = useAppointmentProcess();
 
-  // Dummy notities en historie voor demo (in praktijk uit backend)
+  // Dummy notes/historie, unchanged
   const notities = [
     "Klant wil graag volgende week extra opties besproken krijgen.",
     "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland.",
@@ -95,25 +105,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const historyEntries = isRescheduled && rescheduleReason
     ? [{ type: "Afspraak verzet", description: rescheduleReason, date: app.date }]
     : [];
-
-  const handleOpenProcessModal = () => setProcessModalOpen(true);
-  const handleCloseProcessModal = () => {
-    setProcessModalOpen(false);
-    setProcessReason("");
-    setProcessTaskChecked(false);
-    setProcessTaskDescription("");
-    setProcessing(false);
-  }
-  const handleProcessSubmit = () => {
-    setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
-      setProcessModalOpen(false);
-      setProcessReason("");
-      setProcessTaskChecked(false);
-      setProcessTaskDescription("");
-    }, 1200);
-  };
 
   return (
     <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
@@ -123,7 +114,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           <CardTitle className="text-xl font-bold text-[#1A1F2C]">{app.title}</CardTitle>
         </div>
       </CardHeader>
-
       <CardContent className="p-0">
         <div className="p-0">
           {lead && (
@@ -178,144 +168,39 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               )}
             </div>
           </div>
-
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onViewHistory}
-                className="text-xs font-semibold text-[#0A8AD0]"
-              >
-                <Info className="h-4 w-4 mr-1" />
-                Geschiedenis
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onOpenRescheduleModal}
-                className="text-xs font-semibold text-[#0A8AD0]"
-              >
-                <Calendar className="h-4 w-4 mr-1" />
-                Verzetten
-              </Button>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button
-                    size="sm"
-                    className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white"
-                  >
-                    <FileText className="h-4 w-4 mr-1" />
-                    Verwerken
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-full sm:max-w-md flex flex-col justify-between h-full px-0">
-                  <div className="p-6 pt-7">
-                    <SheetHeader>
-                      <SheetTitle>Verwerken</SheetTitle>
-                      <SheetDescription>
-                        Creëer, upload of verwerk documenten voor deze afspraak.
-                      </SheetDescription>
-                    </SheetHeader>
-
-                    <div className="mt-6 space-y-6">
-                      {/* Offerte sectie */}
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
-                          Offerte
-                        </h3>
-                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onCreateQuote}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Creëer offerte
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onOpenUploadQuote}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Upload offerte
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Factuur sectie */}
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
-                          Factuur
-                        </h3>
-                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onCreateInvoice}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Creëer factuur
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onOpenUploadInvoice}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Upload factuur
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Werkovereenkomst sectie */}
-                      <div className="border border-gray-200 rounded-lg p-4">
-                        <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-[#0EA5E9]" />
-                          Werkovereenkomst
-                        </h3>
-                        <div className="flex flex-col sm:flex-row gap-2 mt-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onCreateAgreement}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Creëer overeenkomst
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onOpenUploadAgreement}
-                            className="text-[#0EA5E9] border-[#0EA5E9]"
-                          >
-                            Upload overeenkomst
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
-                    <Button
-                      className="w-full bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white font-bold py-2 px-4 rounded-lg shadow transition"
-                      onClick={handleOpenProcessModal}
-                      size="lg"
-                    >
-                      <Info className="h-5 w-5 mr-2" />
-                      Afspraak verwerken
-                    </Button>
-                    <p className="text-xs text-gray-500 mt-2">Geef aan waarom je geen documenten aanmaakt of maak een taak aan.</p>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
+            <EmployeeAppointmentActions
+              onViewHistory={onViewHistory}
+              onOpenRescheduleModal={onOpenRescheduleModal}
+              onOpenProcessModal={handleOpenProcessModal}
+            />
           </div>
         </div>
       </CardContent>
-
+      <EmployeeAppointmentSheet
+        hasDigitalQuote={hasDigitalQuote}
+        hasDigitalInvoice={hasDigitalInvoice}
+        hasDigitalAgreement={hasDigitalAgreement}
+        digitalQuote={digitalQuote}
+        digitalInvoice={digitalInvoice}
+        digitalAgreement={digitalAgreement}
+        onCreateQuote={onCreateQuote}
+        onOpenUploadQuote={onOpenUploadQuote}
+        uploadQuoteDialogOpen={uploadQuoteDialogOpen}
+        onQuoteResult={onQuoteResult}
+        onCloseUploadQuote={onCloseUploadQuote}
+        onCreateInvoice={onCreateInvoice}
+        onOpenUploadInvoice={onOpenUploadInvoice}
+        uploadInvoiceDialogOpen={uploadInvoiceDialogOpen}
+        onInvoiceResult={onInvoiceResult}
+        onCloseUploadInvoice={onCloseUploadInvoice}
+        onCreateAgreement={onCreateAgreement}
+        onOpenUploadAgreement={onOpenUploadAgreement}
+        uploadAgreementDialogOpen={uploadAgreementDialogOpen}
+        onAgreementResult={onAgreementResult}
+        onCloseUploadAgreement={onCloseUploadAgreement}
+        onOpenProcessModal={handleOpenProcessModal}
+      />
       <RescheduleDialog
         open={rescheduleModalOpen}
         reason={rescheduleReason}
@@ -323,23 +208,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         onCancel={onCloseRescheduleModal}
         onSave={onRescheduleSave}
       />
-
-      <ReceiptUploadDialog
-        open={uploadQuoteDialogOpen}
-        onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()}
-        onResult={onQuoteResult}
-      />
-      <ReceiptUploadDialog
-        open={uploadInvoiceDialogOpen}
-        onOpenChange={open => open ? onOpenUploadInvoice() : onCloseUploadInvoice()}
-        onResult={onInvoiceResult}
-      />
-      <ReceiptUploadDialog
-        open={uploadAgreementDialogOpen}
-        onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()}
-        onResult={onAgreementResult}
-      />
-
       <AppointmentProcessModal
         open={processModalOpen}
         reason={processReason}
