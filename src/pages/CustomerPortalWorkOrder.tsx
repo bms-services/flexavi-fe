@@ -1,19 +1,18 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
 import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
 import { CustomerInfoCard } from "@/components/workagreements/customer-portal/components/CustomerInfoCard";
+import { WorkOrderDetails } from "@/components/customer-portal/workorders/components/WorkOrderDetails";
+import { PaymentSection } from "@/components/customer-portal/workorders/components/PaymentSection";
+import { SignatureSection } from "@/components/customer-portal/workorders/components/SignatureSection";
+import { WorkOrderHeader } from "@/components/customer-portal/workorders/components/WorkOrderHeader";
 import { AgreementDetails } from "@/components/workagreements/customer-portal/components/AgreementDetails";
-import { WorkDescription } from "@/components/workagreements/customer-portal/components/WorkDescription";
 import { ProvisionsCard } from "@/components/workagreements/customer-portal/components/ProvisionsCard";
 import { ExclusionsCard } from "@/components/workagreements/customer-portal/components/ExclusionsCard";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
-import { PaymentDetails } from "@/components/workagreements/customer-portal/components/PaymentDetails";
-import { WorkOrderHeader } from "@/components/customer-portal/workorders/components/WorkOrderHeader";
-import { WorkOrderDetails } from "@/components/customer-portal/workorders/components/WorkOrderDetails";
-import { PaymentSection } from "@/components/customer-portal/workorders/components/PaymentSection";
-import { SignatureSection } from "@/components/customer-portal/workorders/components/SignatureSection";
 import { toast } from "sonner";
 
 const mockWorkOrder = {
@@ -24,7 +23,25 @@ const mockWorkOrder = {
   plannedStartDate: "2025-05-01T08:00:00Z",
   address: "Hoofdstraat 123, Amsterdam",
   notes: "Installatie van 12 zonnepanelen op het zuidelijke dak inclusief montage en aansluiting op het elektriciteitsnet.",
-  customerNotes: "Graag parkeren op de oprit"
+  customerNotes: "Graag parkeren op de oprit",
+  warranty: "10",
+  startDate: "2025-05-01",
+  totalAmount: 2800.50,
+  provisions: [
+    "Ter beschikking stellen stroomvoorziening 230 volt 16 amp.",
+    "Sanitaire voorzieningen",
+    "Bereikbaarheid werkplek met materieel",
+  ],
+  exclusions: [
+    "Werkzaamheden die niet genoemd zijn vallen buiten deze werkopdracht",
+    "Werkzaamheden aan asbesthoudende materialen",
+    "Parkeerkosten"
+  ],
+  attachments: [],
+  defaultAttachments: [
+    { name: "Werkopdracht.pdf", url: "/attachments/werkopdracht.pdf" },
+    { name: "Projectfoto.jpg", url: "/attachments/projectfoto.jpg" }
+  ]
 };
 
 const CustomerPortalWorkOrder = () => {
@@ -111,12 +128,32 @@ const CustomerPortalWorkOrder = () => {
           <CustomerInfoCard customer={customerInfo} />
         </div>
 
+        <AgreementDetails 
+          workAgreement={{
+            totalAmount: workOrder.totalAmount,
+            startDate: workOrder.startDate,
+            warranty: workOrder.warranty
+          }}
+          formatCurrency={formatCurrency}
+        />
+
         <WorkOrderDetails 
           description={workOrder.notes}
           customerNotes={workOrder.customerNotes}
         />
 
-        <PaymentSection totalAmount={2800.50} />
+        <ProvisionsCard provisions={workOrder.provisions} />
+        
+        <ExclusionsCard exclusions={workOrder.exclusions} />
+
+        <Attachments 
+          attachments={workOrder.attachments}
+          defaultAttachments={workOrder.defaultAttachments}
+        />
+
+        <GeneralTerms />
+
+        <PaymentSection totalAmount={workOrder.totalAmount} />
 
         <SignatureSection
           customerSignature={workOrder.customerSignature}
