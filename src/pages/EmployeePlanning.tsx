@@ -33,8 +33,8 @@ export default function EmployeePlanningPage() {
 
   return (
     <Layout>
-      <div className="container max-w-full px-4 py-6 overflow-x-hidden">
-        <div className="mb-6">
+      <div className="max-w-full px-2 sm:px-4 py-4 sm:py-6 overflow-hidden">
+        <div className="mb-4 sm:mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-roof-100 p-2 rounded-full">
               <Calendar className="h-6 w-6 text-roof-600" />
@@ -42,7 +42,7 @@ export default function EmployeePlanningPage() {
             <h1 className="text-xl sm:text-2xl font-bold text-roof-800">Mijn planning</h1>
           </div>
           
-          <div className="bg-white rounded-lg p-4 shadow-sm border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-roof-500" /> 
               <span className="text-sm font-medium">Actief team:</span>

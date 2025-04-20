@@ -130,8 +130,8 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const getLead = (leadId: string) => mockLeads.find(l => l.id === leadId);
 
   return (
-    <div className="bg-white">
-      <div className="flex items-center gap-2 px-4 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
+    <div className="bg-white w-full overflow-hidden">
+      <div className="flex items-center gap-2 px-3 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-5 w-5 text-roof-600" />
         <h2 className="text-lg font-semibold text-roof-700">
           {dayLabel} - Werklijst
@@ -146,7 +146,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
           <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-4 grid gap-4 max-w-full">
+        <div className="p-2 sm:p-4 grid gap-3 sm:gap-4 max-w-full">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];

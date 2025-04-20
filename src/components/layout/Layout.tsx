@@ -15,7 +15,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen max-w-full overflow-x-hidden">
       {isMobile ? (
         <Sheet>
           <SheetTrigger asChild>
@@ -36,9 +36,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Sidebar />
         </div>
       )}
-      <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''}`}>
+      <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
         <QuickActions />
-        <main className="flex-1 p-4 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
           {children}
         </main>
       </div>

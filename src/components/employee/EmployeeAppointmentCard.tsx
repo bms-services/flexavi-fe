@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
 interface EmployeeAppointmentCardProps {
   app: Appointment;
   lead: any;
@@ -40,6 +41,7 @@ interface EmployeeAppointmentCardProps {
   onRescheduleReasonChange: (val: string) => void;
   onRescheduleSave: () => void;
 }
+
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -103,8 +105,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   };
   return <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition max-w-full">
       <div className="relative">
-        <CardHeader className="pb-2 pt-4 px-4 sm:px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
-          <div className="flex flex-col items-start gap-2 min-w-0">
+        <CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-5 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
+          <div className="flex flex-col items-start gap-1 sm:gap-2 min-w-0">
             <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
             </span>
@@ -115,10 +117,10 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
-                <MoreHorizontal className="w-6 h-6" />
+                <MoreHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" style={{
+            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[180px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" style={{
             color: "#00254D"
           }}>
               <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
