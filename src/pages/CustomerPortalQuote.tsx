@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
-import { FileText, ChevronLeft, Download, Printer } from "lucide-react";
+import { FileText, Download, Printer } from "lucide-react";
 import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import { formatCurrency } from "@/utils/format";
@@ -117,17 +117,6 @@ const CustomerPortalQuote = () => {
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="max-w-4xl mx-auto p-4">
-        <div className="mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate(-1)}
-            className="hover:bg-white/50 transition-colors"
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Terug naar overzicht
-          </Button>
-        </div>
-
         <Card className="border shadow-md bg-white">
           <CardHeader className="border-b pb-6 bg-gradient-to-r from-primary/10 to-primary/5">
             <div className="flex justify-between items-start">
