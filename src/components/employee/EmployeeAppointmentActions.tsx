@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { History, RotateCC } from "lucide-react";
+import { History, RotateCcw } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 interface EmployeeAppointmentActionsProps {
@@ -33,7 +33,7 @@ export const EmployeeAppointmentActions: React.FC<EmployeeAppointmentActionsProp
             onClick={onOpenRescheduleModal}
             className="text-amber-500 border-amber-500"
           >
-            <RotateCC className="h-4 w-4 mr-1" />
+            <RotateCcw className="h-4 w-4 mr-1" />
             Verzetten
           </Button>
         </DialogTrigger>
