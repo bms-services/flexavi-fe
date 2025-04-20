@@ -1,6 +1,6 @@
 
 import React from "react";
-import { User, Phone, Mail, MapPin, Info, History, note } from "lucide-react";
+import { User, Phone, Mail, MapPin, Info, History, Note } from "lucide-react";
 
 interface LeadInfoCardProps {
   lead: {
@@ -54,44 +54,47 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
           Bekijk op kaart
         </button>
       </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-[#6E59A5]">
         <div>
-          <h4 className="text-xs font-semibold text-[#1A1F2C] mb-1 flex items-center gap-1">
-            <note className="h-4 w-4 text-[#9b87f5]" />
-            Klantnotities & geschiedenis
+          <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
+            <Note className="h-4 w-4 text-[#9b87f5]" />
+            Klantnotities
           </h4>
-          {isRescheduled && rescheduleReason && (
-            <div className="text-xs bg-amber-50 border-l-4 border-amber-400 p-2 rounded mb-2 text-amber-700 flex items-center gap-1">
-              <History className="h-3 w-3 mr-1" />
-              Verzet: {rescheduleReason}
-            </div>
-          )}
           {notes.length > 0 ? (
-            <ul className="text-xs text-[#6E59A5] list-disc pl-4">
+            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1">
               {notes.map((n, i) => (
-                <li key={i}>{n}</li>
+                <li key={i} className="whitespace-pre-wrap">{n}</li>
               ))}
             </ul>
           ) : (
-            <div className="text-xs text-gray-500 italic">Geen notities beschikbaar</div>
+            <div className="italic text-gray-500">Geen notities beschikbaar</div>
           )}
         </div>
-        {historyEntries && historyEntries.length > 0 && (
-          <div>
-            <h4 className="text-xs font-semibold text-[#1A1F2C] mb-1 flex items-center gap-1">
-              <Info className="h-4 w-4 text-[#33C3F0]" />
-              Historische acties
-            </h4>
-            <ul className="text-xs text-[#6E59A5] list-disc pl-4">
+        <div>
+          <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
+            <Info className="h-4 w-4 text-[#33C3F0]" />
+            Klantgeschiedenis
+          </h4>
+          {isRescheduled && rescheduleReason && (
+            <div className="mb-2 text-amber-700 bg-amber-50 border-l-4 border-amber-400 rounded p-2 flex items-center gap-2 text-xs">
+              <History className="h-4 w-4" />
+              <span>Afspraak verzet: {rescheduleReason}</span>
+              <span className="text-gray-400 ml-auto text-[11px]">{historyEntries.length > 0 ? historyEntries[0].date : ""}</span>
+            </div>
+          )}
+          {historyEntries.length > 0 ? (
+            <ul className="list-disc pl-5 max-h-40 overflow-y-auto space-y-1">
               {historyEntries.map((entry, i) => (
                 <li key={i}>
-                  <span className="font-semibold">{entry.type}:</span> {entry.description}{" "}
-                  <span className="text-gray-400 ml-1">{entry.date}</span>
+                  <span className="font-semibold text-[#1A1F2C]">{entry.type}:</span> {entry.description}
+                  <span className="text-gray-400 ml-1 text-[11px]">{entry.date}</span>
                 </li>
               ))}
             </ul>
-          </div>
-        )}
+          ) : (
+            <div className="italic text-gray-500">Geen geschiedenis beschikbaar</div>
+          )}
+        </div>
       </div>
     </div>
   );
