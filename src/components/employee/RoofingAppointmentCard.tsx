@@ -9,7 +9,7 @@ import {
   User,
   History,
   Info,
-  Roof,
+  Home,
   Briefcase,
   Wrench
 } from "lucide-react";
@@ -115,7 +115,7 @@ export const RoofingAppointmentCard: React.FC<RoofingAppointmentCardProps> = ({
         <span className="font-medium">{app.date}</span>
         <span className="text-xs text-[#8E9196]">{app.startTime} - {app.endTime}</span>
       </InfoField>
-      <InfoField icon={<Roof className="h-4 w-4 text-[#7E69AB]" />} label="Type dak">
+      <InfoField icon={<Home className="h-4 w-4 text-[#7E69AB]" />} label="Type dak">
         <span>{lead?.roofType || "Onbekend"}</span>
       </InfoField>
       <InfoField icon={<Briefcase className="h-4 w-4 text-[#7E69AB]" />} label="Type opdracht">
