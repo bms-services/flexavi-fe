@@ -1,33 +1,36 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { PaymentMethodSelect } from "@/components/workagreements/forms/payment-terms/components/PaymentMethodSelect";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
+import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { Settings } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
-import { PaymentMethod } from "@/types";
+import { PaymentMethod, PaymentInstallment } from "@/types";
 
 export const WorkAgreementSettingsForm = () => {
+  // Standaardwaarden voor instellingen
   const [warranty, setWarranty] = useState("5");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("bank");
+  const [cashPaymentAmount, setCashPaymentAmount] = useState(0);
+  const [paymentInstallments, setPaymentInstallments] = useState<PaymentInstallment[]>([
+    { percentage: 40, description: "Bij aanvang werkzaamheden", dueType: "start" },
+    { percentage: 50, description: "Tijdens werkzaamheden", dueType: "during" },
+    { percentage: 10, description: "Bij oplevering", dueType: "completion" }
+  ]);
   const [exclusions, setExclusions] = useState<string[]>([
     "Verwijderen van asbest",
     "Schilderwerk",
     "Stucwerk"
   ]);
-  const [defaultInstallments] = useState([
-    { percentage: 40, description: "Bij aanvang werkzaamheden", dueType: "start" as const },
-    { percentage: 50, description: "Tijdens werkzaamheden", dueType: "during" as const },
-    { percentage: 10, description: "Bij oplevering", dueType: "completion" as const }
-  ]);
+  // Dit bedrag is alleen visueel, je kan evt. totaalbedrag aanpassen voor test
+  const DUMMY_TOTAL = 10000; // Alleen voor het formulier
 
   const handleSave = () => {
-    // Here you would save the settings to your backend
-    toast.success("Instellingen opgeslagen");
+    // Hier zou je de standaardinstellingen versturen naar een backend endpoint
+    toast.success("Standaard werkovereenkomst-instellingen opgeslagen");
   };
 
   return (
@@ -57,22 +60,18 @@ export const WorkAgreementSettingsForm = () => {
         </div>
 
         <div>
-          <Label>Standaard betaalmethode</Label>
-          <PaymentMethodSelect
-            value={paymentMethod}
-            onChange={setPaymentMethod}
-          />
-        </div>
-
-        <div>
-          <Label>Standaard betaaltermijnen</Label>
-          <div className="space-y-2 mt-2">
-            {defaultInstallments.map((installment, index) => (
-              <div key={index} className="flex justify-between items-center p-3 bg-muted rounded-md">
-                <span>{installment.description}</span>
-                <span className="font-medium">{installment.percentage}%</span>
-              </div>
-            ))}
+          <Label>Standaard betaalvoorwaarden</Label>
+          <div className="mt-2">
+            <PaymentTermsForm
+              paymentMethod={paymentMethod}
+              cashPaymentAmount={cashPaymentAmount}
+              paymentInstallments={paymentInstallments}
+              totalAmount={DUMMY_TOTAL}
+              onPaymentMethodChange={setPaymentMethod}
+              onCashPaymentAmountChange={setCashPaymentAmount}
+              onPaymentInstallmentsChange={setPaymentInstallments}
+              disabled={false}
+            />
           </div>
         </div>
 
@@ -85,6 +84,8 @@ export const WorkAgreementSettingsForm = () => {
             />
           </div>
         </div>
+
+        {/* Hier kun je later aanvullende secties toevoegen zoals Algemene Voorwaarden en Bijlagen */}
 
         <Button onClick={handleSave} className="w-full">
           Instellingen opslaan
