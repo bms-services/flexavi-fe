@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Table,
@@ -57,7 +56,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({
     return matchesSearch && matchesLocation && matchesLeadStatus && matchesQuoteStatus && matchesInvoiceStatus;
   });
 
-  const totalPages = Math.ceil(filteredLeads.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredLeads.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedLeads = filteredLeads.slice(startIndex, startIndex + itemsPerPage);
 

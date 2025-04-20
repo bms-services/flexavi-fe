@@ -20,10 +20,12 @@ export const LeadTablePagination: React.FC<LeadTablePaginationProps> = ({
   totalPages,
   setCurrentPage,
 }) => {
-  if (totalPages <= 1) return null;
+  // Always show pagination, even with just one page
+  // This ensures the pagination component is visible
+  if (totalPages <= 0) return null;
 
   return (
-    <Pagination className="justify-center">
+    <Pagination className="justify-center mt-4">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious 
