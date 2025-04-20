@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,15 +13,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createLeadSchema, type CreateLeadFormData } from "@/utils/validations";
+import { getLeadDetail } from "@/data/mockData";
 
 interface CreateLeadFormProps {
   onSubmit: (values: CreateLeadFormData) => void;
   onCancel: () => void;
+  leadId?: string;
 }
 
 export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
   onSubmit,
   onCancel,
+  leadId,
 }) => {
   const form = useForm<CreateLeadFormData>({
     resolver: zodResolver(createLeadSchema),
@@ -34,6 +37,27 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
     },
     mode: "onBlur", // Validate on blur for better UX
   });
+
+  // If leadId is provided, populate the form with lead data
+  useEffect(() => {
+    if (leadId) {
+      const leadData = getLeadDetail(leadId);
+      if (leadData) {
+        // Extract postcode and huisnummer from address (simplified implementation)
+        const addressParts = leadData.address.split(' ');
+        const postcode = addressParts.slice(0, 2).join(' ');
+        const huisnummer = addressParts[2] || '';
+        
+        form.reset({
+          name: leadData.name,
+          email: leadData.email,
+          phone: leadData.phone,
+          postcode: postcode,
+          huisnummer: huisnummer,
+        });
+      }
+    }
+  }, [leadId, form]);
 
   const handleSubmit = (data: CreateLeadFormData) => {
     // The data is already transformed by Zod
@@ -141,7 +165,7 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
           <Button variant="outline" type="button" onClick={onCancel}>
             Annuleren
           </Button>
-          <Button type="submit">Lead Toevoegen</Button>
+          <Button type="submit">{leadId ? "Lead Bijwerken" : "Lead Toevoegen"}</Button>
         </div>
       </form>
     </Form>
