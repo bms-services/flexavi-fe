@@ -34,8 +34,28 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
     return mockLeads.find(lead => lead.id === leadId);
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const draggingElement = document.querySelector('.dragging');
+    const container = e.currentTarget;
+    const siblings = [...container.querySelectorAll('[draggable="true"]:not(.dragging)')];
+
+    // Find the sibling to insert before based on mouse position
+    const nextSibling = siblings.find(sibling => {
+      const box = sibling.getBoundingClientRect();
+      return e.clientY < box.top + box.height / 2;
+    });
+
+    if (draggingElement) {
+      container.insertBefore(draggingElement, nextSibling || null);
+    }
+  };
+
   return (
-    <div className="space-y-2">
+    <div 
+      className="space-y-2" 
+      onDragOver={handleDragOver}
+    >
       {sortedAppointments.map((appointment) => {
         const leadInfo = getLeadInfo(appointment.leadId);
         
@@ -47,14 +67,21 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
               appointment.teamType === "sales" 
                 ? "bg-blue-50 border-blue-200" 
                 : "bg-green-50 border-green-200",
-              onDragStart ? "cursor-move hover:shadow-md transition-shadow" : ""
+              onDragStart ? "cursor-move hover:shadow-md transition-shadow" : "",
+              "draggable-item"
             )}
             draggable={!!onDragStart}
-            onDragStart={(e) => onDragStart && onDragStart(e, appointment)}
+            onDragStart={(e) => {
+              e.currentTarget.classList.add('dragging');
+              onDragStart && onDragStart(e, appointment);
+            }}
+            onDragEnd={(e) => {
+              e.currentTarget.classList.remove('dragging');
+            }}
           >
             <div className="flex items-start gap-2">
               {onDragStart && (
-                <GripVertical className="h-3.5 w-3.5 text-muted-foreground mt-1 flex-shrink-0" />
+                <GripVertical className="h-3.5 w-3.5 text-muted-foreground mt-1 flex-shrink-0 cursor-move" />
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-0.5">
