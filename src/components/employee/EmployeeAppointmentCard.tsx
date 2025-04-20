@@ -131,114 +131,102 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           )}
 
           <div className="px-6 pb-6 pt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-7">
-              {/* Beschrijving KAART & Documenten KAART */}
-              <div className="bg-[#FAF9FD] rounded-2xl shadow-md flex flex-col p-5 min-h-[170px] border border-[#ece6fa]">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText className="text-[#9b87f5] h-5 w-5" />
-                  <span className="font-semibold text-[#7E69AB] text-sm uppercase tracking-wide">Beschrijving</span>
+
+            {/* Nieuw knoppenblok */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-7">
+              {/* OFFERTES */}
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Offerte</span>
+                <div className="flex flex-row gap-2 w-full">
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
+                    onClick={onCreateQuote}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <FilePlus className="w-4 h-4" />
+                      Maak
+                    </span>
+                  </button>
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
+                    onClick={onOpenUploadQuote}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      Upload
+                    </span>
+                  </button>
                 </div>
-                <span className="block text-base text-[#1A1F2C] leading-relaxed">{app.description}</span>
               </div>
 
-              {/* Documenten KAART */}
-              <div className="bg-[#F6F7FA] rounded-2xl shadow-md flex flex-col p-5 border border-[#d8e8f9] min-h-[170px]">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText className="text-[#0EA5E9] h-5 w-5" />
-                  <span className="font-semibold text-[#0EA5E9] text-sm uppercase tracking-wide">Documenten</span>
+              {/* FACTUUR */}
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Factuur</span>
+                <div className="flex flex-row gap-2 w-full">
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
+                    onClick={onCreateInvoice}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <FilePlus className="w-4 h-4" />
+                      Maak
+                    </span>
+                  </button>
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
+                    onClick={onOpenUploadInvoice}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      Upload
+                    </span>
+                  </button>
                 </div>
-                {digitalQuote || digitalInvoice || digitalAgreement ? (
-                  <div className="grid gap-2 sm:grid-cols-3">
-                    {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
-                    {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
-                    {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
-                    <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
-                    <span className="text-xs">Geen digitale documenten beschikbaar</span>
-                  </div>
-                )}
+              </div>
+
+              {/* WERKOPDRACHT */}
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Werkopdracht</span>
+                <div className="flex flex-row gap-2 w-full">
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
+                    onClick={onCreateAgreement}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <FilePlus className="w-4 h-4" />
+                      Maak
+                    </span>
+                  </button>
+                  <button
+                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
+                    onClick={onOpenUploadAgreement}
+                    type="button"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      Upload
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
+            {/* EINDE Nieuw knoppenblok */}
 
-            {/* HERONTWORPEN KNOPPEN BLOK */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-7">
-              {/* ROWN 1: Online maken */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Maak offerte */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#8B5CF6] to-[#33C3F0] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onCreateQuote}
-                  type="button"
-                >
-                  <FilePlus className="mb-1 text-[#fff] bg-[#8B5CF6] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Maak offerte</span>
-                </button>
-                {/* Maak factuur */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#0EA5E9] to-[#1EAEDB] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onCreateInvoice}
-                  type="button"
-                >
-                  <FilePlus className="mb-1 text-[#fff] bg-[#0EA5E9] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Maak factuur</span>
-                </button>
-                {/* Maak werkopdracht */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#7E69AB] to-[#9b87f5] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onCreateAgreement}
-                  type="button"
-                >
-                  <FilePlus className="mb-1 text-[#fff] bg-[#7E69AB] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Maak werkopdracht</span>
-                </button>
-              </div>
-
-              {/* ROWN 2: Upload handmatig */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-4 sm:mt-0">
-                {/* Upload offerte */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#8B5CF6] to-[#33C3F0] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onOpenUploadQuote}
-                  type="button"
-                >
-                  <Upload className="mb-1 text-[#fff] bg-[#8B5CF6] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Upload offerte</span>
-                </button>
-                {/* Upload factuur */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#0EA5E9] to-[#1EAEDB] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onOpenUploadInvoice}
-                  type="button"
-                >
-                  <Upload className="mb-1 text-[#fff] bg-[#0EA5E9] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Upload factuur</span>
-                </button>
-                {/* Upload werkopdracht */}
-                <button
-                  className="flex-1 rounded-2xl py-4 px-1 bg-gradient-to-r from-[#7E69AB] to-[#9b87f5] shadow-lg flex flex-col items-center justify-center group hover:scale-105 transition-all duration-200"
-                  onClick={onOpenUploadAgreement}
-                  type="button"
-                >
-                  <Upload className="mb-1 text-[#fff] bg-[#7E69AB] rounded-full p-1 w-9 h-9 border-2 border-white shadow" />
-                  <span className="text-white font-bold text-sm mt-1 tracking-wide">Upload werkopdracht</span>
-                </button>
-              </div>
-            </div>
-
-            {/* KNOP verwerk afspraak, los eronder */}
             <div className="flex flex-row justify-center mt-2">
               <button
-                className="flex items-center gap-2 rounded-2xl py-4 px-7 bg-gradient-to-r from-[#9b87f5] to-[#D6BCFA] shadow-lg group hover:scale-105 transition-all duration-200"
+                className="flex items-center gap-2 rounded-xl py-3 px-5 bg-gradient-to-r from-[#37547a] to-[#62739b] shadow-lg hover:scale-[1.04] hover:bg-[#253c59] transition-all duration-200"
                 onClick={handleOpenProcessModal}
                 type="button"
               >
-                <CalendarPlus className="text-[#fff] bg-[#9b87f5] rounded-full p-1 w-8 h-8 border-2 border-white shadow mr-1" />
-                <span className="text-[#6E59A5] font-extrabold text-base tracking-wide">Verwerk afspraak</span>
+                <CalendarPlus className="text-white bg-[#37547a] rounded-full p-0.5 w-7 h-7 border-2 border-white shadow mr-1" />
+                <span className="text-white font-extrabold text-base tracking-wide">Verwerk afspraak</span>
               </button>
             </div>
-
             <Separator className="my-7" />
           </div>
 
