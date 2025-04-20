@@ -17,10 +17,9 @@ interface QuoteDetailsProps {
 
 export const QuoteDetails = ({ customer, quote, formatCurrency }: QuoteDetailsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 space-y-4 md:space-y-0">
-      <CustomerInfoCard customer={customer} />
+    <div className="space-y-6">
       <QuoteDatesInfo quote={quote} />
+      <CustomerInfoCard customer={customer} />
     </div>
   );
 };
-
