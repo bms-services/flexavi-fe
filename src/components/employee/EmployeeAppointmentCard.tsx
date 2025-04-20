@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -115,7 +116,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         {/* DRIE BOLLETJES DROPDOWN */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="border-none shadow-none bg-transparent hover:bg-white/20 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition" aria-label="Meer acties">
+            <Button variant="ghost" size="icon" className="border-none shadow-none bg-transparent hover:bg-white/20 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition" aria-label="Meer acties">
               <MoreHorizontal className="w-6 h-6" />
             </Button>
           </DropdownMenuTrigger>
@@ -140,8 +141,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e6f0fc] font-medium">
               <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={onOpenRescheduleModal} className="hover:bg-[#e6f0fc] font-medium">
-              <CalendarPlus className="mr-2 w-4 h-4" /> Afspraak verzetten
+            <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e6f0fc] font-medium">
+              <CalendarPlus className="mr-2 w-4 h-4" /> Verwerk afspraak
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -150,14 +151,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       <CardContent className="p-0">
         {lead && <LeadInfoCard lead={{
         ...lead,
-        appointmentDateTime: `${app.date} · ${app.startTime} - ${app.endTime}`
+        // Removed appointmentDateTime to avoid duplication
       }} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} />}
-
-        
-
-        {/* KNOPPEN ONDERIN WEGLATEN, want nu is alles in dropdown */}
-
-        
 
       </CardContent>
 

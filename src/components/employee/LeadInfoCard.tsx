@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Calendar, MapPin, Phone, Mail, FileText, History, Info, User, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Phone, Mail, FileText, History, Info, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface LeadInfoCardProps {
   lead: {
@@ -34,9 +35,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
     }
   };
   return <div className="bg-gradient-to-br from-[#F1F0FB] to-[#f7f6fd] rounded-2xl border border-[#e0eefe] shadow-lg overflow-hidden w-full animate-fade-in">
-      {/* Header with appointment time */}
-      {lead.appointmentDateTime}
-
+      {/* Removed extra appointmentDateTime to prevent duplication */}
       {/* Lead Information Card */}
       <div className="p-5 sm:p-6 px-[25px] py-[18px]">
         <div className="flex flex-col md:flex-row gap-6 md:gap-10 mb-6">
