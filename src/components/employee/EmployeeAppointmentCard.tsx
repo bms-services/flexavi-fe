@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, FileText, Info } from "lucide-react";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
@@ -118,10 +117,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       <CardHeader className="pb-1 pt-4 px-6 border-b-0 bg-white">
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-[#0EA5E9]" />
-            <span className="text-lg font-bold text-[#1A1F2C]">
-              {app.date} · {app.startTime} - {app.endTime}
-            </span>
+            {/* Hier wordt de dag en tijd weggelaten zoals gevraagd */}
           </div>
         </div>
       </CardHeader>
