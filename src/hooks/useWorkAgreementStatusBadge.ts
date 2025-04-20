@@ -8,12 +8,24 @@ export const useWorkAgreementStatusBadge = (status: WorkAgreementStatus) => {
       variant: "outline" as const 
     },
     sent: { 
-      label: "Verzonden", 
+      label: "Verstuurd", 
       variant: "default" as const 
+    },
+    in_review: {
+      label: "In revisie",
+      variant: "warning" as const
     },
     signed: { 
       label: "Ondertekend", 
       variant: "success" as const 
+    },
+    rejected: {
+      label: "Geweigerd",
+      variant: "destructive" as const
+    },
+    expired: {
+      label: "Verlopen",
+      variant: "secondary" as const
     },
     completed: { 
       label: "Afgerond", 

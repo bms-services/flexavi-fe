@@ -9,27 +9,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, PlusCircle, Search, Edit2, Trash2, FileSignature } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { mockWorkAgreements } from "@/data/mockWorkAgreements";
-import { mockLeads } from "@/data/mockData";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Eye, PlusCircle, Edit2, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
+import { mockWorkAgreements } from "@/data/mockWorkAgreements";
+import { mockLeads } from "@/data/mockData";
 import { WorkAgreement } from "@/types";
 import { useWorkAgreementStatusBadge } from "@/hooks/useWorkAgreementStatusBadge";
+import { WorkAgreementFilters } from "@/components/workagreements/filters/WorkAgreementFilters";
+import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
 
 const WorkAgreements = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   const getLeadName = (leadId: string) => {
@@ -44,12 +41,23 @@ const WorkAgreements = () => {
     }).format(amount);
   };
 
-  const filteredAgreements = mockWorkAgreements.filter(
-    (wa) =>
-      wa.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getLeadName(wa.leadId).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wa.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter work agreements
+  const filteredAgreements = mockWorkAgreements.filter((wa) => {
+    const lead = mockLeads.find((l) => l.id === wa.leadId);
+    const searchMatch = 
+      lead?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead?.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      wa.id.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const statusMatch = statusFilter === "all" || wa.status === statusFilter;
+    
+    return searchMatch && statusMatch;
+  });
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredAgreements.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedAgreements = filteredAgreements.slice(startIndex, startIndex + itemsPerPage);
 
   const handleViewAgreement = (agreement: WorkAgreement) => {
     navigate(`/portal/workagreement/${agreement.id}`);
@@ -57,10 +65,6 @@ const WorkAgreements = () => {
 
   const handleEditAgreement = (agreement: WorkAgreement) => {
     navigate(`/workagreements/edit/${agreement.id}`);
-  };
-
-  const handleDeleteAgreement = (agreement: WorkAgreement) => {
-    console.log("Delete agreement:", agreement);
   };
 
   const handleCreateAgreement = () => {
@@ -92,19 +96,16 @@ const WorkAgreements = () => {
                   Een lijst van alle werkovereenkomsten
                 </CardDescription>
               </div>
-              <div className="relative w-full sm:w-auto sm:max-w-xs">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Zoek werkovereenkomsten..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
             </div>
           </CardHeader>
           <CardContent>
+            <WorkAgreementFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              status={statusFilter}
+              onStatusChange={setStatusFilter}
+            />
+            
             <Table>
               <TableHeader>
                 <TableRow>
@@ -120,7 +121,7 @@ const WorkAgreements = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAgreements.map((agreement) => {
+                {paginatedAgreements.map((agreement) => {
                   const statusConfig = useWorkAgreementStatusBadge(agreement.status);
                   return (
                     <TableRow key={agreement.id}>
@@ -139,13 +140,6 @@ const WorkAgreements = () => {
                             onClick={() => handleEditAgreement(agreement)}
                           >
                             <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDeleteAgreement(agreement)}
-                          >
-                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -174,6 +168,12 @@ const WorkAgreements = () => {
                 })}
               </TableBody>
             </Table>
+
+            <LeadTablePagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
           </CardContent>
         </Card>
       </div>

@@ -31,8 +31,11 @@ export const StatusSelect: React.FC<StatusSelectProps> = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="draft">Concept</SelectItem>
-          <SelectItem value="sent">Verzonden</SelectItem>
+          <SelectItem value="sent">Verstuurd</SelectItem>
+          <SelectItem value="in_review">In revisie</SelectItem>
           <SelectItem value="signed">Ondertekend</SelectItem>
+          <SelectItem value="rejected">Geweigerd</SelectItem>
+          <SelectItem value="expired">Verlopen</SelectItem>
           <SelectItem value="completed">Afgerond</SelectItem>
           <SelectItem value="cancelled">Geannuleerd</SelectItem>
         </SelectContent>

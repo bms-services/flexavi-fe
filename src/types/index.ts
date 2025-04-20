@@ -157,9 +157,12 @@ export type PaymentInstallment = {
 };
 
 export type WorkAgreementStatus = 
-  | "draft"
-  | "sent"
-  | "signed"
+  | "draft"      // Concept
+  | "sent"       // Verstuurd
+  | "in_review"  // In revisie
+  | "signed"     // Ondertekend
+  | "rejected"   // Geweigerd
+  | "expired"    // Verlopen
   | "completed"
   | "cancelled";
 
