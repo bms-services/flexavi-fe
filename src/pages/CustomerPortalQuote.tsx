@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -85,8 +84,8 @@ const CustomerPortalQuote = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="max-w-4xl mx-auto p-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-[80%] mx-auto p-4">
         <QuotePortalContent
           quote={quote}
           customer={customer}
