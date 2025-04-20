@@ -1,8 +1,6 @@
-
 import React from "react";
 import { Calendar, MapPin, Phone, Mail, FileText, History, Info, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 interface LeadInfoCardProps {
   lead: {
     name: string;
@@ -11,20 +9,23 @@ interface LeadInfoCardProps {
     email: string;
     appointmentDateTime?: string;
   };
-  historyEntries?: { type: string; description: string; date: string }[];
+  historyEntries?: {
+    type: string;
+    description: string;
+    date: string;
+  }[];
   notes?: string[];
   isRescheduled?: boolean;
   rescheduleReason?: string;
   showMapButton?: boolean;
 }
-
 export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   lead,
   historyEntries = [],
   notes = [],
   isRescheduled = false,
   rescheduleReason,
-  showMapButton = false,
+  showMapButton = false
 }) => {
   const handleOpenMap = () => {
     if (lead.address) {
@@ -32,28 +33,12 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
       window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
     }
   };
-
-  return (
-    <div className="bg-gradient-to-br from-[#F1F0FB] to-[#f7f6fd] rounded-2xl border border-[#e0eefe] shadow-lg overflow-hidden w-full animate-fade-in">
+  return <div className="bg-gradient-to-br from-[#F1F0FB] to-[#f7f6fd] rounded-2xl border border-[#e0eefe] shadow-lg overflow-hidden w-full animate-fade-in">
       {/* Header with appointment time */}
-      {lead.appointmentDateTime && (
-        <div className="bg-[#0EA5E9]/10 px-6 py-4 border-b border-[#e0eefe]">
-          <div className="flex items-center gap-3">
-            <div className="bg-[#0EA5E9] rounded-full p-2 shadow-sm">
-              <Calendar className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <span className="text-xs text-[#0EA5E9] font-medium uppercase">Geplande afspraak</span>
-              <h2 className="text-lg md:text-xl font-bold text-[#0EA5E9]">
-                {lead.appointmentDateTime}
-              </h2>
-            </div>
-          </div>
-        </div>
-      )}
+      {lead.appointmentDateTime}
 
       {/* Lead Information Card */}
-      <div className="p-5 sm:p-6">
+      <div className="p-5 sm:p-6 px-[25px] py-[18px]">
         <div className="flex flex-col md:flex-row gap-6 md:gap-10 mb-6">
           {/* Customer Info */}
           <div className="flex-1 space-y-3">
@@ -70,10 +55,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             <div className="ml-11 space-y-2">
               <div className="flex items-center gap-2 text-[#0EA5E9] hover:text-[#0a8cca] transition-colors">
                 <MapPin className="w-4 h-4 shrink-0" />
-                <button 
-                  onClick={showMapButton ? handleOpenMap : undefined} 
-                  className={`text-sm break-words ${showMapButton ? 'hover:underline cursor-pointer' : ''}`}
-                >
+                <button onClick={showMapButton ? handleOpenMap : undefined} className={`text-sm break-words ${showMapButton ? 'hover:underline cursor-pointer' : ''}`}>
                   {lead.address}
                 </button>
               </div>
@@ -107,15 +89,9 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             </div>
             
             <div className="max-h-40 overflow-y-auto pr-1 space-y-2">
-              {notes.length > 0 ? (
-                notes.map((note, i) => (
-                  <div key={i} className="bg-[#F9F8FF] p-2 rounded text-sm text-[#403E43] border-l-2 border-[#7E69AB]">
+              {notes.length > 0 ? notes.map((note, i) => <div key={i} className="bg-[#F9F8FF] p-2 rounded text-sm text-[#403E43] border-l-2 border-[#7E69AB]">
                     {note}
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400 text-sm italic">Geen notities beschikbaar</p>
-              )}
+                  </div>) : <p className="text-gray-400 text-sm italic">Geen notities beschikbaar</p>}
             </div>
           </div>
 
@@ -129,27 +105,19 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             </div>
             
             <div className="max-h-40 overflow-y-auto pr-1 space-y-2">
-              {isRescheduled && rescheduleReason && (
-                <div className="bg-[#0EA5E9]/10 p-2 rounded text-sm border-l-2 border-[#0EA5E9]">
+              {isRescheduled && rescheduleReason && <div className="bg-[#0EA5E9]/10 p-2 rounded text-sm border-l-2 border-[#0EA5E9]">
                   <span className="font-medium text-[#0EA5E9]">Afspraak verzet:</span>
                   <p className="text-[#1A1F2C] mt-1">{rescheduleReason}</p>
                   <span className="text-xs text-gray-500 block mt-1">
                     {historyEntries.length > 0 ? historyEntries[0].date : ""}
                   </span>
-                </div>
-              )}
+                </div>}
               
-              {historyEntries.length > 0 ? (
-                historyEntries.map((entry, i) => (
-                  <div key={i} className="bg-[#F9F8FF] p-2 rounded text-sm text-[#403E43] border-l-2 border-[#1EAEDB]">
+              {historyEntries.length > 0 ? historyEntries.map((entry, i) => <div key={i} className="bg-[#F9F8FF] p-2 rounded text-sm text-[#403E43] border-l-2 border-[#1EAEDB]">
                     <span className="font-medium text-[#1A1F2C]">{entry.type}:</span>
                     <p className="text-[#403E43] mt-0.5">{entry.description}</p>
                     <span className="text-xs text-gray-500 block mt-0.5">{entry.date}</span>
-                  </div>
-                ))
-              ) : !isRescheduled ? (
-                <p className="text-gray-400 text-sm italic">Geen geschiedenis beschikbaar</p>
-              ) : null}
+                  </div>) : !isRescheduled ? <p className="text-gray-400 text-sm italic">Geen geschiedenis beschikbaar</p> : null}
             </div>
           </div>
 
@@ -164,21 +132,13 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             
             <div className="h-full flex flex-col items-center justify-center py-4">
               <p className="text-gray-400 text-sm italic text-center">Extra klantinformatie komt hier beschikbaar</p>
-              {showMapButton && (
-                <Button 
-                  onClick={handleOpenMap} 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-4 text-[#0EA5E9] border-[#0EA5E9] hover:bg-[#0EA5E9]/10"
-                >
+              {showMapButton && <Button onClick={handleOpenMap} variant="outline" size="sm" className="mt-4 text-[#0EA5E9] border-[#0EA5E9] hover:bg-[#0EA5E9]/10">
                   <MapPin className="w-4 h-4 mr-2" />
                   Toon op kaart
-                </Button>
-              )}
+                </Button>}
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
