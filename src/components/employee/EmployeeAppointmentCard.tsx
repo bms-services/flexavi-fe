@@ -136,29 +136,31 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               notes={notities}
             />
           )}
-          
+
           <div className="px-6 pb-6">
-            <div className="mb-4">
-              <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
-              <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
+            <div className="flex flex-col md:flex-row md:gap-10">
+              <div className="mb-4 flex-1">
+                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
+                <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
+              </div>
+              <div className="flex-1 mt-4 md:mt-0">
+                <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
+                {(digitalQuote || digitalInvoice || digitalAgreement) ? (
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
+                    {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
+                    {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
+                    <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
+                    <span className="text-xs">Geen digitale documenten beschikbaar</span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <Separator />
-            <div className="mt-5">
-              <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
-              {(digitalQuote || digitalInvoice || digitalAgreement) ? (
-                <div className="grid gap-2 sm:grid-cols-3">
-                  {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
-                  {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
-                  {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
-                  <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
-                  <span className="text-xs">Geen digitale documenten beschikbaar</span>
-                </div>
-              )}
-            </div>
+            <Separator className="my-6" />
           </div>
 
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
