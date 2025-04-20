@@ -9,6 +9,8 @@ import { mockLeads } from "@/data/mockData";
 interface TeamAppointmentListProps {
   appointments: Appointment[];
   onDragStart?: (e: React.DragEvent, appointment: Appointment) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent, dropIndex: number) => void;
 }
 
 const appointmentTypeLabels = {
@@ -24,7 +26,9 @@ const appointmentTypeLabels = {
 
 export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
   appointments,
-  onDragStart
+  onDragStart,
+  onDragOver,
+  onDrop
 }) => {
   const sortedAppointments = [...appointments].sort((a, b) => 
     a.startTime.localeCompare(b.startTime)
@@ -34,9 +38,16 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
     return mockLeads.find(lead => lead.id === leadId);
   };
 
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (onDragOver) {
+      onDragOver(e);
+    }
+  };
+
   return (
-    <div className="space-y-2">
-      {sortedAppointments.map((appointment) => {
+    <div className="space-y-2" onDragOver={e => e.preventDefault()}>
+      {sortedAppointments.map((appointment, index) => {
         const leadInfo = getLeadInfo(appointment.leadId);
         
         return (
@@ -51,6 +62,8 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
             )}
             draggable={!!onDragStart}
             onDragStart={(e) => onDragStart && onDragStart(e, appointment)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={(e) => onDrop && onDrop(e, index)}
           >
             <div className="flex items-start gap-2">
               {onDragStart && (
@@ -106,3 +119,4 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
     </div>
   );
 };
+

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, AlertTriangle } from "lucide-react";
@@ -24,16 +24,38 @@ export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
   onDrop,
   onDragStart
 }) => {
+  const [localAppointments, setLocalAppointments] = useState(appointments);
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleReorder = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const appointmentId = e.dataTransfer.getData("appointmentId");
+    const draggedAppointment = localAppointments.find(app => app.id === appointmentId);
+    
+    if (!draggedAppointment || draggedAppointment.teamId !== team.id) {
+      onDrop(e, team.id);
+      return;
+    }
+
+    const updatedAppointments = [...localAppointments];
+    const draggedIndex = updatedAppointments.findIndex(app => app.id === appointmentId);
+    
+    // Remove the dragged item
+    updatedAppointments.splice(draggedIndex, 1);
+    // Insert it at the new position
+    updatedAppointments.splice(dropIndex, 0, draggedAppointment);
+    
+    setLocalAppointments(updatedAppointments);
   };
 
   return (
     <Card 
       className="overflow-hidden"
       onDragOver={handleDragOver}
-      onDrop={(e) => onDrop(e, team.id)}
     >
       <CardHeader className={team.type === "sales" ? "bg-blue-50" : "bg-green-50 pb-3"}>
         <div className="flex items-center justify-between">
@@ -63,7 +85,7 @@ export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
         </div>
       </CardHeader>
       <CardContent className="p-3">
-        {appointments.length === 0 ? (
+        {localAppointments.length === 0 ? (
           <div className="py-8 text-center text-muted-foreground border-2 border-dashed rounded-lg">
             <AlertTriangle className="h-5 w-5 mx-auto mb-2 text-amber-500" />
             <p>Geen afspraken toegewezen aan dit team</p>
@@ -71,8 +93,9 @@ export const TeamAppointmentCard: React.FC<TeamAppointmentCardProps> = ({
           </div>
         ) : (
           <TeamAppointmentList 
-            appointments={appointments} 
+            appointments={localAppointments} 
             onDragStart={onDragStart}
+            onDrop={handleReorder}
           />
         )}
       </CardContent>
