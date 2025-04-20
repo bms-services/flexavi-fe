@@ -18,7 +18,7 @@ import { NavItem } from "@/types/navigation";
 export const navigationItems: NavItem[] = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Leads", href: "/leads", icon: Users },
-  { name: "Afspraken", href: "/appointments", icon: Calendar },
+  { name: "Planning", href: "/appointments", icon: Calendar },
   {
     name: "Sales",
     href: "#",

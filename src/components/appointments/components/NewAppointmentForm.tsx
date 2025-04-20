@@ -23,8 +23,10 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
       date: new Date(),
       startTime: "09:00",
       teamId: "",
-      type: "new_assignment" as AppointmentStatus,
+      type: "quote_request" as AppointmentStatus,
       description: "",
+      additionalDates: [],
+      additionalTimes: [],
     },
   });
 
@@ -32,9 +34,39 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
     if (!selectedCustomer) {
       return;
     }
+    
+    // Create array of all appointments (main + additional dates)
+    const appointments = [
+      {
+        date: data.date,
+        startTime: data.startTime,
+        teamId: data.teamId,
+        type: data.type,
+        description: data.description,
+        customer: selectedCustomer,
+      }
+    ];
+    
+    // Add additional dates if present
+    if (data.additionalDates && data.additionalDates.length > 0) {
+      data.additionalDates.forEach((date: Date, index: number) => {
+        appointments.push({
+          date,
+          startTime: data.additionalTimes[index] || data.startTime, // Use main time as fallback
+          teamId: data.teamId,
+          type: data.type,
+          description: data.description,
+          customer: selectedCustomer,
+        });
+      });
+    }
+    
     onSubmit({
-      ...data,
-      customer: selectedCustomer,
+      appointments,
+      mainAppointment: {
+        ...data,
+        customer: selectedCustomer,
+      }
     });
   };
 

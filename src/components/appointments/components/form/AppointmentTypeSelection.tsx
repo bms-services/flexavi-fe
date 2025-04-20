@@ -12,10 +12,10 @@ import { UseFormReturn } from "react-hook-form";
 import { AppointmentStatus } from "@/types";
 
 const appointmentTypes: { value: AppointmentStatus; label: string }[] = [
-  { value: "new_assignment", label: "Klus" },
-  { value: "warranty", label: "Garantie" },
-  { value: "quote_request", label: "Offerte aanvraag" },
-  { value: "extra_assignment", label: "Betaling ophalen" },
+  { value: "quote_request", label: "Offerte/Inspectie" },
+  { value: "new_assignment", label: "Klus maken" },
+  { value: "warranty", label: "Garantie maken" },
+  { value: "extra_assignment", label: "Geld ophalen" },
 ];
 
 interface AppointmentTypeSelectionProps {
@@ -36,7 +36,7 @@ export const AppointmentTypeSelection: React.FC<AppointmentTypeSelectionProps> =
                 <SelectValue placeholder="Selecteer type afspraak" />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
+            <SelectContent className="bg-background">
               {appointmentTypes.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}

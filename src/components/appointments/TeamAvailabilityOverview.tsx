@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { format, parseISO, addDays, startOfWeek } from "date-fns";
+import { format, parseISO, addDays, startOfWeek, parse, addWeeks } from "date-fns";
 import { Users, Building2, Search, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { TeamSection } from "./components/TeamSection";
@@ -11,6 +11,7 @@ import { Slider } from "@/components/ui/slider";
 import { TeamDetails } from "@/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { nl } from "date-fns/locale";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 export const TeamAvailabilityOverview = ({
   startDate,
@@ -34,6 +42,10 @@ export const TeamAvailabilityOverview = ({
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
   const [editingTeam, setEditingTeam] = useState<TeamDetails | null>(null);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    startDate ? new Date(startDate) : new Date()
+  );
   const isMobile = useIsMobile();
   const daysToShow = 7;
 
@@ -61,6 +73,21 @@ export const TeamAvailabilityOverview = ({
   const handleTeamNameEdit = (team: TeamDetails) => {
     setEditingTeam(team);
   };
+  
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setSelectedDate(date);
+      // Calculate new date offset based on selected date
+      const selectedWeekStart = startOfWeek(date, { weekStartsOn: 1 });
+      const currentWeekStart = startOfWeek(parseISO(startDate), { weekStartsOn: 1 });
+      const weekDiff = Math.round(
+        (selectedWeekStart.getTime() - currentWeekStart.getTime()) / 
+        (7 * 24 * 60 * 60 * 1000)
+      );
+      setDateOffset(weekDiff);
+      setDatePickerOpen(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -85,12 +112,28 @@ export const TeamAvailabilityOverview = ({
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">
-                {format(parseISO(dates[0]), 'dd MMM')} - {format(parseISO(dates[dates.length - 1]), 'dd MMM yyyy')}
-              </span>
-            </div>
+            
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="min-w-[180px] justify-start">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <span className="text-sm">
+                    {format(parseISO(dates[0]), 'dd MMM')} - {format(parseISO(dates[dates.length - 1]), 'dd MMM yyyy')}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                  locale={nl}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+            
             <Button 
               variant="outline" 
               size="icon" 
