@@ -133,12 +133,12 @@ const CustomerPortalWorkOrder = () => {
           {getStatusBadge(workOrder.status)}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <CompanyDetails companyDetails={companyDetails} />
-          <CustomerInfoCard customer={customerInfo} />
-        </div>
-
         <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <CompanyDetails companyDetails={companyDetails} />
+            <CustomerInfoCard customer={customerInfo} />
+          </div>
+
           <AgreementDetails 
             workAgreement={{
               totalAmount: 2800.50,
