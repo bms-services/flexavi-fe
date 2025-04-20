@@ -48,9 +48,14 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
   const handleSubmit = (values: z.infer<typeof memberSchema>) => {
     const newEmployee: Employee = {
       id: uuidv4(),
-      ...values,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      phoneNumber: values.phoneNumber || undefined,
+      role: values.role,
       teamIds: [teamId],
     };
+    
     onSubmit(newEmployee);
     form.reset();
     onOpenChange(false);

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +14,7 @@ import { SignatureSettings } from "@/components/settings/signature/SignatureSett
 import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
 import { PermissionsSettings } from "@/components/settings/permissions/PermissionsSettings";
 import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield } from "lucide-react";
+import { EmployeeSettings } from "@/components/settings/employees/EmployeeSettings";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -85,6 +85,10 @@ const Settings = () => {
                   <Users2 className="h-4 w-4 mr-2" />
                   Teams
                 </TabsTrigger>
+                <TabsTrigger value="employees" className="w-full justify-start">
+                  <User className="h-4 w-4 mr-2" />
+                  Medewerkers
+                </TabsTrigger>
                 <TabsTrigger value="permissions" className="w-full justify-start">
                   <Shield className="h-4 w-4 mr-2" />
                   Rechten
@@ -134,6 +138,10 @@ const Settings = () => {
               
               <TabsContent value="teams" className="mt-0">
                 <TeamSettings />
+              </TabsContent>
+              
+              <TabsContent value="employees" className="mt-0">
+                <EmployeeSettings />
               </TabsContent>
               
               <TabsContent value="permissions" className="mt-0">
