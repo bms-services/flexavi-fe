@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { NewAppointmentForm } from "./NewAppointmentForm";
 import { useToast } from "@/hooks/use-toast";
@@ -61,7 +62,7 @@ export const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden z-[350]">
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Nieuwe Afspraak Inplannen</DialogTitle>
             <DialogDescription>

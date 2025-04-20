@@ -40,7 +40,7 @@ export const AppointmentTypeSelection: React.FC<AppointmentTypeSelectionProps> =
                 <SelectValue placeholder="Selecteer type afspraak" />
               </SelectTrigger>
             </FormControl>
-            <SelectContent className="z-[300]">
+            <SelectContent>
               {appointmentTypes.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}

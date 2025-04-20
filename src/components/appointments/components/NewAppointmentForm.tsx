@@ -9,13 +9,6 @@ import { AppointmentTypeSelection } from "./form/AppointmentTypeSelection";
 import { TeamSelection } from "./form/TeamSelection";
 import { DescriptionField } from "./form/DescriptionField";
 import { Lead, AppointmentStatus } from "@/types";
-import { addDays, format } from "date-fns";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 interface NewAppointmentFormProps {
   onSubmit: (data: any) => void;
@@ -32,7 +25,6 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
       teamId: "",
       type: "quote_request" as AppointmentStatus,
       description: "",
-      additionalDateRanges: [],
     },
   });
 
@@ -41,53 +33,15 @@ export const NewAppointmentForm = ({ onSubmit, teams }: NewAppointmentFormProps)
       return;
     }
     
-    // Create array of all appointments (main + additional dates)
-    const appointments = [
-      {
-        date: data.date,
-        startTime: data.startTime,
-        teamId: data.teamId,
-        type: data.type,
-        description: data.description,
-        customer: selectedCustomer,
-      }
-    ];
-    
-    // Add additional date ranges if present
-    if (data.additionalDateRanges && data.additionalDateRanges.length > 0) {
-      data.additionalDateRanges.forEach((range: any) => {
-        if (range.startDate && range.endDate) {
-          // Get all dates between start and end (inclusive)
-          let currentDate = new Date(range.startDate);
-          const endDate = new Date(range.endDate);
-          
-          while (currentDate <= endDate) {
-            appointments.push({
-              date: new Date(currentDate),
-              startTime: range.time || data.startTime, // Use main time as fallback
-              teamId: data.teamId,
-              type: data.type,
-              description: data.description,
-              customer: selectedCustomer,
-            });
-            currentDate = addDays(currentDate, 1);
-          }
-        }
-      });
-    }
-    
     onSubmit({
-      appointments,
-      mainAppointment: {
-        ...data,
-        customer: selectedCustomer,
-      }
+      ...data,
+      customer: selectedCustomer,
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 max-h-[70vh] overflow-y-auto p-1">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <div className="space-y-4">
           <CustomerSearch
             selectedCustomer={selectedCustomer}

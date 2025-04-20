@@ -18,16 +18,15 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { mockLeads } from "@/data/mockLeads";
 import { cn } from "@/lib/utils";
 import { Lead } from "@/types";
 import { CreateCustomerForm } from "./CreateCustomerForm";
 import { useToast } from "@/hooks/use-toast";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CustomerSearchProps {
   selectedCustomer: Lead | null;
@@ -87,10 +86,10 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
             <User className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[400px] p-0 z-[300]" align="start" sideOffset={4}>
-          <Command className="w-full">
-            <CommandInput placeholder="Zoek een klant..." className="h-9" />
-            <CommandList className="max-h-[200px]">
+        <PopoverContent className="w-[400px] p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Zoek een klant..." />
+            <CommandList>
               <CommandEmpty>
                 <div className="flex flex-col items-center justify-center p-4 gap-2">
                   <p>Geen klanten gevonden.</p>
@@ -106,31 +105,27 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
                 </div>
               </CommandEmpty>
               <CommandGroup>
-                <ScrollArea className="max-h-[200px]">
-                  <div className="p-1">
-                    {mockLeads.map((customer) => (
-                      <CommandItem
-                        key={customer.id}
-                        value={customer.name}
-                        onSelect={() => {
-                          onSelectCustomer(customer);
-                          setOpen(false);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        {customer.name}
-                        <Check
-                          className={cn(
-                            "ml-auto h-4 w-4",
-                            selectedCustomer?.id === customer.id
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                      </CommandItem>
-                    ))}
-                  </div>
-                </ScrollArea>
+                {mockLeads.map((customer) => (
+                  <CommandItem
+                    key={customer.id}
+                    value={customer.name}
+                    onSelect={() => {
+                      onSelectCustomer(customer);
+                      setOpen(false);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {customer.name}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        selectedCustomer?.id === customer.id
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
               </CommandGroup>
               <div className="p-2 border-t">
                 <Button
@@ -149,7 +144,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
       </Popover>
 
       <Dialog open={showNewCustomerDialog} onOpenChange={setShowNewCustomerDialog}>
-        <DialogContent className="sm:max-w-md z-[400]">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Nieuwe Klant Toevoegen</DialogTitle>
             <DialogDescription>
