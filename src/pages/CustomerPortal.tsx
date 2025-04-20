@@ -3,18 +3,15 @@ import { useParams } from "react-router-dom";
 import { QuoteStatus } from "@/types";
 import { mockQuotes } from "@/data/mockQuotes";
 import { mockLeads } from "@/data/mockLeads";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FileText } from "lucide-react";
-import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Signature from "@/components/customer/Signature";
 import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
 import PortalRejectedMessage from "@/components/customer-portal/PortalRejectedMessage";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { QuotePortalHeader } from "@/components/customer-portal/quote/QuotePortalHeader";
+import { QuoteRevisionDialog } from "@/components/customer-portal/quote/QuoteRevisionDialog";
+import { QuoteActions } from "@/components/customer-portal/quote/QuoteActions";
 
 const CustomerPortal = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,8 +38,6 @@ const CustomerPortal = () => {
     setLoading(false);
   }, [id]);
 
-  const statusBadge = useQuoteStatusBadge(quote?.status as QuoteStatus);
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
@@ -57,11 +52,6 @@ const CustomerPortal = () => {
     }
     setSubmitted(true);
     console.log("Offerte geaccepteerd met handtekening:", signature);
-  };
-
-  const handleReject = () => {
-    setRejected(true);
-    console.log("Offerte afgewezen");
   };
 
   const handleRevisionRequest = () => {
@@ -112,20 +102,11 @@ const CustomerPortal = () => {
         <div className="container mx-auto flex justify-center">
           <Card className="w-full max-w-3xl">
             <CardHeader className="border-b pb-6">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                <div>
-                  <CardTitle className="text-xl md:text-2xl flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-primary shrink-0" />
-                    <span className="break-all">Offerte {quote.id.replace("quote-", "OF-")}</span>
-                  </CardTitle>
-                  <CardDescription className="mt-1">{quote.description}</CardDescription>
-                </div>
-                {statusBadge && (
-                  <Badge variant={statusBadge.variant} className="self-start">
-                    {statusBadge.label}
-                  </Badge>
-                )}
-              </div>
+              <QuotePortalHeader
+                quoteId={quote.id}
+                description={quote.description}
+                status={quote.status as QuoteStatus}
+              />
             </CardHeader>
             
             <CardContent className="py-6 space-y-6">
@@ -152,51 +133,23 @@ const CustomerPortal = () => {
               </div>
             </CardContent>
             
-            <CardFooter className="flex flex-col sm:flex-row justify-between gap-4 border-t pt-6">
-              <Button 
-                variant="outline" 
-                onClick={() => setIsRevisionDialogOpen(true)}
-                className="w-full sm:w-auto order-2 sm:order-1"
-              >
-                Revisie Aanvragen
-              </Button>
-              <Button 
-                onClick={handleAccept}
-                className="w-full sm:w-auto order-1 sm:order-2"
-              >
-                Offerte accepteren
-              </Button>
+            <CardFooter>
+              <QuoteActions
+                onRevisionRequest={() => setIsRevisionDialogOpen(true)}
+                onAccept={handleAccept}
+              />
             </CardFooter>
           </Card>
         </div>
       </div>
 
-      <Dialog open={isRevisionDialogOpen} onOpenChange={setIsRevisionDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Revisie Aanvragen</DialogTitle>
-            <DialogDescription>
-              Geef aan welke aanpassingen u graag zou willen zien in de offerte.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <Textarea
-              value={revisionComment}
-              onChange={(e) => setRevisionComment(e.target.value)}
-              placeholder="Beschrijf hier uw gewenste aanpassingen..."
-              className="min-h-[150px]"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRevisionDialogOpen(false)}>
-              Annuleren
-            </Button>
-            <Button onClick={handleRevisionRequest} disabled={!revisionComment}>
-              Verstuur Revisie Verzoek
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <QuoteRevisionDialog
+        open={isRevisionDialogOpen}
+        onOpenChange={setIsRevisionDialogOpen}
+        revisionComment={revisionComment}
+        onRevisionCommentChange={setRevisionComment}
+        onSubmit={handleRevisionRequest}
+      />
     </>
   );
 };
