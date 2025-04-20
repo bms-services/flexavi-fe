@@ -1,6 +1,6 @@
 
 import React from "react";
-import { User, Phone, Mail, MapPin, Info, History, FileText } from "lucide-react";
+import { User, Info, History, FileText, Phone, Mail, MapPin } from "lucide-react";
 
 interface LeadInfoCardProps {
   lead: {
@@ -9,52 +9,58 @@ interface LeadInfoCardProps {
     phone: string;
     email: string;
   };
-  onMapOpen: (address: string) => void;
   historyEntries?: { type: string; description: string; date: string }[];
   notes?: string[];
   isRescheduled?: boolean;
   rescheduleReason?: string;
+  showMapButton?: boolean; // nieuw, default false
 }
 
 export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   lead,
-  onMapOpen,
   historyEntries = [],
   notes = [],
   isRescheduled = false,
   rescheduleReason,
+  showMapButton = false
 }) => {
   return (
     <div className="bg-[#F1F0FB] rounded-xl p-5 mb-4 border">
-      <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
-        <div className="flex-1 flex items-center gap-3">
+      {/* NAAM + ADRES */}
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
           <User className="h-6 w-6 text-[#0EA5E9]" />
-          <div>
+        </div>
+        <div className="flex-1">
+          <div className="flex flex-col">
             <span className="font-semibold text-lg text-[#1A1F2C]">{lead.name}</span>
-            <div className="text-xs text-[#0EA5E9]">{lead.address}</div>
+            <div className="text-xs text-[#0EA5E9] mb-0.5">{lead.address}</div>
+            <div className="flex flex-col gap-1 mt-2">
+              <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-[#0AA1E4] text-xs hover:underline">
+                <Phone className="h-4 w-4" /> {lead.phone}
+              </a>
+              <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-[#0EA5E9] text-xs hover:underline">
+                <Mail className="h-4 w-4" /> {lead.email}
+              </a>
+            </div>
           </div>
         </div>
-        <div className="flex-1 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2">
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-1 text-[#0AA1E4] text-sm hover:underline">
-            <Phone className="h-4 w-4" />
-            {lead.phone}
-          </a>
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-1 text-[#0EA5E9] text-sm hover:underline">
-            <Mail className="h-4 w-4" />
-            {lead.email}
-          </a>
-        </div>
+        {/* Kaartknop optioneel en standaard niet tonen */}
+        {showMapButton && (
+          <div className="ml-auto">
+            <button
+              className="flex items-center gap-1 text-xs bg-white border border-[#0EA5E9] text-[#0AA1E4] rounded px-3 py-1 hover:bg-[#dbeefd] focus:outline-none transition"
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`, "_blank")}
+            >
+              <MapPin className="h-4 w-4" />
+              Bekijk op kaart
+            </button>
+          </div>
+        )}
       </div>
-      <div className="mt-3 flex items-center gap-2">
-        <button
-          className="flex items-center gap-1 text-xs bg-white border border-[#0EA5E9] text-[#0AA1E4] rounded px-3 py-1 hover:bg-[#dbeefd] focus:outline-none transition"
-          onClick={() => onMapOpen(lead.address)}
-        >
-          <MapPin className="h-4 w-4" />
-          Bekijk op kaart
-        </button>
-      </div>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-[#0A8AD0]">
+      {/* 3 kolommen: notities, historie, evt. extra */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-[#0A8AD0]">
+        {/* Notities */}
         <div>
           <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
             <FileText className="h-4 w-4 text-[#0EA5E9]" />
@@ -70,6 +76,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             <div className="italic text-gray-500">Geen notities beschikbaar</div>
           )}
         </div>
+        {/* Geschiedenis */}
         <div>
           <h4 className="font-semibold text-[#1A1F2C] mb-2 flex items-center gap-2">
             <Info className="h-4 w-4 text-[#0AA1E4]" />
@@ -95,8 +102,11 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
             <div className="italic text-gray-500">Geen geschiedenis beschikbaar</div>
           )}
         </div>
+        {/* Extra kolom voor toekomstige uitbreiding / placeholder */}
+        <div>
+          {/* Je kunt eventueel hier iets toevoegen zoals "Contact moments" etc. Voor nu leeg */}
+        </div>
       </div>
     </div>
   );
 };
-

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,14 +79,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!digitalInvoice;
   const hasDigitalAgreement = !!digitalAgreement;
 
-  // State for process modal
   const [processModalOpen, setProcessModalOpen] = React.useState(false);
   const [processReason, setProcessReason] = React.useState("");
   const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
   const [processTaskDescription, setProcessTaskDescription] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
 
-  // Dummy notities en historie voor demo (in praktijk uit backend)
   const notities = [
     "Klant wil graag volgende week extra opties besproken krijgen.",
     "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland.",
@@ -117,10 +114,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
 
   return (
     <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
-      <CardHeader className="pb-4 pt-4 px-6 border-b bg-[#F1F0FB]">
-        <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-[#0EA5E9]" />
-          <CardTitle className="text-xl font-bold text-[#1A1F2C]">{app.title}</CardTitle>
+      <CardHeader className="pb-1 pt-4 px-6 border-b-0 bg-white">
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-[#0EA5E9]" />
+            <span className="text-lg font-bold text-[#1A1F2C]">
+              {app.date} · {app.startTime} - {app.endTime}
+            </span>
+          </div>
         </div>
       </CardHeader>
 
@@ -129,46 +130,27 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           {lead && (
             <LeadInfoCard
               lead={lead}
-              onMapOpen={onMapOpen}
-              historyEntries={historyEntries}
-              notes={notities}
               isRescheduled={isRescheduled}
               rescheduleReason={rescheduleReason}
+              historyEntries={historyEntries}
+              notes={notities}
+              showMapButton={false}
             />
           )}
           <div className="px-6 pb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6 mb-5">
-              <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Tijdsbestek</span>
-                <span className="text-sm text-[#0A8AD0] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
-              </div>
-              <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Locatie</span>
-                <button
-                  onClick={() => onMapOpen(app.location || "")}
-                  className="text-sm font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent"
-                  tabIndex={0}
-                  type="button"
-                >
-                  <span>{app.location}</span>
-                  <span className="ml-1">
-                    <svg className="inline h-4 w-4 text-[#33C3F0]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10.5a8.38 8.38 0 0 1-1.9 5.4l-6.11 7.61a2 2 0 0 1-3.1 0L3 15.91A8.38 8.38 0 0 1 1 10.5 9 9 0 1 1 21 10.5z"/><circle cx="12" cy="10.5" r="2.25"/></svg>
-                  </span>
-                </button>
-              </div>
-              <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
-                <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
-              </div>
+            <div className="mb-4">
+              <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
+              <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
             </div>
+
             <Separator />
             <div className="mt-5">
               <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
-              {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
+              {(digitalQuote || digitalInvoice || digitalAgreement) ? (
                 <div className="grid gap-2 sm:grid-cols-3">
-                  {hasDigitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
-                  {hasDigitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
-                  {hasDigitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
+                  {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
+                  {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
+                  {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
@@ -217,9 +199,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                         Creëer, upload of verwerk documenten voor deze afspraak.
                       </SheetDescription>
                     </SheetHeader>
-
                     <div className="mt-6 space-y-6">
-                      {/* Offerte/Factuur/Werkovereenkomst acties kunnen hier (niet gewijzigd) */}
                     </div>
                   </div>
                   <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
@@ -255,12 +235,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       />
       <ReceiptUploadDialog
         open={uploadInvoiceDialogOpen}
-        onOpenChange={open => open ? onOpenUploadInvoice() : onCloseUploadInvoice()}
+        onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice}
         onResult={onInvoiceResult}
       />
       <ReceiptUploadDialog
         open={uploadAgreementDialogOpen}
-        onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()}
+        onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement}
         onResult={onAgreementResult}
       />
 
