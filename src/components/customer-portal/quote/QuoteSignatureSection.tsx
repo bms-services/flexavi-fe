@@ -15,7 +15,9 @@ export const QuoteSignatureSection: React.FC<QuoteSignatureSectionProps> = ({
       <p className="text-sm text-gray-500 mb-4">
         Om deze offerte te accepteren, plaats uw handtekening hieronder en klik op 'Accepteren'.
       </p>
-      <Signature onSignatureChange={onSignatureChange} />
+      <div className="bg-white border rounded-md p-4 shadow-sm">
+        <Signature onSignatureChange={onSignatureChange} />
+      </div>
     </div>
   );
 };

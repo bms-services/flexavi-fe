@@ -16,13 +16,13 @@ export const QuoteActions: React.FC<QuoteActionsProps> = ({
       <Button 
         variant="outline" 
         onClick={onRevisionRequest}
-        className="w-full sm:w-auto order-2 sm:order-1"
+        className="w-full sm:w-auto order-2 sm:order-1 hover:bg-gray-100"
       >
         Revisie Aanvragen
       </Button>
       <Button 
         onClick={onAccept}
-        className="w-full sm:w-auto order-1 sm:order-2"
+        className="w-full sm:w-auto order-1 sm:order-2 bg-primary hover:bg-primary/90"
       >
         Offerte accepteren
       </Button>

@@ -22,14 +22,14 @@ export const QuotePortalHeader: React.FC<QuotePortalHeaderProps> = ({
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
       <div>
-        <CardTitle className="text-xl md:text-2xl flex items-center gap-2">
-          <FileText className="h-5 w-5 text-primary shrink-0" />
+        <CardTitle className="text-xl md:text-2xl flex items-center gap-2 text-primary">
+          <FileText className="h-6 w-6 text-primary shrink-0" />
           <span className="break-all">Offerte {quoteId.replace("quote-", "OF-")}</span>
         </CardTitle>
-        <CardDescription className="mt-1">{description}</CardDescription>
+        <CardDescription className="mt-1 text-gray-600">{description}</CardDescription>
       </div>
       {statusBadge && (
-        <Badge variant={statusBadge.variant} className="self-start">
+        <Badge variant={statusBadge.variant} className="self-start font-medium">
           {statusBadge.label}
         </Badge>
       )}

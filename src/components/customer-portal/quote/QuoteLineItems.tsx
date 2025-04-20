@@ -9,29 +9,29 @@ interface QuoteLineItemsProps {
 export const QuoteLineItems = ({ lineItems, formatCurrency }: QuoteLineItemsProps) => {
   return (
     <div className="w-full min-w-[600px]">
-      <table className="w-full text-sm">
+      <table className="w-full text-sm border-separate border-spacing-0">
         <thead>
-          <tr className="border-b">
-            <th className="text-left py-2">Beschrijving</th>
-            <th className="text-center py-2">Aantal</th>
-            <th className="text-center py-2">Eenheid</th>
-            <th className="text-right py-2">Prijs per eenheid</th>
-            <th className="text-right py-2">Totaal</th>
+          <tr>
+            <th className="text-left py-3 px-4 bg-primary/5 border-y rounded-l-md font-medium">Beschrijving</th>
+            <th className="text-center py-3 px-4 bg-primary/5 border-y font-medium">Aantal</th>
+            <th className="text-center py-3 px-4 bg-primary/5 border-y font-medium">Eenheid</th>
+            <th className="text-right py-3 px-4 bg-primary/5 border-y font-medium">Prijs per eenheid</th>
+            <th className="text-right py-3 px-4 bg-primary/5 border-y rounded-r-md font-medium">Totaal</th>
           </tr>
         </thead>
         <tbody>
           {lineItems.map((item: any) => (
-            <tr key={item.id} className="border-b">
-              <td className="py-2">{item.description}</td>
-              <td className="text-center py-2">{item.quantity}</td>
-              <td className="text-center py-2">{item.unit}</td>
-              <td className="text-right py-2">{formatCurrency(item.pricePerUnit)}</td>
-              <td className="text-right py-2">{formatCurrency(item.total)}</td>
+            <tr key={item.id} className="hover:bg-gray-50">
+              <td className="py-3 px-4 border-b">{item.description}</td>
+              <td className="text-center py-3 px-4 border-b">{item.quantity}</td>
+              <td className="text-center py-3 px-4 border-b">{item.unit}</td>
+              <td className="text-right py-3 px-4 border-b">{formatCurrency(item.pricePerUnit)}</td>
+              <td className="text-right py-3 px-4 border-b font-medium">{formatCurrency(item.total)}</td>
             </tr>
           ))}
           <tr>
-            <td colSpan={4} className="text-right py-4 font-medium">Totaal:</td>
-            <td className="text-right py-4 font-bold">
+            <td colSpan={4} className="text-right py-4 px-4 font-medium">Totaal:</td>
+            <td className="text-right py-4 px-4 font-bold text-primary">
               {formatCurrency(lineItems.reduce((sum, item) => sum + item.total, 0))}
             </td>
           </tr>

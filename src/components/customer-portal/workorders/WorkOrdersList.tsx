@@ -24,7 +24,7 @@ export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) =>
       case 'planned':
         return <Badge variant="secondary">Gepland</Badge>;
       case 'in_progress':
-        return <Badge variant="default">In Uitvoering</Badge>;
+        return <Badge variant="primary" className="bg-blue-500 hover:bg-blue-600">In Uitvoering</Badge>;
       case 'completed':
         return <Badge variant="success">Afgerond</Badge>;
       default:
@@ -34,8 +34,8 @@ export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) =>
 
   if (workOrders.length === 0) {
     return (
-      <Card>
-        <CardContent className="py-8">
+      <Card className="border">
+        <CardContent className="py-8 bg-white">
           <p className="text-center text-muted-foreground">
             Er zijn nog geen werkopdrachten beschikbaar.
           </p>
@@ -47,11 +47,11 @@ export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) =>
   return (
     <div className="space-y-4">
       {workOrders.map((workOrder) => (
-        <Card key={workOrder.id}>
-          <CardHeader>
+        <Card key={workOrder.id} className="border shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="bg-white border-b">
             <div className="flex items-start justify-between">
               <div>
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-primary">
                   <FileText className="h-5 w-5 text-primary" />
                   Werkopdracht {workOrder.id}
                 </CardTitle>
@@ -62,7 +62,7 @@ export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) =>
               {getStatusBadge(workOrder.status)}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="bg-white">
             <div className="text-sm text-muted-foreground">
               <p>Aangemaakt op: {format(new Date(workOrder.createdAt), "d MMMM yyyy", { locale: nl })}</p>
               {workOrder.plannedStartDate && (
