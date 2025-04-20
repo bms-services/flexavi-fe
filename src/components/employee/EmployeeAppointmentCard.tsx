@@ -10,6 +10,7 @@ import { EmployeeAppointmentActions } from "./EmployeeAppointmentActions";
 import { EmployeeAppointmentSheet } from "./EmployeeAppointmentSheet";
 import { Sheet } from "@/components/ui/sheet";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
+import { Dialog } from "@/components/ui/dialog";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -43,7 +44,6 @@ interface EmployeeAppointmentCardProps {
   onRescheduleSave: () => void;
 }
 
-// --- NEW Helper: Kolom-card style
 function BlockCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <div
@@ -58,7 +58,6 @@ function BlockCard({ children, className = "" }: { children: React.ReactNode; cl
   );
 }
 
-// --- NEW: Notities en Geschiedenis compact block
 function NotesHistory({
   notes,
   historyEntries,
@@ -100,7 +99,6 @@ function NotesHistory({
   );
 }
 
-// --- Redesign Main Card
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -135,6 +133,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const [localDigitalQuote, setLocalDigitalQuote] = useState<ReceiptData | undefined>(digitalQuote);
   const [localDigitalInvoice, setLocalDigitalInvoice] = useState<ReceiptData | undefined>(digitalInvoice);
   const [localDigitalAgreement, setLocalDigitalAgreement] = useState<ReceiptData | undefined>(digitalAgreement);
+  const [processModalOpen, setProcessModalOpen] = useState(false);
 
   const handleQuoteResult = (data: ReceiptData) => {
     setLocalDigitalQuote(data);
@@ -153,7 +152,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const hasDigitalInvoice = !!localDigitalInvoice;
   const hasDigitalAgreement = !!localDigitalAgreement;
 
-  // Mock notes/history for demo - you can pass in as props
   const notes = [
     "Klant wil graag volgende week extra opties besproken krijgen.",
   ];
@@ -161,19 +159,15 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     ? [{ type: "Afspraak verzet", description: rescheduleReason, date: app.date }]
     : [];
 
-  // --- Card header styling
   return (
     <Card className="border-[#B8D8FF] bg-[#F8FAFC] rounded-3xl overflow-hidden shadow flex flex-col w-full">
-      {/* Header */}
       <CardHeader className="rounded-t-3xl border-2 border-[#B8D8FF] bg-[#F4F9FE] px-6 py-3 border-b flex flex-row items-center gap-2 border-t-0 border-x-0">
         <Calendar className="h-6 w-6 text-[#189BE7]" />
         <CardTitle className="text-xl font-bold text-[#1366b2]"> {app.title} </CardTitle>
       </CardHeader>
 
-      {/* Main Content in 3 blocks */}
       <CardContent className="bg-white p-6 pt-3">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Kolom 1: Klant */}
           <BlockCard className="col-span-1">
             <div className="flex items-center gap-2 mb-1">
               <User className="h-6 w-6 text-[#189BE7]" />
@@ -202,13 +196,10 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               Bekijk op kaart
             </button>
 
-            {/* Notities en geschiedenis compact */}
             <NotesHistory notes={notes} historyEntries={historyEntries} />
           </BlockCard>
 
-          {/* Kolom 2: Tijdsbestek, locatie, beschrijving */}
           <BlockCard className="col-span-1">
-            {/* Tijdsbestek */}
             <div className="mb-2">
               <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
                 <Calendar className="h-4 w-4" />
@@ -218,7 +209,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 {app.date} · {app.startTime} - {app.endTime}
               </span>
             </div>
-            {/* Locatie */}
             <div className="mb-2">
               <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
                 <MapPin className="h-4 w-4" />
@@ -234,7 +224,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 <MapPin className="inline h-4 w-4 text-[#2196F3] ml-1" />
               </span>
             </div>
-            {/* Beschrijving */}
             <div>
               <span className="block text-sm font-bold text-[#189BE7] flex items-center gap-1 mb-0.5">
                 <FileText className="h-4 w-4" />
@@ -244,7 +233,6 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             </div>
           </BlockCard>
 
-          {/* Kolom 3: Documenten */}
           <BlockCard className="col-span-1 items-center">
             <h4 className="uppercase text-xs text-[#189BE7] font-bold mb-1 tracking-wider text-center">
               Documenten
@@ -265,13 +253,16 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         </div>
       </CardContent>
 
-      {/* Actions (Geschiedenis / Verzetten / Verwerken) */}
       <div className="bg-[#F8FAFC] border-t px-2 py-2 flex flex-wrap md:flex-nowrap justify-end gap-3 mt-2 w-full">
         <div className="grow flex flex-row justify-end gap-2">
-          <EmployeeAppointmentActions
-            onViewHistory={onViewHistory}
-            onOpenRescheduleModal={onOpenRescheduleModal}
-          />
+          <Dialog open={rescheduleModalOpen} onOpenChange={(open) => {
+            if (!open) onCloseRescheduleModal();
+          }}>
+            <EmployeeAppointmentActions
+              onViewHistory={onViewHistory}
+              onOpenRescheduleModal={onOpenRescheduleModal}
+            />
+          </Dialog>
         </div>
         <div className="grow-0">
           <Sheet>
@@ -297,13 +288,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               uploadAgreementDialogOpen={uploadAgreementDialogOpen}
               onAgreementResult={handleAgreementResult}
               onCloseUploadAgreement={onCloseUploadAgreement}
-              onOpenProcessModal={() => {}} // If needed
+              onOpenProcessModal={() => setProcessModalOpen(true)}
             />
           </Sheet>
         </div>
       </div>
 
-      {/* Dialogs */}
       <RescheduleDialog
         open={rescheduleModalOpen}
         reason={rescheduleReason}
@@ -312,15 +302,15 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         onSave={onRescheduleSave}
       />
       <AppointmentProcessModal
-        open={false}
+        open={processModalOpen}
         reason={""}
         onReasonChange={() => {}}
         taskChecked={false}
         onTaskCheckedChange={() => {}}
         taskDescription={""}
         onTaskDescriptionChange={() => {}}
-        onCancel={() => {}}
-        onSubmit={() => {}}
+        onCancel={() => setProcessModalOpen(false)}
+        onSubmit={() => setProcessModalOpen(false)}
         loading={false}
       />
     </Card>
