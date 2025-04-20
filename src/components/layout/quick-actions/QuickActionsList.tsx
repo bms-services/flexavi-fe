@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, FileText, Folder, Receipt } from 'lucide-react';
@@ -134,9 +135,8 @@ export const QuickActionsList = () => {
     });
     setUploadedImage(null);
     
-    // Using toast notification (from sonner)
-    toast({
-      title: "Bon verwerkt",
+    // Using toast notification (from sonner) - fixed format
+    toast("Bon verwerkt", {
       description: "De bon is succesvol verwerkt en opgeslagen",
     });
   };
