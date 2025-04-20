@@ -39,9 +39,9 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#F1F0FB] to-[#f7f6fd] rounded-2xl border border-[#e0eefe] shadow-lg overflow-hidden w-full animate-fade-in">
-      {/* Grid met klant links (1/3) en afspraakomschrijving rechts (2/3) */}
+    <div className="bg-[#EFF7FF] rounded-2xl border border-[#e0eefe] shadow-lg overflow-hidden w-full animate-fade-in">
       <div className="p-5 sm:p-6 px-[25px] py-[18px]">
+        {/* Nieuwe grid: klantgegevens 1/3, afspraakomschrijving 2/3 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 mb-6">
           {/* Klant Info (1/3) */}
           <div className="flex-1 md:col-span-1 space-y-3 min-w-0">
@@ -51,7 +51,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
               </div>
               <div>
                 <span className="text-xs text-[#7E69AB] font-medium uppercase">Klantgegevens</span>
-                <h3 className="text-lg font-bold text-[#1A1F2C]">{lead.name}</h3>
+                <h3 className="text-lg font-bold text-[#23262F]">{lead.name}</h3>
               </div>
             </div>
             <div className="ml-11 space-y-2">
@@ -77,9 +77,13 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
           </div>
           {/* Afspraakomschrijving (2/3) */}
           <div className="md:col-span-2 flex flex-col justify-center min-h-[112px]">
-            <span className="text-xs text-[#7E69AB] font-medium uppercase mb-2 block">Afspraakomschrijving</span>
-            <div className="text-base md:text-lg font-semibold text-[#221F26] whitespace-pre-line">
-              {description ? description : <span className="text-gray-400 font-normal italic">Geen omschrijving ingevuld</span>}
+            <span className="text-xs text-[#2F3857] font-semibold uppercase mb-2 block">
+              Afspraakomschrijving
+            </span>
+            <div className="bg-white/80 rounded-lg px-5 py-4 min-h-[96px] flex items-center shadow-sm border border-[#e0eefe]">
+              <p className={`text-base md:text-lg font-medium md:font-semibold text-[#1A1F2C] whitespace-pre-line ${description ? "" : "text-gray-400 italic font-normal"}`}>
+                {description ? description : "Geen omschrijving ingevuld"}
+              </p>
             </div>
           </div>
         </div>
@@ -91,7 +95,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
               <div className="bg-[#7E69AB]/10 rounded-full p-1.5">
                 <FileText className="w-4 h-4 text-[#7E69AB]" />
               </div>
-              <h4 className="font-semibold text-[#221F26]">Notities</h4>
+              <h4 className="font-semibold text-[#23262F]">Notities</h4>
             </div>
             <div className="max-h-40 overflow-y-auto pr-1 space-y-2">
               {notes.length > 0 ? notes.map((note, i) => (
@@ -107,7 +111,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
               <div className="bg-[#1EAEDB]/10 rounded-full p-1.5">
                 <History className="w-4 h-4 text-[#1EAEDB]" />
               </div>
-              <h4 className="font-semibold text-[#221F26]">Geschiedenis</h4>
+              <h4 className="font-semibold text-[#23262F]">Geschiedenis</h4>
             </div>
             <div className="max-h-40 overflow-y-auto pr-1 space-y-2">
               {isRescheduled && rescheduleReason && (
@@ -136,7 +140,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
               <div className="bg-[#0EA5E9]/10 rounded-full p-1.5">
                 <Info className="w-4 h-4 text-[#0EA5E9]" />
               </div>
-              <h4 className="font-semibold text-[#221F26]">Extra Informatie</h4>
+              <h4 className="font-semibold text-[#23262F]">Extra Informatie</h4>
             </div>
             <div className="h-full flex flex-col items-center justify-center py-4">
               <p className="text-gray-400 text-sm italic text-center">Extra klantinformatie komt hier beschikbaar</p>
@@ -153,4 +157,3 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
     </div>
   );
 };
-
