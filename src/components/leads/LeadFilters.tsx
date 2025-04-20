@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -47,15 +46,18 @@ export const LeadFilters = ({ onFilterChange, filters, searchTerm, onSearchChang
         />
 
         <Select value={filters.leadStatus} onValueChange={(value) => onFilterChange("leadStatus", value)}>
-          <SelectTrigger className="h-8 w-[150px]">
+          <SelectTrigger className="h-8 w-[180px]">
             <SelectValue placeholder="Lead status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Alle statussen</SelectItem>
-            <SelectItem value="new">Nieuw</SelectItem>
-            <SelectItem value="in-progress">In behandeling</SelectItem>
-            <SelectItem value="completed">Afgerond</SelectItem>
-            <SelectItem value="cancelled">Geannuleerd</SelectItem>
+            <SelectItem value="new_lead">Nieuwe lead</SelectItem>
+            <SelectItem value="appointment_scheduled">Afspraak ingepland</SelectItem>
+            <SelectItem value="warranty_visit">Garantie afspraak</SelectItem>
+            <SelectItem value="payment_pending">Openstaande betaling</SelectItem>
+            <SelectItem value="in_collection">Loopt bij incasso</SelectItem>
+            <SelectItem value="legal_case">Rechtzaak lopend</SelectItem>
+            <SelectItem value="satisfied">Tevreden klant</SelectItem>
           </SelectContent>
         </Select>
 

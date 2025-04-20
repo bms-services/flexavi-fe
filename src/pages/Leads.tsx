@@ -1,10 +1,14 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { LeadList } from "@/components/leads/LeadList";
 import { mockLeads } from "@/data/mockData";
 
+const ITEMS_PER_PAGE = 10;
+
 const Leads = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
@@ -15,7 +19,12 @@ const Leads = () => {
           </p>
         </div>
 
-        <LeadList leads={mockLeads} />
+        <LeadList 
+          leads={mockLeads} 
+          currentPage={currentPage}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </Layout>
   );

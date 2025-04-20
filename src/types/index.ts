@@ -19,13 +19,13 @@ export type LeadDetail = Lead & {
 };
 
 export type LeadStatus = 
-  | "new" 
-  | "contacted" 
-  | "qualified" 
-  | "proposal" 
-  | "negotiation" 
-  | "won" 
-  | "lost";
+  | "new_lead"           // Nieuwe lead
+  | "appointment_scheduled" // Afspraak ingepland
+  | "warranty_visit"     // Garantie afspraak
+  | "payment_pending"    // Openstaande betaling
+  | "in_collection"      // Loopt bij incasso
+  | "legal_case"        // Rechtzaak lopend
+  | "satisfied";        // Tevreden klant
 
 export type Note = {
   id: string;

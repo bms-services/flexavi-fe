@@ -9,15 +9,15 @@ interface LeadStatusBadgeProps {
 
 export const LeadStatusBadge: React.FC<LeadStatusBadgeProps> = ({ status }) => {
   const statusConfig = {
-    new: { label: "Nieuw", variant: "default" as const },
-    contacted: { label: "Contact", variant: "secondary" as const },
-    qualified: { label: "Gekwalificeerd", variant: "outline" as const },
-    proposal: { label: "Offerte", variant: "primary" as const },
-    negotiation: { label: "Onderhandeling", variant: "warning" as const },
-    won: { label: "Gewonnen", variant: "success" as const },
-    lost: { label: "Verloren", variant: "destructive" as const },
+    new_lead: { label: "Nieuwe lead", variant: "default" as const },
+    appointment_scheduled: { label: "Afspraak ingepland", variant: "secondary" as const },
+    warranty_visit: { label: "Garantie afspraak", variant: "outline" as const },
+    payment_pending: { label: "Openstaande betaling", variant: "warning" as const },
+    in_collection: { label: "Loopt bij incasso", variant: "destructive" as const },
+    legal_case: { label: "Rechtzaak lopend", variant: "destructive" as const },
+    satisfied: { label: "Tevreden klant", variant: "success" as const },
   };
 
-  const config = statusConfig[status] || statusConfig.new;
+  const config = statusConfig[status] || statusConfig.new_lead;
   return <Badge variant={config.variant}>{config.label}</Badge>;
 };
