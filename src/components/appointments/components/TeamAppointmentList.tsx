@@ -34,28 +34,8 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
     return mockLeads.find(lead => lead.id === leadId);
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const draggingElement = document.querySelector('.dragging');
-    const container = e.currentTarget;
-    const siblings = [...container.querySelectorAll('[draggable="true"]:not(.dragging)')];
-
-    // Find the sibling to insert before based on mouse position
-    const nextSibling = siblings.find(sibling => {
-      const box = sibling.getBoundingClientRect();
-      return e.clientY < box.top + box.height / 2;
-    });
-
-    if (draggingElement) {
-      container.insertBefore(draggingElement, nextSibling || null);
-    }
-  };
-
   return (
-    <div 
-      className="space-y-2" 
-      onDragOver={handleDragOver}
-    >
+    <div className="space-y-2">
       {sortedAppointments.map((appointment) => {
         const leadInfo = getLeadInfo(appointment.leadId);
         
@@ -67,17 +47,10 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
               appointment.teamType === "sales" 
                 ? "bg-blue-50 border-blue-200" 
                 : "bg-green-50 border-green-200",
-              onDragStart ? "cursor-move hover:shadow-md transition-shadow" : "",
-              "draggable-item"
+              onDragStart ? "cursor-move hover:shadow-md transition-shadow" : ""
             )}
             draggable={!!onDragStart}
-            onDragStart={(e) => {
-              e.currentTarget.classList.add('dragging');
-              onDragStart && onDragStart(e, appointment);
-            }}
-            onDragEnd={(e) => {
-              e.currentTarget.classList.remove('dragging');
-            }}
+            onDragStart={(e) => onDragStart && onDragStart(e, appointment)}
           >
             <div className="flex items-start gap-2">
               {onDragStart && (

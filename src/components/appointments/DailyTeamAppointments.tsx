@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Appointment, TeamDetails } from "@/types";
 import { useToast } from "@/hooks/use-toast";
