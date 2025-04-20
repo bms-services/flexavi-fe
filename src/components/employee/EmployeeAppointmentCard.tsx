@@ -162,45 +162,94 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               </div>
             </div>
 
-            {/* ACTIE KNOPPEN herontworpen met grote iconen */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              <Button
-                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#9b87f5] hover:bg-[#f6f2fd] focus:ring-2 focus:ring-[#9b87f5] transition-all"
-                onClick={onCreateQuote}
-                type="button"
-              >
-                <FilePlus className="mb-1 w-7 h-7 text-[#9b87f5] group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-[#7E69AB] mt-1">Maak offerte</span>
-                <span className="text-xs text-[#9b87f5] opacity-70 -mt-0.5">+ upload</span>
-              </Button>
-              <Button
-                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#0EA5E9] hover:bg-[#e7f6fd] focus:ring-2 focus:ring-[#0EA5E9] transition-all"
-                onClick={onCreateInvoice}
-                type="button"
-              >
-                <FilePlus className="mb-1 w-7 h-7 text-[#0EA5E9] group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-[#0A8AD0] mt-1">Maak factuur</span>
-                <span className="text-xs text-[#0EA5E9] opacity-70 -mt-0.5">+ upload</span>
-              </Button>
-              <Button
-                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#7E69AB] hover:bg-[#f3f1fa] focus:ring-2 focus:ring-[#7E69AB] transition-all"
-                onClick={onCreateAgreement}
-                type="button"
-              >
-                <FilePlus className="mb-1 w-7 h-7 text-[#7E69AB] group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-[#7E69AB] mt-1">Werkopdracht</span>
-                <span className="text-xs text-[#7E69AB] opacity-70 -mt-0.5">+ upload</span>
-              </Button>
-              <Button
-                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-2 border-[#9b87f5] focus:ring-2 focus:ring-[#9b87f5] transition-all"
-                onClick={handleOpenProcessModal}
-                type="button"
-              >
-                <CalendarPlus className="mb-1 w-7 h-7 text-white group-hover:scale-110 transition-transform" />
-                <span className="text-sm mt-1">Verwerk afspraak</span>
-              </Button>
+            {/* MODERN KNOPPEN BLOK */}
+            <div className="flex flex-col gap-6 md:flex-row md:gap-4 justify-center items-stretch mx-auto max-w-4xl">
+              {/* Offerte */}
+              <div className="flex-1">
+                <button
+                  className="w-full relative group rounded-2xl p-0 overflow-hidden shadow-xl"
+                  style={{
+                    background: "linear-gradient(90deg, #8B5CF6 0%, #33C3F0 100%)",
+                  }}
+                  onClick={onCreateQuote}
+                  type="button"
+                >
+                  <div className="flex flex-col items-center justify-center py-6 px-2 md:px-4">
+                    <span className="flex items-center justify-center bg-white bg-opacity-70 rounded-full w-12 h-12 mb-3 shadow group-hover:scale-110 transition-transform duration-300">
+                      <svg width="30" height="30" stroke="#8B5CF6" viewBox="0 0 24 24" fill="none" strokeWidth="2"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M9 7h6M9 11h6M9 15h3"/><path d="M12 17v4m2-2h-4"/></svg>
+                    </span>
+                    <span className="text-white tracking-wide font-bold text-lg md:text-xl drop-shadow">Maak offerte</span>
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium transition">+ upload</span>
+                  </div>
+                  <span className="absolute inset-0 rounded-2xl border-2 border-[#8B5CF6] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </button>
+              </div>
+
+              {/* Factuur */}
+              <div className="flex-1">
+                <button
+                  className="w-full relative group rounded-2xl p-0 overflow-hidden shadow-xl"
+                  style={{
+                    background: "linear-gradient(90deg, #0EA5E9 0%, #1EAEDB 100%)",
+                  }}
+                  onClick={onCreateInvoice}
+                  type="button"
+                >
+                  <div className="flex flex-col items-center justify-center py-6 px-2 md:px-4">
+                    <span className="flex items-center justify-center bg-white bg-opacity-70 rounded-full w-12 h-12 mb-3 shadow group-hover:scale-110 transition-transform duration-300">
+                      <svg width="30" height="30" stroke="#0EA5E9" viewBox="0 0 24 24" fill="none" strokeWidth="2"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M9 7h6M9 11h6M9 15h3"/><path d="M12 19v2m0-6v2" /></svg>
+                    </span>
+                    <span className="text-white tracking-wide font-bold text-lg md:text-xl drop-shadow">Maak factuur</span>
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium transition">+ upload</span>
+                  </div>
+                  <span className="absolute inset-0 rounded-2xl border-2 border-[#0EA5E9] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </button>
+              </div>
+
+              {/* Werkopdracht */}
+              <div className="flex-1">
+                <button
+                  className="w-full relative group rounded-2xl p-0 overflow-hidden shadow-xl"
+                  style={{
+                    background: "linear-gradient(90deg, #7E69AB 0%, #9b87f5 100%)",
+                  }}
+                  onClick={onCreateAgreement}
+                  type="button"
+                >
+                  <div className="flex flex-col items-center justify-center py-6 px-2 md:px-4">
+                    <span className="flex items-center justify-center bg-white bg-opacity-70 rounded-full w-12 h-12 mb-3 shadow group-hover:scale-110 transition-transform duration-300">
+                      <svg width="30" height="30" stroke="#7E69AB" viewBox="0 0 24 24" fill="none" strokeWidth="2"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M9 7h6M9 11h6M9 15h3"/><path d="M8 20h8" /></svg>
+                    </span>
+                    <span className="text-white tracking-wide font-bold text-lg md:text-xl drop-shadow">Werkopdracht</span>
+                    <span className="text-xs mt-1 text-white/80 group-hover:text-white font-medium transition">+ upload</span>
+                  </div>
+                  <span className="absolute inset-0 rounded-2xl border-2 border-[#7E69AB] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </button>
+              </div>
+
+              {/* Verwerk Afspraak */}
+              <div className="flex-1 relative">
+                <button
+                  className="w-full relative group rounded-2xl p-0 overflow-hidden shadow-xl"
+                  style={{
+                    background: "linear-gradient(90deg, #9b87f5 0%, #D6BCFA 100%)",
+                  }}
+                  onClick={handleOpenProcessModal}
+                  type="button"
+                >
+                  <div className="flex flex-col items-center justify-center py-6 px-2 md:px-4">
+                    <span className="flex items-center justify-center bg-white bg-opacity-70 rounded-full w-12 h-12 mb-3 shadow group-hover:scale-110 transition-transform duration-300">
+                      <svg width="30" height="30" stroke="#9b87f5" viewBox="0 0 24 24" fill="none" strokeWidth="2"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 14h8m-4-4v8" /></svg>
+                    </span>
+                    <span className="text-[#6E59A5] tracking-wide font-extrabold text-lg md:text-xl drop-shadow">Verwerk afspraak</span>
+                  </div>
+                  <span className="absolute inset-0 rounded-2xl border-2 border-[#9b87f5] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </button>
+                <span className="block text-xs text-[#7E69AB] text-center font-medium mt-2 opacity-70">Afronden of notitie toevoegen</span>
+              </div>
             </div>
-            {/* /ACTIE KNOPPEN */}
+            {/* /MODERN KNOPPEN BLOK */}
+
             <Separator className="my-7" />
           </div>
           {/* EINDE: nieuw ontworpen blok */}
