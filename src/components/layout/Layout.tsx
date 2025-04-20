@@ -27,12 +27,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="p-0 max-w-[220px]">
+          <SheetContent side="left" className="p-0 max-w-[200px]">
             <Sidebar />
           </SheetContent>
         </Sheet>
       ) : (
-        <div className="w-[220px] flex-shrink-0">
+        <div className="w-[200px] flex-shrink-0">
           <Sidebar />
         </div>
       )}
@@ -45,3 +45,4 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     </div>
   );
 };
+
