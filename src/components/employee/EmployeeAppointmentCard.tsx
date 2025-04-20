@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -131,16 +130,23 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             />
           )}
 
-          <div className="px-6 pb-6 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Beschrijving */}
-              <div className="mb-4 flex-1">
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
-                <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
+          <div className="px-6 pb-6 pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-7">
+              {/* Beschrijving KAART */}
+              <div className="bg-[#FAF9FD] rounded-2xl shadow-md flex flex-col p-5 min-h-[170px] border border-[#ece6fa]">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="text-[#9b87f5] h-5 w-5" />
+                  <span className="font-semibold text-[#7E69AB] text-sm uppercase tracking-wide">Beschrijving</span>
+                </div>
+                <span className="block text-base text-[#1A1F2C] leading-relaxed">{app.description}</span>
               </div>
-              {/* Documenten */}
-              <div className="flex-1">
-                <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
+
+              {/* Documenten KAART */}
+              <div className="bg-[#F6F7FA] rounded-2xl shadow-md flex flex-col p-5 border border-[#d8e8f9] min-h-[170px]">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="text-[#0EA5E9] h-5 w-5" />
+                  <span className="font-semibold text-[#0EA5E9] text-sm uppercase tracking-wide">Documenten</span>
+                </div>
                 {digitalQuote || digitalInvoice || digitalAgreement ? (
                   <div className="grid gap-2 sm:grid-cols-3">
                     {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
@@ -156,47 +162,48 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               </div>
             </div>
 
-            {/* Verwerk knop sectie met 4 knoppen */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
-              {/* Maak offerte & upload offerte */}
+            {/* ACTIE KNOPPEN herontworpen met grote iconen */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <Button
-                className="justify-start px-4 py-3 font-semibold text-[#9b87f5] border border-[#9b87f5] hover:bg-[#f7f4fd]"
+                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#9b87f5] hover:bg-[#f6f2fd] focus:ring-2 focus:ring-[#9b87f5] transition-all"
                 onClick={onCreateQuote}
+                type="button"
               >
-                <FilePlus className="mr-2 text-[#9b87f5]" />
-                Maak offerte & upload offerte
+                <FilePlus className="mb-1 w-7 h-7 text-[#9b87f5] group-hover:scale-110 transition-transform" />
+                <span className="text-sm text-[#7E69AB] mt-1">Maak offerte</span>
+                <span className="text-xs text-[#9b87f5] opacity-70 -mt-0.5">+ upload</span>
               </Button>
-
-              {/* Maak factuur & upload factuur */}
               <Button
-                className="justify-start px-4 py-3 font-semibold text-[#0EA5E9] border border-[#0EA5E9] hover:bg-[#e7f6fd]"
+                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#0EA5E9] hover:bg-[#e7f6fd] focus:ring-2 focus:ring-[#0EA5E9] transition-all"
                 onClick={onCreateInvoice}
+                type="button"
               >
-                <FilePlus className="mr-2 text-[#0EA5E9]" />
-                Maak factuur & upload factuur
+                <FilePlus className="mb-1 w-7 h-7 text-[#0EA5E9] group-hover:scale-110 transition-transform" />
+                <span className="text-sm text-[#0A8AD0] mt-1">Maak factuur</span>
+                <span className="text-xs text-[#0EA5E9] opacity-70 -mt-0.5">+ upload</span>
               </Button>
-
-              {/* Maak werkopdracht & upload werkopdracht */}
               <Button
-                className="justify-start px-4 py-3 font-semibold text-[#7E69AB] border border-[#7E69AB] hover:bg-[#f3f1fa]"
+                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group border-2 border-[#7E69AB] hover:bg-[#f3f1fa] focus:ring-2 focus:ring-[#7E69AB] transition-all"
                 onClick={onCreateAgreement}
+                type="button"
               >
-                <FilePlus className="mr-2 text-[#7E69AB]" />
-                Maak werkopdracht & upload werkopdracht
+                <FilePlus className="mb-1 w-7 h-7 text-[#7E69AB] group-hover:scale-110 transition-transform" />
+                <span className="text-sm text-[#7E69AB] mt-1">Werkopdracht</span>
+                <span className="text-xs text-[#7E69AB] opacity-70 -mt-0.5">+ upload</span>
               </Button>
-
-              {/* Verwerk afspraak */}
               <Button
-                className="justify-start px-4 py-3 font-semibold text-white bg-[#9b87f5] hover:bg-[#7E69AB]"
+                className="flex flex-col items-center justify-center px-4 py-4 font-semibold rounded-xl shadow group bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-2 border-[#9b87f5] focus:ring-2 focus:ring-[#9b87f5] transition-all"
                 onClick={handleOpenProcessModal}
+                type="button"
               >
-                <CalendarPlus className="mr-2" />
-                Verwerk afspraak
+                <CalendarPlus className="mb-1 w-7 h-7 text-white group-hover:scale-110 transition-transform" />
+                <span className="text-sm mt-1">Verwerk afspraak</span>
               </Button>
             </div>
-
-            <Separator className="my-6" />
+            {/* /ACTIE KNOPPEN */}
+            <Separator className="my-7" />
           </div>
+          {/* EINDE: nieuw ontworpen blok */}
 
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
             <div className="flex gap-2 flex-wrap">
