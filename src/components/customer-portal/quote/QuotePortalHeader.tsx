@@ -1,7 +1,6 @@
 
 import React from "react";
 import { FileText } from "lucide-react";
-import { CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { QuoteStatus } from "@/types";
 import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
@@ -12,26 +11,20 @@ interface QuotePortalHeaderProps {
   status: QuoteStatus;
 }
 
-export const QuotePortalHeader: React.FC<QuotePortalHeaderProps> = ({
-  quoteId,
-  description,
-  status,
-}) => {
+export const QuotePortalHeader = ({ quoteId, description, status }: QuotePortalHeaderProps) => {
   const statusBadge = useQuoteStatusBadge(status);
 
   return (
-    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+    <div className="flex justify-between items-start">
       <div>
-        <CardTitle className="text-xl md:text-2xl flex items-center gap-2 text-primary">
-          <FileText className="h-6 w-6 text-primary shrink-0" />
-          <span className="break-all">Offerte {quoteId.replace("quote-", "OF-")}</span>
-        </CardTitle>
-        <CardDescription className="mt-1 text-gray-600">{description}</CardDescription>
+        <h2 className="text-2xl font-semibold flex items-center gap-2">
+          <FileText className="h-5 w-5 text-primary" />
+          Offerte {quoteId.replace("quote-", "OF-")}
+        </h2>
+        <p className="text-muted-foreground mt-1">{description}</p>
       </div>
       {statusBadge && (
-        <Badge variant={statusBadge.variant} className="self-start font-medium">
-          {statusBadge.label}
-        </Badge>
+        <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
       )}
     </div>
   );
