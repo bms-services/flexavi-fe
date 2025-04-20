@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,7 @@ import { Clipboard, CalendarRange, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface WorkOrder {
   id: string;
@@ -20,6 +20,8 @@ interface WorkOrdersListProps {
 }
 
 export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) => {
+  const navigate = useNavigate();
+  
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'planned':
@@ -51,7 +53,11 @@ export const WorkOrdersList: React.FC<WorkOrdersListProps> = ({ workOrders }) =>
   return (
     <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
       {workOrders.map((workOrder) => (
-        <Card key={workOrder.id} className="border shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+        <Card 
+          key={workOrder.id} 
+          className="border shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer"
+          onClick={() => navigate(`/portal/workorder/${workOrder.id}`)}
+        >
           <CardHeader className="pb-3 flex flex-row items-start justify-between space-y-0">
             <div>
               <CardTitle className="text-lg flex items-center gap-2">
