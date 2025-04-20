@@ -33,13 +33,13 @@ export default function EmployeePlanningPage() {
 
   return (
     <Layout>
-      <div className="container py-6">
+      <div className="container max-w-full px-4 py-6 overflow-x-hidden">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-roof-100 p-2 rounded-full">
               <Calendar className="h-6 w-6 text-roof-600" />
             </div>
-            <h1 className="text-2xl font-bold text-roof-800">Mijn planning</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-roof-800">Mijn planning</h1>
           </div>
           
           <div className="bg-white rounded-lg p-4 shadow-sm border flex flex-col sm:flex-row sm:items-center justify-between gap-4">

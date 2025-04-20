@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,20 +104,20 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-  return <Card className="shadow-md border border-gray-300 bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition">
+  return <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition max-w-full">
       <div className="relative">
-        <CardHeader className="pb-5 pt-4 px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-[#EFF7FF]">
-          <div className="flex flex-col items-start gap-2">
+        <CardHeader className="pb-5 pt-4 px-4 sm:px-6 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-[#EFF7FF]">
+          <div className="flex flex-col items-start gap-2 min-w-0">
             <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
             </span>
-            <div className="text-lg font-bold text-gray-900">
+            <div className="text-sm sm:text-lg font-bold text-gray-900 truncate max-w-full">
               {app.date} · {app.startTime} - {app.endTime}
             </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
+              <Button variant="ghost" size="icon" className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
                 <MoreHorizontal className="w-6 h-6" />
               </Button>
             </DropdownMenuTrigger>
@@ -155,8 +156,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         {lead && <LeadInfoCard lead={lead} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} description={afspraakOmschrijving} />}
       </CardContent>
       <ReceiptUploadDialog open={uploadQuoteDialogOpen} onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()} onResult={onQuoteResult} />
-      <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
-      <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open ? onOpenUploadAgreement : onCloseUploadAgreement} onResult={onAgreementResult} />
+      <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
+      <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement} onResult={onAgreementResult} />
       <AppointmentProcessModal open={processModalOpen} reason={processReason} onReasonChange={setProcessReason} taskChecked={processTaskChecked} onTaskCheckedChange={setProcessTaskChecked} taskDescription={processTaskDescription} onTaskDescriptionChange={setProcessTaskDescription} onCancel={handleCloseProcessModal} onSubmit={handleProcessSubmit} loading={processing} />
     </Card>;
 };

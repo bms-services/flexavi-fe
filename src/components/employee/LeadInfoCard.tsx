@@ -39,7 +39,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
   };
 
   return (
-    <div className="bg-[#EFF7FF] rounded-2xl border border-[#DFE7F1] shadow-lg overflow-hidden w-full animate-fade-in">
+    <div className="bg-[#EFF7FF] rounded-2xl border border-[#F1F1F1] shadow-lg overflow-hidden w-full animate-fade-in">
       <div className="p-3 sm:p-5 md:p-6">
         {/* Responsive grid: klantgegevens 1/3, afspraakomschrijving 2/3 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 mb-6">
@@ -83,7 +83,7 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
               Afspraakomschrijving
             </span>
             <div className="bg-white/90 rounded-lg px-4 py-4 min-h-[96px] flex items-center shadow-sm border border-[#DFE7F1]">
-              <p className={`text-base sm:text-lg font-medium text-[#1A1F2C] whitespace-pre-line break-words`}>
+              <p className="text-base sm:text-lg font-medium text-[#1A1F2C] whitespace-pre-line break-words w-full">
                 {description ? description : <span className="text-gray-400 italic font-normal">Geen omschrijving ingevuld</span>}
               </p>
             </div>

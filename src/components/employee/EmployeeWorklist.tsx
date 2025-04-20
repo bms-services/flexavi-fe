@@ -131,7 +131,7 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
 
   return (
     <div className="bg-white">
-      <div className="flex items-center gap-2 px-6 py-4 border-b bg-white sticky top-0 z-10">
+      <div className="flex items-center gap-2 px-4 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-5 w-5 text-roof-600" />
         <h2 className="text-lg font-semibold text-roof-700">
           {dayLabel} - Werklijst
