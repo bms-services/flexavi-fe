@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Invoice } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ interface InvoicesTabProps {
 export const InvoicesTab: React.FC<InvoicesTabProps> = ({ invoices, leadId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const navigate = useNavigate();
   
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {

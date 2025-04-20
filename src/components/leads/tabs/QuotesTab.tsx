@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Quote } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { PlusCircle, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
+import { formatCurrency } from "@/utils/format";
 
 interface QuotesTabProps {
   quotes: Quote[];
