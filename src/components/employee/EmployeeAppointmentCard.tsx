@@ -11,7 +11,6 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
-
 interface EmployeeAppointmentCardProps {
   app: Appointment;
   lead: any;
@@ -43,7 +42,6 @@ interface EmployeeAppointmentCardProps {
   onRescheduleReasonChange: (val: string) => void;
   onRescheduleSave: () => void;
 }
-
 export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = ({
   app,
   lead,
@@ -73,26 +71,22 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   onOpenRescheduleModal,
   onCloseRescheduleModal,
   onRescheduleReasonChange,
-  onRescheduleSave,
+  onRescheduleSave
 }) => {
   const hasDigitalQuote = !!digitalQuote;
   const hasDigitalInvoice = !!digitalInvoice;
   const hasDigitalAgreement = !!digitalAgreement;
-
   const [processModalOpen, setProcessModalOpen] = React.useState(false);
   const [processReason, setProcessReason] = React.useState("");
   const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
   const [processTaskDescription, setProcessTaskDescription] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
-
-  const notities = [
-    "Klant wil graag volgende week extra opties besproken krijgen.",
-    "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland.",
-  ];
-  const historyEntries = isRescheduled && rescheduleReason
-    ? [{ type: "Afspraak verzet", description: rescheduleReason, date: app.date }]
-    : [];
-
+  const notities = ["Klant wil graag volgende week extra opties besproken krijgen.", "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland."];
+  const historyEntries = isRescheduled && rescheduleReason ? [{
+    type: "Afspraak verzet",
+    description: rescheduleReason,
+    date: app.date
+  }] : [];
   const handleOpenProcessModal = () => setProcessModalOpen(true);
   const handleCloseProcessModal = () => {
     setProcessModalOpen(false);
@@ -100,7 +94,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     setProcessTaskChecked(false);
     setProcessTaskDescription("");
     setProcessing(false);
-  }
+  };
   const handleProcessSubmit = () => {
     setProcessing(true);
     setTimeout(() => {
@@ -111,9 +105,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-
-  return (
-    <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
+  return <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
       <CardHeader className="pb-1 pt-4 px-6 border-b-0 bg-white">
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center gap-2">
@@ -124,20 +116,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
 
       <CardContent className="p-0">
         <div className="p-0">
-          {lead && (
-            <LeadInfoCard
-              lead={{
-                ...lead,
-                appointmentDateTime: `${app.date} · ${app.startTime} - ${app.endTime}`
-              }}
-              isRescheduled={isRescheduled}
-              rescheduleReason={rescheduleReason}
-              historyEntries={historyEntries}
-              notes={notities}
-            />
-          )}
+          {lead && <LeadInfoCard lead={{
+          ...lead,
+          appointmentDateTime: `${app.date} · ${app.startTime} - ${app.endTime}`
+        }} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} />}
 
-          <div className="px-6 pb-6">
+          <div className="px-6 pb-6 py-[32px]">
             <div className="flex flex-col md:flex-row md:gap-10">
               <div className="mb-4 flex-1">
                 <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
@@ -145,18 +129,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               </div>
               <div className="flex-1 mt-4 md:mt-0">
                 <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
-                {(digitalQuote || digitalInvoice || digitalAgreement) ? (
-                  <div className="grid gap-2 sm:grid-cols-3">
+                {digitalQuote || digitalInvoice || digitalAgreement ? <div className="grid gap-2 sm:grid-cols-3">
                     {digitalQuote && <DigitalQuoteDisplay quote={digitalQuote} title="Offerte" />}
                     {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur" />}
                     {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst" />}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
+                  </div> : <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
                     <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
                     <span className="text-xs">Geen digitale documenten beschikbaar</span>
-                  </div>
-                )}
+                  </div>}
               </div>
             </div>
 
@@ -165,30 +145,17 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
 
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
             <div className="flex gap-2 flex-wrap">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onViewHistory}
-                className="text-xs font-semibold text-[#0A8AD0]"
-              >
+              <Button variant="outline" size="sm" onClick={onViewHistory} className="text-xs font-semibold text-[#0A8AD0]">
                 <Info className="h-4 w-4 mr-1" />
                 Geschiedenis
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onOpenRescheduleModal}
-                className="text-xs font-semibold text-[#0A8AD0]"
-              >
+              <Button variant="outline" size="sm" onClick={onOpenRescheduleModal} className="text-xs font-semibold text-[#0A8AD0]">
                 <Calendar className="h-4 w-4 mr-1" />
                 Verzetten
               </Button>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button
-                    size="sm"
-                    className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white"
-                  >
+                  <Button size="sm" className="text-xs font-bold bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white">
                     <FileText className="h-4 w-4 mr-1" />
                     Verwerken
                   </Button>
@@ -205,11 +172,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                     </div>
                   </div>
                   <div className="bg-gray-100 px-6 py-4 border-t flex flex-col items-center">
-                    <Button
-                      className="w-full bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white font-bold py-2 px-4 rounded-lg shadow transition"
-                      onClick={handleOpenProcessModal}
-                      size="lg"
-                    >
+                    <Button className="w-full bg-[#0EA5E9] hover:bg-[#0A6DBC] text-white font-bold py-2 px-4 rounded-lg shadow transition" onClick={handleOpenProcessModal} size="lg">
                       <Info className="h-5 w-5 mr-2" />
                       Afspraak verwerken
                     </Button>
@@ -222,42 +185,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         </div>
       </CardContent>
 
-      <RescheduleDialog
-        open={rescheduleModalOpen}
-        reason={rescheduleReason}
-        onChange={onRescheduleReasonChange}
-        onCancel={onCloseRescheduleModal}
-        onSave={onRescheduleSave}
-      />
+      <RescheduleDialog open={rescheduleModalOpen} reason={rescheduleReason} onChange={onRescheduleReasonChange} onCancel={onCloseRescheduleModal} onSave={onRescheduleSave} />
 
-      <ReceiptUploadDialog
-        open={uploadQuoteDialogOpen}
-        onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()}
-        onResult={onQuoteResult}
-      />
-      <ReceiptUploadDialog
-        open={uploadInvoiceDialogOpen}
-        onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice}
-        onResult={onInvoiceResult}
-      />
-      <ReceiptUploadDialog
-        open={uploadAgreementDialogOpen}
-        onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement}
-        onResult={onAgreementResult}
-      />
+      <ReceiptUploadDialog open={uploadQuoteDialogOpen} onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()} onResult={onQuoteResult} />
+      <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
+      <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement} onResult={onAgreementResult} />
 
-      <AppointmentProcessModal
-        open={processModalOpen}
-        reason={processReason}
-        onReasonChange={setProcessReason}
-        taskChecked={processTaskChecked}
-        onTaskCheckedChange={setProcessTaskChecked}
-        taskDescription={processTaskDescription}
-        onTaskDescriptionChange={setProcessTaskDescription}
-        onCancel={handleCloseProcessModal}
-        onSubmit={handleProcessSubmit}
-        loading={processing}
-      />
-    </Card>
-  );
+      <AppointmentProcessModal open={processModalOpen} reason={processReason} onReasonChange={setProcessReason} taskChecked={processTaskChecked} onTaskCheckedChange={setProcessTaskChecked} taskDescription={processTaskDescription} onTaskDescriptionChange={setProcessTaskDescription} onCancel={handleCloseProcessModal} onSubmit={handleProcessSubmit} loading={processing} />
+    </Card>;
 };
