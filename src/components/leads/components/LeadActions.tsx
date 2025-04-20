@@ -73,23 +73,25 @@ export const LeadDetailActions = () => {
   const leadId = window.location.pathname.split('/').pop() || '';
 
   const handleAddNote = () => {
-    // Scroll to the notes tab
+    // Find the notes tab element and click it
     const notesTab = document.querySelector('[data-state="inactive"][value="notes"]');
     if (notesTab) {
       (notesTab as HTMLElement).click();
       
-      // Scroll to the notes section
+      // After the tab is loaded, focus on the editor
       setTimeout(() => {
-        const notesSection = document.querySelector('.tabs-content[value="notes"]');
-        if (notesSection) {
-          notesSection.scrollIntoView({ behavior: 'smooth' });
+        const editorDiv = document.querySelector('.ProseMirror');
+        if (editorDiv) {
+          (editorDiv as HTMLElement).focus();
+          // Scroll to the notes editor
+          editorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 100);
+      }, 200);
     }
   };
 
   const handleScheduleAppointment = () => {
-    navigate(`/appointments/create?leadId=${leadId}`);
+    navigate(`/appointments?leadId=${leadId}`);
   };
 
   const handleCreateQuote = () => {
@@ -103,7 +105,6 @@ export const LeadDetailActions = () => {
   return (
     <div className="flex flex-wrap items-center gap-2 w-full bg-white p-4 shadow-sm rounded-lg mb-6">
       <Button 
-        variant="outline" 
         onClick={handleAddNote}
         className="flex-shrink-0"
       >
@@ -112,7 +113,6 @@ export const LeadDetailActions = () => {
       </Button>
       
       <Button 
-        variant="outline" 
         onClick={handleScheduleAppointment}
         className="flex-shrink-0"
       >
@@ -121,7 +121,6 @@ export const LeadDetailActions = () => {
       </Button>
       
       <Button 
-        variant="outline" 
         onClick={handleCreateQuote}
         className="flex-shrink-0"
       >
@@ -130,7 +129,6 @@ export const LeadDetailActions = () => {
       </Button>
       
       <Button 
-        variant="outline" 
         onClick={handleCreateInvoice}
         className="flex-shrink-0"
       >
@@ -162,8 +160,7 @@ export const LeadDetailActions = () => {
       <Dialog open={isWorkOrderDialogOpen} onOpenChange={setIsWorkOrderDialogOpen}>
         <DialogTrigger asChild>
           <Button 
-            variant="outline" 
-            className="flex-shrink-0 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 border-emerald-200"
+            className="flex-shrink-0"
           >
             <Briefcase className="mr-2 h-4 w-4" />
             Werkopdracht
