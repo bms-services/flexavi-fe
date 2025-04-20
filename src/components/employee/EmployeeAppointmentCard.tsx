@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, FileText } from "lucide-react";
@@ -125,37 +126,41 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
 
   return (
     <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
-      <CardHeader className="pb-4 pt-4 px-6 border-b bg-[#F1F0FB]">
-        <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-[#0EA5E9]" />
-          <CardTitle className="text-xl font-bold text-[#1A1F2C]">{app.title}</CardTitle>
+      <CardHeader className="py-2 px-4 border-b bg-[#F1F0FB]">
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-[#0EA5E9]" />
+          <CardTitle className="text-lg font-bold text-[#1A1F2C]">{app.title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="p-0">
         <div className="p-0">
           {lead && (
-            <LeadInfoCard
-              lead={lead}
-              onMapOpen={onMapOpen}
-              historyEntries={historyEntries}
-              notes={notities}
-              isRescheduled={isRescheduled}
-              rescheduleReason={rescheduleReason}
-            />
+            <div className="px-4 pt-3 pb-2">
+              <LeadInfoCard
+                lead={lead}
+                onMapOpen={onMapOpen}
+                historyEntries={historyEntries}
+                notes={notities}
+                isRescheduled={isRescheduled}
+                rescheduleReason={rescheduleReason}
+                compact
+              />
+            </div>
           )}
-          <div className="px-6 pb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-6 mb-5">
+          <div className="px-4 pb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 mb-2">
               <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Tijdsbestek</span>
-                <span className="text-sm text-[#0A8AD0] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
+                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Tijdsbestek</span>
+                <span className="text-[13px] text-[#0A8AD0] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
               </div>
               <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Locatie</span>
+                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Locatie</span>
                 <button
                   onClick={() => onMapOpen(app.location || "")}
-                  className="text-sm font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent"
+                  className="text-[13px] font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent"
                   tabIndex={0}
                   type="button"
+                  style={{padding: 0, margin: 0}}
                 >
                   <span>{app.location}</span>
                   <span className="ml-1">
@@ -164,13 +169,13 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 </button>
               </div>
               <div>
-                <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
-                <span className="block text-sm text-[#1A1F2C]">{app.description}</span>
+                <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Beschrijving</span>
+                <span className="block text-[13px] text-[#1A1F2C]">{app.description}</span>
               </div>
             </div>
-            <Separator />
-            <div className="mt-5">
-              <h4 className="text-xs font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
+            <Separator className="my-2" />
+            <div>
+              <h4 className="text-[11px] font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
               {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
                 <div className="grid gap-2 sm:grid-cols-3">
                   {hasDigitalQuote && <DigitalQuoteDisplay quote={localDigitalQuote!} title="Offerte" />}
@@ -178,14 +183,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                   {hasDigitalAgreement && <DigitalQuoteDisplay quote={localDigitalAgreement!} title="Werkovereenkomst" />}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center text-center py-7 text-[#0A8AD0]">
-                  <FileText className="h-10 w-10 text-[#0A8AD0] mb-2" />
+                <div className="flex flex-col items-center justify-center text-center py-5 text-[#0A8AD0]">
+                  <FileText className="h-8 w-8 text-[#0A8AD0] mb-1" />
                   <span className="text-xs">Geen digitale documenten beschikbaar</span>
                 </div>
               )}
             </div>
           </div>
-          <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
+          <div className="border-t bg-[#FAF9FD] px-3 py-2 flex justify-end">
             <Sheet>
               <EmployeeAppointmentActions
                 onViewHistory={onViewHistory}
