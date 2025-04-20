@@ -30,13 +30,17 @@ export const AppointmentTypeSelection: React.FC<AppointmentTypeSelectionProps> =
       render={({ field }) => (
         <FormItem>
           <FormLabel>Type Afspraak</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+          <Select 
+            onValueChange={field.onChange} 
+            value={field.value} 
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Selecteer type afspraak" />
               </SelectTrigger>
             </FormControl>
-            <SelectContent className="bg-background">
+            <SelectContent>
               {appointmentTypes.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}
