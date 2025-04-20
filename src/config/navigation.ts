@@ -19,6 +19,7 @@ export const navigationItems: NavItem[] = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Leads", href: "/leads", icon: Users },
   { name: "Planning", href: "/appointments", icon: Calendar },
+  { name: "Medewerker", href: "/employee/planning", icon: Calendar },
   {
     name: "Sales",
     href: "#",
@@ -33,7 +34,6 @@ export const navigationItems: NavItem[] = [
   { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Producten", href: "/products", icon: Package },
   { name: "Partners", href: "/partners", icon: Handshake },
-  { name: "Medewerker Planning", href: "/employee/planning", icon: Calendar },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
