@@ -32,17 +32,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </SheetContent>
         </Sheet>
       ) : (
-        <div className="w-[200px] flex-shrink-0">
+        <div className="w-[200px] flex-shrink-0 fixed h-screen">
           <Sidebar />
         </div>
       )}
-      <div className="flex-1 min-h-screen flex flex-col">
+      <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''}`}>
         <QuickActions />
-        <main className="flex-1 p-4">
+        <main className="flex-1 p-4 overflow-y-auto">
           {children}
         </main>
       </div>
     </div>
   );
 };
-
