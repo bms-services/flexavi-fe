@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { QuoteStatus } from "@/types";
 import { mockQuotes } from "@/data/mockQuotes";
 import { mockLeads } from "@/data/mockLeads";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
 import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
 import PortalSuccessMessage from "@/components/customer-portal/PortalSuccessMessage";
@@ -65,38 +65,51 @@ const CustomerPortal = () => {
   };
 
   if (loading) {
-    return <QuotePortalLoading />;
+    return (
+      <CustomerPortalLayout>
+        <QuotePortalLoading />
+      </CustomerPortalLayout>
+    );
   }
 
   if (!quote || !customer) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
-      </div>
+      <CustomerPortalLayout>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
+        </div>
+      </CustomerPortalLayout>
     );
   }
 
   if (submitted) {
     return (
-      <PortalSuccessMessage 
-        title="Offerte Geaccepteerd"
-        description="Hartelijk dank voor het accepteren van onze offerte."
-      />
+      <CustomerPortalLayout>
+        <PortalSuccessMessage 
+          title="Offerte Geaccepteerd"
+          description="Hartelijk dank voor het accepteren van onze offerte."
+        />
+      </CustomerPortalLayout>
     );
   }
 
   if (rejected) {
     return (
-      <PortalRejectedMessage 
-        title="Revisie Aangevraagd"
-        description="We hebben uw revisie verzoek ontvangen en nemen spoedig contact met u op."
-      />
+      <CustomerPortalLayout>
+        <PortalRejectedMessage 
+          title="Revisie Aangevraagd"
+          description="We hebben uw revisie verzoek ontvangen en nemen spoedig contact met u op."
+        />
+      </CustomerPortalLayout>
     );
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-50 py-6 md:py-12 px-4">
+    <CustomerPortalLayout 
+      title="Offerte Details" 
+      subtitle="Bekijk en beheer uw offerte"
+    >
+      <div className="py-6 md:py-12 px-4">
         <div className="container mx-auto flex justify-center">
           <Card className="w-full max-w-3xl border shadow-md">
             <CardHeader className="border-b pb-6 bg-white">
@@ -142,7 +155,7 @@ const CustomerPortal = () => {
         onRevisionCommentChange={setRevisionComment}
         onSubmit={handleRevisionRequest}
       />
-    </>
+    </CustomerPortalLayout>
   );
 };
 
