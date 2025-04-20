@@ -81,16 +81,17 @@ export const AvailabilityCell = ({
           <Badge 
             variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
             className={cn(
-              "w-full justify-between gap-1 cursor-pointer transition-colors text-sm px-3 py-1.5",
+              "w-full justify-between gap-1 cursor-pointer transition-colors text-xs md:text-sm px-2 md:px-3 py-1 md:py-1.5",
               hasSearchedLocation && "bg-green-100 hover:bg-green-200 border-green-500",
               isSufficientCapacity && !isFullyBooked && "border-blue-500",
               !isSufficientCapacity && !isFullyBooked && "border-red-500",
               !isFullyBooked && !hasSearchedLocation && "hover:bg-primary hover:text-primary-foreground"
             )}
           >
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {timeSlot.start}:00
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3 md:h-3.5 md:w-3.5" />
+              <span className="hidden md:inline">{timeSlot.start}:00</span>
+              <span className="md:hidden">{timeSlot.start}</span>
             </span>
             <span className="font-medium">{count}/{maxSlots}</span>
           </Badge>

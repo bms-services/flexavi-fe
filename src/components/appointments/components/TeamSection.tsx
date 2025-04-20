@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isToday, parseISO } from "date-fns";
@@ -46,7 +45,6 @@ export const TeamSection = ({
     return unavailableDates[teamId]?.includes(date);
   };
 
-  // Calculate statistics for each date
   const getDateStatistics = (date: string) => {
     let totalScheduled = 0;
     let totalCapacity = 0;
@@ -87,7 +85,7 @@ export const TeamSection = ({
       </div>
       <CardContent className="p-4">
         <div className="rounded-lg border overflow-hidden">
-          <div className="grid grid-cols-[200px,1fr] bg-muted/30">
+          <div className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] bg-muted/30">
             <div className="p-3 font-medium border-r">Team</div>
             <div className="grid grid-cols-7">
               {dates.map(date => (
@@ -101,8 +99,7 @@ export const TeamSection = ({
             </div>
           </div>
 
-          {/* Statistics Row */}
-          <div className="grid grid-cols-[200px,1fr] border-t bg-muted/5">
+          <div className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] border-t bg-muted/5">
             <div className="p-3 flex items-center gap-2 border-r">
               <List className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm font-medium text-muted-foreground">
@@ -139,9 +136,8 @@ export const TeamSection = ({
             </div>
           </div>
 
-          {/* Teams Grid */}
           {teams.map(team => (
-            <div key={team.id} className="grid grid-cols-[200px,1fr] border-t hover:bg-muted/5">
+            <div key={team.id} className="grid grid-cols-[150px,1fr] md:grid-cols-[150px,1fr] border-t hover:bg-muted/5">
               <div className="p-3 flex items-center gap-2 border-r">
                 <div 
                   className="w-2.5 h-2.5 rounded-full" 

@@ -11,7 +11,7 @@ export const DateHeader = ({ date, isToday, onDateClick }: DateHeaderProps) => {
     <Button
       variant="ghost"
       className={cn(
-        "w-full h-full p-2 flex flex-col items-center hover:bg-muted",
+        "w-full h-full p-1 md:p-2 flex flex-col items-center hover:bg-muted text-xs md:text-sm",
         isToday && "bg-primary/5"
       )}
       onClick={() => onDateClick?.(date)}
@@ -19,7 +19,7 @@ export const DateHeader = ({ date, isToday, onDateClick }: DateHeaderProps) => {
       <div className="font-medium">
         {format(parseISO(date), "EEE", { locale: nl })}
       </div>
-      <div className="text-sm text-muted-foreground">
+      <div className="text-muted-foreground">
         {format(parseISO(date), "d MMM", { locale: nl })}
       </div>
     </Button>

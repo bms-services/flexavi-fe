@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { format, parseISO, addDays, startOfWeek } from "date-fns";
 import { Users, Building2, Search, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
@@ -32,13 +31,11 @@ export const TeamAvailabilityOverview = ({
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
   const [editingTeam, setEditingTeam] = useState<TeamDetails | null>(null);
-  const daysToShow = 7; // Changed from 5 to 7 days
-  
-  // Calculate dates based on startDate and dateOffset
-  // Always start from Monday of the current week + dateOffset weeks
+  const daysToShow = 7;
+
   const dates = Array.from({ length: daysToShow }, (_, i) => {
     const baseDate = startOfWeek(parseISO(startDate), { weekStartsOn: 1 });
-    const offsetDate = addDays(baseDate, i + (dateOffset * 7)); // Apply offset in weeks
+    const offsetDate = addDays(baseDate, i + (dateOffset * 7));
     return format(offsetDate, 'yyyy-MM-dd');
   });
 
@@ -46,11 +43,11 @@ export const TeamAvailabilityOverview = ({
   const installationTeams = teams.filter(team => team.type === "installation");
 
   const handlePreviousDays = () => {
-    setDateOffset(dateOffset - 1); // Move back 1 week
+    setDateOffset(dateOffset - 1);
   };
 
   const handleNextDays = () => {
-    setDateOffset(dateOffset + 1); // Move forward 1 week
+    setDateOffset(dateOffset + 1);
   };
 
   const handleSliderChange = (value: number[]) => {
@@ -62,8 +59,8 @@ export const TeamAvailabilityOverview = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-6 overflow-x-auto pb-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between min-w-[800px]">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
@@ -102,8 +99,8 @@ export const TeamAvailabilityOverview = ({
             <Slider
               defaultValue={[0]}
               value={[dateOffset]}
-              max={12} // Adjust to show 12 weeks forward
-              step={1} // Step by 1 week
+              max={12}
+              step={1}
               onValueChange={handleSliderChange}
               className="py-2"
             />
@@ -111,30 +108,34 @@ export const TeamAvailabilityOverview = ({
         </div>
       </div>
 
-      <TeamSection
-        title="Verkoopteams"
-        icon={<Users className="h-5 w-5 text-primary" />}
-        teams={salesTeams}
-        dates={dates}
-        appointments={appointments}
-        scheduleSettings={scheduleSettings}
-        searchLocation={searchLocation}
-        unavailableDates={unavailableDates}
-        onTeamNameEdit={handleTeamNameEdit}
-        onDateClick={onDateClick}
-      />
+      <div className="min-w-[800px]">
+        <TeamSection
+          title="Verkoopteams"
+          icon={<Users className="h-5 w-5 text-primary" />}
+          teams={salesTeams}
+          dates={dates}
+          appointments={appointments}
+          scheduleSettings={scheduleSettings}
+          searchLocation={searchLocation}
+          unavailableDates={unavailableDates}
+          onTeamNameEdit={handleTeamNameEdit}
+          onDateClick={onDateClick}
+        />
+      </div>
       
-      <InstallationTeamSection
-        title="Uitvoerende Teams"
-        icon={<Building2 className="h-5 w-5 text-primary" />}
-        teams={installationTeams}
-        dates={dates}
-        appointments={appointments}
-        searchLocation={searchLocation}
-        unavailableDates={unavailableDates}
-        onTeamNameEdit={handleTeamNameEdit}
-        onDateClick={onDateClick}
-      />
+      <div className="min-w-[800px]">
+        <InstallationTeamSection
+          title="Uitvoerende Teams"
+          icon={<Building2 className="h-5 w-5 text-primary" />}
+          teams={installationTeams}
+          dates={dates}
+          appointments={appointments}
+          searchLocation={searchLocation}
+          unavailableDates={unavailableDates}
+          onTeamNameEdit={handleTeamNameEdit}
+          onDateClick={onDateClick}
+        />
+      </div>
     </div>
   );
 };
