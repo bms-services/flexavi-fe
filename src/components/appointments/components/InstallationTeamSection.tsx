@@ -45,7 +45,7 @@ export const InstallationTeamSection = ({
         <div className="rounded-lg border overflow-hidden">
           <div className="grid grid-cols-[200px,1fr] bg-muted/30">
             <div className="p-3 font-medium border-r">Team</div>
-            <div className="grid grid-cols-5">
+            <div className="grid grid-cols-7">
               {dates.map(date => (
                 <DateHeader 
                   key={date} 
@@ -72,7 +72,7 @@ export const InstallationTeamSection = ({
                   {team.name}
                 </Button>
               </div>
-              <div className="grid grid-cols-5">
+              <div className="grid grid-cols-7">
                 {dates.map(date => (
                   <div key={date} className="p-2 space-y-2 border-l relative">
                     {isTeamUnavailableOnDate(team.id, date) ? (
