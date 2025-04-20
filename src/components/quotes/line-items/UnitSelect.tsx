@@ -1,32 +1,46 @@
 
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
 } from "@/components/ui/select";
 
 interface UnitSelectProps {
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-export const UnitSelect: React.FC<UnitSelectProps> = ({ value, onChange }) => {
+export const UnitSelect: React.FC<UnitSelectProps> = ({ 
+  value, 
+  onChange,
+  disabled = false 
+}) => {
+  const units = [
+    { value: "stuk", label: "Stuk" },
+    { value: "m", label: "Meter" },
+    { value: "m2", label: "Vierkante meter" },
+    { value: "m3", label: "Kubieke meter" },
+    { value: "uur", label: "Uur" },
+    { value: "dag", label: "Dag" },
+    { value: "set", label: "Set" },
+    { value: "rol", label: "Rol" }
+  ];
+
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={onChange} disabled={disabled}>
       <SelectTrigger>
         <SelectValue placeholder="Eenheid" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="stuk">Stuk</SelectItem>
-        <SelectItem value="m²">m²</SelectItem>
-        <SelectItem value="m³">m³</SelectItem>
-        <SelectItem value="meter">meter</SelectItem>
-        <SelectItem value="uur">Uur</SelectItem>
-        <SelectItem value="dag">Dag</SelectItem>
-        <SelectItem value="set">Set</SelectItem>
+        {units.map((unit) => (
+          <SelectItem key={unit.value} value={unit.value}>
+            {unit.label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );

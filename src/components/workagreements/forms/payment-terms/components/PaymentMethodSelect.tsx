@@ -14,16 +14,18 @@ type PaymentMethod = "bank" | "cash" | "both";
 interface PaymentMethodSelectProps {
   value: PaymentMethod;
   onChange: (value: PaymentMethod) => void;
+  disabled?: boolean;
 }
 
 export const PaymentMethodSelect: React.FC<PaymentMethodSelectProps> = ({
   value,
   onChange,
+  disabled = false
 }) => {
   return (
     <div>
       <Label>Betaalmethode</Label>
-      <Select value={value} onValueChange={onChange}>
+      <Select value={value} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger>
           <SelectValue placeholder="Selecteer betaalmethode" />
         </SelectTrigger>

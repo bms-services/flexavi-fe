@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 interface CashPaymentInputProps {
   value: number;
   onChange: (amount: number) => void;
+  disabled?: boolean;
 }
 
 export const CashPaymentInput: React.FC<CashPaymentInputProps> = ({
   value,
   onChange,
+  disabled = false
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const amount = parseFloat(e.target.value);
@@ -25,6 +27,7 @@ export const CashPaymentInput: React.FC<CashPaymentInputProps> = ({
         value={value || ''}
         onChange={handleChange}
         placeholder="Bedrag"
+        disabled={disabled}
       />
     </div>
   );

@@ -16,6 +16,7 @@ interface WorkAgreementDetailsFormProps {
   status: WorkAgreementStatus;
   onFieldChange: (field: string, value: string) => void;
   onQuoteSelect: (quote: Quote | null) => void;
+  disabled?: boolean;
 }
 
 export const WorkAgreementDetailsForm: React.FC<WorkAgreementDetailsFormProps> = ({
@@ -27,6 +28,7 @@ export const WorkAgreementDetailsForm: React.FC<WorkAgreementDetailsFormProps> =
   status,
   onFieldChange,
   onQuoteSelect,
+  disabled = false
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [availableQuotes, setAvailableQuotes] = useState<Quote[]>([]);
@@ -51,6 +53,7 @@ export const WorkAgreementDetailsForm: React.FC<WorkAgreementDetailsFormProps> =
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           onQuoteSelect={onQuoteSelect}
+          disabled={disabled}
         />
       </div>
 
@@ -60,11 +63,13 @@ export const WorkAgreementDetailsForm: React.FC<WorkAgreementDetailsFormProps> =
         warranty={warranty}
         startDate={startDate}
         onFieldChange={onFieldChange}
+        disabled={disabled}
       />
 
       <StatusSelect
         status={status}
         onStatusChange={(value) => onFieldChange("status", value)}
+        disabled={disabled}
       />
     </div>
   );

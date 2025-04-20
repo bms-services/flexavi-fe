@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import { PaymentMethodSelect } from "./components/PaymentMethodSelect";
 import { CashPaymentInput } from "./components/CashPaymentInput";
 import { PaymentInstallmentItem } from "./components/PaymentInstallmentItem";
+import { PaymentMethod, PaymentInstallment } from "@/types";
 
 interface PaymentTermsFormProps {
   paymentMethod?: PaymentMethod;
@@ -123,7 +124,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
                 key={index}
                 installment={installment}
                 onRemove={() => handleRemoveInstallment(index)}
-                onChange={(field, value) => handleInstallmentChange(index, field, value)}
+                onChange={(field, value) => handleInstallmentChange(index, field as keyof PaymentInstallment, value)}
                 disabled={disabled}
                 amount={totalAmount * (installment.percentage / 100)}
               />

@@ -1,18 +1,18 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import { LineItemRow } from "@/components/quotes/LineItemRow";
 import { QuoteLineItem } from "@/types";
-import { Product } from "@/types/product";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { LineItemRow } from "./LineItemRow";
 
 interface LineItemsListProps {
   lineItems: QuoteLineItem[];
   onLineItemChange: (index: number, updatedItem: QuoteLineItem) => void;
   onAddLineItem: () => void;
   onRemoveLineItem: (index: number) => void;
-  productSuggestions: Record<string, Product[]>;
+  productSuggestions: Record<string, any[]>;
   onProductSearch: (title: string, index: string) => void;
+  disabled?: boolean;
 }
 
 export const LineItemsList: React.FC<LineItemsListProps> = ({
@@ -20,56 +20,46 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   onLineItemChange,
   onAddLineItem,
   onRemoveLineItem,
-  productSuggestions = {},
+  productSuggestions,
   onProductSearch,
+  disabled = false
 }) => {
-  // Ensure we have a valid array of line items
-  const safeLineItems = Array.isArray(lineItems) ? lineItems : [];
-  
-  // Ensure productSuggestions is a valid object
-  const safeSuggestions = productSuggestions || {};
-
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-12 gap-2 font-medium text-sm border-b pb-2">
-        <div className="col-span-4">Product / Dienst</div>
-        <div className="col-span-1 text-center">Aantal</div>
+      <div className="grid grid-cols-12 gap-2 font-medium text-sm text-muted-foreground">
+        <div className="col-span-5">Omschrijving</div>
+        <div className="col-span-2">Aantal</div>
         <div className="col-span-2">Eenheid</div>
-        <div className="col-span-1 text-center">BTW</div>
-        <div className="col-span-2">Prijs per eenheid</div>
-        <div className="col-span-1 text-right">Totaal</div>
+        <div className="col-span-2">Prijs</div>
         <div className="col-span-1"></div>
       </div>
-
-      {safeLineItems.map((item, index) => {
-        // Get suggestions for this item safely
-        const itemSuggestions = item?.id && safeSuggestions[item.id] 
-          ? safeSuggestions[item.id] 
-          : [];
-          
-        return (
+      
+      <div className="space-y-2">
+        {lineItems.map((item, index) => (
           <LineItemRow
-            key={item.id || `item-${index}`}
-            lineItem={item}
-            onChange={updatedItem => onLineItemChange(index, updatedItem)}
+            key={item.id || index}
+            item={item}
+            onLineItemChange={(updatedItem) => onLineItemChange(index, updatedItem)}
             onRemove={() => onRemoveLineItem(index)}
-            productSuggestions={itemSuggestions}
-            onProductSearch={(title) => {
-              if (item?.id) {
-                onProductSearch(title, item.id);
-              }
-            }}
-            showRemoveButton={safeLineItems.length > 1}
+            productSuggestions={productSuggestions[index] || []}
+            onProductSearch={(title) => onProductSearch(title, index.toString())}
+            disabled={disabled}
           />
-        );
-      })}
-
-      <div className="flex justify-end">
-        <Button onClick={onAddLineItem}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Regel toevoegen
-        </Button>
+        ))}
       </div>
+      
+      {!disabled && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onAddLineItem}
+          className="mt-2"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Item toevoegen
+        </Button>
+      )}
     </div>
   );
 };

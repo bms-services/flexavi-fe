@@ -21,7 +21,7 @@ export const PaymentInstallmentItem: React.FC<PaymentInstallmentItemProps> = ({
   installment,
   onRemove,
   onChange,
-  disabled,
+  disabled = false,
   amount
 }) => {
   const formatCurrency = (value: number) => {
