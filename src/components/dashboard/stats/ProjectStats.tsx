@@ -2,7 +2,7 @@
 import React from "react";
 import { StatCard } from "./StatCard";
 import { Briefcase } from "lucide-react";
-import { Project } from "@/types";
+import { Project } from "@/types/project";
 
 interface ProjectStatsProps {
   projects: Project[];
