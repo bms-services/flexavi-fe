@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { format, parseISO, addDays } from "date-fns";
+import { format, parseISO, addDays, startOfWeek } from "date-fns";
 import { Users, Building2, Search, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { TeamSection } from "./components/TeamSection";
@@ -32,24 +32,25 @@ export const TeamAvailabilityOverview = ({
   const [searchLocation, setSearchLocation] = useState("");
   const [dateOffset, setDateOffset] = useState(0);
   const [editingTeam, setEditingTeam] = useState<TeamDetails | null>(null);
-  const daysToShow = 5;
+  const daysToShow = 7; // Changed from 5 to 7 days
   
   // Calculate dates based on startDate and dateOffset
-  const dates = Array.from({ length: daysToShow }, (_, i) => 
-    format(addDays(parseISO(startDate), i + dateOffset), 'yyyy-MM-dd')
-  );
+  // Always start from Monday of the current week + dateOffset weeks
+  const dates = Array.from({ length: daysToShow }, (_, i) => {
+    const baseDate = startOfWeek(parseISO(startDate), { weekStartsOn: 1 });
+    const offsetDate = addDays(baseDate, i + (dateOffset * 7)); // Apply offset in weeks
+    return format(offsetDate, 'yyyy-MM-dd');
+  });
 
   const salesTeams = teams.filter(team => team.type === "sales");
   const installationTeams = teams.filter(team => team.type === "installation");
 
   const handlePreviousDays = () => {
-    if (dateOffset > 0) {
-      setDateOffset(dateOffset - daysToShow);
-    }
+    setDateOffset(dateOffset - 1); // Move back 1 week
   };
 
   const handleNextDays = () => {
-    setDateOffset(dateOffset + daysToShow);
+    setDateOffset(dateOffset + 1); // Move forward 1 week
   };
 
   const handleSliderChange = (value: number[]) => {
@@ -101,8 +102,8 @@ export const TeamAvailabilityOverview = ({
             <Slider
               defaultValue={[0]}
               value={[dateOffset]}
-              max={90}
-              step={5}
+              max={12} // Adjust to show 12 weeks forward
+              step={1} // Step by 1 week
               onValueChange={handleSliderChange}
               className="py-2"
             />
