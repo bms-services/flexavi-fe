@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { WorkAgreementDetailsForm } from "@/components/workagreements/forms/WorkAgreementDetailsForm";
 import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
@@ -18,6 +19,7 @@ import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/W
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WorkAgreementAttachments } from "@/components/workagreements/forms/attachments/WorkAgreementAttachments";
+import { Save } from "lucide-react";
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,16 +45,25 @@ const WorkAgreementEdit = () => {
     handlePaymentInstallmentsChange,
   } = useWorkAgreementForm(id);
 
+  const isReadOnly = workAgreement.status === "signed";
+  const canDelete = workAgreement.status === "draft";
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <WorkAgreementHeader isEditing={isEditing} onSave={handleSaveWorkAgreement} />
+        <WorkAgreementHeader 
+          isEditing={isEditing} 
+          onSave={handleSaveWorkAgreement}
+          canDelete={canDelete}
+          isReadOnly={isReadOnly}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
             <CustomerCard
               selectedCustomer={selectedCustomer}
               onSelectCustomer={handleCustomerSelect}
+              disabled={isReadOnly}
             />
 
             <Card>
@@ -70,6 +81,7 @@ const WorkAgreementEdit = () => {
                   status={workAgreement.status}
                   onFieldChange={handleWorkAgreementFieldChange}
                   onQuoteSelect={handleQuoteSelect}
+                  disabled={isReadOnly}
                 />
               </CardContent>
             </Card>
@@ -88,6 +100,7 @@ const WorkAgreementEdit = () => {
                 onRemoveLineItem={handleRemoveLineItem}
                 productSuggestions={productSuggestions}
                 onProductSearch={getProductSuggestions}
+                disabled={isReadOnly}
               />
               <QuoteSummary subtotal={totalAmount} />
             </CardContent>
@@ -103,9 +116,11 @@ const WorkAgreementEdit = () => {
                 paymentMethod={workAgreement.paymentMethod}
                 cashPaymentAmount={workAgreement.cashPaymentAmount}
                 paymentInstallments={workAgreement.paymentInstallments}
+                totalAmount={totalAmount}
                 onPaymentMethodChange={handlePaymentMethodChange}
                 onCashPaymentAmountChange={handleCashPaymentAmountChange}
                 onPaymentInstallmentsChange={handlePaymentInstallmentsChange}
+                disabled={isReadOnly}
               />
             </CardContent>
           </Card>
@@ -149,6 +164,15 @@ const WorkAgreementEdit = () => {
             </CardContent>
           </Card>
         </div>
+
+        {!isReadOnly && (
+          <div className="lg:col-span-3 flex justify-end">
+            <Button onClick={handleSaveWorkAgreement} className="w-full sm:w-auto">
+              <Save className="h-4 w-4 mr-2" />
+              Werkovereenkomst opslaan
+            </Button>
+          </div>
+        )}
       </div>
     </Layout>
   );

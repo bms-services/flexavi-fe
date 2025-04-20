@@ -1,90 +1,86 @@
 
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-
-type PaymentInstallment = {
-  percentage: number;
-  description: string;
-  dueType: "upfront" | "start" | "during" | "completion";
-};
 
 interface PaymentInstallmentItemProps {
-  installment: PaymentInstallment;
+  installment: {
+    percentage: number;
+    description: string;
+    dueType: "upfront" | "start" | "during" | "completion";
+  };
   onRemove: () => void;
-  onChange: (field: keyof PaymentInstallment, value: string | number) => void;
+  onChange: (field: string, value: string | number) => void;
+  disabled?: boolean;
+  amount: number;
 }
 
 export const PaymentInstallmentItem: React.FC<PaymentInstallmentItemProps> = ({
   installment,
   onRemove,
   onChange,
+  disabled,
+  amount
 }) => {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(value);
+  };
+
   return (
-    <Card className="mb-2">
-      <CardContent className="pt-4">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <div className="md:col-span-2">
-            <Label>Omschrijving</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                value={installment.description}
-                onChange={(e) => onChange('description', e.target.value)}
-                placeholder="Omschrijving"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <Label>Percentage (%)</Label>
-            <Input
-              type="number"
-              value={installment.percentage}
-              onChange={(e) => onChange('percentage', e.target.value)}
-              placeholder="Percentage"
-            />
-          </div>
-
-          <div>
-            <Label>Type</Label>
-            <Select 
-              value={installment.dueType} 
-              onValueChange={(value) => onChange('dueType', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="upfront">Vooraf</SelectItem>
-                <SelectItem value="start">Bij aanvang</SelectItem>
-                <SelectItem value="during">Tussentijds</SelectItem>
-                <SelectItem value="completion">Bij oplevering</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-end">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onRemove}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="grid grid-cols-12 gap-2 items-start py-2 border-b last:border-0">
+      <div className="col-span-5">
+        <Input
+          value={installment.description}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="Omschrijving"
+          disabled={disabled}
+        />
+      </div>
+      <div className="col-span-3">
+        <Select
+          value={installment.dueType}
+          onValueChange={(value) => onChange("dueType", value)}
+          disabled={disabled}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="upfront">Bij opdracht</SelectItem>
+            <SelectItem value="start">Bij aanvang</SelectItem>
+            <SelectItem value="during">Tijdens werk</SelectItem>
+            <SelectItem value="completion">Bij oplevering</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="col-span-2">
+        <Input
+          type="number"
+          value={installment.percentage}
+          onChange={(e) => onChange("percentage", e.target.value)}
+          placeholder="%"
+          disabled={disabled}
+        />
+      </div>
+      <div className="col-span-2 flex items-center gap-2">
+        <span className="text-sm font-medium">{formatCurrency(amount)}</span>
+        {!disabled && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            className="h-8 w-8 p-0"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };

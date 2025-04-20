@@ -7,30 +7,26 @@ import { PaymentMethodSelect } from "./components/PaymentMethodSelect";
 import { CashPaymentInput } from "./components/CashPaymentInput";
 import { PaymentInstallmentItem } from "./components/PaymentInstallmentItem";
 
-type PaymentMethod = "bank" | "cash" | "both";
-
-type PaymentInstallment = {
-  percentage: number;
-  description: string;
-  dueType: "upfront" | "start" | "during" | "completion";
-};
-
 interface PaymentTermsFormProps {
   paymentMethod?: PaymentMethod;
   cashPaymentAmount?: number;
   paymentInstallments?: PaymentInstallment[];
+  totalAmount: number;
   onPaymentMethodChange: (method: PaymentMethod) => void;
   onCashPaymentAmountChange: (amount: number) => void;
   onPaymentInstallmentsChange: (installments: PaymentInstallment[]) => void;
+  disabled?: boolean;
 }
 
 export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
   paymentMethod = "bank",
   cashPaymentAmount = 0,
   paymentInstallments = [],
+  totalAmount,
   onPaymentMethodChange,
   onCashPaymentAmountChange,
   onPaymentInstallmentsChange,
+  disabled = false
 }) => {
   const [showCashAmount, setShowCashAmount] = useState(
     paymentMethod === "cash" || paymentMethod === "both"
@@ -42,7 +38,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
   };
 
   const handleAddInstallment = () => {
-    const newInstallments: PaymentInstallment[] = [
+    const newInstallments = [
       ...paymentInstallments,
       {
         percentage: 25,
@@ -82,31 +78,42 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     0
   );
 
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(amount);
+  };
+
   return (
     <div className="space-y-4">
       <PaymentMethodSelect 
         value={paymentMethod} 
-        onChange={handleMethodChange} 
+        onChange={handleMethodChange}
+        disabled={disabled}
       />
 
       {showCashAmount && (
         <CashPaymentInput
           value={cashPaymentAmount}
           onChange={onCashPaymentAmountChange}
+          disabled={disabled}
         />
       )}
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label>Betaaltermijnen</Label>
-          <Button 
-            type="button" 
-            variant="outline" 
-            size="sm" 
-            onClick={handleAddInstallment}
-          >
-            <Plus className="h-4 w-4 mr-1" /> Termijn toevoegen
-          </Button>
+          {!disabled && (
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm" 
+              onClick={handleAddInstallment}
+            >
+              <Plus className="h-4 w-4 mr-1" /> Termijn toevoegen
+            </Button>
+          )}
         </div>
 
         {paymentInstallments.length > 0 ? (
@@ -117,6 +124,8 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
                 installment={installment}
                 onRemove={() => handleRemoveInstallment(index)}
                 onChange={(field, value) => handleInstallmentChange(index, field, value)}
+                disabled={disabled}
+                amount={totalAmount * (installment.percentage / 100)}
               />
             ))}
 
@@ -126,7 +135,11 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
                 {totalPercentage}%
               </span>
             </div>
-            {totalPercentage !== 100 && (
+            <div className="flex justify-between text-sm mt-1">
+              <span>Totaal bedrag:</span>
+              <span className="font-medium">{formatCurrency(totalAmount)}</span>
+            </div>
+            {totalPercentage !== 100 && !disabled && (
               <p className="text-sm text-red-500 mt-1">
                 Het totaal moet 100% zijn
               </p>
