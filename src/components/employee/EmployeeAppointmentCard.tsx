@@ -114,11 +114,13 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         {digitalInvoice && <DigitalQuoteDisplay quote={digitalInvoice} title="Factuur (digitaal)" />}
         {digitalAgreement && <DigitalQuoteDisplay quote={digitalAgreement} title="Werkovereenkomst (digitaal)" />}
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 mt-4">
           <Button variant="outline" size="sm" onClick={() => onMapOpen(app.location || "")}>
             <MapPin className="h-4 w-4 mr-2" />
             Open Maps
           </Button>
+          
+          {/* Offerte knoppen */}
           <Button variant="outline" size="sm" onClick={onCreateQuote}>
             <FilePlus className="h-4 w-4 mr-2" />
             Maak Offerte
@@ -128,22 +130,24 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
             Upload Offerte
           </Button>
 
+          {/* Factuur knoppen */}
           <Button variant="outline" size="sm" onClick={onCreateInvoice}>
             <FilePlus className="h-4 w-4 mr-2" />
-            Maak factuur
+            Maak Factuur
           </Button>
           <Button variant="outline" size="sm" onClick={onOpenUploadInvoice}>
             <Upload className="h-4 w-4 mr-2" />
-            Upload factuur
+            Upload Factuur
           </Button>
 
+          {/* Werkovereenkomst knoppen */}
           <Button variant="outline" size="sm" onClick={onCreateAgreement}>
             <FilePlus className="h-4 w-4 mr-2" />
-            Maak werkovereenkomst
+            Maak Werkovereenkomst
           </Button>
           <Button variant="outline" size="sm" onClick={onOpenUploadAgreement}>
             <Upload className="h-4 w-4 mr-2" />
-            Upload werkovereenkomst
+            Upload Werkovereenkomst
           </Button>
 
           <Button variant="outline" size="sm" onClick={onViewHistory}>
