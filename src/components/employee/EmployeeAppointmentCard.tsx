@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Info, FilePlus, Upload, CalendarPlus } from "lucide-react";
+import { Calendar, Info, MoreHorizontal, FilePlus, Upload, CalendarPlus, FileMinus } from "lucide-react";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
 import { ReceiptData } from "@/components/layout/quick-actions/types/quickActions";
 import { DigitalQuoteDisplay } from "./DigitalQuoteDisplay";
@@ -10,6 +11,12 @@ import { Appointment } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -107,12 +114,53 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
 
   return (
     <Card className="shadow-md border border-[#0EA5E9] bg-white rounded-2xl overflow-hidden hover:shadow-lg transition">
-      <CardHeader className="pb-1 pt-4 px-6 border-b-0 bg-white">
+      <CardHeader className="pb-1 pt-4 px-6 border-b-0 bg-white flex flex-row justify-between items-start">
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center gap-2">
             {/* Dag en tijd bewust leeg gelaten */}
           </div>
         </div>
+        {/* DRIE BOLLETJES DROPDOWN */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="border-none shadow-none bg-transparent hover:bg-gray-100 text-[#00254D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0EA5E9] transition"
+              aria-label="Meer acties"
+            >
+              <MoreHorizontal className="w-7 h-7" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="bottom"
+            align="end"
+            className="z-[2000] min-w-[180px] bg-white rounded-xl border border-[#00254D] shadow-lg p-1"
+            style={{ color: "#00254D" }}
+          >
+            <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e9f2fa] font-medium">
+              <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onOpenUploadQuote} className="hover:bg-[#e9f2fa] font-medium">
+              <Upload className="mr-2 w-4 h-4" /> Offerte uploaden
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onCreateInvoice} className="hover:bg-[#e9f2fa] font-medium">
+              <FilePlus className="mr-2 w-4 h-4" /> Factuur maken
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onOpenUploadInvoice} className="hover:bg-[#e9f2fa] font-medium">
+              <Upload className="mr-2 w-4 h-4" /> Factuur uploaden
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onCreateAgreement} className="hover:bg-[#e9f2fa] font-medium">
+              <FilePlus className="mr-2 w-4 h-4" /> Werkopdracht maken
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e9f2fa] font-medium">
+              <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e9f2fa] font-medium">
+              <CalendarPlus className="mr-2 w-4 h-4" /> Verwerk afspraak
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </CardHeader>
 
       <CardContent className="p-0">
@@ -131,106 +179,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           )}
 
           <div className="px-6 pb-6 pt-8">
-
-            {/* Nieuw knoppenblok */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-7">
-              {/* OFFERTES */}
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Offerte</span>
-                <div className="flex flex-row gap-2 w-full">
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
-                    onClick={onCreateQuote}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <FilePlus className="w-4 h-4" />
-                      Maak
-                    </span>
-                  </button>
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
-                    onClick={onOpenUploadQuote}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <Upload className="w-4 h-4" />
-                      Upload
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* FACTUUR */}
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Factuur</span>
-                <div className="flex flex-row gap-2 w-full">
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
-                    onClick={onCreateInvoice}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <FilePlus className="w-4 h-4" />
-                      Maak
-                    </span>
-                  </button>
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
-                    onClick={onOpenUploadInvoice}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <Upload className="w-4 h-4" />
-                      Upload
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* WERKOPDRACHT */}
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-[#00254D] text-sm mb-1 pl-1">Werkopdracht</span>
-                <div className="flex flex-row gap-2 w-full">
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold bg-[#00254D] text-white shadow-md hover:bg-[#1a3866] transition-colors"
-                    onClick={onCreateAgreement}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <FilePlus className="w-4 h-4" />
-                      Maak
-                    </span>
-                  </button>
-                  <button
-                    className="flex-1 rounded-lg py-2 px-2 text-sm font-semibold border border-[#00254D] text-[#00254D] bg-white shadow-md hover:bg-roof-100 transition-colors"
-                    onClick={onOpenUploadAgreement}
-                    type="button"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <Upload className="w-4 h-4" />
-                      Upload
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            {/* NIET MEER NODIG: alle oude knoppen zijn verwijderd! */}
+            {/* Hier stond het grid met alle (maak/upload) knoppen */}
             {/* EINDE Nieuw knoppenblok */}
 
-            <div className="flex flex-row justify-center mt-2">
-              <button
-                className="flex items-center gap-2 rounded-xl py-3 px-5 bg-gradient-to-r from-[#37547a] to-[#62739b] shadow-lg hover:scale-[1.04] hover:bg-[#253c59] transition-all duration-200"
-                onClick={handleOpenProcessModal}
-                type="button"
-              >
-                <CalendarPlus className="text-white bg-[#37547a] rounded-full p-0.5 w-7 h-7 border-2 border-white shadow mr-1" />
-                <span className="text-white font-extrabold text-base tracking-wide">Verwerk afspraak</span>
-              </button>
-            </div>
             <Separator className="my-7" />
           </div>
-
-          {/* EINDE: nieuw ontworpen blok */}
 
           <div className="border-t bg-[#FAF9FD] p-4 flex justify-end">
             <div className="flex gap-2 flex-wrap">
@@ -296,3 +250,4 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     </Card>
   );
 };
+
