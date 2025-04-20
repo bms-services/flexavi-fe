@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { format, parseISO, addDays, startOfWeek, parse, addWeeks } from "date-fns";
-import { Users, Building2, Search, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Building2, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { TeamSection } from "./components/TeamSection";
 import { InstallationTeamSection } from "./components/InstallationTeamSection";
@@ -24,8 +24,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
 
 export const TeamAvailabilityOverview = ({
   startDate,
@@ -116,14 +117,14 @@ export const TeamAvailabilityOverview = ({
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="min-w-[180px] justify-start">
-                  <Calendar className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mr-2 h-4 w-4" />
                   <span className="text-sm">
                     {format(parseISO(dates[0]), 'dd MMM')} - {format(parseISO(dates[dates.length - 1]), 'dd MMM yyyy')}
                   </span>
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
+                <CalendarComponent
                   mode="single"
                   selected={selectedDate}
                   onSelect={handleDateSelect}
