@@ -61,7 +61,7 @@ export const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden z-[350]">
           <DialogHeader>
             <DialogTitle>Nieuwe Afspraak Inplannen</DialogTitle>
             <DialogDescription>
