@@ -2,35 +2,38 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Building2, Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Users, Building2, Plus, UserPlus } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Team, TeamType } from "@/types";
+import { Employee } from "@/types/employee";
 import { v4 as uuidv4 } from "uuid";
+import { AddTeamMemberDialog } from "./AddTeamMemberDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const teamSchema = z.object({
   name: z.string().min(1, "Team naam is verplicht"),
-  members: z.array(z.string()).optional(),
   color: z.string().default("#3b82f6"),
 });
 
 export const TeamSettings: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [teamType, setTeamType] = useState<TeamType>("sales");
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [addMemberDialogOpen, setAddMemberDialogOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(teamSchema),
     defaultValues: {
       name: "",
-      members: [],
       color: "#3b82f6",
     },
   });
@@ -40,7 +43,7 @@ export const TeamSettings: React.FC = () => {
       id: uuidv4(),
       name: values.name,
       type: teamType,
-      members: values.members || [],
+      members: [],
       color: values.color,
     };
 
@@ -58,6 +61,38 @@ export const TeamSettings: React.FC = () => {
     setTeamType(type);
     form.reset();
     setDialogOpen(true);
+  };
+
+  const handleAddMember = (employee: Employee) => {
+    if (!selectedTeam) return;
+    
+    setEmployees([...employees, employee]);
+    
+    const updatedTeams = teams.map(team => {
+      if (team.id === selectedTeam.id) {
+        return {
+          ...team,
+          members: [...team.members, employee.id]
+        };
+      }
+      return team;
+    });
+    
+    setTeams(updatedTeams);
+    
+    toast({
+      title: "Medewerker toegevoegd",
+      description: `${employee.firstName} ${employee.lastName} is toegevoegd aan ${selectedTeam.name}.`,
+    });
+  };
+
+  const openAddMemberDialog = (team: Team) => {
+    setSelectedTeam(team);
+    setAddMemberDialogOpen(true);
+  };
+
+  const getTeamMembers = (team: Team) => {
+    return employees.filter(employee => team.members.includes(employee.id));
   };
 
   return (
@@ -79,14 +114,41 @@ export const TeamSettings: React.FC = () => {
                 {teams
                   .filter(team => team.type === "sales")
                   .map(team => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-md">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: team.color }}></div>
-                        <span>{team.name}</span>
+                    <div key={team.id} className="p-4 border rounded-md space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 rounded-full" style={{ backgroundColor: team.color }}></div>
+                          <span className="font-medium">{team.name}</span>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openAddMemberDialog(team)}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Voeg lid toe
+                        </Button>
                       </div>
-                      <div>
-                        <span className="text-sm text-muted-foreground">{team.members.length} leden</span>
-                      </div>
+                      
+                      {getTeamMembers(team).length > 0 && (
+                        <div className="border-t pt-3">
+                          <h4 className="text-sm font-medium mb-2">Teamleden:</h4>
+                          <div className="space-y-2">
+                            {getTeamMembers(team).map(member => (
+                              <div key={member.id} className="flex items-center gap-2 text-sm">
+                                <Avatar className="h-6 w-6">
+                                  <AvatarImage src={member.avatar} />
+                                  <AvatarFallback>
+                                    {member.firstName[0]}
+                                    {member.lastName[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span>{member.firstName} {member.lastName}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))
                 }
@@ -107,14 +169,41 @@ export const TeamSettings: React.FC = () => {
                 {teams
                   .filter(team => team.type === "installation")
                   .map(team => (
-                    <div key={team.id} className="flex items-center justify-between p-3 border rounded-md">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: team.color }}></div>
-                        <span>{team.name}</span>
+                    <div key={team.id} className="p-4 border rounded-md space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 rounded-full" style={{ backgroundColor: team.color }}></div>
+                          <span className="font-medium">{team.name}</span>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openAddMemberDialog(team)}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Voeg lid toe
+                        </Button>
                       </div>
-                      <div>
-                        <span className="text-sm text-muted-foreground">{team.members.length} leden</span>
-                      </div>
+                      
+                      {getTeamMembers(team).length > 0 && (
+                        <div className="border-t pt-3">
+                          <h4 className="text-sm font-medium mb-2">Teamleden:</h4>
+                          <div className="space-y-2">
+                            {getTeamMembers(team).map(member => (
+                              <div key={member.id} className="flex items-center gap-2 text-sm">
+                                <Avatar className="h-6 w-6">
+                                  <AvatarImage src={member.avatar} />
+                                  <AvatarFallback>
+                                    {member.firstName[0]}
+                                    {member.lastName[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span>{member.firstName} {member.lastName}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))
                 }
@@ -180,6 +269,13 @@ export const TeamSettings: React.FC = () => {
             </Form>
           </DialogContent>
         </Dialog>
+
+        <AddTeamMemberDialog
+          open={addMemberDialogOpen}
+          onOpenChange={setAddMemberDialogOpen}
+          onSubmit={handleAddMember}
+          teamId={selectedTeam?.id || ""}
+        />
       </CardContent>
     </Card>
   );
