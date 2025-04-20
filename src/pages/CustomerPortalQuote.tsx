@@ -15,20 +15,25 @@ import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import { FileText, ChevronLeft, Download, Printer } from "lucide-react";
 import { QuoteDetails } from "@/components/customer-portal/quote/QuoteDetails";
 import { QuoteLineItems } from "@/components/customer-portal/quote/QuoteLineItems";
-import { CustomerPortalLayout } from "@/components/customer-portal/layout/CustomerPortalLayout";
 import { formatCurrency } from "@/utils/format";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { Separator } from "@/components/ui/separator";
 import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
+import { FloatingActions } from "@/components/customer-portal/quote/FloatingActions";
+import { QuoteRevisionDialog } from "@/components/customer-portal/quote/QuoteRevisionDialog";
+import { useToast } from "@/hooks/use-toast";
 
 const CustomerPortalQuote = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [quote, setQuote] = useState<any | null>(null);
   const [customer, setCustomer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [revisionDialogOpen, setRevisionDialogOpen] = useState(false);
+  const [revisionComment, setRevisionComment] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -56,43 +61,62 @@ const CustomerPortalQuote = () => {
     iban: "NL00 INGB 0000 0000 00"
   };
   
-  // Sample mockup attachments for demonstration
   const demoAttachments = [
     { name: "Situatie foto's.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
     { name: "Materiaal specificaties.jpg", url: "https://source.unsplash.com/random/800x600/?material" },
     { name: "Algemene voorwaarden.pdf", url: "#" }
   ];
 
+  const handleAccept = () => {
+    toast({
+      title: "Offerte geaccepteerd",
+      description: "We nemen zo spoedig mogelijk contact met u op.",
+    });
+  };
+
+  const handleRevisionRequest = () => {
+    setRevisionDialogOpen(true);
+  };
+
+  const handleRevisionSubmit = () => {
+    setRevisionDialogOpen(false);
+    setRevisionComment("");
+    toast({
+      title: "Revisie verzoek verzonden",
+      description: "We nemen zo spoedig mogelijk contact met u op.",
+    });
+  };
+
+  const handleReject = () => {
+    toast({
+      title: "Offerte geweigerd",
+      description: "We nemen zo spoedig mogelijk contact met u op.",
+    });
+  };
+
   if (loading) {
     return (
-      <CustomerPortalLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      </CustomerPortalLayout>
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
   if (!quote || !customer) {
     return (
-      <CustomerPortalLayout>
-        <div className="flex items-center justify-center py-12">
-          <Card className="max-w-md w-full">
-            <CardContent className="py-12 text-center">
-              <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
-            </CardContent>
-          </Card>
-        </div>
-      </CustomerPortalLayout>
+      <div className="flex items-center justify-center py-12">
+        <Card className="max-w-md w-full">
+          <CardContent className="py-12 text-center">
+            <p className="text-lg text-gray-600">Offerte niet gevonden.</p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <CustomerPortalLayout
-      title="Offerte Overzicht"
-      subtitle="Bekijk de details van uw offerte"
-    >
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="max-w-4xl mx-auto p-4">
         <div className="mb-6">
           <Button 
             variant="ghost" 
@@ -167,7 +191,21 @@ const CustomerPortalQuote = () => {
           </CardFooter>
         </Card>
       </div>
-    </CustomerPortalLayout>
+
+      <FloatingActions
+        onAccept={handleAccept}
+        onRequestRevision={handleRevisionRequest}
+        onReject={handleReject}
+      />
+
+      <QuoteRevisionDialog
+        open={revisionDialogOpen}
+        onOpenChange={setRevisionDialogOpen}
+        revisionComment={revisionComment}
+        onRevisionCommentChange={setRevisionComment}
+        onSubmit={handleRevisionSubmit}
+      />
+    </div>
   );
 };
 
