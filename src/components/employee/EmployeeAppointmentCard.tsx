@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -139,6 +140,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               notes={notities}
             />
           )}
+          
           <div className="px-6 pb-6">
             <div className="mb-4">
               <span className="block text-xs font-semibold text-[#0A8AD0] mb-1">Beschrijving</span>
