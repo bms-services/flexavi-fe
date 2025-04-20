@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -54,6 +55,13 @@ const CustomerPortalQuote = () => {
     bankName: "ING Bank",
     iban: "NL00 INGB 0000 0000 00"
   };
+  
+  // Sample mockup attachments for demonstration
+  const demoAttachments = [
+    { name: "Situatie foto's.jpg", url: "https://source.unsplash.com/random/800x600/?construction" },
+    { name: "Materiaal specificaties.jpg", url: "https://source.unsplash.com/random/800x600/?material" },
+    { name: "Algemene voorwaarden.pdf", url: "#" }
+  ];
 
   if (loading) {
     return (
