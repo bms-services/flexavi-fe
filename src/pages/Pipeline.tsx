@@ -4,7 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { PipelineBoard } from "@/components/pipeline/PipelineBoard";
 import { PipelineSelector } from "@/components/pipeline/PipelineSelector";
 import { PipelineManagementDialog } from "@/components/pipeline/PipelineManagementDialog";
-import { Pipeline, PipelineItem } from "@/types/pipeline";
+import type { Pipeline as PipelineType, PipelineItem } from "@/types/pipeline";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PipelineForm } from "@/components/pipeline/PipelineForm";
 import { v4 as uuidv4 } from "uuid";
@@ -79,7 +79,7 @@ const sampleItems: PipelineItem[] = [
 ];
 
 const Pipeline = () => {
-  const [pipelines, setPipelines] = useState<Pipeline[]>(samplePipelines);
+  const [pipelines, setPipelines] = useState<PipelineType[]>(samplePipelines);
   const [items, setItems] = useState<PipelineItem[]>(sampleItems);
   const [selectedPipelineId, setSelectedPipelineId] = useState<string>(samplePipelines[0].id);
   

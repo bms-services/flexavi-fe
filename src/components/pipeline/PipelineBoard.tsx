@@ -44,7 +44,7 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
   return (
     <div className="h-[calc(100vh-12rem)]">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <ScrollArea className="h-full" orientation="horizontal">
+        <ScrollArea className="h-full">
           <div className="flex gap-4 p-4 h-full">
             {pipeline.stages.sort((a, b) => a.order - b.order).map((stage) => (
               <PipelineStageComponent
