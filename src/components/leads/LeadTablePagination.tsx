@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Pagination,
@@ -24,8 +23,36 @@ export const LeadTablePagination: React.FC<LeadTablePaginationProps> = ({
   // This ensures the pagination component is visible
   if (totalPages <= 0) return null;
 
+  // Calculate page numbers to display (show max 5 pages)
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisible = 5;
+    
+    if (totalPages <= maxVisible) {
+      // If total pages is less than max visible, show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Otherwise, show a window of pages around current page
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      
+      // Adjust if we're near the end
+      if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+    }
+    
+    return pageNumbers;
+  };
+
   return (
-    <Pagination className="justify-center mt-4">
+    <Pagination className="justify-center mt-6 pb-4">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious 
@@ -34,7 +61,7 @@ export const LeadTablePagination: React.FC<LeadTablePaginationProps> = ({
           />
         </PaginationItem>
         
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        {getPageNumbers().map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
               onClick={() => setCurrentPage(page)}
