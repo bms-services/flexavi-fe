@@ -77,12 +77,10 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   onRescheduleReasonChange,
   onRescheduleSave,
 }) => {
-  // Local state for digital documents in this example (In real app: fetch/save via API)
   const [localDigitalQuote, setLocalDigitalQuote] = useState<ReceiptData | undefined>(digitalQuote);
   const [localDigitalInvoice, setLocalDigitalInvoice] = useState<ReceiptData | undefined>(digitalInvoice);
   const [localDigitalAgreement, setLocalDigitalAgreement] = useState<ReceiptData | undefined>(digitalAgreement);
 
-  // Triggered when upload-modal returns parsed data
   const handleQuoteResult = (data: ReceiptData) => {
     setLocalDigitalQuote(data);
     if (onQuoteResult) onQuoteResult(data);
@@ -147,24 +145,34 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               />
             </div>
           )}
-          <div className="px-4 pb-3">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 mb-2">
+          <div className="px-4 pb-3 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 flex flex-col space-y-1">
               <div>
                 <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Tijdsbestek</span>
-                <span className="text-[13px] text-[#0A8AD0] font-medium">{app.date} · {app.startTime} - {app.endTime}</span>
+                <span className="text-[13px] text-[#0A8AD0] font-medium">
+                  {app.date} · {app.startTime} - {app.endTime}
+                </span>
               </div>
               <div>
                 <span className="block text-[11px] font-semibold text-[#0A8AD0] mb-0.5">Locatie</span>
                 <button
                   onClick={() => onMapOpen(app.location || "")}
-                  className="text-[13px] font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent"
+                  className="text-[13px] font-medium text-[#33C3F0] hover:underline flex items-center gap-1 bg-transparent p-0 m-0"
                   tabIndex={0}
                   type="button"
-                  style={{padding: 0, margin: 0}}
                 >
                   <span>{app.location}</span>
                   <span className="ml-1">
-                    <svg className="inline h-4 w-4 text-[#33C3F0]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 10.5a8.38 8.38 0 0 1-1.9 5.4l-6.11 7.61a2 2 0 0 1-3.1 0L3 15.91A8.38 8.38 0 0 1 1 10.5 9 9 0 1 1 21 10.5z"/><circle cx="12" cy="10.5" r="2.25"/></svg>
+                    <svg
+                      className="inline h-4 w-4 text-[#33C3F0]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M21 10.5a8.38 8.38 0 0 1-1.9 5.4l-6.11 7.61a2 2 0 0 1-3.1 0L3 15.91A8.38 8.38 0 0 1 1 10.5 9 9 0 1 1 21 10.5z" />
+                      <circle cx="12" cy="10.5" r="2.25" />
+                    </svg>
                   </span>
                 </button>
               </div>
@@ -173,8 +181,8 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
                 <span className="block text-[13px] text-[#1A1F2C]">{app.description}</span>
               </div>
             </div>
-            <Separator className="my-2" />
-            <div>
+
+            <div className="flex-1 min-w-[180px]">
               <h4 className="text-[11px] font-semibold text-[#0A8AD0] uppercase mb-1">Documenten</h4>
               {(hasDigitalQuote || hasDigitalInvoice || hasDigitalAgreement) ? (
                 <div className="grid gap-2 sm:grid-cols-3">
@@ -190,6 +198,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               )}
             </div>
           </div>
+          <Separator className="my-2" />
           <div className="border-t bg-[#FAF9FD] px-3 py-2 flex justify-end">
             <Sheet>
               <EmployeeAppointmentActions
@@ -246,3 +255,4 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     </Card>
   );
 };
+
