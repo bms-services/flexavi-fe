@@ -12,8 +12,16 @@ export const useQuoteStatusBadge = (status?: QuoteStatus) => {
     revised: { label: "Herzien", variant: "warning" as const },
   };
 
-  const config = statusConfig[status];
-  return { label: config.label, variant: config.variant };
+  // Check if the status exists in the statusConfig
+  if (!statusConfig[status]) {
+    console.warn(`Unknown quote status: ${status}`);
+    return { label: status, variant: "outline" as const };
+  }
+
+  return { 
+    label: statusConfig[status].label, 
+    variant: statusConfig[status].variant 
+  };
 };
 
 export const useInvoiceStatusBadge = (status?: InvoiceStatus) => {
@@ -29,6 +37,14 @@ export const useInvoiceStatusBadge = (status?: InvoiceStatus) => {
     legal: { label: "Rechtzaak", variant: "destructive" as const },
   };
 
-  const config = statusConfig[status];
-  return { label: config.label, variant: config.variant };
+  // Check if the status exists in the statusConfig
+  if (!statusConfig[status]) {
+    console.warn(`Unknown invoice status: ${status}`);
+    return { label: status, variant: "outline" as const };
+  }
+
+  return { 
+    label: statusConfig[status].label, 
+    variant: statusConfig[status].variant 
+  };
 };

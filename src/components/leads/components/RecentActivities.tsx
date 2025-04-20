@@ -55,7 +55,7 @@ export const RecentActivities: React.FC<RecentActivitiesProps> = ({ activities }
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="font-medium">
-                        {isQuote ? 'Offerte:' : 'Factuur:'} {activity.description}
+                        {isQuote ? 'Offerte:' : 'Factuur:'} {activity.description || 'Geen beschrijving'}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {format(new Date(activity.createdAt), "d MMMM yyyy", { locale: nl })}
