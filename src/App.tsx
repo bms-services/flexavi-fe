@@ -38,6 +38,8 @@ import Pricing from "./pages/Pricing";
 import Landing from "./pages/Landing";
 import Requests from "./pages/Requests";
 import ReputationManagement from "./pages/ReputationManagement";
+import Expenses from "./pages/Expenses";
+import ExpenseDetail from "./pages/ExpenseDetail";
 
 function App() {
   return (
@@ -62,6 +64,8 @@ function App() {
         </Route>
         <Route path="/invoices/new" element={<InvoiceEdit />} />
         <Route path="/invoices/:id" element={<InvoiceEdit />} />
+        <Route path="/expenses" element={<Expenses />} />
+        <Route path="/expenses/:id" element={<ExpenseDetail />} />
         <Route path="/products" element={<Products />} />
         <Route path="/partners" element={<Partners />} />
         <Route path="/settings" element={<Settings />} />

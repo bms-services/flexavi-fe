@@ -14,6 +14,7 @@ import {
   UserCog,
   MessageSquare,
   Star,
+  FileText,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -33,6 +34,7 @@ export const navigationItems: NavItem[] = [
       { name: "Facturen", href: "/invoices" },
     ],
   },
+  { name: "Kosten", href: "/expenses", icon: FileText },
   { name: "Projecten", href: "/projects", icon: Briefcase },
   { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Calculator", href: "/calculator", icon: Calculator },
