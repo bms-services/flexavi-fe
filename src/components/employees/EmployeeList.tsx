@@ -1,21 +1,14 @@
-
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Employee } from "@/types/employee-management";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Plus, CalendarDays } from "lucide-react";
+import { Edit, Trash2, Calendar } from "lucide-react";
 import { useEmployeeDialog } from "./useEmployeeDialog";
 import { EmployeeDialog } from "./EmployeeDialog";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { DayOffDialog } from "./DayOffDialog";
 
-// Temporary mock data - will be replaced with real data later
 const mockEmployees: Employee[] = [
   {
     id: "1",
@@ -105,10 +98,27 @@ const mockEmployees: Employee[] = [
   }
 ];
 
+const roleLabels = {
+  sales: "Verkoper",
+  roofer: "Dakdekker",
+  office: "Kantoor",
+  driver: "Chauffeur",
+};
+
+const teamLabels = {
+  sales: "Verkoop team",
+  installation: "Uitvoerend team",
+  management: "Management team",
+  administration: "Administratie team"
+};
+
 export const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const { isOpen, selectedEmployee, openDialog, closeDialog } = useEmployeeDialog();
+  const [dayOffDialogOpen, setDayOffDialogOpen] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = (data: Employee) => {
     if (selectedEmployee) {
@@ -123,18 +133,16 @@ export const EmployeeList = () => {
     setEmployees(employees.filter(emp => emp.id !== id));
   };
 
-  const roleLabels = {
-    sales: "Verkoper",
-    roofer: "Dakdekker",
-    office: "Kantoor",
-    driver: "Chauffeur",
+  const handleDayOff = (employeeId: string) => {
+    setSelectedEmployeeId(employeeId);
+    setDayOffDialogOpen(true);
   };
 
-  const teamLabels = {
-    sales: "Verkoop team",
-    installation: "Uitvoerend team",
-    management: "Management team",
-    administration: "Administratie team"
+  const handleDayOffSubmit = (date: Date) => {
+    toast({
+      title: "Vrije dag toegevoegd",
+      description: "De medewerker is succesvol vrij gegeven op de geselecteerde datum."
+    });
   };
 
   const goToCalendarView = () => {
@@ -189,6 +197,13 @@ export const EmployeeList = () => {
                     <Button
                       variant="ghost"
                       size="sm"
+                      onClick={() => handleDayOff(employee.id)}
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => openDialog(employee)}
                     >
                       <Edit className="h-4 w-4" />
@@ -213,6 +228,13 @@ export const EmployeeList = () => {
         onClose={closeDialog}
         employee={selectedEmployee}
         onSubmit={handleSubmit}
+      />
+
+      <DayOffDialog
+        isOpen={dayOffDialogOpen}
+        onClose={() => setDayOffDialogOpen(false)}
+        onSubmit={handleDayOffSubmit}
+        employeeId={selectedEmployeeId}
       />
     </>
   );
