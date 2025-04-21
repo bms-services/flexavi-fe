@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   CartesianGrid,
@@ -48,6 +47,22 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
     return data;
   };
 
+  const formatYAxis = (value: number) => {
+    return new Intl.NumberFormat("nl-NL", {
+      style: "currency",
+      currency: "EUR",
+      notation: "compact",
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const formatTooltip = (value: number) => {
+    return new Intl.NumberFormat("nl-NL", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  };
+
   const data = generateChartData();
   
   const formatYAxis = (value: number) => {
@@ -67,72 +82,53 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   };
 
   return (
-    <div className="w-full h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-          <CartesianGrid 
-            strokeDasharray="3 3" 
-            vertical={false} 
-            stroke="#f0f0f0" 
-          />
-          <XAxis 
-            dataKey="month" 
-            axisLine={false} 
-            tickLine={false}
-            tick={{ fontSize: 12 }}
-            label={{
-              value: 'Maanden',
-              position: 'insideBottom',
-              offset: -10,
-              fontSize: 12,
-              fill: '#666'
-            }}
-          />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fontSize: 12 }}
-            tickFormatter={formatYAxis}
-            label={{
-              value: 'Omzet (EUR)',
-              angle: -90,
-              position: 'insideLeft',
-              fontSize: 12,
-              fill: '#666'
-            }}
-          />
-          <Tooltip 
-            formatter={(value: number, name: string) => [
-              formatTooltip(Number(value)), 
-              name === 'revenue' ? 'Omzet' : 'Doelstelling'
-            ]}
-            contentStyle={{ 
-              borderRadius: 8,
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
-            }}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="revenue" 
-            stroke="#0c97e8" 
-            strokeWidth={3}
-            dot={{ strokeWidth: 3, r: 4, fill: "white" }}
-            activeDot={{ r: 6, fill: "#0c97e8" }}
-            name="Omzet"
-          />
-          <Line 
-            type="monotone" 
-            dataKey="target" 
-            stroke="#d4d4d4" 
-            strokeWidth={2}
-            strokeDasharray="5 5"
-            dot={false}
-            name="Doelstelling"
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+        <XAxis 
+          dataKey="month" 
+          axisLine={false} 
+          tickLine={false}
+          tick={{ fontSize: 12 }}
+          dy={10}
+        />
+        <YAxis 
+          axisLine={false} 
+          tickLine={false} 
+          tick={{ fontSize: 12 }}
+          tickFormatter={formatYAxis}
+          dx={-10}
+        />
+        <Tooltip 
+          formatter={(value: number, name: string) => [
+            formatTooltip(Number(value)), 
+            name === 'revenue' ? 'Omzet' : 'Doelstelling'
+          ]}
+          contentStyle={{ 
+            borderRadius: 8,
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
+          }}
+        />
+        <Line 
+          type="monotone" 
+          dataKey="revenue" 
+          stroke="#0c97e8" 
+          strokeWidth={2}
+          dot={{ strokeWidth: 2, r: 3, fill: "white" }}
+          activeDot={{ r: 5, fill: "#0c97e8" }}
+          name="Omzet"
+        />
+        <Line 
+          type="monotone" 
+          dataKey="target" 
+          stroke="#d4d4d4" 
+          strokeWidth={1.5}
+          strokeDasharray="5 5"
+          dot={false}
+          name="Doelstelling"
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
-
