@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockQuotes, mockWorkAgreements } from "@/data/mockData";
+import { mockQuotes, mockWorkAgreements, mockEmployees, mockReviews } from "@/data/mockData";
 
 export const OverviewStats = () => {
   const acceptedQuotes = mockQuotes.filter(quote => quote.status === "accepted").length;
@@ -45,7 +45,7 @@ export const OverviewStats = () => {
           <CardDescription>Beschikbare teams vandaag</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{mockEmployees.filter(emp => emp.active && emp.teamIds.length > 0).length}</div>
+          <div className="text-2xl font-bold">{mockEmployees.filter(emp => emp.teamIds.length > 0).length}</div>
           <p className="text-sm text-muted-foreground">
             Teams in het veld
           </p>

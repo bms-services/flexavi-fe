@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter, PlusCircle } from "lucide-react";
+import { Filter, PlusCircle, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 
