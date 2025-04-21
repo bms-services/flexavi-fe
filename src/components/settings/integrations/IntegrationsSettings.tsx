@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Integration } from "@/types";
@@ -14,6 +13,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+
+interface WebhookLog {
+  id: string;
+  integrationId: string;
+  timestamp: string;
+  event: string;
+  status: "success" | "error";
+}
 
 const mockIntegrations: Integration[] = [
   {
@@ -31,8 +38,18 @@ export const IntegrationsSettings = () => {
   const [integrations, setIntegrations] = useState<Integration[]>(mockIntegrations);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
+  const [webhookLogs, setWebhookLogs] = useState<WebhookLog[]>([]);
 
-  const handleAddIntegration = (integration: Integration) => {
+  const handleAddIntegration = async (integration: Integration) => {
+    const logEntry: WebhookLog = {
+      id: crypto.randomUUID(),
+      integrationId: integration.id,
+      timestamp: new Date().toISOString(),
+      event: "integration_created",
+      status: "success",
+    };
+    
+    setWebhookLogs([logEntry, ...webhookLogs]);
     setIntegrations([...integrations, integration]);
     toast.success("Integratie succesvol toegevoegd");
     setIsDialogOpen(false);
@@ -73,43 +90,71 @@ export const IntegrationsSettings = () => {
       </div>
 
       <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Naam</TableHead>
-              <TableHead>Platform Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Laatst Bijgewerkt</TableHead>
-              <TableHead className="text-right">Acties</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {integrations.map((integration) => (
-              <TableRow key={integration.id}>
-                <TableCell className="font-medium">{integration.name}</TableCell>
-                <TableCell>{integration.platformType}</TableCell>
-                <TableCell>
-                  <Badge variant={integration.status === "active" ? "default" : "secondary"}>
-                    {integration.status === "active" ? "Actief" : "Inactief"}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {new Date(integration.updatedAt).toLocaleDateString("nl-NL")}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => openEditDialog(integration)}
+        <h3 className="text-lg font-medium p-4 border-b">Webhook Logs</h3>
+        <div className="p-4">
+          {webhookLogs.length === 0 ? (
+            <p className="text-muted-foreground">Geen webhook logs beschikbaar</p>
+          ) : (
+            <div className="space-y-2">
+              {webhookLogs.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex justify-between items-center p-2 bg-muted rounded"
+                >
+                  <span>{new Date(log.timestamp).toLocaleString()}</span>
+                  <span>{log.event}</span>
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      log.status === "success"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
                   >
-                    Bewerken
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    {log.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Naam</TableHead>
+            <TableHead>Platform Type</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Laatst Bijgewerkt</TableHead>
+            <TableHead className="text-right">Acties</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {integrations.map((integration) => (
+            <TableRow key={integration.id}>
+              <TableCell className="font-medium">{integration.name}</TableCell>
+              <TableCell>{integration.platformType}</TableCell>
+              <TableCell>
+                <Badge variant={integration.status === "active" ? "default" : "secondary"}>
+                  {integration.status === "active" ? "Actief" : "Inactief"}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {new Date(integration.updatedAt).toLocaleDateString("nl-NL")}
+              </TableCell>
+              <TableCell className="text-right">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openEditDialog(integration)}
+                >
+                  Bewerken
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <IntegrationDialog
         isOpen={isDialogOpen}
