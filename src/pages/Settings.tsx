@@ -1,24 +1,10 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TimeBlockSettings } from "@/components/settings/appointments/TimeBlockSettings";
-import { CalendarColorSettings } from "@/components/settings/appointments/CalendarColorSettings";
-import { TeamSettings } from "@/components/settings/teams/TeamSettings";
-import { PersonalInfoSettings } from "@/components/settings/account/PersonalInfoSettings";
-import { PasswordSettings } from "@/components/settings/account/PasswordSettings";
-import { CompanySettings } from "@/components/settings/company/CompanySettings";
-import { DomainSettings } from "@/components/settings/company/DomainSettings";
+import { Tabs } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { DefaultAttachmentsSettings } from "@/components/settings/attachments/DefaultAttachmentsSettings";
-import { EmailTemplatesSettings } from "@/components/settings/email/EmailTemplatesSettings";
-import { SignatureSettings } from "@/components/settings/signature/SignatureSettings";
-import { SubscriptionSettings } from "@/components/settings/subscription/SubscriptionSettings";
-import { PermissionsSettings } from "@/components/settings/permissions/PermissionsSettings";
-import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield, FileText } from "lucide-react";
-import { EmployeeSettings } from "@/components/settings/employees/EmployeeSettings";
-import { WorkAgreementSettingsForm } from "@/components/settings/workagreements/WorkAgreementSettingsForm";
-import { IntegrationsSettings } from "@/components/settings/integrations/IntegrationsSettings";
-import { Webhook } from "lucide-react";
+import { SettingsLayout } from "@/components/settings/layout/SettingsLayout";
+import { SettingsTabContent } from "@/components/settings/tabs/SettingsTabContent";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -65,136 +51,20 @@ const Settings = () => {
 
   return (
     <Layout>
-      <div className="container py-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Instellingen</h1>
-          <p className="text-muted-foreground">
-            Beheer je account- en applicatie-instellingen.
-          </p>
-        </div>
-
-        <div className="flex mt-6 min-h-[calc(100vh-10rem)]">
-          <Tabs defaultValue="company" orientation="vertical" className="flex min-h-full">
-            <div className="shrink-0">
-              <TabsList className="flex flex-col h-auto space-y-1 min-w-[200px] bg-muted p-2 rounded-l-md">
-                <TabsTrigger value="company" className="w-full justify-start">
-                  <Building2 className="h-4 w-4 mr-2" />
-                  Bedrijf
-                </TabsTrigger>
-                <TabsTrigger value="teams" className="w-full justify-start">
-                  <Users2 className="h-4 w-4 mr-2" />
-                  Teams
-                </TabsTrigger>
-                <TabsTrigger value="employees" className="w-full justify-start">
-                  <User className="h-4 w-4 mr-2" />
-                  Medewerkers
-                </TabsTrigger>
-                <TabsTrigger value="permissions" className="w-full justify-start">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Rechten
-                </TabsTrigger>
-                <TabsTrigger value="appointments" className="w-full justify-start">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Agenda
-                </TabsTrigger>
-                <TabsTrigger value="account" className="w-full justify-start">
-                  <User className="h-4 w-4 mr-2" />
-                  Account
-                </TabsTrigger>
-                <TabsTrigger value="attachments" className="w-full justify-start">
-                  <Paperclip className="h-4 w-4 mr-2" />
-                  Standaard bijlagen
-                </TabsTrigger>
-                <TabsTrigger value="email" className="w-full justify-start">
-                  <Mail className="h-4 w-4 mr-2" />
-                  Email templates
-                </TabsTrigger>
-                <TabsTrigger value="signature" className="w-full justify-start">
-                  <Pen className="h-4 w-4 mr-2" />
-                  Handtekening
-                </TabsTrigger>
-                <TabsTrigger value="subscription" className="w-full justify-start">
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Mijn abonnement
-                </TabsTrigger>
-                <TabsTrigger value="workagreements" className="w-full justify-start">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Werkovereenkomsten
-                </TabsTrigger>
-                <TabsTrigger value="integrations" className="w-full justify-start">
-                  <Webhook className="h-4 w-4 mr-2" />
-                  Koppelingen
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <div className="flex-1 border-l bg-background ml-4 pl-6">
-              <TabsContent value="company" className="mt-0">
-                <CompanySettings />
-                <div className="mt-6">
-                  <DomainSettings />
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="appointments" className="mt-0">
-                <TimeBlockSettings
-                  timeBlocks={timeBlocks}
-                  slotSettings={slotSettings}
-                  onTimeBlocksChange={setTimeBlocks}
-                  onSlotSettingsChange={handleSlotSettingsChange}
-                  onSave={handleSaveSlots}
-                />
-                <CalendarColorSettings
-                  colors={colors}
-                  onColorsChange={setColors}
-                  onSave={handleSaveColors}
-                />
-              </TabsContent>
-              
-              <TabsContent value="teams" className="mt-0">
-                <TeamSettings />
-              </TabsContent>
-              
-              <TabsContent value="employees" className="mt-0">
-                <EmployeeSettings />
-              </TabsContent>
-              
-              <TabsContent value="permissions" className="mt-0">
-                <PermissionsSettings />
-              </TabsContent>
-              
-              <TabsContent value="account" className="mt-0">
-                <PersonalInfoSettings />
-                <PasswordSettings />
-              </TabsContent>
-
-              <TabsContent value="attachments" className="mt-0">
-                <DefaultAttachmentsSettings />
-              </TabsContent>
-
-              <TabsContent value="email" className="mt-0">
-                <EmailTemplatesSettings />
-              </TabsContent>
-
-              <TabsContent value="signature" className="mt-0">
-                <SignatureSettings />
-              </TabsContent>
-
-              <TabsContent value="subscription" className="mt-0">
-                <SubscriptionSettings />
-              </TabsContent>
-
-              <TabsContent value="workagreements" className="mt-0">
-                <WorkAgreementSettingsForm />
-              </TabsContent>
-
-              <TabsContent value="integrations" className="mt-0">
-                <IntegrationsSettings />
-              </TabsContent>
-            </div>
-          </Tabs>
-        </div>
-      </div>
+      <Tabs defaultValue="company" orientation="vertical" className="flex min-h-full">
+        <SettingsLayout>
+          <SettingsTabContent
+            timeBlocks={timeBlocks}
+            slotSettings={slotSettings}
+            colors={colors}
+            onTimeBlocksChange={setTimeBlocks}
+            onSlotSettingsChange={handleSlotSettingsChange}
+            onSaveSlots={handleSaveSlots}
+            onSaveColors={handleSaveColors}
+            onColorsChange={setColors}
+          />
+        </SettingsLayout>
+      </Tabs>
     </Layout>
   );
 };
