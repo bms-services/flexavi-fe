@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -29,11 +30,7 @@ import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-
-// Helper: Formatteer valuta
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(amount);
-};
+import { formatCurrency } from "@/utils/format";
 
 // Helper: Klantnaam ophalen
 const getLeadName = (leadId: string) => {
@@ -50,6 +47,85 @@ const statusOptions: { value: QuoteStatus, label: string }[] = [
 ];
 
 const itemsPerPageOptions = [10, 25, 100];
+
+// DateRangePicker component
+function DateRangePicker({
+  value,
+  onChange,
+  label,
+}: {
+  value: [Date | undefined, Date | undefined];
+  onChange: (range: [Date | undefined, Date | undefined]) => void;
+  label: string;
+}) {
+  const [open, setOpen] = useState(false);
+  
+  const displayValue = () => {
+    if (value[0] && value[1]) {
+      return `${format(value[0], "dd-MM-yyyy")} tot ${format(value[1], "dd-MM-yyyy")}`;
+    } else if (value[0]) {
+      return `Vanaf ${format(value[0], "dd-MM-yyyy")}`;
+    } else if (value[1]) {
+      return `Tot ${format(value[1], "dd-MM-yyyy")}`;
+    }
+    return "Selecteer datumbereik";
+  };
+  
+  return (
+    <div className="flex flex-col gap-1 min-w-[220px] w-full md:w-auto">
+      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="justify-start w-full">
+            {displayValue()}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0 z-50" align="start">
+          <div className="flex gap-2 p-3">
+            <div>
+              <div className="mb-2 text-xs font-medium">Van</div>
+              <Calendar
+                mode="single"
+                selected={value[0]}
+                onSelect={(date) => onChange([date, value[1]])}
+                className="rounded border shadow pointer-events-auto"
+                disabled={(date) => value[1] ? date > value[1] : false}
+              />
+            </div>
+            <div>
+              <div className="mb-2 text-xs font-medium">Tot</div>
+              <Calendar
+                mode="single"
+                selected={value[1]}
+                onSelect={(date) => onChange([value[0], date])}
+                className="rounded border shadow pointer-events-auto"
+                disabled={(date) => value[0] ? date < value[0] : false}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 p-3 pt-0">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                onChange([undefined, undefined]);
+                setOpen(false);
+              }}
+            >
+              Reset
+            </Button>
+            <Button 
+              size="sm"
+              onClick={() => setOpen(false)}
+            >
+              Toepassen
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
 
 const Quotes = () => {
   // Paginering
@@ -133,59 +209,6 @@ const Quotes = () => {
   const handleEditQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
   const handleDeleteQuote = (quote: Quote) => console.log("Delete quote:", quote);
 
-  // Eigen datumrange picker component (simple, binnen Quotes zelf)
-  function DateRangeFilter({
-    value,
-    onChange,
-    label,
-  }: {
-    value: [Date | undefined, Date | undefined];
-    onChange: (range: [Date | undefined, Date | undefined]) => void;
-    label: string;
-  }) {
-    return (
-      <div className="flex flex-col gap-1 min-w-[220px] w-full md:w-auto">
-        <label className="text-xs font-medium text-muted-foreground">{label}</label>
-        <div className="flex gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start w-full md:w-[110px]">
-                {value[0] ? format(value[0], "dd-MM-yyyy") : <span>Vanaf</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 z-50" align="start">
-              <Calendar
-                mode="single"
-                selected={value[0]}
-                onSelect={(date) => onChange([date, value[1]])}
-                className="p-3 pointer-events-auto"
-                initialFocus
-                disabled={(date) => value[1] ? date > value[1] : false}
-              />
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start w-full md:w-[110px]">
-                {value[1] ? format(value[1], "dd-MM-yyyy") : <span>Tot</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 z-50" align="start">
-              <Calendar
-                mode="single"
-                selected={value[1]}
-                onSelect={(date) => onChange([value[0], date])}
-                className="p-3 pointer-events-auto"
-                initialFocus
-                disabled={(date) => value[0] ? date < value[0] : false}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <Layout>
       <div className="container max-w-full px-2 sm:px-4 py-6 space-y-6">
@@ -223,18 +246,20 @@ const Quotes = () => {
           <CardContent>
             {/* Filterbalk, vernieuwd */}
             <div className="bg-muted/40 rounded-lg p-3 flex flex-col md:flex-row md:items-end gap-3 mb-4 overflow-x-auto">
-              {/* Aangemaakt datum-bereik */}
-              <DateRangeFilter
+              {/* Aangemaakt datumbereik - nu één veld */}
+              <DateRangePicker
                 value={filters.createdRange}
                 onChange={(range) => handleChangeFilter("createdRange", range)}
-                label="Aangemaakt van/tot"
+                label="Aangemaakt datumbereik"
               />
-              {/* Vervaldatum datum-bereik */}
-              <DateRangeFilter
+              
+              {/* Vervaldatum bereik - nu één veld */}
+              <DateRangePicker
                 value={filters.expireRange}
                 onChange={(range) => handleChangeFilter("expireRange", range)}
-                label="Vervaldatum van/tot"
+                label="Vervaldatum bereik"
               />
+              
               {/* Offertenummer, nu vrij tekstveld */}
               <div className="flex flex-col gap-1 min-w-[140px] w-full md:w-auto">
                 <label className="text-xs font-medium text-muted-foreground">Offertenummer</label>
