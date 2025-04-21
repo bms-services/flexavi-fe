@@ -22,16 +22,16 @@ interface ProductSearchProps {
   suggestions: any[];
   onSearch: (query: string) => void;
   disabled?: boolean;
-  label?: string;
+  label?: string; // Add the label property
 }
 
 export const ProductSearch: React.FC<ProductSearchProps> = ({ 
   value, 
   onChange, 
-  suggestions = [], // Provide default empty array
+  suggestions, 
   onSearch,
   disabled = false,
-  label = "Omschrijving"
+  label = "Omschrijving" // Default label
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -66,9 +66,6 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     setOpen(false);
   };
 
-  // Ensure suggestions is an array to prevent map errors
-  const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
-
   return (
     <Popover open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
       <PopoverTrigger asChild>
@@ -88,7 +85,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
           <CommandList>
             <CommandEmpty>Geen producten gevonden.</CommandEmpty>
             <CommandGroup>
-              {safeSuggestions.map((suggestion, index) => (
+              {suggestions?.map((suggestion, index) => (
                 <CommandItem
                   key={index}
                   onSelect={() => handleSelect(suggestion.title || suggestion.description)}

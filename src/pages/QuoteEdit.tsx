@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -40,6 +41,7 @@ const QuoteEdit = () => {
     handleSaveQuote,
   } = useQuoteForm(id);
 
+  // Check if the quote is accepted, and redirect if trying to edit an accepted quote
   useEffect(() => {
     if (isEditing && quote.status === "accepted") {
       toast({
@@ -79,7 +81,7 @@ const QuoteEdit = () => {
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-3">
             <CardHeader>
               <CardTitle>Offerteregels</CardTitle>
               <CardDescription>Voeg producten en diensten toe aan de offerte</CardDescription>
@@ -97,9 +99,17 @@ const QuoteEdit = () => {
             </CardContent>
           </Card>
           
-          <div className="lg:col-span-1">
-            <QuoteStats quoteId={id || ""} />
-          </div>
+          {isEditing && (
+            <Card className="lg:col-span-3">
+              <CardHeader>
+                <CardTitle>Offerte statistieken</CardTitle>
+                <CardDescription>Inzicht in hoe vaak de offerte is bekeken (niet zichtbaar voor klanten)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <QuoteStats quoteId={id || ""} />
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </Layout>
