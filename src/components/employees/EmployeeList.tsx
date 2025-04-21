@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Table,
@@ -9,9 +10,10 @@ import {
 } from "@/components/ui/table";
 import { Employee } from "@/types/employee-management";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, CalendarDays } from "lucide-react";
 import { useEmployeeDialog } from "./useEmployeeDialog";
 import { EmployeeDialog } from "./EmployeeDialog";
+import { useNavigate } from "react-router-dom";
 
 // Temporary mock data - will be replaced with real data later
 const mockEmployees: Employee[] = [
@@ -71,12 +73,42 @@ const mockEmployees: Employee[] = [
     availableDays: ["1", "2", "3", "4", "5"],
     active: true,
     teamIds: ["installation"]
+  },
+  {
+    id: "3",
+    firstName: "Piet",
+    lastName: "Janssen",
+    email: "piet@example.com",
+    role: "driver",
+    startDate: "2024-03-01",
+    rates: {
+      hourlyRate: 22,
+      dailyRate: 180
+    },
+    workingDays: {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: false,
+      friday: true,
+      saturday: false,
+      sunday: false
+    },
+    workingHours: {
+      start: "07:30",
+      end: "16:30"
+    },
+    availableDays: ["1", "2", "3", "5"],
+    active: true,
+    phoneNumber: "0623456789",
+    teamIds: ["installation"]
   }
 ];
 
 export const EmployeeList = () => {
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const { isOpen, selectedEmployee, openDialog, closeDialog } = useEmployeeDialog();
+  const navigate = useNavigate();
 
   const handleSubmit = (data: Employee) => {
     if (selectedEmployee) {
@@ -100,16 +132,28 @@ export const EmployeeList = () => {
 
   const teamLabels = {
     sales: "Verkoop team",
-    installation: "Uitvoerend team"
+    installation: "Uitvoerend team",
+    management: "Management team",
+    administration: "Administratie team"
+  };
+
+  const goToCalendarView = () => {
+    navigate("/employees/schedule");
   };
 
   return (
     <>
-      <div className="flex justify-end mb-4">
-        <Button onClick={() => openDialog()}>
-          <Plus className="h-4 w-4 mr-2" />
-          Nieuwe Medewerker
-        </Button>
+      <div className="flex justify-between mb-4">
+        <div className="flex gap-2">
+          <Button onClick={() => openDialog()}>
+            <Plus className="h-4 w-4 mr-2" />
+            Nieuwe Medewerker
+          </Button>
+          <Button variant="outline" onClick={goToCalendarView}>
+            <CalendarDays className="h-4 w-4 mr-2" />
+            Roosterschema
+          </Button>
+        </div>
       </div>
 
       <div className="rounded-md border">

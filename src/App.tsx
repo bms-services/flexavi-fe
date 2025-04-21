@@ -32,6 +32,7 @@ import CustomerPortalInvoice from "./pages/CustomerPortalInvoice";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import EmployeePlanning from "./pages/EmployeePlanning";
 import EmployeeManagement from "./pages/EmployeeManagement";
+import EmployeeSchedule from "./pages/EmployeeSchedule";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Pricing from "./pages/Pricing";
 import Landing from "./pages/Landing";
@@ -68,6 +69,7 @@ function App() {
         <Route path="/requests" element={<Requests />} />
         <Route path="/employee/planning" element={<EmployeePlanning />} />
         <Route path="/employees" element={<EmployeeManagement />} />
+        <Route path="/employees/schedule" element={<EmployeeSchedule />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/reputation" element={<ReputationManagement />} />
 

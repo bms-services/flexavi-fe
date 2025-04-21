@@ -10,16 +10,26 @@ interface WorkScheduleFormProps {
 }
 
 export const WorkScheduleForm = ({ form }: WorkScheduleFormProps) => {
+  const days = [
+    { id: "monday", label: "Maandag" },
+    { id: "tuesday", label: "Dinsdag" },
+    { id: "wednesday", label: "Woensdag" },
+    { id: "thursday", label: "Donderdag" },
+    { id: "friday", label: "Vrijdag" },
+    { id: "saturday", label: "Zaterdag" },
+    { id: "sunday", label: "Zondag" },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="space-y-4">
         <h3 className="text-sm font-medium">Werkdagen</h3>
         <div className="grid grid-cols-2 gap-2">
-          {Object.entries(form.watch("workingDays")).map(([day]) => (
+          {days.map((day) => (
             <FormField
-              key={day}
+              key={day.id}
               control={form.control}
-              name={`workingDays.${day}` as keyof Employee}
+              name={`workingDays.${day.id}` as keyof Employee}
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2">
                   <FormControl>
@@ -28,9 +38,7 @@ export const WorkScheduleForm = ({ form }: WorkScheduleFormProps) => {
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="font-normal">
-                    {day.charAt(0).toUpperCase() + day.slice(1)}
-                  </FormLabel>
+                  <FormLabel className="font-normal">{day.label}</FormLabel>
                 </FormItem>
               )}
             />

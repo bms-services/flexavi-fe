@@ -1,6 +1,6 @@
 
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
 import { Employee } from "@/types/employee-management";
 
@@ -9,29 +9,44 @@ interface TeamSelectionFormProps {
 }
 
 export const TeamSelectionForm = ({ form }: TeamSelectionFormProps) => {
+  const teams = [
+    { id: "sales", label: "Verkoop team" },
+    { id: "installation", label: "Uitvoerend team" },
+    { id: "management", label: "Management team" },
+    { id: "administration", label: "Administratie team" },
+  ];
+
   return (
-    <FormField
-      control={form.control}
-      name="teamIds"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Teams</FormLabel>
-          <Select
-            onValueChange={(value) => field.onChange([...field.value || [], value])}
-            value={field.value?.[0]}
-          >
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecteer team" />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              <SelectItem value="sales">Verkoop team</SelectItem>
-              <SelectItem value="installation">Uitvoerend team</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormItem>
-      )}
-    />
+    <div className="space-y-4">
+      <h3 className="text-sm font-medium">Teams</h3>
+      <div className="space-y-2">
+        {teams.map((team) => {
+          const teamIds = form.watch("teamIds") || [];
+          const isSelected = teamIds.includes(team.id);
+          
+          return (
+            <div key={team.id} className="flex items-center space-x-2">
+              <Checkbox 
+                checked={isSelected}
+                onCheckedChange={(checked) => {
+                  const currentTeams = [...teamIds];
+                  if (checked) {
+                    if (!currentTeams.includes(team.id)) {
+                      form.setValue("teamIds", [...currentTeams, team.id]);
+                    }
+                  } else {
+                    form.setValue(
+                      "teamIds", 
+                      currentTeams.filter(id => id !== team.id)
+                    );
+                  }
+                }}
+              />
+              <span className="text-sm">{team.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
