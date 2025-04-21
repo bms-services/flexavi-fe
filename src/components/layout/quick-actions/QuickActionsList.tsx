@@ -33,6 +33,10 @@ export const QuickActionsList = () => {
       icon: FileText,
       label: 'Factuur maken',
       href: '/invoices/create',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate('/invoices/create');
+      },
     },
     {
       icon: FileText,

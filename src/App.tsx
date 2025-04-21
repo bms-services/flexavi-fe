@@ -62,8 +62,8 @@ function App() {
         <Route path="/invoices" element={<InvoicesMain />}>
           <Route index element={<Invoices />} />
         </Route>
-        <Route path="/invoices/new" element={<InvoiceEdit />} />
-        <Route path="/invoices/:id" element={<InvoiceEdit />} />
+        <Route path="/invoices/create" element={<InvoiceEdit />} />
+        <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/expenses/:id" element={<ExpenseDetail />} />
         <Route path="/products" element={<Products />} />

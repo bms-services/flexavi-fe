@@ -1,24 +1,21 @@
 
-import React, { useState } from "react";
+import React from "react";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Invoice } from "@/types";
 
 interface CreditInvoiceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   selectedInvoice: Invoice | null;
-  onCredit: (creditType: "full" | "partial") => void;
+  onCredit: (type: "full" | "partial") => void;
 }
 
 export const CreditInvoiceDialog: React.FC<CreditInvoiceDialogProps> = ({
@@ -27,55 +24,35 @@ export const CreditInvoiceDialog: React.FC<CreditInvoiceDialogProps> = ({
   selectedInvoice,
   onCredit,
 }) => {
-  const [creditType, setCreditType] = useState<"full" | "partial">("full");
-
-  const handleCredit = () => {
-    onCredit(creditType);
-  };
+  if (!selectedInvoice) return null;
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Factuur crediteren</AlertDialogTitle>
-          <AlertDialogDescription>
-            Wilt u de factuur volledig of gedeeltelijk crediteren?
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        
-        <div className="py-4">
-          <RadioGroup value={creditType} onValueChange={(value: "full" | "partial") => setCreditType(value)}>
-            <div className="flex items-start space-y-2">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="full" id="full" />
-                  <Label htmlFor="full" className="font-medium">Volledige creditering</Label>
-                </div>
-                <div className="pl-6 text-sm text-muted-foreground">
-                  De gehele factuur wordt gecrediteerd en de originele factuur wordt als betaald gemarkeerd.
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-y-2 mt-4">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="partial" id="partial" />
-                  <Label htmlFor="partial" className="font-medium">Gedeeltelijke creditering</Label>
-                </div>
-                <div className="pl-6 text-sm text-muted-foreground">
-                  Maak een nieuwe creditfactuur aan waarbij u zelf bepaalt welke regels gecrediteerd worden.
-                </div>
-              </div>
-            </div>
-          </RadioGroup>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Factuur crediteren</DialogTitle>
+          <DialogDescription>
+            Kies het type creditering voor factuur {selectedInvoice.id.replace("inv-", "FACT-")}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <p className="text-sm text-muted-foreground">
+            Een volledige creditering maakt de factuur volledig ongedaan. Een gedeeltelijke creditering staat toe om specifieke items te crediteren.
+          </p>
         </div>
-        
-        <AlertDialogFooter>
-          <AlertDialogCancel>Annuleren</AlertDialogCancel>
-          <AlertDialogAction onClick={handleCredit}>Factuur crediteren</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        <DialogFooter className="flex-col sm:flex-row sm:justify-between sm:space-x-2">
+          <Button
+            variant="outline"
+            onClick={() => onCredit("partial")}
+            className="mt-2 sm:mt-0"
+          >
+            Gedeeltelijke creditering
+          </Button>
+          <Button onClick={() => onCredit("full")}>
+            Volledige creditering
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

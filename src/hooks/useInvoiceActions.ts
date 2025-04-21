@@ -11,7 +11,7 @@ export const useInvoiceActions = () => {
   const navigate = useNavigate();
 
   const handleViewInvoice = (invoice: Invoice) => {
-    navigate(`/portal/invoice/${invoice.id}`);
+    navigate(`/portal/invoices/${invoice.id}`);
   };
 
   const handleEditInvoice = (invoice: Invoice) => {

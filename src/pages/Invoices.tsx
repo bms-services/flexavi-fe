@@ -1,4 +1,10 @@
 
+import React from "react";
 import InvoicesMain from "./InvoicesMain";
 
-export default InvoicesMain;
+// Dit bestand fungeert als doorverwijzer naar InvoicesMain
+const Invoices = () => {
+  return <InvoicesMain />;
+};
+
+export default Invoices;
