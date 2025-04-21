@@ -32,7 +32,7 @@ export const PipelineItemModalContent: React.FC<PipelineItemModalContentProps> =
   <div className="p-6 flex-1 min-h-0 max-h-full overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 relative">
     <div className="space-y-6 min-w-0">
       <CustomerInfoPanel lead={leadNAW} />
-      {/* Move location map above appointments */}
+      {/* Locatie moved above appointments */}
       <LeadLocationMap address={leadNAW.address} />
       <GuaranteesPanel guarantees={guarantees} getStatusColor={getStatusColor} />
     </div>

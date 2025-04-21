@@ -2,7 +2,6 @@
 import React from "react";
 import { User, MapPin, Phone, Mail, Info, Home, BadgeEuro } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { LeadLocationMap } from "@/components/leads/components/LeadLocationMap";
 import { formatEuro } from "@/lib/utils";
 
 interface CustomerInfoPanelProps {
@@ -65,9 +64,6 @@ export const CustomerInfoPanel: React.FC<CustomerInfoPanelProps> = ({ lead }) =>
             </div>
           </div>
         </div>
-      </div>
-      <div className="mt-5">
-        <LeadLocationMap address={lead.address} />
       </div>
     </CardContent>
   </Card>
