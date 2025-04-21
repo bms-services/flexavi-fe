@@ -1,13 +1,9 @@
 
 import React from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash } from "lucide-react";
 import { QuoteLineItem } from "@/types";
-import { ProductSearch } from "@/components/quotes/line-items/ProductSearch";
-import { QuantityInput } from "@/components/quotes/line-items/QuantityInput";
-import { UnitSelect } from "@/components/quotes/line-items/UnitSelect";
 import { Product } from "@/types/product";
 
 interface LineItemRowProps {
@@ -48,6 +44,11 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     onChange(updatedItem);
   };
 
+  const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange("description", e.target.value);
+    onProductSearch(e.target.value);
+  };
+
   // Kolom classes & stylings
   const colClasses = [
     "px-2 py-2 text-center align-middle w-[60px]",     // aantal
@@ -59,51 +60,74 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     "px-2 py-2 text-center align-middle w-[40px]",     // verwijder
   ];
 
+  // True inline inputs with transparent background and no borders
+  const inlineInputStyle = "w-full bg-transparent border-none outline-none focus:ring-0 focus:outline-none p-0 h-auto";
+
   return (
     <>
       <tr className="border-b border-[#E1E3E6] hover:bg-muted/70 transition-colors">
         {/* Aantal */}
         <td className={colClasses[0]}>
-          <Input
+          <input
             type="number"
             min="0"
             step="0.01"
             value={item.quantity}
             onChange={(e) => handleChange("quantity", parseFloat(e.target.value) || 0)}
-            className="text-center"
+            className={`${inlineInputStyle} text-center`}
             disabled={disabled}
           />
         </td>
         {/* Eenheid */}
         <td className={colClasses[1]}>
-          <Input
+          <input
             type="text"
             value={item.unit}
             onChange={(e) => handleChange("unit", e.target.value)}
-            className="text-center"
+            className={`${inlineInputStyle} text-center`}
             disabled={disabled}
           />
         </td>
         {/* Product/Dienst */}
         <td className={colClasses[2]}>
-          <Input
+          <input
             type="text"
             value={item.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            className="text-left"
+            onChange={handleProductChange}
+            className={`${inlineInputStyle} text-left`}
             disabled={disabled}
+            autoComplete="off"
           />
+          {productSuggestions && productSuggestions.length > 0 && !disabled && (
+            <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+              {productSuggestions.map((product, i) => (
+                <div
+                  key={i}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    handleChange("description", product.title);
+                    handleChange("unit", product.unit);
+                    handleChange("pricePerUnit", product.pricePerUnit);
+                    handleChange("vatRate", product.vat);
+                  }}
+                >
+                  <div>{product.title}</div>
+                  <div className="text-xs text-gray-500">{product.pricePerUnit} EUR</div>
+                </div>
+              ))}
+            </div>
+          )}
         </td>
         {/* Eenheidsprijs */}
         <td className={colClasses[3]}>
-          <Input
+          <input
             id={`price-${index}`}
             type="number"
             min="0"
             step="0.01"
             value={item.pricePerUnit}
             onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
-            className="text-right"
+            className={`${inlineInputStyle} text-right`}
             disabled={disabled}
           />
         </td>
@@ -112,7 +136,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
           <select
             value={item.vatRate ?? 21}
             onChange={e => handleChange("vatRate", parseFloat(e.target.value))}
-            className="w-full text-center bg-transparent border-none outline-none"
+            className={`${inlineInputStyle} text-center`}
             disabled={disabled}
             style={{ minWidth: 45 }}
           >
@@ -125,12 +149,12 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
         </td>
         {/* Regel totaal */}
         <td className={colClasses[5]}>
-          <Input
+          <input
             id={`total-${index}`}
             type="number"
             value={item.total}
             readOnly
-            className="bg-muted text-right"
+            className={`${inlineInputStyle} text-right font-medium`}
             disabled={disabled}
           />
         </td>
@@ -172,4 +196,3 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
 };
 
 export default LineItemRow;
-
