@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
@@ -71,11 +70,12 @@ export const PipelineItemModal: React.FC<Props> = ({
   // Afspraakdata ophalen (voor lead-type items)
   let appointment = undefined;
   if (item.objectType === "lead") {
-    // Vind een afspraak die hoort bij deze lead (niet gelukte afspraken: status = "canceled", "rescheduled", "quote_request")
+    // Vind een afspraak die hoort bij deze lead (niet gelukte afspraken: status = "canceled", "rescheduled", "no_show", "failed")
+    // Voor demo gebruiken we statuses canceled, rescheduled, toegevoegd no_show en failed als voorbeeld
     appointment = mockAppointments.find(
       a =>
         a.leadId === item.objectId &&
-        ["canceled", "rescheduled", "quote_request"].includes(a.status)
+        ["canceled", "rescheduled", "no_show", "failed"].includes(a.status)
     );
   }
 
@@ -123,10 +123,10 @@ export const PipelineItemModal: React.FC<Props> = ({
             </ul>
           </div>
           {/* Afspraakdata */}
-          <div className="flex-1 min-w-[260px]">
+          <div className="flex-1 min-w-[260px] flex flex-col">
             <h3 className="text-sm font-semibold mb-2">Afspraakgegevens</h3>
             {appointment ? (
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm flex-grow">
                 <div>
                   <span className="font-medium">Datum:</span>{" "}
                   {appointment.date}{" "}
@@ -147,9 +147,9 @@ export const PipelineItemModal: React.FC<Props> = ({
                 )}
               </div>
             ) : (
-              <div className="text-muted-foreground italic text-sm">Geen mislukte afspraak gevonden voor deze lead.</div>
+              <div className="text-muted-foreground italic text-sm">Geen niet gelukte afspraak gevonden voor deze lead.</div>
             )}
-            {/* Actieknoppen */}
+            {/* Actieknoppen naast onder afspraakdata */}
             <div className="flex flex-wrap gap-2 mt-6">
               <Button onClick={handleCreateQuote} variant="outline" className="min-w-[140px] flex gap-2">
                 <FilePlus className="h-4 w-4" />
@@ -186,5 +186,3 @@ export const PipelineItemModal: React.FC<Props> = ({
     </Dialog>
   );
 };
-
-// ... end of file
