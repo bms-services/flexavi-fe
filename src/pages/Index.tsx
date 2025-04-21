@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointments";
 import { RecentLeads } from "@/components/dashboard/RecentLeads";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Filter, PlusCircle, RefreshCw } from "lucide-react";
+import { Calendar, Clock, Filter, PlusCircle, RefreshCw, Users, Star, Briefcase } from "lucide-react";
 import { getUpcomingAppointments, getRecentLeads } from "@/data/mockData";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,12 +13,20 @@ import { LeadConversionRate } from "@/components/dashboard/LeadConversionRate";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { mockEmployees } from "@/data/mockEmployees";
+import { mockReviews } from "@/data/mockReviews";
+import { mockProjects } from "@/data/mockProjects";
+import { ProjectsKPIs } from "@/components/projects/ProjectsKPIs";
+import { RecentReviewsWidget } from "@/components/reputation/widgets/RecentReviewsWidget";
 
 const Dashboard = () => {
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
+
+  const activeEmployees = mockEmployees.filter(emp => emp.active).length;
+  const latestReviews = mockReviews.slice(0, 5);
 
   return (
     <Layout>
@@ -62,6 +69,8 @@ const Dashboard = () => {
 
         <DashboardStats timeRange={timeRange} />
 
+        <ProjectsKPIs projects={mockProjects} />
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -85,6 +94,50 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <LeadConversionRate timeRange={timeRange} />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Medewerkers
+                </CardTitle>
+                <CardDescription>Actieve medewerkers: {activeEmployees}</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {mockEmployees.slice(0, 5).map(employee => (
+                  <div key={employee.id} className="flex items-center justify-between border-b pb-2 last:border-0">
+                    <div>
+                      <p className="font-medium">{employee.firstName} {employee.lastName}</p>
+                      <p className="text-sm text-muted-foreground">{employee.role}</p>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {employee.teamIds.join(", ")}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5" />
+                  Recente Reviews
+                </CardTitle>
+                <CardDescription>Laatste klantbeoordelingen</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <RecentReviewsWidget reviews={latestReviews} />
             </CardContent>
           </Card>
         </div>
