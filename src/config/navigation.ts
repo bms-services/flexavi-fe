@@ -13,6 +13,7 @@ import {
   Receipt,
   Route,
   Calculator,
+  Satellite,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -34,6 +35,7 @@ export const navigationItems: NavItem[] = [
   { name: "Projecten", href: "/projects", icon: Briefcase },
   { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Calculator", href: "/calculator", icon: Calculator },
+  { name: "Satelliet AI Dakmeting", href: "/roof-measurement", icon: Satellite },
   { name: "Producten", href: "/products", icon: Package },
   { name: "Partners", href: "/partners", icon: Handshake },
   { name: "Instellingen", href: "/settings", icon: Settings },
