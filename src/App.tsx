@@ -39,6 +39,7 @@ import Requests from "./pages/Requests";
 import ReputationManagement from "./pages/ReputationManagement";
 import Expenses from "./pages/Expenses";
 import ExpenseDetail from "./pages/ExpenseDetail";
+import WorkAgreementDetail from "./pages/WorkAgreementDetail";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
         <Route path="/workagreements" element={<WorkAgreements />} />
         <Route path="/workagreements/create" element={<WorkAgreementEdit />} />
         <Route path="/workagreements/edit/:id" element={<WorkAgreementEdit />} />
+        <Route path="/workagreements/:id" element={<WorkAgreementDetail />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/invoices/create" element={<InvoiceEdit />} />
         <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />

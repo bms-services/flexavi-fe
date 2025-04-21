@@ -127,7 +127,7 @@ export const WorkOrdersTab: React.FC<WorkOrdersTabProps> = ({ leadId }) => {
                   {currentWorkOrders.map((workOrder) => (
                     <TableRow key={workOrder.id} 
                       className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => navigate(`/projects/${workOrder.id}`)}
+                      onClick={() => navigate(`/workagreements/${workOrder.id}`)}
                     >
                       <TableCell>
                         <span className="font-medium">{workOrder.title}</span>

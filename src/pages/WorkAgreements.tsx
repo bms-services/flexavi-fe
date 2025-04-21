@@ -64,7 +64,7 @@ const WorkAgreements = () => {
   };
 
   const handleEditAgreement = (agreement: WorkAgreement) => {
-    navigate(`/workagreements/${agreement.id}`);
+    navigate(`/workagreements/edit/${agreement.id}`);
   };
 
   const handleCreateAgreement = () => {
