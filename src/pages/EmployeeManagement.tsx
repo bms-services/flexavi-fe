@@ -1,11 +1,9 @@
-
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { EmployeeList } from "@/components/employees/EmployeeList";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
 import { useEmployeeDialog } from "@/components/employees/useEmployeeDialog";
-import { EmployeeCalendarView } from "@/components/employees/EmployeeCalendarView";
 import { Employee, WorkDay } from "@/types/employee-management";
 import { useToast } from "@/hooks/use-toast";
 
@@ -140,11 +138,6 @@ export default function EmployeeManagement() {
 
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
           <EmployeeList />
-          <EmployeeCalendarView 
-            employees={employees}
-            workDays={workDays}
-            onAddDayOff={handleAddDayOff}
-          />
         </div>
       </div>
     </Layout>
