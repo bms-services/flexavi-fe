@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
-import { ScrollContainer } from "@/components/ui/scroll-container";
+import { CalendarIcon } from "lucide-react";
 
 interface DashboardHeaderProps {
   timeRange: string;
@@ -18,19 +18,22 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   lastUpdated,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col md:flex-row justify-between gap-4">
       <div>
         <h1 className="text-2xl font-bold">Dashboard overzicht</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Laatste update: {format(lastUpdated, "d MMMM yyyy, HH:mm", { locale: nl })}
         </p>
       </div>
-      
-      <ScrollContainer className="flex items-center gap-2">
-        <Button variant="outline" size="sm">Vandaag</Button>
-        <Button variant="outline" size="sm">Vergeleken met vorige dag</Button>
+      <div className="flex gap-2">
+        <Button variant="outline" className="h-9">
+          Vandaag
+        </Button>
+        <Button variant="outline" className="h-9">
+          Vergeleken met vorige dag
+        </Button>
         <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] h-9">
             <SelectValue placeholder="Selecteer periode" />
           </SelectTrigger>
           <SelectContent>
@@ -41,7 +44,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <SelectItem value="year">Dit jaar</SelectItem>
           </SelectContent>
         </Select>
-      </ScrollContainer>
+      </div>
     </div>
   );
 };

@@ -1,36 +1,30 @@
 
-import React from "react";
-import { Logo } from "@/components/ui/logo";
-import QuickActions from "./QuickActions";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sidebar } from "./Sidebar";
+import { Link } from "react-router-dom";
+import { Logo } from "@/components/ui/logo";
 
-export const MainHeader: React.FC = () => {
-  const isMobile = useIsMobile();
-
+export const MainHeader = () => {
   return (
-    <header className="h-16 border-b shadow-sm bg-white z-50">
-      <div className="container h-full mx-auto px-4 flex items-center justify-between">
-        <div className="flex items-center">
-          {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="mr-2">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-[280px]">
-                <Sidebar />
-              </SheetContent>
-            </Sheet>
-          )}
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
+      <div className="container mx-auto max-w-6xl px-4">
+        <div className="flex items-center justify-between h-16">
           <Logo />
+          <nav className="hidden md:flex items-center gap-8">
+            <Link to="/" className="text-sm hover:text-primary transition-colors">
+              Home
+            </Link>
+            <Link to="/pricing" className="text-sm hover:text-primary transition-colors">
+              Prijzen
+            </Link>
+            <Link to="/auth/login">
+              <Button variant="outline" size="sm">Inloggen</Button>
+            </Link>
+            <Link to="/auth/register">
+              <Button size="sm">Gratis proberen</Button>
+            </Link>
+          </nav>
         </div>
-        <QuickActions />
       </div>
     </header>
   );
-};
+}

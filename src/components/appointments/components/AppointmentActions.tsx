@@ -1,69 +1,76 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Settings, Calendar, Users } from "lucide-react";
-import { TeamDetails } from "@/types";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
+import { PlusCircle, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { NewAppointmentForm } from "./form/NewAppointmentForm";
 
 interface AppointmentActionsProps {
   onNewAppointment: () => void;
   onSettingsOpen: () => void;
-  teams: TeamDetails[];
+  teams: Array<{ id: string; name: string; type: string }>;
 }
 
 export const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   onNewAppointment,
   onSettingsOpen,
-  teams
+  teams,
 }) => {
-  const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [open, setOpen] = React.useState(false);
 
-  if (isMobile) {
-    return (
-      <div className="flex space-x-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Settings className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onSettingsOpen}>
-              <Calendar className="h-4 w-4 mr-2" />
-              Agenda instellingen
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => {}}>
-              <Users className="h-4 w-4 mr-2" />
-              Team beheer
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <Button onClick={onNewAppointment} className="whitespace-nowrap">
-          <PlusCircle className="h-4 w-4 mr-2" />
-          Nieuwe afspraak
-        </Button>
-      </div>
-    );
-  }
+  const handleSubmit = (data: any) => {
+    onNewAppointment();
+    setOpen(false);
+    toast({
+      title: "Afspraak ingepland",
+      description: "De nieuwe afspraak is succesvol ingepland.",
+    });
+  };
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
 
   return (
-    <div className="flex items-center space-x-4">
-      <Button variant="outline" onClick={onSettingsOpen}>
-        <Settings className="h-4 w-4 mr-2" />
-        Instellingen
-      </Button>
-      
-      <Button onClick={onNewAppointment}>
-        <PlusCircle className="h-4 w-4 mr-2" />
-        Nieuwe afspraak
-      </Button>
-    </div>
+    <>
+      <div className="flex gap-2">
+        <Button 
+          className="bg-primary hover:bg-primary/90" 
+          onClick={() => setOpen(true)}
+        >
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Nieuwe Afspraak
+        </Button>
+        <Button 
+          variant="outline" 
+          size="icon" 
+          onClick={handleSettingsClick}
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Nieuwe Afspraak Inplannen</DialogTitle>
+            <DialogDescription>
+              Vul het formulier in om een nieuwe afspraak in te plannen.
+            </DialogDescription>
+          </DialogHeader>
+          <NewAppointmentForm onSubmit={handleSubmit} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

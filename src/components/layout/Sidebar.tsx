@@ -5,16 +5,14 @@ import { navigationItems } from "@/config/navigation";
 import { NavLink } from "./NavLink";
 import { SidebarHeader } from "./SidebarHeader";
 import { SidebarFooter } from "./SidebarFooter";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
-  const isMobile = useIsMobile();
 
   return (
     <div className="h-full bg-sidebar flex flex-col text-sidebar-foreground">
       <SidebarHeader />
-      <nav className={`flex-1 ${isMobile ? 'p-5' : 'p-4'} space-y-1 overflow-y-auto`}>
+      <nav className="flex-1 p-4 space-y-1">
         {navigationItems.map((item) => (
           <NavLink
             key={item.name}
