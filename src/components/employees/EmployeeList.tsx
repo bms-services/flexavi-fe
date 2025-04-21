@@ -29,7 +29,8 @@ const mockEmployees: Employee[] = [
     },
     availableDays: ["1", "2", "3", "4", "5"],
     active: true,
-    phoneNumber: "0612345678"
+    phoneNumber: "0612345678",
+    teamIds: ["sales"]
   },
   {
     id: "2",
@@ -43,7 +44,8 @@ const mockEmployees: Employee[] = [
       dailyRate: 240
     },
     availableDays: ["1", "2", "3", "4", "5"],
-    active: true
+    active: true,
+    teamIds: ["installation"]
   }
 ];
 
