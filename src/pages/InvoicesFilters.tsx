@@ -4,7 +4,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { InvoicesPagination } from "@/components/invoices/InvoicesPagination";
 import { DateRangePicker } from "@/components/quotes/DateRangePicker";
 import { Button } from "@/components/ui/button";
-import { Filter, FileText, FilePdf } from "lucide-react";
+import { Filter, FileText, File } from "lucide-react";  // replaced FilePdf with File
 import { statusOptions } from "./InvoicesMain";
 import { exportInvoicesCSV, exportInvoicesPDF } from "@/utils/exportInvoices";
 import { Invoice } from "@/types";
@@ -79,7 +79,7 @@ export const InvoicesFilters: React.FC<InvoicesFiltersProps> = ({
         onClick={() => exportInvoicesPDF(filteredInvoices)}
         title="Exporteer naar PDF"
       >
-        <FilePdf className="mr-1 w-4 h-4" /> PDF
+        <File className="mr-1 w-4 h-4" /> PDF
       </Button>
     </div>
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 px-2">
@@ -112,3 +112,4 @@ export const InvoicesFilters: React.FC<InvoicesFiltersProps> = ({
     </div>
   </>
 );
+
