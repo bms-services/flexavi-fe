@@ -103,11 +103,12 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-  return <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition max-w-full">
+  return (
+    <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-xl sm:rounded-2xl overflow-hidden hover:shadow-lg transition">
       <div className="relative">
-        <CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-5 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
-          <div className="flex flex-col items-start gap-1 sm:gap-2 min-w-0">
-            <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
+        <CardHeader className="pb-2 pt-2.5 sm:pt-4 px-2.5 sm:px-5 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-xl sm:rounded-t-2xl bg-white">
+          <div className="flex flex-col items-start gap-0.5 sm:gap-2 min-w-0">
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
             </span>
             <div className="text-sm sm:text-lg font-bold text-gray-900 truncate max-w-full">
@@ -116,13 +117,21 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
-                <MoreHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition h-8 w-8 sm:h-9 sm:w-9" 
+                aria-label="Meer acties"
+              >
+                <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[180px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" style={{
-            color: "#00254D"
-          }}>
+            <DropdownMenuContent 
+              side="bottom" 
+              align="end" 
+              className="z-[2000] min-w-[160px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" 
+              style={{ color: "#00254D" }}
+            >
               <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
                 <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
               </DropdownMenuItem>
@@ -152,11 +161,20 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
         </CardHeader>
       </div>
       <CardContent className="p-0">
-        {lead && <LeadInfoCard lead={lead} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} description={afspraakOmschrijving} />}
+        {lead && <LeadInfoCard 
+          lead={lead} 
+          isRescheduled={isRescheduled} 
+          rescheduleReason={rescheduleReason} 
+          historyEntries={historyEntries} 
+          notes={notities} 
+          showMapButton={true} 
+          description={afspraakOmschrijving}
+        />}
       </CardContent>
       <ReceiptUploadDialog open={uploadQuoteDialogOpen} onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()} onResult={onQuoteResult} />
       <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
       <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement} onResult={onAgreementResult} />
       <AppointmentProcessModal open={processModalOpen} reason={processReason} onReasonChange={setProcessReason} taskChecked={processTaskChecked} onTaskCheckedChange={setProcessTaskChecked} taskDescription={processTaskDescription} onTaskDescriptionChange={setProcessTaskDescription} onCancel={handleCloseProcessModal} onSubmit={handleProcessSubmit} loading={processing} />
-    </Card>;
+    </Card>
+  );
 };
