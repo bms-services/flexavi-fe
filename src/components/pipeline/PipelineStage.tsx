@@ -1,11 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { PipelineStage as PipelineStageType, PipelineItem } from "@/types/pipeline";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { PipelineItemCard } from "./PipelineItemCard";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ColorPopover } from "./ColorPopover";
 
 interface PipelineStageProps {
   stage: PipelineStageType;
@@ -21,21 +20,22 @@ export const PipelineStage: React.FC<PipelineStageProps> = ({
   const isMobile = useIsMobile();
   const stageItems = items.filter((item) => item.stageId === stage.id);
 
+  // Houdt de kleur van de kolom bij in lokale state (begin met stage.color)
+  const [color, setColor] = useState(stage.color);
+
   return (
-    <div className={`bg-white/95 rounded-xl shadow-[0_2px_6px_rgba(50,50,94,0.06)] border border-gray-200 min-w-[280px] max-w-xs w-full flex-shrink-0 h-fit max-h-full transition-shadow hover:shadow-lg flex flex-col`}>
+    <div
+      className="bg-white/95 rounded-xl shadow-[0_2px_6px_rgba(50,50,94,0.06)] border border-gray-200 min-w-[280px] max-w-xs w-full flex-shrink-0 h-fit max-h-full transition-shadow hover:shadow-lg flex flex-col"
+      style={{ borderColor: color }}
+    >
       <div className="px-4 pt-3 pb-2 border-b flex items-center justify-between rounded-t-xl bg-white/90">
         <div className="flex items-center gap-2">
+          {/* Kleur picker */}
+          <ColorPopover value={color} onChange={setColor} />
           <span className="text-base font-medium">{stage.name}</span>
           <span className="text-xs text-muted-foreground">({stageItems.length})</span>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onAddItem(stage.id)}
-          className="h-8 w-8"
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        {/* Plus knop weggehaald, toevoegen kan eventueel elders */}
       </div>
       <Droppable droppableId={stage.id} type="pipelineItem">
         {(provided, snapshot) => (
