@@ -21,7 +21,7 @@ export const QuoteMetrics: React.FC<QuoteMetricsProps> = ({
     for (let i = 0; i < 30; i++) {
       const baseAmount = Math.random() * 3000 + 2000; // Random amount between 2000-5000
       data.push({
-        time: format(addDays(startDate, i), 'd MMM', { locale: nl }),
+        time: format(addDays(startDate, i), 'd', { locale: nl }),
         value: Math.round(baseAmount),
       });
     }
@@ -58,31 +58,31 @@ export const QuoteMetrics: React.FC<QuoteMetricsProps> = ({
       ]}
       subTitle="OFFERTES DEZE MAAND"
       chart={
-        <ResponsiveContainer width="100%" height={100}>
-          <LineChart data={quoteData}>
+        <ResponsiveContainer width="100%" height={80}>
+          <LineChart data={quoteData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <XAxis 
               dataKey="time" 
-              tick={{ fontSize: 10 }} 
+              tick={{ fontSize: 8 }} 
               tickLine={false}
               axisLine={false}
               interval="preserveStartEnd"
-              minTickGap={15}
+              minTickGap={20}
             />
             <YAxis 
               domain={['auto', 'auto']}
               tickFormatter={formatYAxis}
-              tick={{ fontSize: 10 }}
+              tick={{ fontSize: 8 }}
               tickLine={false}
               axisLine={false}
-              width={40}
+              width={30}
             />
             <Tooltip 
               formatter={(value: number) => [formatTooltip(value), 'Offerte']}
               labelFormatter={(label) => `Dag: ${label}`}
               contentStyle={{ 
-                fontSize: '12px', 
+                fontSize: '10px', 
                 borderRadius: '4px',
-                padding: '4px 8px'
+                padding: '2px 4px'
               }}
             />
             <Line 

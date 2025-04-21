@@ -25,7 +25,7 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
     while (currentDay <= monthEnd && dailyData.length < 31) {
       const baseAmount = Math.random() * 2000 + 1000; // Random base between 1000-3000
       dailyData.push({
-        time: format(currentDay, 'd MMM', { locale: nl }),
+        time: format(currentDay, "d", { locale: nl }),
         today: Math.round(baseAmount),
         yesterday: Math.round(baseAmount * 0.9)
       });
@@ -64,31 +64,31 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
       ]}
       subTitle="OMZET DEZE MAAND"
       chart={
-        <ResponsiveContainer width="100%" height={100}>
-          <LineChart data={salesData}>
+        <ResponsiveContainer width="100%" height={80}>
+          <LineChart data={salesData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <XAxis 
               dataKey="time" 
-              tick={{ fontSize: 10 }} 
+              tick={{ fontSize: 8 }} 
               tickLine={false}
               axisLine={false}
               interval="preserveStartEnd"
-              minTickGap={15}
+              minTickGap={20}
             />
             <YAxis 
               domain={['auto', 'auto']}
               tickFormatter={formatYAxis}
-              tick={{ fontSize: 10 }}
+              tick={{ fontSize: 8 }}
               tickLine={false}
               axisLine={false}
-              width={40}
+              width={30}
             />
             <Tooltip 
               formatter={(value: number) => [formatTooltip(value), 'Omzet']}
               labelFormatter={(label) => `Dag: ${label}`}
               contentStyle={{ 
-                fontSize: '12px', 
+                fontSize: '10px', 
                 borderRadius: '4px',
-                padding: '4px 8px'
+                padding: '2px 4px'
               }}
             />
             <Line 
