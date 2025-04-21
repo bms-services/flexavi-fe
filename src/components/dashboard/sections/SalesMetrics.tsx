@@ -3,7 +3,7 @@ import React from "react";
 import { StatsCardWithChart } from "../stats/StatsCardWithChart";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { Invoice } from "@/types";
-import { format, parseISO, startOfMonth, endOfMonth } from "date-fns";
+import { format, parseISO, startOfMonth, endOfMonth, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
 
 interface SalesMetricsProps {
@@ -15,29 +15,25 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
   totalAmount, 
   formatCurrency 
 }) => {
-  // Generate daily data for current month
+  // Generate daily data for current month with sample data
   const generateDailyData = () => {
     const now = new Date();
     const monthStart = startOfMonth(now);
     const monthEnd = endOfMonth(now);
-    
-    // Create a map of dates to track amounts
-    const dailyAmounts = new Map();
-    const days = [];
+    const dailyData = [];
     let currentDay = monthStart;
     
     while (currentDay <= monthEnd) {
-      const dateStr = format(currentDay, 'yyyy-MM-dd');
-      dailyAmounts.set(dateStr, {
+      const baseAmount = Math.random() * 2000 + 1000; // Random base between 1000-3000
+      dailyData.push({
         time: format(currentDay, 'd MMM', { locale: nl }),
-        today: 0,
-        yesterday: 0
+        today: Math.round(baseAmount),
+        yesterday: Math.round(baseAmount * 0.9)
       });
-      days.push(dateStr);
-      currentDay = new Date(currentDay.setDate(currentDay.getDate() + 1));
+      currentDay = addDays(currentDay, 1);
     }
     
-    return Array.from(dailyAmounts.values());
+    return dailyData;
   };
 
   const salesData = generateDailyData();

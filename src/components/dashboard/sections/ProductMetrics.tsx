@@ -1,23 +1,26 @@
 
 import React from "react";
 import { StatsCardWithTable } from "../stats/StatsCardWithTable";
-import { Product } from "@/types/product";
-import { getTopProducts } from "@/utils/dashboardCalculations";
 
 interface ProductMetricsProps {
-  products: Product[];
+  products: any[];
 }
 
-export const ProductMetrics: React.FC<ProductMetricsProps> = ({ products }) => {
-  const topProducts = getTopProducts(products);
+export const ProductMetrics: React.FC<ProductMetricsProps> = () => {
+  const services = [
+    { name: "Installatie zonnepanelen", count: 28, change: 12.4 },
+    { name: "Energieadvies", count: 15, change: 8.2 },
+    { name: "Onderhoud installaties", count: 12, change: -2.1 },
+    { name: "Systeemontwerp", count: 8, change: 5.7 }
+  ];
 
   return (
     <StatsCardWithTable
-      title="Top producten per verkocht aantal"
-      table={topProducts.map(product => ({
-        label: product.name,
-        value: product.count.toString(),
-        change: product.change
+      title="Meest verkochte diensten"
+      table={services.map(service => ({
+        label: service.name,
+        value: service.count.toString(),
+        change: service.change
       }))}
     />
   );

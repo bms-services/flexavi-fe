@@ -7,20 +7,21 @@ import {
   mockProducts,
   mockProjects,
   mockReviews,
-  mockEmployees
+  mockEmployees,
+  mockWorkAgreements
 } from "@/data/mockData";
 import { 
   calculateQuoteMetrics,
   calculateLeadMetrics,
   calculateInvoiceMetrics,
-  generateTimeData
 } from "@/utils/dashboardCalculations";
 import { SalesMetrics } from "./sections/SalesMetrics";
-import { ProductMetrics } from "./sections/ProductMetrics";
+import { QuoteMetrics } from "./sections/QuoteMetrics";
 import { ConversionMetrics } from "./sections/ConversionMetrics";
-import { ProjectMetrics } from "./sections/ProjectMetrics";
+import { ProductMetrics } from "./sections/ProductMetrics";
 import { ReviewsMetrics } from "./sections/ReviewsMetrics";
 import { EmployeeMetrics } from "./sections/EmployeeMetrics";
+import { WorkAgreementMetrics } from "./sections/WorkAgreementMetrics";
 
 interface ShopifyStyleDashboardProps {
   timeRange: string;
@@ -35,23 +36,22 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
     }).format(amount);
   };
 
-  const { totalInvoiceAmount, paidAmount } = calculateInvoiceMetrics(mockInvoices);
-  const { totalLeads, convertedLeads, leadConversionRate } = calculateLeadMetrics(mockLeads);
-  const { quoteConversionRate } = calculateQuoteMetrics(mockQuotes);
+  const { totalInvoiceAmount } = calculateInvoiceMetrics(mockInvoices);
+  const { totalQuoteAmount } = calculateQuoteMetrics(mockQuotes);
 
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Top row - Summary metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <SalesMetrics totalAmount={totalInvoiceAmount} formatCurrency={formatCurrency} />
+        <QuoteMetrics totalQuoteAmount={totalQuoteAmount} formatCurrency={formatCurrency} />
         <ConversionMetrics leads={mockLeads} quotes={mockQuotes} />
-        <ProductMetrics products={mockProducts} />
       </div>
 
       {/* Second row - Detailed metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-        <ProjectMetrics projects={mockProjects} formatCurrency={formatCurrency} />
-        <ReviewsMetrics reviews={mockReviews} />
+        <WorkAgreementMetrics workAgreements={mockWorkAgreements} />
+        <ProductMetrics products={mockProducts} />
         <EmployeeMetrics employees={mockEmployees} />
       </div>
     </div>
