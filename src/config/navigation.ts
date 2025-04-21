@@ -11,6 +11,7 @@ import {
   Receipt,
   Route,
   Calculator,
+  FileText,  // We'll use this as a generic fallback icon
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -24,9 +25,9 @@ export const navigationItems: NavItem[] = [
     href: "#",
     icon: Receipt,
     children: [
-      { name: "Offertes", href: "/quotes" },
-      { name: "Werkovereenkomsten", href: "/workagreements" },
-      { name: "Facturen", href: "/invoices" },
+      { name: "Offertes", href: "/quotes", icon: FileText },
+      { name: "Werkovereenkomsten", href: "/workagreements", icon: FileText },
+      { name: "Facturen", href: "/invoices", icon: FileText },
     ],
   },
   { name: "Projecten", href: "/projects", icon: Briefcase },
@@ -37,3 +38,4 @@ export const navigationItems: NavItem[] = [
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
+
