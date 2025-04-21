@@ -1,42 +1,24 @@
 
-import React from "react";
-import { 
-  Box, FileText, Wrench, Users, 
-  Receipt, ShoppingCart, Briefcase, 
-  DollarSign, Menu, CreditCard, Euro 
-} from "lucide-react";
 import { ExpenseType } from "@/types/expenses";
 
 /**
- * Returns the appropriate icon component for a given expense type
+ * Returns the icon name for a given expense type
  */
-export const getTypeIcon = (type: ExpenseType, size: number = 16, className: string = "") => {
+export const getTypeIconName = (type: ExpenseType): string => {
   switch (type) {
-    case "material":
-      return <Box size={size} className={className} />;
-    case "transport":
-      return <ShoppingCart size={size} className={className} />;
-    case "equipment":
-      return <Wrench size={size} className={className} />;
-    case "subcontractor":
-      return <Users size={size} className={className} />;
-    case "office":
-      return <Briefcase size={size} className={className} />;
-    case "software":
-      return <Menu size={size} className={className} />;
-    case "marketing":
-      return <Receipt size={size} className={className} />;
-    case "training":
-      return <DollarSign size={size} className={className} />;
-    case "maintenance":
-      return <Wrench size={size} className={className} />;
-    case "utilities":
-      return <Euro size={size} className={className} />;
-    case "insurance":
-      return <CreditCard size={size} className={className} />;
+    case "material": return "Box";
+    case "transport": return "ShoppingCart";
+    case "equipment": return "Wrench";
+    case "subcontractor": return "Users";
+    case "office": return "Briefcase";
+    case "software": return "Menu";
+    case "marketing": return "Receipt";
+    case "training": return "DollarSign";
+    case "maintenance": return "Wrench";
+    case "utilities": return "Euro";
+    case "insurance": return "CreditCard";
     case "other":
-    default:
-      return <FileText size={size} className={className} />;
+    default: return "FileText";
   }
 };
 
