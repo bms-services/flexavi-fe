@@ -43,18 +43,25 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* Top row - Summary metrics */}
+      {/* First column */}
       <div className="grid grid-cols-1 gap-4">
         <SalesMetrics totalAmount={totalInvoiceAmount} formatCurrency={formatCurrency} />
         <QuoteMetrics totalQuoteAmount={totalQuoteAmount} formatCurrency={formatCurrency} />
         <ConversionMetrics leads={mockLeads} quotes={mockQuotes} />
       </div>
 
-      {/* Second row - Detailed metrics */}
+      {/* Second column */}
       <div className="grid grid-cols-1 gap-4">
         <WorkAgreementMetrics workAgreements={mockWorkAgreements} />
         <ProductMetrics products={mockProducts} />
+        <ReviewsMetrics reviews={mockReviews} />
+      </div>
+
+      {/* Third column */}
+      <div className="grid grid-cols-1 gap-4">
         <EmployeeMetrics employees={mockEmployees} />
+        <ProductMetrics products={mockProducts.slice(0, 3)} />
+        <WorkAgreementMetrics workAgreements={mockWorkAgreements.slice(0, 3)} />
       </div>
     </div>
   );
