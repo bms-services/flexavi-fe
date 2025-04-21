@@ -8,41 +8,55 @@ interface ConversionMetricsProps {
   quotes: Quote[];
 }
 
-export const ConversionMetrics: React.FC<ConversionMetricsProps> = ({ leads, quotes }) => {
+export const ConversionMetrics: React.FC<ConversionMetricsProps> = ({ 
+  leads, 
+  quotes 
+}) => {
+  // Calculate conversion rates for each stage
+  const totalLeads = leads.length;
+  const appointmentScheduled = leads.filter(l => l.status === "appointment_scheduled").length;
+  const quoteSent = quotes.length;
+  const convertedLeads = leads.filter(l => l.status === "satisfied").length;
+
   const conversionFunnel = [
     { 
-      stage: "Bekeken", 
-      count: leads.length, 
-      rate: (leads.length / leads.length * 100).toFixed(2), 
+      stage: "Nieuwe leads", 
+      count: totalLeads,
+      rate: (totalLeads / totalLeads * 100).toFixed(1),
       change: 4.0 
     },
     { 
-      stage: "Contact", 
-      count: leads.filter(l => l.status !== "new_lead").length, 
-      rate: (leads.filter(l => l.status !== "new_lead").length / leads.length * 100).toFixed(2), 
+      stage: "Afspraak gepland", 
+      count: appointmentScheduled,
+      rate: (appointmentScheduled / totalLeads * 100).toFixed(1),
       change: 2.0 
     },
     { 
-      stage: "Offerte", 
-      count: quotes.length, 
-      rate: (quotes.length / leads.length * 100).toFixed(2), 
+      stage: "Offerte verstuurd", 
+      count: quoteSent,
+      rate: (quoteSent / totalLeads * 100).toFixed(1),
       change: 1.4 
+    },
+    {
+      stage: "Tevreden klant",
+      count: convertedLeads,
+      rate: (convertedLeads / totalLeads * 100).toFixed(1),
+      change: 0.8
     }
   ];
 
   return (
     <StatsCardWithTable
-      title="Online conversie percentage"
-      value={`${(quotes.length / leads.length * 100).toFixed(2)}%`}
+      title="Conversie percentage"
+      value={`${(convertedLeads / totalLeads * 100).toFixed(1)}%`}
       change={3.6}
-      subTitle="CONVERSIE TRECHTER"
+      subTitle="LEAD NAAR KLANT CONVERSIE"
       table={conversionFunnel.map(item => ({
         label: item.stage,
         value: `${item.rate}%`,
-        subLabel: `${item.count} bezoeken`,
+        subLabel: `${item.count} leads`,
         change: item.change
       }))}
     />
   );
 };
-

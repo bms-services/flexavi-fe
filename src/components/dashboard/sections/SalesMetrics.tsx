@@ -1,16 +1,46 @@
 
 import React from "react";
 import { StatsCardWithChart } from "../stats/StatsCardWithChart";
-import { generateTimeData } from "@/utils/dashboardCalculations";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { Invoice } from "@/types";
+import { format, parseISO, startOfMonth, endOfMonth } from "date-fns";
+import { nl } from "date-fns/locale";
 
 interface SalesMetricsProps {
   totalAmount: number;
   formatCurrency: (amount: number) => string;
 }
 
-export const SalesMetrics: React.FC<SalesMetricsProps> = ({ totalAmount, formatCurrency }) => {
-  const salesData = generateTimeData(24, 50);
+export const SalesMetrics: React.FC<SalesMetricsProps> = ({ 
+  totalAmount, 
+  formatCurrency 
+}) => {
+  // Generate daily data for current month
+  const generateDailyData = () => {
+    const now = new Date();
+    const monthStart = startOfMonth(now);
+    const monthEnd = endOfMonth(now);
+    
+    // Create a map of dates to track amounts
+    const dailyAmounts = new Map();
+    const days = [];
+    let currentDay = monthStart;
+    
+    while (currentDay <= monthEnd) {
+      const dateStr = format(currentDay, 'yyyy-MM-dd');
+      dailyAmounts.set(dateStr, {
+        time: format(currentDay, 'd MMM', { locale: nl }),
+        today: 0,
+        yesterday: 0
+      });
+      days.push(dateStr);
+      currentDay = new Date(currentDay.setDate(currentDay.getDate() + 1));
+    }
+    
+    return Array.from(dailyAmounts.values());
+  };
+
+  const salesData = generateDailyData();
 
   return (
     <StatsCardWithChart
@@ -18,25 +48,22 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({ totalAmount, formatC
       value={formatCurrency(totalAmount)}
       change={2.6}
       chipData={[
-        { label: "Online winkel", value: formatCurrency(totalAmount * 0.6), change: 3.2 },
-        { label: "Persoonlijk", value: formatCurrency(totalAmount * 0.4), change: 7.0 }
+        { label: "Bedrijfsales", value: formatCurrency(totalAmount), change: 3.2 }
       ]}
-      subTitle="OMZET OVER TIJD"
+      subTitle="OMZET DEZE MAAND"
       chart={
         <ResponsiveContainer width="100%" height={100}>
           <LineChart data={salesData}>
-            <XAxis dataKey="time" hide />
-            <YAxis hide />
-            <Line type="monotone" dataKey="yesterday" stroke="#e2e8f0" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="today" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+            <Line 
+              type="monotone" 
+              dataKey="today" 
+              stroke="#8b5cf6" 
+              strokeWidth={2} 
+              dot={false} 
+            />
           </LineChart>
         </ResponsiveContainer>
       }
-      chartLegend={[
-        { label: "Gisteren", color: "#e2e8f0" },
-        { label: "Vandaag", color: "#8b5cf6" }
-      ]}
     />
   );
 };
-
