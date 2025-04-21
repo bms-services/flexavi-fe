@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -150,13 +151,13 @@ export const EmployeeDialog = ({ isOpen, onClose, employee, onSubmit }: Employee
                   <FormField
                     key={day}
                     control={form.control}
-                    name={`workingDays.${day}`}
+                    name={`workingDays.${day}` as any}
                     render={({ field }) => (
                       <FormItem className="flex items-center space-x-2">
                         <FormControl>
                           <Checkbox
                             checked={field.value}
-                            onCheckedChange={field.onChange}
+                            onCheckedChange={(checked) => field.onChange(checked)}
                           />
                         </FormControl>
                         <FormLabel className="font-normal">

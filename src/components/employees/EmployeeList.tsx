@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Table,
@@ -27,6 +26,19 @@ const mockEmployees: Employee[] = [
       hourlyRate: 25,
       dailyRate: 200
     },
+    workingDays: {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: true,
+      saturday: false,
+      sunday: false
+    },
+    workingHours: {
+      start: "09:00",
+      end: "17:00"
+    },
     availableDays: ["1", "2", "3", "4", "5"],
     active: true,
     phoneNumber: "0612345678",
@@ -42,6 +54,19 @@ const mockEmployees: Employee[] = [
     rates: {
       hourlyRate: 30,
       dailyRate: 240
+    },
+    workingDays: {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: true,
+      saturday: false,
+      sunday: false
+    },
+    workingHours: {
+      start: "08:00",
+      end: "16:00"
     },
     availableDays: ["1", "2", "3", "4", "5"],
     active: true,
