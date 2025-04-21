@@ -33,13 +33,13 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
   const discountAmount = calculateDiscount();
   const subtotalAfterDiscount = subtotal - discountAmount;
 
-  // Calculate VAT amounts per rate
+  // Calculate VAT amounts per rate and group by rate
   const vatAmounts = new Map<number, number>();
   lineItems.forEach(item => {
-    const vatRate = item.vatRate ?? 21;
-    const itemTotal = item.total;
+    const vatRate = item.vatRate ?? 21; // Default to 21% if not specified
+    const itemTotalAfterDiscount = item.total * (1 - discountAmount / subtotal);
     const currentAmount = vatAmounts.get(vatRate) || 0;
-    vatAmounts.set(vatRate, currentAmount + (itemTotal * vatRate) / 100);
+    vatAmounts.set(vatRate, currentAmount + (itemTotalAfterDiscount * vatRate) / 100);
   });
 
   // Calculate total including VAT
@@ -49,12 +49,14 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
   return (
     <div className="border-t mt-6 pt-4">
       <div className="flex justify-end">
-        <div className="w-full max-w-xs space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Subtotaal (excl. BTW)</span>
-            <span>{formatCurrency(subtotal)}</span>
+        <div className="w-full max-w-xs space-y-3">
+          {/* Subtotal */}
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>Subtotaal</span>
+            <span className="font-medium text-gray-900">{formatCurrency(subtotal)}</span>
           </div>
           
+          {/* Discount Section */}
           <DiscountSection
             subtotal={subtotal}
             discountType={discountType}
@@ -64,6 +66,7 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
             className="mb-2"
           />
 
+          {/* Show discount amount if there is one */}
           {discountAmount > 0 && (
             <div className="flex justify-between text-sm text-red-600">
               <span>Korting</span>
@@ -71,20 +74,25 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
             </div>
           )}
 
+          {/* Separator before VAT */}
+          <div className="border-t border-gray-200 my-2" />
+
           {/* Show each VAT rate separately */}
           {Array.from(vatAmounts.entries())
             .sort(([rateA], [rateB]) => rateA - rateB)
             .map(([rate, amount]) => (
-              <div key={rate} className="flex justify-between text-sm">
+              <div key={rate} className="flex justify-between text-sm text-gray-600">
                 <span>BTW {rate}%</span>
-                <span>{formatCurrency(amount)}</span>
+                <span className="font-medium text-gray-900">{formatCurrency(amount)}</span>
               </div>
-            ))
-          }
+            ))}
 
-          <div className="flex justify-between font-medium border-t pt-2">
-            <span>Totaal (incl. BTW)</span>
-            <span className="text-lg font-bold">{formatCurrency(total)}</span>
+          {/* Total including VAT */}
+          <div className="flex justify-between font-medium border-t border-gray-200 pt-3 mt-2">
+            <span className="text-gray-900">Totaal (incl. BTW)</span>
+            <span className="text-lg font-bold text-primary">
+              {formatCurrency(total)}
+            </span>
           </div>
         </div>
       </div>
