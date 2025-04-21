@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -23,9 +23,6 @@ import { Save } from "lucide-react";
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
-  const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
-  const [discountValue, setDiscountValue] = useState(0);
-  
   const {
     workAgreement,
     lineItems,
@@ -105,13 +102,7 @@ const WorkAgreementEdit = () => {
                 onProductSearch={getProductSuggestions}
                 disabled={isReadOnly}
               />
-              <QuoteSummary 
-                subtotal={totalAmount} 
-                discountType={discountType}
-                discountValue={discountValue}
-                onDiscountTypeChange={setDiscountType}
-                onDiscountValueChange={setDiscountValue}
-              />
+              <QuoteSummary subtotal={totalAmount} />
             </CardContent>
           </Card>
 

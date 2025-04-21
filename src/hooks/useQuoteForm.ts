@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Quote, QuoteLineItem, Lead } from "@/types";
 import { mockQuotes, mockLeads } from "@/data/mockData";
@@ -73,23 +74,6 @@ export const useQuoteForm = (quoteId?: string) => {
       }
     }
   }, [quoteId, isEditing, navigate]);
-
-  const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
-  const [discountValue, setDiscountValue] = useState(0);
-
-  // Calculate final amount including discount
-  useEffect(() => {
-    const subtotal = lineItems.reduce((sum, item) => sum + (parseFloat(String(item.total)) || 0), 0);
-    const discountAmount = discountType === "percentage" 
-      ? (subtotal * discountValue) / 100 
-      : discountValue;
-    
-    setQuote(prev => ({ 
-      ...prev, 
-      amount: Math.max(0, subtotal - discountAmount),
-      discount: { type: discountType, value: discountValue }
-    }));
-  }, [lineItems, discountType, discountValue]);
 
   const handleLineItemChange = (index: number, updatedItem: QuoteLineItem) => {
     const newLineItems = [...lineItems];
@@ -187,9 +171,5 @@ export const useQuoteForm = (quoteId?: string) => {
     handleQuoteFieldChange,
     getProductSuggestions,
     handleSaveQuote,
-    discountType,
-    discountValue,
-    setDiscountType,
-    setDiscountValue,
   };
 };

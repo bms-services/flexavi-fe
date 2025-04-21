@@ -19,14 +19,7 @@ export const PaymentSection: React.FC<PaymentSectionProps> = ({
         <Euro className="h-4 w-4" />
         Betaling
       </h3>
-      <InvoiceSummary 
-        subtotal={totalAmount} 
-        vatRate={vatRate} 
-        discountType="percentage"
-        discountValue={0}
-        onDiscountTypeChange={() => {}}
-        onDiscountValueChange={() => {}}
-      />
+      <InvoiceSummary subtotal={totalAmount} vatRate={vatRate} />
     </Card>
   );
 };

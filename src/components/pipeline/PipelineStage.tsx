@@ -15,6 +15,8 @@ interface PipelineStageProps {
   isFirstStage?: boolean;
 }
 
+const NIEUWE_LEADS_PIPELINE_ID = "pipeline-callbacks";
+
 export const PipelineStage: React.FC<PipelineStageProps> = ({
   stage,
   items,
@@ -22,11 +24,13 @@ export const PipelineStage: React.FC<PipelineStageProps> = ({
   isFirstStage,
 }) => {
   const isMobile = useIsMobile();
+  // Sorteer per order:
   const stageItems = items
     .filter((item) => item.stageId === stage.id)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const [color, setColor] = useState(stage.color);
+
   const [mailSettingsOpen, setMailSettingsOpen] = useState(false);
   const [mailEnabled, setMailEnabled] = useState(true);
   const [mailTemplate, setMailTemplate] = useState(
@@ -40,6 +44,8 @@ Jouw team`
 
   const currentPipelineId = stageItems[0]?.pipelineId;
 
+  const isNieuweLeadsPipeline = stageItems[0]?.pipelineId === NIEUWE_LEADS_PIPELINE_ID;
+
   return (
     <div
       className="bg-white/95 rounded-xl shadow-[0_2px_6px_rgba(50,50,94,0.06)] border border-gray-200 min-w-[280px] max-w-xs w-full flex-shrink-0 h-fit max-h-full transition-shadow hover:shadow-lg flex flex-col"
@@ -51,26 +57,30 @@ Jouw team`
           <span className="text-base font-medium">{stage.name}</span>
           <span className="text-xs text-muted-foreground">({stageItems.length})</span>
         </div>
-        <button
-          type="button"
-          className="rounded-full hover:bg-accent/30 p-1 transition border border-transparent hover:border-accent"
-          title="Instellingen e-mail na slepen"
-          onClick={() => setMailSettingsOpen(true)}
-        >
-          <Settings size={20} className="text-muted-foreground" />
-          <span className="sr-only">Instellingen e-mail</span>
-        </button>
+        {isNieuweLeadsPipeline && !isFirstStage && (
+          <button
+            type="button"
+            className="rounded-full hover:bg-accent/30 p-1 transition border border-transparent hover:border-accent"
+            title="Instellingen e-mail na slepen"
+            onClick={() => setMailSettingsOpen(true)}
+          >
+            <Settings size={20} className="text-muted-foreground" />
+            <span className="sr-only">Instellingen e-mail</span>
+          </button>
+        )}
       </div>
 
-      <StageMailSettingsModal
-        open={mailSettingsOpen}
-        onOpenChange={setMailSettingsOpen}
-        enabled={mailEnabled}
-        onEnabledChange={setMailEnabled}
-        template={mailTemplate}
-        onTemplateChange={setMailTemplate}
-        stageName={stage.name}
-      />
+      {isNieuweLeadsPipeline && (
+        <StageMailSettingsModal
+          open={mailSettingsOpen}
+          onOpenChange={setMailSettingsOpen}
+          enabled={mailEnabled}
+          onEnabledChange={setMailEnabled}
+          template={mailTemplate}
+          onTemplateChange={setMailTemplate}
+          stageName={stage.name}
+        />
+      )}
 
       <Droppable droppableId={stage.id} type="pipelineItem">
         {(provided, snapshot) => (

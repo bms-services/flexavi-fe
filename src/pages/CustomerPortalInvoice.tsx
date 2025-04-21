@@ -162,14 +162,7 @@ const CustomerPortalInvoice = () => {
               </div>
             </div>
             
-            <InvoiceSummary 
-              subtotal={invoice.amount} 
-              vatRate={21}
-              discountType="percentage"
-              discountValue={invoice.discount?.value || 0}
-              onDiscountTypeChange={() => {}}
-              onDiscountValueChange={() => {}}
-            />
+            <InvoiceSummary subtotal={invoice.amount} vatRate={21} />
             
             <Separator className="my-8" />
             

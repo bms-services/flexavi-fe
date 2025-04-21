@@ -17,10 +17,7 @@ export const Sidebar: React.FC = () => {
           <NavLink
             key={item.name}
             {...item}
-            isActive={
-              location.pathname === item.href || 
-              (item.children?.some(child => location.pathname === child.href) ?? false)
-            }
+            isActive={location.pathname === item.href}
           />
         ))}
       </nav>
@@ -28,3 +25,4 @@ export const Sidebar: React.FC = () => {
     </div>
   );
 };
+

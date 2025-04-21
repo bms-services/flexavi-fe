@@ -1,7 +1,10 @@
+
 import {
   Home,
   Users,
   Calendar,
+  FileText,
+  FileCheck,
   Package,
   Settings,
   Briefcase,
@@ -23,9 +26,9 @@ export const navigationItems: NavItem[] = [
     href: "#",
     icon: Receipt,
     children: [
-      { name: "Offertes", href: "/quotes" },
-      { name: "Werkovereenkomsten", href: "/workagreements" },
-      { name: "Facturen", href: "/invoices" },
+      { name: "Offertes", href: "/quotes", icon: FileText },
+      { name: "Werkovereenkomsten", href: "/workagreements", icon: FileText },
+      { name: "Facturen", href: "/invoices", icon: FileCheck },
     ],
   },
   { name: "Projecten", href: "/projects", icon: Briefcase },

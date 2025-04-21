@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Invoice, QuoteLineItem } from "@/types";
 import { v4 as uuidv4 } from "uuid";
@@ -49,10 +50,6 @@ export const useInvoiceForm = (invoiceId?: string) => {
   // State for product suggestions
   const [productSuggestions, setProductSuggestions] = useState<Record<string, Product[]>>({});
 
-  // State for discount
-  const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
-  const [discountValue, setDiscountValue] = useState(0);
-
   // Effect to load invoice if editing
   useEffect(() => {
     if (isEditing && invoiceId) {
@@ -80,19 +77,11 @@ export const useInvoiceForm = (invoiceId?: string) => {
     }
   }, [invoiceId, isEditing]);
 
-  // Calculate total including discount
+  // Calculate total
   useEffect(() => {
-    const subtotal = lineItems.reduce((sum, item) => sum + (parseFloat(String(item.total)) || 0), 0);
-    const discountAmount = discountType === "percentage" 
-      ? (subtotal * discountValue) / 100 
-      : discountValue;
-    
-    setInvoice(prev => ({ 
-      ...prev, 
-      amount: Math.max(0, subtotal - discountAmount),
-      discount: { type: discountType, value: discountValue }
-    }));
-  }, [lineItems, discountType, discountValue]);
+    const total = lineItems.reduce((sum, item) => sum + item.total, 0);
+    setInvoice((prev) => ({ ...prev, amount: total }));
+  }, [lineItems]);
 
   // Handle line item changes
   const handleLineItemChange = (index: number, updatedItem: QuoteLineItem) => {
@@ -177,9 +166,5 @@ export const useInvoiceForm = (invoiceId?: string) => {
     handleInvoiceFieldChange,
     getProductSuggestions,
     handleSaveInvoice,
-    discountType,
-    discountValue,
-    setDiscountType,
-    setDiscountValue,
   };
 };
