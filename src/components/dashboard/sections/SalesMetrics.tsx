@@ -1,7 +1,7 @@
 
 import React from "react";
 import { StatsCardWithChart } from "../stats/StatsCardWithChart";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { format, startOfMonth, endOfMonth, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
 
@@ -37,6 +37,23 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
 
   const salesData = generateDailyData();
 
+  // Custom tooltip formatter
+  const formatTooltip = (value: number) => {
+    return new Intl.NumberFormat("nl-NL", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  };
+
+  const formatYAxis = (value: number) => {
+    return new Intl.NumberFormat("nl-NL", {
+      style: "currency",
+      currency: "EUR",
+      notation: "compact",
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   return (
     <StatsCardWithChart
       title="Totale omzet"
@@ -49,6 +66,31 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
       chart={
         <ResponsiveContainer width="100%" height={100}>
           <LineChart data={salesData}>
+            <XAxis 
+              dataKey="time" 
+              tick={{ fontSize: 10 }} 
+              tickLine={false}
+              axisLine={false}
+              interval="preserveStartEnd"
+              minTickGap={15}
+            />
+            <YAxis 
+              domain={['auto', 'auto']}
+              tickFormatter={formatYAxis}
+              tick={{ fontSize: 10 }}
+              tickLine={false}
+              axisLine={false}
+              width={40}
+            />
+            <Tooltip 
+              formatter={(value: number) => [formatTooltip(value), 'Omzet']}
+              labelFormatter={(label) => `Dag: ${label}`}
+              contentStyle={{ 
+                fontSize: '12px', 
+                borderRadius: '4px',
+                padding: '4px 8px'
+              }}
+            />
             <Line 
               type="monotone" 
               dataKey="today" 

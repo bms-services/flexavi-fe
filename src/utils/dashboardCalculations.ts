@@ -1,3 +1,4 @@
+
 import { Lead, Quote, Invoice } from "@/types";
 import { Product } from "@/types/product";
 
