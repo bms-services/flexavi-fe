@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   CartesianGrid,
@@ -64,22 +65,6 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   };
 
   const data = generateChartData();
-  
-  const formatYAxis = (value: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
-  const formatTooltip = (value: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
 
   return (
     <ResponsiveContainer width="100%" height="100%">
