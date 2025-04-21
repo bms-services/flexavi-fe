@@ -98,10 +98,24 @@ const InvoicesMain = () => {
   };
 
   const handleEditInvoice = (invoice: Invoice) => {
+    if (invoice.status !== "draft") {
+      toast({
+        title: "Alleen concepten kunnen bewerkt worden",
+        variant: "destructive",
+      });
+      return;
+    }
     navigate(`/invoices/edit/${invoice.id}`);
   };
 
   const handleDeleteInvoice = (invoice: Invoice) => {
+    if (invoice.status !== "draft") {
+      toast({
+        title: "Alleen concepten kunnen verwijderd worden",
+        variant: "destructive",
+      });
+      return;
+    }
     console.log("Delete invoice:", invoice);
   };
 
@@ -114,12 +128,32 @@ const InvoicesMain = () => {
     setCreditDialogOpen(true);
   };
 
-  const createCreditInvoice = () => {
+  const createCreditInvoice = (creditType: "full" | "partial") => {
     if (!selectedInvoice) return;
-    toast({
-      title: "Creditfactuur aangemaakt",
-      description: `Creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")} is aangemaakt.`,
-    });
+    
+    if (creditType === "full") {
+      toast({
+        title: "Creditfactuur aangemaakt",
+        description: `Volledige creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")} is aangemaakt. De originele factuur is als betaald gemarkeerd.`,
+      });
+      // In a real application, we would:
+      // 1. Create a new credit invoice with the same line items and negative amounts
+      // 2. Mark the original invoice as paid
+      // For now, we'll just close the dialog
+    } else if (creditType === "partial") {
+      // Navigate to the credit invoice edit page
+      toast({
+        title: "Gedeeltelijke creditering",
+        description: `U wordt doorgestuurd naar het bewerk scherm voor een nieuwe creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")}.`,
+      });
+      
+      // In a real application, we would create a new credit invoice and navigate to its edit page
+      // For now, let's just navigate to a mock URL
+      setTimeout(() => {
+        navigate("/invoices/create?creditFor=" + selectedInvoice.id);
+      }, 500);
+    }
+    
     setCreditDialogOpen(false);
     setSelectedInvoice(null);
   };

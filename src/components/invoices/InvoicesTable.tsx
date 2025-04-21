@@ -49,6 +49,8 @@ export const InvoicesTable: React.FC<InvoicesTableProps> = ({
     <TableBody>
       {invoices.map((invoice) => {
         const statusConfig = useInvoiceStatusBadge(invoice.status);
+        const isDraft = invoice.status === "draft";
+        
         return (
           <TableRow key={invoice.id}>
             <TableCell>
@@ -65,7 +67,8 @@ export const InvoicesTable: React.FC<InvoicesTableProps> = ({
                   variant="ghost"
                   size="icon"
                   onClick={() => onEdit(invoice)}
-                  title="Bewerken"
+                  disabled={!isDraft}
+                  title={!isDraft ? "Alleen concepten kunnen bewerkt worden" : "Bewerken"}
                 >
                   <Edit2 className="h-4 w-4" />
                 </Button>
@@ -73,7 +76,8 @@ export const InvoicesTable: React.FC<InvoicesTableProps> = ({
                   variant="ghost"
                   size="icon"
                   onClick={() => onDelete(invoice)}
-                  title="Verwijderen"
+                  disabled={!isDraft}
+                  title={!isDraft ? "Alleen concepten kunnen verwijderd worden" : "Verwijderen"}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
