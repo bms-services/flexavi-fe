@@ -1,45 +1,20 @@
+
 import React, { useState, useMemo } from "react";
 import { Layout } from "@/components/layout/Layout";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Eye, PlusCircle, Search, Edit2, Trash2, RefreshCcw, Send } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { mockInvoices } from "@/data/mockData";
 import { mockLeads } from "@/data/mockLeads";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { Invoice } from "@/types";
-import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
-import { useNavigate } from "react-router-dom";
 import { QuotesFilterBar } from "@/components/quotes/QuotesFilterBar";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { formatCurrency } from "@/utils/format";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Invoice } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+
+import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
+import { InvoicesTable } from "@/components/invoices/InvoicesTable";
+import { InvoicesPagination } from "@/components/invoices/InvoicesPagination";
+import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
 
 export const statusOptions = [
   { value: "draft", label: "Concept" },
@@ -50,7 +25,6 @@ export const statusOptions = [
   { value: "collection", label: "Incasso" },
   { value: "legal", label: "Juridisch" },
 ];
-
 const itemsPerPageOptions = [10, 25, 100];
 
 const Invoices = () => {
@@ -64,8 +38,8 @@ const Invoices = () => {
   });
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
@@ -136,12 +110,10 @@ const Invoices = () => {
 
   const createCreditInvoice = () => {
     if (!selectedInvoice) return;
-    
     toast({
       title: "Creditfactuur aangemaakt",
       description: `Creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")} is aangemaakt.`,
     });
-    
     setCreditDialogOpen(false);
     setSelectedInvoice(null);
   };
@@ -149,19 +121,7 @@ const Invoices = () => {
   return (
     <Layout>
       <div className="container py-6 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Facturen</h1>
-            <p className="text-muted-foreground">
-              Beheer al je facturen op één plek
-            </p>
-          </div>
-          <Button onClick={handleCreateNewInvoice}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Nieuwe Factuur
-          </Button>
-        </div>
-
+        <InvoicesHeader onCreateNewInvoice={handleCreateNewInvoice} />
         <Card>
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -172,7 +132,6 @@ const Invoices = () => {
                 </CardDescription>
               </div>
               <div className="relative w-full sm:w-auto sm:max-w-xs">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Zoek facturen..."
@@ -203,116 +162,29 @@ const Invoices = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-1">
-                <Button size="icon" variant="ghost" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-                  <span className="sr-only">Vorige</span>
-                  <svg width="20" height="20" viewBox="0 0 20 20"><path d="M13 16l-4-4 4-4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
-                </Button>
-                <span className="text-xs mx-2">{currentPage} / {totalPages}</span>
-                <Button size="icon" variant="ghost" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-                  <span className="sr-only">Volgende</span>
-                  <svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 4l4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
-                </Button>
-              </div>
+              <InvoicesPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Acties</TableHead>
-                  <TableHead>Nummer</TableHead>
-                  <TableHead>Klant</TableHead>
-                  <TableHead>Datum</TableHead>
-                  <TableHead>Vervaldatum</TableHead>
-                  <TableHead>Bedrag</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pageInvoices.map((invoice) => {
-                  const statusConfig = useInvoiceStatusBadge(invoice.status);
-                  return (
-                    <TableRow key={invoice.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleViewInvoice(invoice)}
-                            title="Bekijken"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEditInvoice(invoice)}
-                            title="Bewerken"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDeleteInvoice(invoice)}
-                            title="Verwijderen"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleCreditInvoice(invoice)}
-                            title="Crediteren"
-                          >
-                            <RefreshCcw className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {invoice.id.replace("inv-", "FACT-")}
-                      </TableCell>
-                      <TableCell>{getLeadName(invoice.leadId)}</TableCell>
-                      <TableCell>
-                        {format(new Date(invoice.createdAt), "dd-MM-yyyy", {
-                          locale: nl,
-                        })}
-                      </TableCell>
-                      <TableCell>
-                        {format(new Date(invoice.dueDate), "dd-MM-yyyy", {
-                          locale: nl,
-                        })}
-                      </TableCell>
-                      <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                      <TableCell>
-                        {statusConfig && (
-                          <Badge variant={statusConfig.variant}>
-                            {statusConfig.label}
-                          </Badge>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            <InvoicesTable
+              invoices={pageInvoices}
+              getLeadName={getLeadName}
+              onView={handleViewInvoice}
+              onEdit={handleEditInvoice}
+              onDelete={handleDeleteInvoice}
+              onCredit={handleCreditInvoice}
+            />
           </CardContent>
         </Card>
       </div>
-
-      <AlertDialog open={creditDialogOpen} onOpenChange={setCreditDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Factuur crediteren</AlertDialogTitle>
-            <AlertDialogDescription>
-              Weet je zeker dat je deze factuur wilt crediteren? Er wordt een nieuwe creditfactuur aangemaakt.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuleren</AlertDialogCancel>
-            <AlertDialogAction onClick={createCreditInvoice}>Ja, crediteer factuur</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CreditInvoiceDialog
+        open={creditDialogOpen}
+        onOpenChange={setCreditDialogOpen}
+        selectedInvoice={selectedInvoice}
+        onCredit={createCreditInvoice}
+      />
     </Layout>
   );
 };
