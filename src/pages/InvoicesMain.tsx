@@ -1,19 +1,17 @@
-import React, { useState, useMemo } from "react";
+
+import React from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { mockInvoices } from "@/data/mockData";
-import { mockLeads } from "@/data/mockLeads";
-import { Invoice } from "@/types";
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
 import { InvoicesTable } from "@/components/invoices/InvoicesTable";
 import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
 import { InvoicesFilters } from "./InvoicesFilters";
 import { InvoiceKPIs } from "@/components/invoices/InvoiceKPIs";
-
-const itemsPerPageOptions = [10, 25, 100];
+import { useInvoiceFilters } from "@/hooks/useInvoiceFilters";
+import { useInvoiceActions } from "@/hooks/useInvoiceActions";
+import { calculateInvoiceKPIs } from "@/components/invoices/InvoiceKPICalculator";
 
 export const statusOptions = [
   { value: "draft", label: "Concept" },
@@ -25,142 +23,38 @@ export const statusOptions = [
   { value: "legal", label: "Juridisch" },
 ];
 
+const itemsPerPageOptions = [10, 25, 100];
+
 const InvoicesMain = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [filters, setFilters] = useState({
-    createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
-    expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
-    searchTerm: "",
-    status: "all",
-  });
-  const [creditDialogOpen, setCreditDialogOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const {
+    filters,
+    currentPage,
+    itemsPerPage,
+    totalPages,
+    filteredInvoices,
+    pageInvoices,
+    getLeadName,
+    setCurrentPage,
+    setItemsPerPage,
+    handleChangeFilter,
+  } = useInvoiceFilters();
+
+  const {
+    creditDialogOpen,
+    selectedInvoice,
+    setCreditDialogOpen,
+    handleViewInvoice,
+    handleEditInvoice,
+    handleDeleteInvoice,
+    handleCreateNewInvoice,
+    handleCreditInvoice,
+    createCreditInvoice,
+  } = useInvoiceActions();
+
   const location = useLocation();
+  const kpis = calculateInvoiceKPIs(filteredInvoices);
 
-  const getLeadName = (leadId: string) => {
-    const lead = mockLeads.find((l) => l.id === leadId);
-    return lead ? lead.name : "Onbekend";
-  };
-
-  const filteredInvoices = useMemo(() => {
-    return mockInvoices.filter((invoice) => {
-      const createdAt = new Date(invoice.createdAt);
-      const [createdFrom, createdTo] = filters.createdRange;
-      if (createdFrom && createdAt < createdFrom) return false;
-      if (createdTo && createdAt > createdTo) return false;
-
-      const [expireFrom, expireTo] = filters.expireRange;
-      if (expireFrom || expireTo) {
-        const dueDate = new Date(invoice.dueDate);
-        if (expireFrom && dueDate < expireFrom) return false;
-        if (expireTo && dueDate > expireTo) return false;
-      }
-
-      if (filters.status && filters.status !== "all" && invoice.status !== filters.status) return false;
-
-      if (filters.searchTerm) {
-        const lower = filters.searchTerm.toLowerCase();
-        if (
-          !invoice.description.toLowerCase().includes(lower) &&
-          !getLeadName(invoice.leadId).toLowerCase().includes(lower) &&
-          !invoice.id.toLowerCase().includes(lower)
-        )
-          return false;
-      }
-      return true;
-    });
-  }, [filters]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredInvoices.length / itemsPerPage));
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const pageInvoices = filteredInvoices.slice(startIndex, startIndex + itemsPerPage);
-
-  // KPI-BEREKENINGEN afh. van filtering:
-  const kpiTotal = filteredInvoices.reduce((sum, q) => sum + q.amount, 0);
-  const kpiPaid = filteredInvoices.filter(q => q.status === "paid").reduce((sum, q) => sum + q.amount, 0);
-  const kpiOutstanding = filteredInvoices
-    .filter(q => ["sent", "overdue", "collection", "legal"].includes(q.status))
-    .reduce((sum, q) => sum + q.amount, 0);
-
-  const handleChangeFilter = (field: string, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-    if (currentPage !== 1) setCurrentPage(1);
-  };
-
-  const handleViewInvoice = (invoice: Invoice) => {
-    navigate(`/portal/invoice/${invoice.id}`);
-  };
-
-  const handleEditInvoice = (invoice: Invoice) => {
-    if (invoice.status !== "draft") {
-      toast({
-        title: "Alleen concepten kunnen bewerkt worden",
-        variant: "destructive",
-      });
-      return;
-    }
-    navigate(`/invoices/edit/${invoice.id}`);
-  };
-
-  const handleDeleteInvoice = (invoice: Invoice) => {
-    if (invoice.status !== "draft") {
-      toast({
-        title: "Alleen concepten kunnen verwijderd worden",
-        variant: "destructive",
-      });
-      return;
-    }
-    console.log("Delete invoice:", invoice);
-  };
-
-  const handleCreateNewInvoice = () => {
-    navigate("/invoices/create");
-  };
-
-  const handleCreditInvoice = (invoice: Invoice) => {
-    setSelectedInvoice(invoice);
-    setCreditDialogOpen(true);
-  };
-
-  const createCreditInvoice = (creditType: "full" | "partial") => {
-    if (!selectedInvoice) return;
-    
-    if (creditType === "full") {
-      toast({
-        title: "Creditfactuur aangemaakt",
-        description: `Volledige creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")} is aangemaakt. De originele factuur is als betaald gemarkeerd.`,
-      });
-      // In a real application, we would:
-      // 1. Create a new credit invoice with the same line items and negative amounts
-      // 2. Mark the original invoice as paid
-      // For now, we'll just close the dialog
-    } else if (creditType === "partial") {
-      // Navigate to the credit invoice edit page
-      toast({
-        title: "Gedeeltelijke creditering",
-        description: `U wordt doorgestuurd naar het bewerk scherm voor een nieuwe creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")}.`,
-      });
-      
-      // In a real application, we would create a new credit invoice and navigate to its edit page
-      // For now, let's just navigate to a mock URL
-      setTimeout(() => {
-        navigate("/invoices/create?creditFor=" + selectedInvoice.id);
-      }, 500);
-    }
-    
-    setCreditDialogOpen(false);
-    setSelectedInvoice(null);
-  };
-
-  // Depending on pathname, render either the main content or filters
   const renderContent = () => {
-    // Check if we're on the filters route
     if (location.pathname.includes("/filter")) {
       return (
         <InvoicesFilters
@@ -177,8 +71,6 @@ const InvoicesMain = () => {
         />
       );
     }
-
-    // Otherwise use Outlet to render child routes
     return <Outlet />;
   };
 
@@ -186,7 +78,11 @@ const InvoicesMain = () => {
     <Layout>
       <div className="container py-6 space-y-6">
         <InvoicesHeader onCreateNewInvoice={handleCreateNewInvoice} />
-        <InvoiceKPIs total={kpiTotal} paid={kpiPaid} outstanding={kpiOutstanding} />
+        <InvoiceKPIs 
+          total={kpis.total} 
+          paid={kpis.paid} 
+          outstanding={kpis.outstanding} 
+        />
         <Card>
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
