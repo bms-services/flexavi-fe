@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MapPin, Phone, Mail, FileText, History, Info, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,38 +44,41 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 mb-4">
           {/* Klant Info (1/3) */}
           <div className="flex-1 md:col-span-1 space-y-2 min-w-0">
-            <div className="flex items-start gap-2 mb-1">
-              <div className="bg-[#7E69AB]/10 rounded-full p-1.5 sm:p-2 mt-0.5 shadow-sm">
-                <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#7E69AB]" />
-              </div>
-              <div>
-                <span className="text-xs text-[#2F3857] font-medium uppercase">Klantgegevens</span>
-                <h3 className="text-base sm:text-lg font-bold text-[#1A1F2C]">{lead.name}</h3>
-              </div>
-            </div>
-            <div className="ml-9 sm:ml-11 space-y-2">
-              <div className="flex items-center gap-2 text-[#1A1F2C] hover:text-[#0a8cca] transition-colors">
-                <MapPin className="w-4 h-4 shrink-0" />
-                <button 
-                  onClick={showMapButton ? handleOpenMap : undefined} 
-                  className={`text-xs sm:text-sm break-words ${showMapButton ? 'hover:underline cursor-pointer' : ''} text-[#1A1F2C]`}>
-                  {lead.address}
-                </button>
-              </div>
-              <div className="flex items-center gap-2 text-[#1A1F2C] hover:text-[#0a8cca] transition-colors">
-                <Phone className="w-4 h-4 shrink-0" />
-                <a href={`tel:${lead.phone}`} className="text-xs sm:text-sm hover:underline text-[#1A1F2C]">
-                  {lead.phone}
-                </a>
-              </div>
-              <div className="flex items-center gap-2 text-[#1A1F2C] hover:text-[#0a8cca] transition-colors">
-                <Mail className="w-4 h-4 shrink-0" />
-                <a href={`mailto:${lead.email}`} className="text-xs sm:text-sm hover:underline text-[#1A1F2C]">
-                  {lead.email}
-                </a>
+            <div className="bg-white rounded-xl p-4 shadow-sm">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xs uppercase text-[#6B7280] font-medium mb-2">Klantgegevens</h3>
+                  <p className="text-lg font-semibold text-[#1A1F2C]">{lead.name}</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2 text-[#1A1F2C]">
+                    <MapPin className="w-5 h-5 text-[#6B7280] shrink-0" />
+                    <button 
+                      onClick={showMapButton ? handleOpenMap : undefined} 
+                      className={`text-sm break-words ${showMapButton ? 'hover:underline cursor-pointer' : ''}`}>
+                      {lead.address}
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-[#1A1F2C]">
+                    <Phone className="w-5 h-5 text-[#6B7280] shrink-0" />
+                    <a href={`tel:${lead.phone}`} className="text-sm hover:underline">
+                      {lead.phone}
+                    </a>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-[#1A1F2C]">
+                    <Mail className="w-5 h-5 text-[#6B7280] shrink-0" />
+                    <a href={`mailto:${lead.email}`} className="text-sm hover:underline">
+                      {lead.email}
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
           {/* Afspraakomschrijving (2/3), responsief */}
           <div className="md:col-span-2 flex flex-col justify-center min-h-[100px] sm:min-h-[112px]">
             <span className="text-xs text-[#2F3857] font-semibold uppercase mb-1 sm:mb-2 block">
