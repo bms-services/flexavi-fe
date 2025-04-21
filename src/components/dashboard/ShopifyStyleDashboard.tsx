@@ -42,7 +42,8 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
   const quoteConversionRate = totalQuotes > 0 ? (acceptedQuotes / totalQuotes) * 100 : 0;
   
   const totalLeads = mockLeads.length;
-  const convertedLeads = mockLeads.filter(l => l.status === "won").length;
+  // Fix: change "won" to "satisfied" which is a valid LeadStatus
+  const convertedLeads = mockLeads.filter(l => l.status === "satisfied").length;
   const leadConversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
   
   const generateTimeData = (count: number, max: number) => {
@@ -60,13 +61,13 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
   const averageOrderData = generateTimeData(24, 50);
   const marketingData = generateTimeData(24, 50);
 
-  // Top products
+  // Fix: modify the topProducts code to use properties that exist on Product
   const topProducts = mockProducts
-    .sort((a, b) => b.stock - a.stock)
+    .sort((a, b) => b.pricePerUnit - a.pricePerUnit)
     .slice(0, 4)
     .map(product => ({
-      name: product.name,
-      count: product.stock,
+      name: product.title,
+      count: Math.floor(Math.random() * 100) + 1, // Using random count since stock doesn't exist
       change: Math.floor(Math.random() * 30) + 1
     }));
 
@@ -97,10 +98,10 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
     { url: "/diensten/advies", visits: 14234, change: 9.8 }
   ];
 
-  // Conversion funnel
+  // Fix: modify the conversion funnel to use valid LeadStatus values
   const conversionFunnel = [
     { stage: "Bekeken", count: mockLeads.length, rate: (mockLeads.length / mockLeads.length * 100).toFixed(2), change: 4.0 },
-    { stage: "Contact", count: mockLeads.filter(l => l.status !== "new").length, rate: (mockLeads.filter(l => l.status !== "new").length / mockLeads.length * 100).toFixed(2), change: 2.0 },
+    { stage: "Contact", count: mockLeads.filter(l => l.status !== "new_lead").length, rate: (mockLeads.filter(l => l.status !== "new_lead").length / mockLeads.length * 100).toFixed(2), change: 2.0 },
     { stage: "Offerte", count: mockQuotes.length, rate: (mockQuotes.length / mockLeads.length * 100).toFixed(2), change: 1.4 }
   ];
 
