@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
@@ -16,6 +17,7 @@ import { mockInvoices } from "@/data/mockInvoices";
 import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 import { LeadLocationMap } from "@/components/leads/components/LeadLocationMap";
 import { formatEuro } from "@/lib/utils";
+import { toast } from "sonner";
 
 const demoLeads = [
   {
@@ -112,6 +114,30 @@ export const PipelineItemModal: React.FC<Props> = ({
       expired: "bg-gray-100 text-gray-800",
     };
     return colorMap[status.toLowerCase()] || "bg-gray-100 text-gray-800";
+  };
+
+  // Adding the missing handler functions
+  const handleCreateQuote = () => {
+    toast.success("Offerte aanmaken gestart");
+    // In a real application, this would navigate to the quote creation page or open a dialog
+    // window.location.href = `/quotes/create?leadId=${item.objectId}`;
+  };
+
+  const handleCreateInvoice = () => {
+    toast.success("Factuur aanmaken gestart");
+    // In a real application, this would navigate to the invoice creation page or open a dialog
+    // window.location.href = `/invoices/create?leadId=${item.objectId}`;
+  };
+
+  const handleCreateWorkOrder = () => {
+    toast.success("Werkopdracht aanmaken gestart");
+    // In a real application, this would navigate to the work order creation page or open a dialog
+    // window.location.href = `/workagreements/create?leadId=${item.objectId}`;
+  };
+
+  const handleUploadPhotos = () => {
+    toast.success("Upload foto's gestart");
+    // In a real application, this would open a file picker or upload dialog
   };
 
   return (
