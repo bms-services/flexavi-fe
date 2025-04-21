@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Appointment } from "@/types";
 import { EmployeeAppointmentCard } from "./EmployeeAppointmentCard";
@@ -130,22 +131,22 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
 
   return (
     <div className="bg-white w-full overflow-hidden">
-      <div className="flex items-center gap-2 px-3 py-3 sm:px-6 sm:py-4 border-b bg-white sticky top-0 z-10">
+      <div className="flex items-center gap-1.5 px-3 py-2 sm:px-6 sm:py-4 border-b bg-white sticky top-0 z-10">
         <CalendarDays className="h-4 w-4 sm:h-5 sm:w-5 text-roof-600" />
-        <h2 className="text-base sm:text-lg font-semibold text-roof-700">
+        <h2 className="text-sm sm:text-lg font-semibold text-roof-700">
           {dayLabel} - Werklijst
         </h2>
       </div>
       
       {appointments.length === 0 ? (
-        <div className="py-12 sm:py-16 text-center">
-          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mb-2 sm:mb-3">
-            <CalendarDays className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
+        <div className="py-8 sm:py-16 text-center">
+          <div className="mx-auto w-10 h-10 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mb-2 sm:mb-3">
+            <CalendarDays className="h-5 w-5 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
+          <p className="text-xs sm:text-base text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-2 sm:p-4 grid gap-2 sm:gap-4">
+        <div className="p-1.5 sm:p-4 grid gap-2 sm:gap-4">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];

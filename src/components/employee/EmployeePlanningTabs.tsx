@@ -5,6 +5,7 @@ import { Appointment } from "@/types";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calendar } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DayTab {
   label: string;
@@ -21,21 +22,22 @@ export const EmployeePlanningTabs: React.FC<EmployeePlanningTabsProps> = ({
   getAppointmentsForDay,
 }) => {
   const [activeTab, setActiveTab] = useState<number>(1);
+  const isMobile = useIsMobile();
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="bg-roof-50 p-2 border-b">
+      <div className="bg-roof-50 p-1.5 sm:p-2 border-b">
         <Tabs defaultValue={String(activeTab)} onValueChange={(value) => setActiveTab(Number(value))}>
-          <ScrollArea className="w-full">
-            <TabsList className="w-full justify-start bg-roof-50 p-1 flex space-x-2">
+          <ScrollArea className="w-full" type="scroll">
+            <TabsList className="w-full justify-start bg-roof-50 p-0.5 sm:p-1 flex space-x-1 sm:space-x-2">
               {days.map((day, idx) => (
                 <TabsTrigger 
                   key={day.label} 
                   value={String(idx)}
-                  className="px-3 sm:px-4 py-1.5 sm:py-2 data-[state=active]:bg-white data-[state=active]:text-roof-700 data-[state=active]:shadow-sm whitespace-nowrap flex-shrink-0"
+                  className="px-2 sm:px-4 py-1 sm:py-2 data-[state=active]:bg-white data-[state=active]:text-roof-700 data-[state=active]:shadow-sm whitespace-nowrap flex-shrink-0 text-xs sm:text-sm"
                 >
-                  <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-                  <span className="text-sm">{day.label}</span>
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span>{day.label}</span>
                 </TabsTrigger>
               ))}
             </TabsList>

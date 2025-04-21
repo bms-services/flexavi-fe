@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,14 +105,14 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     }, 1200);
   };
   return (
-    <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-xl sm:rounded-2xl overflow-hidden hover:shadow-lg transition">
+    <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition">
       <div className="relative">
-        <CardHeader className="pb-2 pt-2.5 sm:pt-4 px-2.5 sm:px-5 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-xl sm:rounded-t-2xl bg-white">
-          <div className="flex flex-col items-start gap-0.5 sm:gap-2 min-w-0">
-            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-gray-700">
+        <CardHeader className="pb-1.5 pt-2 sm:pt-3 px-2 sm:px-4 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-lg sm:rounded-t-xl bg-white">
+          <div className="flex flex-col items-start gap-0.5 min-w-0">
+            <span className="text-[9px] sm:text-xs font-semibold uppercase tracking-wide text-gray-700">
               Geplande afspraak
             </span>
-            <div className="text-sm sm:text-lg font-bold text-gray-900 truncate max-w-full">
+            <div className="text-xs sm:text-base font-bold text-gray-900 truncate max-w-full">
               {app.date} · {app.startTime} - {app.endTime}
             </div>
           </div>
@@ -120,41 +121,41 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition h-8 w-8 sm:h-9 sm:w-9" 
+                className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition h-7 w-7 sm:h-9 sm:w-9" 
                 aria-label="Meer acties"
               >
-                <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
+                <MoreHorizontal className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent 
               side="bottom" 
               align="end" 
-              className="z-[2000] min-w-[160px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" 
+              className="z-[2000] min-w-[140px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" 
               style={{ color: "#00254D" }}
             >
-              <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
+              <DropdownMenuItem onClick={onCreateQuote} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <FilePlus className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Offerte maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Offerte uploaden
+              <DropdownMenuItem onClick={onOpenUploadQuote} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <Upload className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Offerte uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Factuur maken
+              <DropdownMenuItem onClick={onCreateInvoice} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <FilePlus className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Factuur maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Factuur uploaden
+              <DropdownMenuItem onClick={onOpenUploadInvoice} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <Upload className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Factuur uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Werkopdracht maken
+              <DropdownMenuItem onClick={onCreateAgreement} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <FilePlus className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Werkopdracht maken
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
+              <DropdownMenuItem onClick={onOpenUploadAgreement} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <Upload className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Werkopdracht uploaden
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenRescheduleModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <CalendarPlus className="mr-2 w-4 h-4" /> Afspraak verzetten
+              <DropdownMenuItem onClick={onOpenRescheduleModal} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <CalendarPlus className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Afspraak verzetten
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Info className="mr-2 w-4 h-4" /> Verwerk afspraak
+              <DropdownMenuItem onClick={handleOpenProcessModal} className="text-xs sm:text-sm hover:bg-[#e6f0fc] font-medium text-gray-800">
+                <Info className="mr-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" /> Verwerk afspraak
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
