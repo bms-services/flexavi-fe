@@ -1,33 +1,32 @@
 
 import React from "react";
+import { DiscountSection } from "./line-items/DiscountSection";
 
 interface QuoteSummaryProps {
   subtotal: number;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  onDiscountTypeChange: (type: "percentage" | "fixed") => void;
+  onDiscountValueChange: (value: number) => void;
 }
 
-export const QuoteSummary: React.FC<QuoteSummaryProps> = ({ subtotal }) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
+export const QuoteSummary: React.FC<QuoteSummaryProps> = ({
+  subtotal,
+  discountType,
+  discountValue,
+  onDiscountTypeChange,
+  onDiscountValueChange,
+}) => {
   return (
     <div className="flex justify-end mt-6 pt-4 border-t">
-      <div className="w-64 space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Subtotaal:</span>
-          <span>{formatCurrency(subtotal)}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span>BTW (21%):</span>
-          <span>{formatCurrency(subtotal * 0.21)}</span>
-        </div>
-        <div className="flex justify-between font-bold">
-          <span>Totaal:</span>
-          <span>{formatCurrency(subtotal * 1.21)}</span>
-        </div>
+      <div className="w-64">
+        <DiscountSection
+          subtotal={subtotal}
+          discountType={discountType}
+          discountValue={discountValue}
+          onDiscountTypeChange={onDiscountTypeChange}
+          onDiscountValueChange={onDiscountValueChange}
+        />
       </div>
     </div>
   );

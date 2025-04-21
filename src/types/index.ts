@@ -87,6 +87,13 @@ export type QuoteLineItem = {
   detailedDescription?: string; // Added detailed description field
 };
 
+export type DiscountType = "percentage" | "fixed";
+
+interface Discount {
+  type: DiscountType;
+  value: number;
+}
+
 export type Quote = {
   id: string;
   leadId: string;
@@ -99,6 +106,7 @@ export type Quote = {
   plannedStartDate?: string;
   notes?: string;
   lineItems: QuoteLineItem[];
+  discount?: Discount;
 };
 
 export type QuoteStatus = 
@@ -123,6 +131,7 @@ export type Invoice = {
   notes?: string;
   paymentDate?: string;
   customerSignature?: string;
+  discount?: Discount;
 };
 
 export type InvoiceStatus = 
