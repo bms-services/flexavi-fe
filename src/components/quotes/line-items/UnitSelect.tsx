@@ -32,7 +32,7 @@ export const UnitSelect: React.FC<UnitSelectProps> = ({
 
   return (
     <Select value={value} onValueChange={onChange} disabled={disabled}>
-      <SelectTrigger>
+      <SelectTrigger className="w-full bg-transparent border-none h-auto p-0 shadow-none focus:ring-0 [&>span]:text-center">
         <SelectValue placeholder="Eenheid" />
       </SelectTrigger>
       <SelectContent>
