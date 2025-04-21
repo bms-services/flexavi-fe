@@ -69,9 +69,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({
         onSearchChange={() => {}} // This is handled by the parent component
       />
       
-      <div className="border rounded-md">
+      <div className="border rounded-md sm:border">
         <Table>
-          <TableHeader>
+          <TableHeader className="hidden sm:table-header-group">
             <TableRow className="hover:bg-transparent">
               <TableHead className="h-8">Naam</TableHead>
               <TableHead className="h-8 hidden md:table-cell">Email</TableHead>
