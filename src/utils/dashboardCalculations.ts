@@ -1,5 +1,5 @@
-
-import { Lead, Quote, Invoice, Product } from "@/types";
+import { Lead, Quote, Invoice } from "@/types";
+import { Product } from "@/types/product";
 
 export const calculateQuoteMetrics = (quotes: Quote[]) => {
   const totalQuotes = quotes.length;
@@ -43,4 +43,3 @@ export const getTopProducts = (products: Product[]) => {
       change: Math.floor(Math.random() * 30) + 1
     }));
 };
-

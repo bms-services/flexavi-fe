@@ -1,7 +1,7 @@
 
 import React from "react";
 import { StatsCardWithTable } from "../stats/StatsCardWithTable";
-import { Product } from "@/types";
+import { Product } from "@/types/product";
 import { getTopProducts } from "@/utils/dashboardCalculations";
 
 interface ProductMetricsProps {
@@ -22,4 +22,3 @@ export const ProductMetrics: React.FC<ProductMetricsProps> = ({ products }) => {
     />
   );
 };
-
