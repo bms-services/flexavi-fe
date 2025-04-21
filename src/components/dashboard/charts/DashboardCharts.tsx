@@ -12,33 +12,29 @@ interface DashboardChartsProps {
 
 export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) => {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-2 h-[350px] flex flex-col">
-        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <Card className="lg:col-span-2">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle className="text-base">Omzet overzicht</CardTitle>
-            <CardDescription className="text-xs">Omzet per maand gebaseerd op facturen</CardDescription>
+            <CardTitle>Omzet overzicht</CardTitle>
+            <CardDescription>Omzet per maand gebaseerd op facturen</CardDescription>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon">
             <RefreshCw className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent className="flex-1 pb-2">
-          <div className="w-full h-full">
-            <RevenueChart timeRange={timeRange} />
-          </div>
+        <CardContent>
+          <RevenueChart timeRange={timeRange} />
         </CardContent>
       </Card>
       
-      <Card className="h-[350px] flex flex-col">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">Lead conversie</CardTitle>
-          <CardDescription className="text-xs">Van lead naar betaalde factuur</CardDescription>
+      <Card>
+        <CardHeader>
+          <CardTitle>Lead conversie</CardTitle>
+          <CardDescription>Van lead naar betaalde factuur</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 pb-2">
-          <div className="w-full h-full">
-            <LeadConversionRate timeRange={timeRange} />
-          </div>
+        <CardContent>
+          <LeadConversionRate timeRange={timeRange} />
         </CardContent>
       </Card>
     </div>

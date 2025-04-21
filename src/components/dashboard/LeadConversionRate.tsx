@@ -2,15 +2,12 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { mockLeads } from "@/data/mockData";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LeadConversionRateProps {
   timeRange: string;
 }
 
 export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRange }) => {
-  const isMobile = useIsMobile();
-  
   // Calculate conversion rates based on lead statuses
   const calculateConversionData = () => {
     const totalLeads = mockLeads.length;
@@ -65,8 +62,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
     outerRadius, 
     percent 
   }: any) => {
-    // Don't show labels on mobile or if the percentage is very small
-    if (isMobile || percent < 0.08) return null;
+    if (percent < 0.05) return null;
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -79,7 +75,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
         fill="white" 
         textAnchor="middle" 
         dominantBaseline="central"
-        fontSize={10}
+        fontSize={12}
         fontWeight="bold"
       >
         {`${(percent * 100).toFixed(0)}%`}
@@ -88,8 +84,8 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
   };
 
   return (
-    <div className="w-full h-full">
-      <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+    <div className="w-full h-[250px]">
+      <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
             data={data}
@@ -97,7 +93,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
             cy="50%"
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={isMobile ? 60 : 80}
+            outerRadius={80}
             fill="#8884d8"
             dataKey="value"
           >
@@ -114,15 +110,12 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
             }}
           />
           <Legend 
-            layout={isMobile ? "horizontal" : "vertical"}
-            verticalAlign={isMobile ? "bottom" : "middle"}
-            align={isMobile ? "center" : "right"}
+            layout="vertical" 
+            verticalAlign="middle" 
+            align="right"
             iconSize={8}
             iconType="circle"
-            formatter={(value) => (
-              <span className="text-xs">{isMobile && value.length > 10 ? value.substring(0, 10) + "..." : value}</span>
-            )}
-            wrapperStyle={isMobile ? { paddingTop: '10px' } : undefined}
+            formatter={(value) => <span className="text-xs">{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>

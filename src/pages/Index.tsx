@@ -8,18 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, PlusCircle } from "lucide-react";
 import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointments";
 import { RecentLeads } from "@/components/dashboard/RecentLeads";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
-  const isMobile = useIsMobile();
 
   return (
     <Layout>
-      <div className="container py-4 sm:py-6 px-4 sm:px-6 space-y-4 sm:space-y-6 max-w-full">
+      <div className="container py-6 space-y-6">
         <DashboardHeader 
           timeRange={timeRange}
           setTimeRange={setTimeRange}
@@ -29,13 +27,13 @@ const Dashboard = () => {
         <ShopifyStyleDashboard timeRange={timeRange} />
         
         <Tabs defaultValue="appointments" className="w-full">
-          <TabsList className={`grid w-full grid-cols-2 ${isMobile ? 'text-xs' : ''}`}>
-            <TabsTrigger value="appointments" className="flex items-center gap-1 sm:gap-2">
-              <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+          <TabsList className="grid w-full md:w-auto grid-cols-2">
+            <TabsTrigger value="appointments" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
               <span>Aankomende afspraken</span>
             </TabsTrigger>
-            <TabsTrigger value="leads" className="flex items-center gap-1 sm:gap-2">
-              <PlusCircle className="h-3 w-3 sm:h-4 sm:w-4" /> 
+            <TabsTrigger value="leads" className="flex items-center gap-2">
+              <PlusCircle className="h-4 w-4" /> 
               <span>Recente leads</span>
             </TabsTrigger>
           </TabsList>
