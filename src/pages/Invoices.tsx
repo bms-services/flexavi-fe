@@ -1,2 +1,4 @@
 
-export { default } from "./InvoicesMain";
+import InvoicesMain from "./InvoicesMain";
+
+export default InvoicesMain;

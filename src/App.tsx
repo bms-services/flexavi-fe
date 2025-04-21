@@ -17,7 +17,7 @@ import WorkAgreementEdit from "./pages/WorkAgreementEdit";
 import Invoices from "./pages/Invoices";
 import InvoiceEdit from "./pages/InvoiceEdit";
 import InvoicesMain from "./pages/InvoicesMain";
-import InvoicesFilters from "./pages/InvoicesFilters";
+import { InvoicesFilters } from "./pages/InvoicesFilters";
 import Products from "./pages/Products";
 import Partners from "./pages/Partners";
 import Settings from "./pages/Settings";
