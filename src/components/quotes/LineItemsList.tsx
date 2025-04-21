@@ -27,17 +27,16 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-[#E1E3E6] bg-white">
+      <div className="overflow-x-auto rounded-lg border border-[#BDBFC2] bg-white shadow-sm">
         <table className="w-full min-w-[900px] text-sm">
           <thead>
             <tr className="bg-muted">
-              <th className="text-center py-2 px-2 font-medium border-b w-[70px]">Aantal</th>
-              <th className="text-center py-2 px-2 font-medium border-b w-[90px]">Eenheid</th>
-              <th className="text-left py-2 px-2 font-medium border-b w-[210px]">Product/Dienst</th>
-              <th className="text-left py-2 px-2 font-medium border-b w-[260px]">Beschrijving</th>
-              <th className="text-right py-2 px-2 font-medium border-b w-[120px]">Eenheidsprijs</th>
-              <th className="text-right py-2 px-2 font-medium border-b w-[130px]">Regel totaal</th>
-              <th className="text-center py-2 px-2 font-medium border-b w-[46px]"></th>
+              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[70px]">Aantal</th>
+              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[100px]">Eenheid</th>
+              <th className="text-left py-2 px-2 font-medium border-b border-[#E1E3E6] w-[260px]">Product/Dienst</th>
+              <th className="text-right py-2 px-2 font-medium border-b border-[#E1E3E6] w-[120px]">Eenheidsprijs</th>
+              <th className="text-right py-2 px-2 font-medium border-b border-[#E1E3E6] w-[130px]">Regel totaal</th>
+              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[46px]"></th>
             </tr>
           </thead>
           <tbody>
