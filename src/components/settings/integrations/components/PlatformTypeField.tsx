@@ -17,7 +17,7 @@ export const PlatformTypeField: React.FC<PlatformTypeFieldProps> = ({ form }) =>
       render={({ field }) => (
         <FormItem>
           <FormLabel>Platform Type</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} defaultValue={field.value || "generic_webhook"}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Selecteer een platform type" />

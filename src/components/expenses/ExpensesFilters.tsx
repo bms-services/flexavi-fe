@@ -83,7 +83,7 @@ export const ExpensesFilters: React.FC<ExpensesFiltersProps> = ({ onFiltersChang
               <SelectValue placeholder="Alle statussen" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Alle statussen</SelectItem>
+              <SelectItem value="all">Alle statussen</SelectItem>
               <SelectItem value="draft">Concept</SelectItem>
               <SelectItem value="pending">In behandeling</SelectItem>
               <SelectItem value="approved">Goedgekeurd</SelectItem>
@@ -100,7 +100,7 @@ export const ExpensesFilters: React.FC<ExpensesFiltersProps> = ({ onFiltersChang
               <SelectValue placeholder="Alle types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Alle types</SelectItem>
+              <SelectItem value="all">Alle types</SelectItem>
               <SelectItem value="material">{getTypeLabel('material')}</SelectItem>
               <SelectItem value="transport">{getTypeLabel('transport')}</SelectItem>
               <SelectItem value="equipment">{getTypeLabel('equipment')}</SelectItem>

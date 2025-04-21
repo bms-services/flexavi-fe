@@ -17,7 +17,7 @@ export const StatusField: React.FC<StatusFieldProps> = ({ form }) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Status</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select onValueChange={field.onChange} defaultValue={field.value || "inactive"}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder="Selecteer status" />
