@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PipelineStage as PipelineStageType, PipelineItem } from "@/types/pipeline";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
@@ -50,17 +51,15 @@ Jouw team`
           <span className="text-base font-medium">{stage.name}</span>
           <span className="text-xs text-muted-foreground">({stageItems.length})</span>
         </div>
-        {!isFirstStage && (
-          <button
-            type="button"
-            className="rounded-full hover:bg-accent/30 p-1 transition border border-transparent hover:border-accent"
-            title="Instellingen e-mail na slepen"
-            onClick={() => setMailSettingsOpen(true)}
-          >
-            <Settings size={20} className="text-muted-foreground" />
-            <span className="sr-only">Instellingen e-mail</span>
-          </button>
-        )}
+        <button
+          type="button"
+          className="rounded-full hover:bg-accent/30 p-1 transition border border-transparent hover:border-accent"
+          title="Instellingen e-mail na slepen"
+          onClick={() => setMailSettingsOpen(true)}
+        >
+          <Settings size={20} className="text-muted-foreground" />
+          <span className="sr-only">Instellingen e-mail</span>
+        </button>
       </div>
 
       <StageMailSettingsModal
