@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, PlusCircle, Search, Edit2, Trash2, Users } from "lucide-react";
+import { Eye, PlusCircle, Search, Edit2, Trash2, RefreshCcw, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockInvoices } from "@/data/mockData";
 import { mockLeads } from "@/data/mockLeads";
@@ -29,6 +29,17 @@ import { useNavigate } from "react-router-dom";
 import { QuotesFilterBar } from "@/components/quotes/QuotesFilterBar";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { formatCurrency } from "@/utils/format";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export const statusOptions = [
   { value: "draft", label: "Concept" },
@@ -51,7 +62,10 @@ const Invoices = () => {
     searchTerm: "",
     status: "",
   });
+  const [creditDialogOpen, setCreditDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
@@ -115,8 +129,21 @@ const Invoices = () => {
     navigate('/invoices/create');
   };
 
-  const handleViewCustomerDashboard = (leadId: string) => {
-    navigate(`/portal/dashboard/${leadId}`);
+  const handleCreditInvoice = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setCreditDialogOpen(true);
+  };
+
+  const createCreditInvoice = () => {
+    if (!selectedInvoice) return;
+    
+    toast({
+      title: "Creditfactuur aangemaakt",
+      description: `Creditfactuur voor ${selectedInvoice.id.replace("inv-", "FACT-")} is aangemaakt.`,
+    });
+    
+    setCreditDialogOpen(false);
+    setSelectedInvoice(null);
   };
 
   return (
@@ -211,6 +238,7 @@ const Invoices = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleViewInvoice(invoice)}
+                            title="Bekijken"
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -218,6 +246,7 @@ const Invoices = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleEditInvoice(invoice)}
+                            title="Bewerken"
                           >
                             <Edit2 className="h-4 w-4" />
                           </Button>
@@ -225,8 +254,17 @@ const Invoices = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteInvoice(invoice)}
+                            title="Verwijderen"
                           >
                             <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleCreditInvoice(invoice)}
+                            title="Crediteren"
+                          >
+                            <RefreshCcw className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -260,6 +298,21 @@ const Invoices = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog open={creditDialogOpen} onOpenChange={setCreditDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Factuur crediteren</AlertDialogTitle>
+            <AlertDialogDescription>
+              Weet je zeker dat je deze factuur wilt crediteren? Er wordt een nieuwe creditfactuur aangemaakt.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuleren</AlertDialogCancel>
+            <AlertDialogAction onClick={createCreditInvoice}>Ja, crediteer factuur</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 };
