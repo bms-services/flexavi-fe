@@ -60,11 +60,11 @@ const WorkAgreements = () => {
   const paginatedAgreements = filteredAgreements.slice(startIndex, startIndex + itemsPerPage);
 
   const handleViewAgreement = (agreement: WorkAgreement) => {
-    navigate(`/portal/workagreement/${agreement.id}`);
+    navigate(`/workagreements/${agreement.id}`);
   };
 
   const handleEditAgreement = (agreement: WorkAgreement) => {
-    navigate(`/workagreements/edit/${agreement.id}`);
+    navigate(`/workagreements/${agreement.id}`);
   };
 
   const handleCreateAgreement = () => {

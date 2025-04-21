@@ -57,7 +57,7 @@ function App() {
         <Route path="/quotes/create" element={<QuoteEdit />} />
         <Route path="/quotes/edit/:id" element={<QuoteEdit />} />
         <Route path="/workagreements" element={<WorkAgreements />} />
-        <Route path="/workagreements/new" element={<WorkAgreementEdit />} />
+        <Route path="/workagreements/create" element={<WorkAgreementEdit />} />
         <Route path="/workagreements/:id" element={<WorkAgreementEdit />} />
         <Route path="/invoices" element={<InvoicesMain />}>
           <Route index element={<Invoices />} />

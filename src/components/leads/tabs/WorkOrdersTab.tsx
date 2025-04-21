@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
@@ -81,7 +82,7 @@ export const WorkOrdersTab: React.FC<WorkOrdersTabProps> = ({ leadId }) => {
 
   const navigate = useNavigate();
   const handleCreateWorkOrder = () => {
-    navigate(`/projects/create?leadId=${leadId}`);
+    navigate(`/workagreements/create?leadId=${leadId}`);
   };
 
   return (

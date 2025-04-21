@@ -38,6 +38,10 @@ export const QuickActionsList = () => {
       icon: FileText,
       label: 'Werkopdracht maken',
       href: '/workagreements/create',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate('/workagreements/create');
+      },
     },
     {
       icon: Receipt,
