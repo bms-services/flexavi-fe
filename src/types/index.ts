@@ -4,3 +4,4 @@ export * from './appointments';
 export * from './quotes';
 export * from './invoices';
 export * from './work-agreements';
+export * from './employee-management';

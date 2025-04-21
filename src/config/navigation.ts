@@ -10,6 +10,7 @@ import {
   Receipt,
   Route,
   Calculator,
+  UserCog,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -18,6 +19,7 @@ export const navigationItems: NavItem[] = [
   { name: "Leads", href: "/leads", icon: Users },
   { name: "Planning", href: "/appointments", icon: Calendar },
   { name: "Medewerker", href: "/employee/planning", icon: Calendar },
+  { name: "Werknemers", href: "/employees", icon: UserCog },
   {
     name: "Sales",
     href: "#",
