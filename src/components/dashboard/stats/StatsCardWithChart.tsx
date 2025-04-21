@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowUp, ArrowDown, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ChipData {
   label: string;
@@ -41,6 +42,8 @@ export const StatsCardWithChart: React.FC<StatsCardWithChartProps> = ({
   chart,
   chartLegend
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <Card className="shadow-sm">
       <CardHeader className="pb-2 flex flex-row items-start justify-between">
@@ -61,16 +64,16 @@ export const StatsCardWithChart: React.FC<StatsCardWithChartProps> = ({
             </TooltipProvider>
           )}
         </div>
-        {viewReportLink && (
+        {viewReportLink && !isMobile && (
           <Button variant="link" size="sm" className="text-sm text-blue-500 p-0">
             View report
           </Button>
         )}
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 md:space-y-4">
         <div className="flex items-baseline justify-between">
-          <div className="text-3xl font-bold">{value}</div>
+          <div className="text-2xl md:text-3xl font-bold">{value}</div>
           <div className={`flex items-center gap-1 text-sm ${isNegativeChange ? 'text-red-500' : 'text-green-500'}`}>
             {isNegativeChange ? (
               <ArrowDown className="h-3 w-3" />
@@ -103,17 +106,17 @@ export const StatsCardWithChart: React.FC<StatsCardWithChartProps> = ({
         )}
         
         {subTitle && (
-          <div className="text-xs uppercase text-muted-foreground font-medium pt-2">
+          <div className="text-xs uppercase text-muted-foreground font-medium">
             {subTitle}
           </div>
         )}
         
-        <div className="pt-2 h-[100px]">
+        <div className={`${isMobile ? 'h-[80px]' : 'h-[100px]'} overflow-visible`}>
           {chart}
         </div>
         
         {chartLegend && (
-          <div className="flex items-center justify-center gap-4 pt-1">
+          <div className="flex items-center justify-center gap-3 md:gap-4 flex-wrap">
             {chartLegend.map((item, index) => (
               <div key={index} className="flex items-center gap-1 text-xs text-muted-foreground">
                 <div 

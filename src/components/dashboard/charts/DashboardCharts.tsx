@@ -15,29 +15,33 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) =
   const isMobile = useIsMobile();
   
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className={isMobile ? "" : "lg:col-span-2"}>
+    <div className="grid gap-4 md:gap-6">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle>Omzet overzicht</CardTitle>
+            <CardTitle className="text-lg md:text-xl">Omzet overzicht</CardTitle>
             <CardDescription>Omzet per maand gebaseerd op facturen</CardDescription>
           </div>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
             <RefreshCw className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent>
-          <RevenueChart timeRange={timeRange} />
+        <CardContent className="p-1 sm:p-4">
+          <div className="h-[250px] md:h-[300px] w-full">
+            <RevenueChart timeRange={timeRange} />
+          </div>
         </CardContent>
       </Card>
       
       <Card>
         <CardHeader>
-          <CardTitle>Lead conversie</CardTitle>
+          <CardTitle className="text-lg md:text-xl">Lead conversie</CardTitle>
           <CardDescription>Van lead naar betaalde factuur</CardDescription>
         </CardHeader>
-        <CardContent>
-          <LeadConversionRate timeRange={timeRange} />
+        <CardContent className="p-1 sm:p-4">
+          <div className="h-[200px] md:h-[250px] w-full">
+            <LeadConversionRate timeRange={timeRange} />
+          </div>
         </CardContent>
       </Card>
     </div>

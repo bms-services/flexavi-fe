@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="container py-4 md:py-6 px-3 md:px-6 space-y-4 md:space-y-6">
+      <div className="container py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-6">
         <DashboardHeader 
           timeRange={timeRange}
           setTimeRange={setTimeRange}
@@ -32,16 +32,16 @@ const Dashboard = () => {
         <DashboardCharts timeRange={timeRange} />
         
         <Tabs defaultValue="appointments" className="w-full">
-          <TabsList className="grid w-full md:w-auto grid-cols-2">
-            <TabsTrigger value="appointments" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+          <TabsList className={`grid ${isMobile ? 'w-full' : 'md:w-auto'} grid-cols-2`}>
+            <TabsTrigger value="appointments" className="flex items-center gap-1 md:gap-2">
+              <Calendar className="h-3 md:h-4 w-3 md:w-4" />
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis text-xs md:text-sm">
                 {isMobile ? "Afspraken" : "Aankomende afspraken"}
               </span>
             </TabsTrigger>
-            <TabsTrigger value="leads" className="flex items-center gap-2">
-              <PlusCircle className="h-4 w-4" /> 
-              <span>Recente leads</span>
+            <TabsTrigger value="leads" className="flex items-center gap-1 md:gap-2">
+              <PlusCircle className="h-3 md:h-4 w-3 md:w-4" /> 
+              <span className="text-xs md:text-sm">Recente leads</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="appointments" className="mt-4">

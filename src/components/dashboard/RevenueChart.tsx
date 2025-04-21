@@ -30,8 +30,11 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
     if (timeRange === "month") months = 3;
     if (timeRange === "quarter") months = 6;
 
-    const data = Array.from({ length: months }).map((_, i) => {
-      const date = subMonths(now, months - i - 1);
+    // For mobile, reduce data points for better display
+    const dataLength = isMobile ? Math.min(6, months) : months;
+
+    const data = Array.from({ length: dataLength }).map((_, i) => {
+      const date = subMonths(now, dataLength - i - 1);
       const monthStr = format(date, "yyyy-MM");
       
       const monthlyTotal = mockInvoices
@@ -70,76 +73,70 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   };
 
   return (
-    <div className="w-full h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ 
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart 
+        data={data} 
+        margin={{ 
           top: 20, 
           right: isMobile ? 10 : 30, 
-          left: isMobile ? 0 : 20, 
+          left: isMobile ? 10 : 20, 
           bottom: 20 
-        }}>
-          <CartesianGrid 
-            strokeDasharray="3 3" 
-            vertical={false} 
-            stroke="#f0f0f0" 
-          />
-          <XAxis 
-            dataKey="month" 
-            axisLine={false} 
-            tickLine={false}
-            tick={{ fontSize: isMobile ? 10 : 12 }}
-            label={isMobile ? undefined : {
-              value: 'Maanden',
-              position: 'insideBottom',
-              offset: -10,
-              fontSize: 12,
-              fill: '#666'
-            }}
-          />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fontSize: isMobile ? 10 : 12 }}
-            tickFormatter={formatYAxis}
-            label={isMobile ? undefined : {
-              value: 'Omzet (EUR)',
-              angle: -90,
-              position: 'insideLeft',
-              fontSize: 12,
-              fill: '#666'
-            }}
-          />
-          <Tooltip 
-            formatter={(value: number, name: string) => [
-              formatTooltip(Number(value)), 
-              name === 'revenue' ? 'Omzet' : 'Doelstelling'
-            ]}
-            contentStyle={{ 
-              borderRadius: 8,
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
-            }}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="revenue" 
-            stroke="#0c97e8" 
-            strokeWidth={3}
-            dot={{ strokeWidth: 3, r: isMobile ? 3 : 4, fill: "white" }}
-            activeDot={{ r: isMobile ? 5 : 6, fill: "#0c97e8" }}
-            name="Omzet"
-          />
-          <Line 
-            type="monotone" 
-            dataKey="target" 
-            stroke="#d4d4d4" 
-            strokeWidth={2}
-            strokeDasharray="5 5"
-            dot={false}
-            name="Doelstelling"
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+        }}
+      >
+        <CartesianGrid 
+          strokeDasharray="3 3" 
+          vertical={false} 
+          stroke="#f0f0f0" 
+          opacity={0.5}
+        />
+        <XAxis 
+          dataKey="month" 
+          axisLine={false} 
+          tickLine={false}
+          tick={{ fontSize: isMobile ? 10 : 12 }}
+          interval={isMobile ? 0 : "preserveStartEnd"}
+          dy={5}
+        />
+        <YAxis 
+          axisLine={false} 
+          tickLine={false} 
+          tick={{ fontSize: isMobile ? 10 : 12 }}
+          tickFormatter={formatYAxis}
+          width={isMobile ? 40 : 60}
+          tickCount={isMobile ? 3 : 5}
+        />
+        <Tooltip 
+          formatter={(value: number, name: string) => [
+            formatTooltip(Number(value)), 
+            name === 'revenue' ? 'Omzet' : 'Doelstelling'
+          ]}
+          contentStyle={{ 
+            borderRadius: 8,
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
+            fontSize: isMobile ? '11px' : '12px',
+            padding: isMobile ? '4px 8px' : '8px 10px'
+          }}
+        />
+        <Line 
+          type="monotone" 
+          dataKey="revenue" 
+          stroke="#0c97e8" 
+          strokeWidth={3}
+          dot={{ strokeWidth: 3, r: isMobile ? 2 : 4, fill: "white" }}
+          activeDot={{ r: isMobile ? 4 : 6, fill: "#0c97e8" }}
+          name="Omzet"
+        />
+        <Line 
+          type="monotone" 
+          dataKey="target" 
+          stroke="#d4d4d4" 
+          strokeWidth={2}
+          strokeDasharray="5 5"
+          dot={false}
+          name="Doelstelling"
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };

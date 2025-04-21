@@ -65,8 +65,8 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
     outerRadius, 
     percent 
   }: any) => {
-    // Hide labels on small segments or on mobile
-    if (percent < 0.05 || isMobile) return null;
+    // Don't render labels on mobile
+    if (isMobile || percent < 0.1) return null;
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -88,42 +88,47 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
   };
 
   return (
-    <div className="w-full h-[250px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={isMobile ? 60 : 80}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip 
-            formatter={(value: number) => [`${value} leads`, null]}
-            contentStyle={{ 
-              borderRadius: 8,
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
-            }}
-          />
-          <Legend 
-            layout={isMobile ? "horizontal" : "vertical"} 
-            verticalAlign={isMobile ? "bottom" : "middle"} 
-            align={isMobile ? "center" : "right"}
-            iconSize={8}
-            iconType="circle"
-            formatter={(value) => <span className="text-xs">{value}</span>}
-            wrapperStyle={isMobile ? { paddingTop: "10px" } : undefined}
-          />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          label={renderCustomizedLabel}
+          outerRadius={isMobile ? 50 : 80}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip 
+          formatter={(value: number) => [`${value} leads`, null]}
+          contentStyle={{ 
+            borderRadius: 8,
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
+            fontSize: isMobile ? '11px' : '12px',
+            padding: isMobile ? '4px 8px' : '8px 10px'
+          }}
+        />
+        <Legend 
+          layout={isMobile ? "horizontal" : "vertical"} 
+          verticalAlign="bottom"
+          align={isMobile ? "center" : "right"}
+          iconSize={isMobile ? 6 : 8}
+          iconType="circle"
+          formatter={(value) => 
+            <span className={`text-${isMobile ? 'xs' : 'sm'}`}>{value}</span>
+          }
+          wrapperStyle={{
+            paddingTop: "10px",
+            fontSize: isMobile ? "10px" : "12px"
+          }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 };
