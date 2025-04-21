@@ -14,6 +14,7 @@ import {
   PopoverContent, 
   PopoverTrigger 
 } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
 
 interface ProductSearchProps {
   value: string;
@@ -21,6 +22,7 @@ interface ProductSearchProps {
   suggestions: any[];
   onSearch: (query: string) => void;
   disabled?: boolean;
+  label?: string; // Add the label property
 }
 
 export const ProductSearch: React.FC<ProductSearchProps> = ({ 
@@ -28,7 +30,8 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   onChange, 
   suggestions, 
   onSearch,
-  disabled = false 
+  disabled = false,
+  label = "Omschrijving" // Default label
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -66,7 +69,8 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   return (
     <Popover open={open && !disabled} onOpenChange={(o) => !disabled && setOpen(o)}>
       <PopoverTrigger asChild>
-        <div>
+        <div className="space-y-1">
+          {label && <Label>{label}</Label>}
           <Input
             value={inputValue}
             onChange={handleInputChange}
@@ -81,7 +85,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
           <CommandList>
             <CommandEmpty>Geen producten gevonden.</CommandEmpty>
             <CommandGroup>
-              {suggestions.map((suggestion, index) => (
+              {suggestions?.map((suggestion, index) => (
                 <CommandItem
                   key={index}
                   onSelect={() => handleSelect(suggestion.title || suggestion.description)}

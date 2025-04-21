@@ -18,6 +18,7 @@ interface LineItemRowProps {
   onChange: (updatedItem: QuoteLineItem) => void;
   productSuggestions?: Product[];
   onProductSearch: (title: string) => void;
+  disabled?: boolean;
 }
 
 const LineItemRow: React.FC<LineItemRowProps> = ({
@@ -27,6 +28,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
   onChange,
   productSuggestions,
   onProductSearch,
+  disabled = false,
 }) => {
   // Handle updating a specific field of the line item
   const handleChange = (field: keyof QuoteLineItem, value: any) => {
@@ -50,8 +52,9 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
             value={item.description}
             onChange={(value) => handleChange("description", value)}
             onSearch={onProductSearch}
-            suggestions={productSuggestions}
+            suggestions={productSuggestions || []}
             label="Product/Dienst"
+            disabled={disabled}
           />
         </div>
         
@@ -59,6 +62,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           <QuantityInput
             value={item.quantity}
             onChange={(value) => handleChange("quantity", value)}
+            disabled={disabled}
           />
         </div>
         
@@ -66,6 +70,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           <UnitSelect
             value={item.unit}
             onChange={(value) => handleChange("unit", value)}
+            disabled={disabled}
           />
         </div>
         
@@ -80,6 +85,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
               value={item.pricePerUnit}
               onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
               className="w-full"
+              disabled={disabled}
             />
           </div>
         </div>
@@ -93,6 +99,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
               value={item.total}
               readOnly
               className="w-full bg-muted"
+              disabled={disabled}
             />
           </div>
         </div>
@@ -104,6 +111,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
             size="icon"
             onClick={onRemove}
             className="h-10 w-10"
+            disabled={disabled}
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -118,6 +126,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           value={item.detailedDescription || ""}
           onChange={(e) => handleChange("detailedDescription", e.target.value)}
           rows={2}
+          disabled={disabled}
         />
       </div>
     </div>
