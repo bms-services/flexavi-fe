@@ -1,15 +1,12 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Save, XCircle } from "lucide-react";
 import { ExpenseType, ExpenseStatus, Expense } from "@/types/expenses";
-import { toast } from "@/components/ui/sonner";
-import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { BasicInfoSection } from "./form-sections/BasicInfoSection";
 import { FinancialSection } from "./form-sections/FinancialSection";
 import { MetadataSection } from "./form-sections/MetadataSection";
+import { ReceiptSection } from "./form-sections/ReceiptSection";
 
 interface ExpenseFormProps {
   expense?: Expense;
@@ -111,12 +108,6 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     
     onSave(formData);
   };
-  
-  const receiptOptions = [
-    { id: "no-receipt", label: "Geen bon" },
-    { id: "upload-receipt", label: "Bon uploaden" },
-    { id: "later-receipt", label: "Bon later uploaden" },
-  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -150,31 +141,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         </div>
       </div>
 
-      {!isEditing && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <Label>Bon toevoegen</Label>
-              <RadioGroup
-                defaultValue="no-receipt"
-                className="flex flex-col space-y-2"
-              >
-                {receiptOptions.map((option) => (
-                  <div
-                    key={option.id}
-                    className="flex items-center space-x-2 border rounded-md p-3"
-                  >
-                    <RadioGroupItem value={option.id} id={option.id} />
-                    <Label htmlFor={option.id} className="cursor-pointer flex-1">
-                      {option.label}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <ReceiptSection isEditing={isEditing} />
 
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onCancel}>
