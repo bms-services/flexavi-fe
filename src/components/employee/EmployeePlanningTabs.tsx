@@ -123,7 +123,8 @@ export const EmployeePlanningTabs: React.FC<EmployeePlanningTabsProps> = ({
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">Previous</Button>
           <Button variant="outline" size="sm">1</Button>
-          <Button variant="primary" size="sm">2</Button>
+          {/* Changed from "primary" to "default" to fix the TypeScript error */}
+          <Button variant="default" size="sm">2</Button>
           <Button variant="outline" size="sm">3</Button>
           <Button variant="outline" size="sm">Next</Button>
         </div>
