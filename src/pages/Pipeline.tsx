@@ -5,6 +5,9 @@ import { PipelineBoard } from "@/components/pipeline/PipelineBoard";
 import { PipelineHeader } from "@/components/pipeline/PipelineHeader";
 import { PipelineDialogs } from "@/components/pipeline/PipelineDialogs";
 import { usePipeline } from "@/hooks/usePipeline";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Info } from "lucide-react";
+import { toast } from "sonner";
 
 const Pipeline = () => {
   const {
@@ -32,9 +35,18 @@ const Pipeline = () => {
             pipelines={pipelines}
             selectedPipelineId={selectedPipelineId}
             onSelectPipeline={setSelectedPipelineId}
-            onCreatePipeline={() => setCreatePipelineOpen(true)}
-            onManagePipelines={() => setManagePipelineOpen(true)}
+            onCreatePipeline={() => toast.info("Aanmaken van nieuwe pijplijnen niet mogelijk")}
+            onManagePipelines={() => toast.info("Aanpassen van vaste pijplijnen niet mogelijk")}
           />
+          
+          <Alert className="mb-4">
+            <Info className="h-4 w-4" />
+            <AlertTitle>Vaste pijplijnen</AlertTitle>
+            <AlertDescription>
+              Dit systeem gebruikt 5 vaste pijplijnen voor verschillende werkprocessen. Sleep items naar 
+              de gewenste fase om ze te verplaatsen. Klik op een item voor meer acties.
+            </AlertDescription>
+          </Alert>
           
           <PipelineBoard 
             pipeline={selectedPipeline}
