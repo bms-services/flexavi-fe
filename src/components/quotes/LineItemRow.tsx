@@ -46,7 +46,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
 
   return (
     <div className="space-y-3 border rounded-md p-3 bg-white">
-      <div className="grid grid-cols-12 gap-2">
+      <div className="grid grid-cols-12 gap-2 items-center">
         <div className="col-span-12 md:col-span-5">
           <ProductSearch
             value={item.description}
@@ -58,7 +58,8 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-3 md:col-span-2">
+        <div className="col-span-3 md:col-span-2 flex flex-col">
+          <Label htmlFor={`quantity-${index}`} className="mb-1">Aantal</Label>
           <QuantityInput
             value={item.quantity}
             onChange={(value) => handleChange("quantity", value)}
@@ -66,7 +67,8 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-4 md:col-span-2">
+        <div className="col-span-4 md:col-span-2 flex flex-col">
+          <Label htmlFor={`unit-${index}`} className="mb-1">Eenheid</Label>
           <UnitSelect
             value={item.unit}
             onChange={(value) => handleChange("unit", value)}
@@ -74,34 +76,30 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-5 md:col-span-2">
-          <div className="space-y-1">
-            <Label htmlFor={`price-${index}`}>Prijs</Label>
-            <Input
-              id={`price-${index}`}
-              type="number"
-              min="0"
-              step="0.01"
-              value={item.pricePerUnit}
-              onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
-              className="w-full"
-              disabled={disabled}
-            />
-          </div>
+        <div className="col-span-5 md:col-span-2 flex flex-col">
+          <Label htmlFor={`price-${index}`} className="mb-1">Prijs</Label>
+          <Input
+            id={`price-${index}`}
+            type="number"
+            min="0"
+            step="0.01"
+            value={item.pricePerUnit}
+            onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
+            className="w-full"
+            disabled={disabled}
+          />
         </div>
         
-        <div className="col-span-5 md:col-span-2 relative">
-          <div className="space-y-1">
-            <Label htmlFor={`total-${index}`}>Totaal</Label>
-            <Input
-              id={`total-${index}`}
-              type="number"
-              value={item.total}
-              readOnly
-              className="w-full bg-muted"
-              disabled={disabled}
-            />
-          </div>
+        <div className="col-span-5 md:col-span-2 flex flex-col relative">
+          <Label htmlFor={`total-${index}`} className="mb-1">Totaal</Label>
+          <Input
+            id={`total-${index}`}
+            type="number"
+            value={item.total}
+            readOnly
+            className="w-full bg-muted"
+            disabled={disabled}
+          />
         </div>
         
         <div className="col-span-2 md:col-span-1 flex items-end justify-end">
