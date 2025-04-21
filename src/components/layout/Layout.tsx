@@ -2,7 +2,6 @@
 import React from "react";
 import { MainHeader } from "./MainHeader";
 import { Sidebar } from "./Sidebar";
-import { MainFooter } from "./MainFooter";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LayoutProps {
@@ -25,7 +24,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </main>
       </div>
-      <MainFooter />
     </div>
   );
 };
