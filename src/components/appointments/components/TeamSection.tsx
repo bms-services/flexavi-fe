@@ -86,8 +86,8 @@ export const TeamSection = ({
         </div>
       </div>
       <CardContent className="p-0 md:p-4">
-        <div className="rounded-lg border overflow-hidden">
-          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] bg-muted/30">
+        <div className="rounded-lg border overflow-x-auto">
+          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] bg-muted/30 min-w-[700px]">
             <div className="p-2 md:p-3 font-medium border-r">Team</div>
             <div className="grid grid-cols-7">
               {dates.map(date => (
@@ -102,7 +102,7 @@ export const TeamSection = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t bg-muted/5">
+          <div className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t bg-muted/5 min-w-[700px]">
             <div className="p-2 md:p-3 flex items-center gap-1 md:gap-2 border-r">
               <List className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
               <span className="text-xs md:text-sm font-medium text-muted-foreground truncate">
@@ -140,7 +140,7 @@ export const TeamSection = ({
           </div>
 
           {teams.map(team => (
-            <div key={team.id} className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t hover:bg-muted/5">
+            <div key={team.id} className="grid grid-cols-[100px,1fr] md:grid-cols-[120px,1fr] border-t hover:bg-muted/5 min-w-[700px]">
               <div className="p-2 md:p-3 flex items-start md:items-center gap-1 md:gap-2 border-r">
                 <div 
                   className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full mt-1 md:mt-0" 

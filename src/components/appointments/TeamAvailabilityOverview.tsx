@@ -156,8 +156,8 @@ export const TeamAvailabilityOverview = ({
         </div>
       </div>
 
-      <ScrollArea className="w-full overflow-auto pb-4">
-        <div className="min-w-[600px]">
+      <div className="overflow-auto pb-4">
+        <div className="min-w-[700px]">
           <TeamSection
             title="Verkoopteams"
             icon={<Users className="h-5 w-5 text-primary" />}
@@ -173,7 +173,7 @@ export const TeamAvailabilityOverview = ({
           />
         </div>
         
-        <div className="min-w-[600px] mt-6">
+        <div className="min-w-[700px] mt-6">
           <InstallationTeamSection
             title="Uitvoerende Teams"
             icon={<Building2 className="h-5 w-5 text-primary" />}
@@ -187,7 +187,7 @@ export const TeamAvailabilityOverview = ({
             isMobile={isMobile}
           />
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };
