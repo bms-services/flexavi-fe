@@ -1,13 +1,11 @@
 
 import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
-import { CompanySettings } from "../company/CompanySettings";
-import { DomainSettings } from "../company/DomainSettings";
-import { TeamSettings } from "../teams/TeamSettings";
-import { EmployeeSettings } from "../employees/EmployeeSettings";
+import { CompanyTabContent } from "./CompanyTabContent";
+import { AppointmentsTabContent } from "./AppointmentsTabContent";
+import { TeamsTabContent } from "./TeamsTabContent";
+import { EmployeesTabContent } from "./EmployeesTabContent";
 import { PermissionsSettings } from "../permissions/PermissionsSettings";
-import { TimeBlockSettings } from "../appointments/TimeBlockSettings";
-import { CalendarColorSettings } from "../appointments/CalendarColorSettings";
 import { PersonalInfoSettings } from "../account/PersonalInfoSettings";
 import { PasswordSettings } from "../account/PasswordSettings";
 import { DefaultAttachmentsSettings } from "../attachments/DefaultAttachmentsSettings";
@@ -18,7 +16,7 @@ import { WorkAgreementSettingsForm } from "../workagreements/WorkAgreementSettin
 import { IntegrationsSettings } from "../integrations/IntegrationsSettings";
 
 interface SettingsTabContentProps {
-  timeBlocks: Array<{ id: number; start: string; end: string; label: string; }>;
+  timeBlocks: Array<{ id: number; start: string; end: string; label: string }>;
   slotSettings: {
     salesMorningSlots: number;
     salesAfternoonSlots: number;
@@ -31,11 +29,11 @@ interface SettingsTabContentProps {
     emptyBorder: string;
     fullBorder: string;
   };
-  onTimeBlocksChange: (blocks: Array<{ id: number; start: string; end: string; label: string; }>) => void;
+  onTimeBlocksChange: (blocks: Array<{ id: number; start: string; end: string; label: string }>) => void;
   onSlotSettingsChange: (settings: Record<string, number>) => void;
   onSaveSlots: () => void;
   onSaveColors: () => void;
-  onColorsChange: (colors: { emptyBorder: string; fullBorder: string; }) => void;
+  onColorsChange: (colors: { emptyBorder: string; fullBorder: string }) => void;
 }
 
 export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
@@ -51,33 +49,28 @@ export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
   return (
     <>
       <TabsContent value="company" className="mt-0">
-        <CompanySettings />
-        <div className="mt-6">
-          <DomainSettings />
-        </div>
+        <CompanyTabContent />
       </TabsContent>
       
       <TabsContent value="appointments" className="mt-0">
-        <TimeBlockSettings
+        <AppointmentsTabContent
           timeBlocks={timeBlocks}
           slotSettings={slotSettings}
+          colors={colors}
           onTimeBlocksChange={onTimeBlocksChange}
           onSlotSettingsChange={onSlotSettingsChange}
-          onSave={onSaveSlots}
-        />
-        <CalendarColorSettings
-          colors={colors}
+          onSaveSlots={onSaveSlots}
+          onSaveColors={onSaveColors}
           onColorsChange={onColorsChange}
-          onSave={onSaveColors}
         />
       </TabsContent>
       
       <TabsContent value="teams" className="mt-0">
-        <TeamSettings />
+        <TeamsTabContent />
       </TabsContent>
       
       <TabsContent value="employees" className="mt-0">
-        <EmployeeSettings />
+        <EmployeesTabContent />
       </TabsContent>
       
       <TabsContent value="permissions" className="mt-0">
