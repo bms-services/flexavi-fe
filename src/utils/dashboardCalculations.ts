@@ -5,8 +5,9 @@ export const calculateQuoteMetrics = (quotes: Quote[]) => {
   const totalQuotes = quotes.length;
   const acceptedQuotes = quotes.filter(q => q.status === "accepted").length;
   const quoteConversionRate = totalQuotes > 0 ? (acceptedQuotes / totalQuotes) * 100 : 0;
+  const totalQuoteAmount = quotes.reduce((sum, quote) => sum + quote.amount, 0);
   
-  return { totalQuotes, acceptedQuotes, quoteConversionRate };
+  return { totalQuotes, acceptedQuotes, quoteConversionRate, totalQuoteAmount };
 };
 
 export const calculateLeadMetrics = (leads: Lead[]) => {
