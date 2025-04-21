@@ -27,16 +27,17 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-[#BDBFC2] bg-white shadow-sm">
-        <table className="w-full min-w-[900px] text-sm">
+      <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white shadow-sm">
+        <table className="w-full min-w-[1000px] text-sm border border-gray-300">
           <thead>
             <tr className="bg-muted">
-              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[70px]">Aantal</th>
-              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[100px]">Eenheid</th>
-              <th className="text-left py-2 px-2 font-medium border-b border-[#E1E3E6] w-[260px]">Product/Dienst</th>
-              <th className="text-right py-2 px-2 font-medium border-b border-[#E1E3E6] w-[120px]">Eenheidsprijs</th>
-              <th className="text-right py-2 px-2 font-medium border-b border-[#E1E3E6] w-[130px]">Regel totaal</th>
-              <th className="text-center py-2 px-2 font-medium border-b border-[#E1E3E6] w-[46px]"></th>
+              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[60px]">Aantal</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[90px]">Eenheid</th>
+              <th className="text-left py-1 px-2 font-medium border-b border-[#E1E3E6] w-[220px]">Product/Dienst</th>
+              <th className="text-right py-1 px-2 font-medium border-b border-[#E1E3E6] w-[110px]">Eenheidsprijs</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[70px]">BTW %</th>
+              <th className="text-right py-1 px-2 font-medium border-b border-[#E1E3E6] w-[120px]">Regel totaal</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[40px]"></th>
             </tr>
           </thead>
           <tbody>
