@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { CircleSlash } from "lucide-react";
@@ -42,34 +41,35 @@ export const LeadTableContent: React.FC<LeadTableContentProps> = ({
       {leads.map((lead) => {
         const stats = getLeadStats(lead.id);
         return (
-          <TableRow key={lead.id} className="block sm:table-row border sm:border-0 rounded-lg sm:rounded-none shadow-sm sm:shadow-none mb-4 sm:mb-0">
-            <TableCell className="flex flex-col py-4 sm:table-cell sm:py-4">
+          <TableRow key={lead.id} className="flex flex-col sm:table-row border sm:border-0 rounded-lg sm:rounded-none shadow-sm sm:shadow-none mb-4 sm:mb-0">
+            <TableCell className="flex flex-col py-3 sm:py-4 sm:table-cell">
               <Link
                 to={`/leads/${lead.id}`}
                 className="font-medium text-primary hover:underline"
               >
                 {lead.name}
               </Link>
-              <div className="mt-1 grid grid-cols-1 gap-1 sm:hidden">
-                <div className="text-sm text-gray-600">{lead.email}</div>
-                <div className="text-sm text-gray-600">{lead.phone}</div>
-                <div className="text-sm text-gray-600">{lead.address}</div>
+              <div className="mt-2 grid gap-1 sm:hidden text-sm">
+                <div className="text-muted-foreground">{lead.email}</div>
+                <div className="text-muted-foreground">{lead.phone}</div>
+                <div className="text-muted-foreground">{lead.address}</div>
               </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">{lead.email}</TableCell>
             <TableCell className="hidden sm:table-cell">{lead.phone}</TableCell>
             <TableCell className="hidden sm:table-cell">{lead.address}</TableCell>
-            <TableCell className="py-2 sm:py-4">
+            <TableCell className="py-2 sm:py-4 flex items-center justify-between sm:table-cell">
+              <span className="text-sm text-muted-foreground sm:hidden">Status</span>
               <LeadStatusBadge status={lead.status} />
             </TableCell>
-            <TableCell className="py-2 sm:py-4">
-              <div className="flex sm:flex-col items-center sm:items-start gap-2">
+            <TableCell className="py-2 sm:py-4 flex flex-row justify-between items-center sm:table-cell border-t sm:border-0">
+              <div className="flex flex-col sm:flex-row gap-1 sm:gap-4">
                 <div>
-                  <span className="text-sm text-gray-500">Offertes</span>
+                  <span className="text-sm text-muted-foreground block sm:inline">Offertes</span>
                   <div className="font-medium">{formatCurrency(stats.quotesValue)}</div>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-500">Facturen</span>
+                  <span className="text-sm text-muted-foreground block sm:inline">Facturen</span>
                   <div className="font-medium">{formatCurrency(stats.invoicesValue)}</div>
                 </div>
               </div>
@@ -106,4 +106,3 @@ export const LeadTableContent: React.FC<LeadTableContentProps> = ({
     </>
   );
 };
-

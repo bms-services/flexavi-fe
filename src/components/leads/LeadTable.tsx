@@ -69,14 +69,14 @@ export const LeadTable: React.FC<LeadTableProps> = ({
         onSearchChange={() => {}}
       />
       
-      <div className="border rounded-md">
+      <div className="border rounded-md overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="hidden sm:table-header-group">
             <TableRow>
               <TableHead>Naam</TableHead>
-              <TableHead className="hidden sm:table-cell">Email</TableHead>
-              <TableHead className="hidden sm:table-cell">Telefoon</TableHead>
-              <TableHead className="hidden sm:table-cell">Adres</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Telefoon</TableHead>
+              <TableHead>Adres</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>
                 <div className="flex items-center gap-1">
@@ -84,7 +84,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({
                   <span>Waarde</span>
                 </div>
               </TableHead>
-              <TableHead className="hidden sm:table-cell">
+              <TableHead>
                 <div className="flex items-center gap-1">
                   <FileText className="h-3.5 w-3.5" />
                   <span>Status</span>
