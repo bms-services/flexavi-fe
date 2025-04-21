@@ -1,4 +1,3 @@
-
 import { Review, ReviewTemplate, ReputationSettings } from "@/types/reputation";
 import { mockLeads } from "./mockLeads";
 import { mockProjects } from "./mockProjects";
@@ -12,16 +11,29 @@ const getRandomDate = () => {
   return new Date(randomTime).toISOString();
 };
 
+// Ensure we have valid leads before using them
+const ensureLeadExists = (index) => {
+  if (!mockLeads[index]) {
+    console.warn(`Lead at index ${index} is undefined, using a fallback id`);
+    return {
+      id: `fallback-lead-${index}`,
+      name: `Customer ${index}`,
+      email: `customer${index}@example.com`
+    };
+  }
+  return mockLeads[index];
+};
+
 // Generate mock reviews
 export const mockReviews: Review[] = [
   // Positive reviews
   {
     id: "rev-001",
-    leadId: mockLeads[0].id,
-    customerName: mockLeads[0].name,
-    customerEmail: mockLeads[0].email,
-    projectId: mockProjects[0].id,
-    invoiceId: mockInvoices[0].id,
+    leadId: ensureLeadExists(0).id,
+    customerName: ensureLeadExists(0).name,
+    customerEmail: ensureLeadExists(0).email,
+    projectId: mockProjects?.[0]?.id || `fallback-project-0`,
+    invoiceId: mockInvoices?.[0]?.id || `fallback-invoice-0`,
     rating: 5,
     text: "Fantastisch werk geleverd bij het vervangen van ons dak. De medewerkers waren professioneel en hebben alles netjes opgeruimd. Echt een aanrader!",
     platform: "google",
@@ -32,11 +44,11 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-002",
-    leadId: mockLeads[1].id,
-    customerName: mockLeads[1].name,
-    customerEmail: mockLeads[1].email,
-    projectId: mockProjects[1].id,
-    invoiceId: mockInvoices[1].id,
+    leadId: ensureLeadExists(1).id,
+    customerName: ensureLeadExists(1).name,
+    customerEmail: ensureLeadExists(1).email,
+    projectId: mockProjects?.[1]?.id || `fallback-project-1`,
+    invoiceId: mockInvoices?.[1]?.id || `fallback-invoice-1`,
     rating: 4,
     text: "Goed werk, planning liep wat uit maar het eindresultaat is prima. De dakkapel ziet er mooi uit en we zijn erg tevreden met de afwerking.",
     platform: "trustpilot",
@@ -47,11 +59,11 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-003",
-    leadId: mockLeads[2].id,
-    customerName: mockLeads[2].name,
-    customerEmail: mockLeads[2].email,
-    projectId: mockProjects[2].id,
-    invoiceId: mockInvoices[2].id,
+    leadId: ensureLeadExists(2).id,
+    customerName: ensureLeadExists(2).name,
+    customerEmail: ensureLeadExists(2).email,
+    projectId: mockProjects?.[2]?.id || `fallback-project-2`,
+    invoiceId: mockInvoices?.[2]?.id || `fallback-invoice-2`,
     rating: 5,
     text: "Zeer tevreden over de isolatie van ons dak. Merkbaar verschil in de warmte in huis en de energierekening. Het team werkte snel en efficiënt.",
     platform: "internal",
@@ -63,11 +75,11 @@ export const mockReviews: Review[] = [
   // Negative review in internal review
   {
     id: "rev-004",
-    leadId: mockLeads[3].id,
-    customerName: mockLeads[3].name,
-    customerEmail: mockLeads[3].email,
-    projectId: mockProjects[3].id,
-    invoiceId: mockInvoices[3].id,
+    leadId: ensureLeadExists(3).id,
+    customerName: ensureLeadExists(3).name,
+    customerEmail: ensureLeadExists(3).email,
+    projectId: mockProjects?.[3]?.id || `fallback-project-3`,
+    invoiceId: mockInvoices?.[3]?.id || `fallback-invoice-3`,
     rating: 2,
     text: "De werkzaamheden duurden langer dan gepland en er was miscommunicatie over de materialen. Uiteindelijk wel opgelost maar het proces verliep stroef.",
     platform: "trustpilot",
@@ -81,10 +93,10 @@ export const mockReviews: Review[] = [
   // Pending review
   {
     id: "rev-005",
-    leadId: mockLeads[4].id,
-    customerName: mockLeads[4].name,
-    customerEmail: mockLeads[4].email,
-    invoiceId: mockInvoices[4].id,
+    leadId: ensureLeadExists(4).id,
+    customerName: ensureLeadExists(4).name,
+    customerEmail: ensureLeadExists(4).email,
+    invoiceId: mockInvoices?.[4]?.id || `fallback-invoice-4`,
     rating: 0, // Not rated yet
     text: "",
     platform: "internal",
@@ -96,11 +108,11 @@ export const mockReviews: Review[] = [
   // More positive reviews for demonstration
   {
     id: "rev-006",
-    leadId: mockLeads[5].id,
-    customerName: mockLeads[5].name,
-    customerEmail: mockLeads[5].email,
-    projectId: mockProjects[4].id,
-    invoiceId: mockInvoices[5].id,
+    leadId: ensureLeadExists(5).id,
+    customerName: ensureLeadExists(5).name,
+    customerEmail: ensureLeadExists(5).email,
+    projectId: mockProjects?.[4]?.id || `fallback-project-4`,
+    invoiceId: mockInvoices?.[5]?.id || `fallback-invoice-5`,
     rating: 5,
     text: "Uitstekende service! Van offerte tot oplevering alles perfect verlopen. De nieuwe dakgoten zien er prachtig uit.",
     platform: "google",
@@ -111,11 +123,11 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-007",
-    leadId: mockLeads[6].id,
-    customerName: mockLeads[6].name,
-    customerEmail: mockLeads[6].email,
-    projectId: mockProjects[5].id,
-    invoiceId: mockInvoices[6].id,
+    leadId: ensureLeadExists(6).id,
+    customerName: ensureLeadExists(6).name,
+    customerEmail: ensureLeadExists(6).email,
+    projectId: mockProjects?.[5]?.id || `fallback-project-5`,
+    invoiceId: mockInvoices?.[6]?.id || `fallback-invoice-6`,
     rating: 4,
     text: "Vakkundig team dat snel en efficiënt heeft gewerkt. Goede communicatie en netjes opgeruimd na afloop.",
     platform: "facebook",
@@ -126,10 +138,10 @@ export const mockReviews: Review[] = [
   },
   {
     id: "rev-008",
-    leadId: mockLeads[7].id,
-    customerName: mockLeads[7].name,
-    customerEmail: mockLeads[7].email,
-    invoiceId: mockInvoices[7].id,
+    leadId: ensureLeadExists(7).id,
+    customerName: ensureLeadExists(7).name,
+    customerEmail: ensureLeadExists(7).email,
+    invoiceId: mockInvoices?.[7]?.id || `fallback-invoice-7`,
     rating: 3,
     text: "Redelijk tevreden over het resultaat. Er waren wat vertragingen, maar het einderesultaat is naar wens.",
     platform: "internal",

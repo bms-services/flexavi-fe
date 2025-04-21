@@ -46,13 +46,7 @@ export const LeadTabs = ({ lead }: LeadTabsProps) => {
       </TabsList>
 
       <TabsContent value="overview">
-        <LeadOverview
-          lead={lead}
-          quotes={lead.quotes}
-          invoices={lead.invoices}
-          workAgreements={lead.workAgreements || []}
-          appointments={lead.appointments}
-        />
+        <LeadOverview lead={lead} />
       </TabsContent>
 
       <TabsContent value="quotes">

@@ -7,3 +7,4 @@ export * from './getLeadDetail';
 export * from './mockProducts';
 export * from './mockProjects';
 export * from './mockWorkAgreements';
+export * from './mockReviews';

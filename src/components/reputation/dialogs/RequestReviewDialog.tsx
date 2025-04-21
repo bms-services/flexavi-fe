@@ -44,6 +44,11 @@ export const RequestReviewDialog = ({
     onOpenChange(false);
   };
 
+  // Extract first name from the lead's full name
+  const getFirstName = (fullName: string) => {
+    return fullName ? fullName.split(' ')[0] : '';
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -95,7 +100,7 @@ export const RequestReviewDialog = ({
               </p>
               <div className="text-xs text-muted-foreground whitespace-pre-line">
                 {mockReviewTemplates.find(t => t.id === selectedTemplate)?.emailBody
-                  .replace('[Naam]', lead.name.split(' ')[0])
+                  .replace('[Naam]', getFirstName(lead.name))
                   .replace('[Bedrijfsnaam]', 'Mijn Dakbedrijf')
                   .replace('[ReviewLink]', 'https://example.com/review/123')}
               </div>
