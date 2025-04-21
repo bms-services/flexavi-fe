@@ -2,13 +2,20 @@
 import React, { useState } from "react";
 import { mockAppointments } from "@/data/mockAppointments";
 import { TeamDetails, Appointment } from "@/types";
-import { format, addDays } from "date-fns";
+import { format, addDays, isToday, isTomorrow, parseISO } from "date-fns";
 import { Layout } from "@/components/layout/Layout";
 import { ProjectOpenTasksCard } from "@/components/projects/detail/tabs/ProjectOpenTasksCard";
 import { mockProjects } from "@/data/mockProjects";
 import { ProjectNote } from "@/types/project";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { EmployeePlanningTabs } from "@/components/employee/EmployeePlanningTabs";
+import { Card, CardContent } from "@/components/ui/card";
 
 const teams: TeamDetails[] = [
   { id: "1", name: "Verkoop Team A", type: "sales", environmentId: "1", color: "#0EA5E9" },
@@ -28,26 +35,38 @@ export default function EmployeePlanningPage() {
       }))
   );
 
-  const getAppointmentsForTeam = () => {
-    return mockAppointments.filter(app => app.teamId === selectedTeamId);
+  // Generate days for the tabs
+  const days = [
+    { label: "Vandaag", offset: 0 },
+    { label: "Morgen", offset: 1 },
+    { label: "Overmorgen", offset: 2 },
+    { label: format(addDays(new Date(), 3), "EEEE d MMM"), offset: 3 },
+    { label: format(addDays(new Date(), 4), "EEEE d MMM"), offset: 4 },
+  ];
+
+  // Function to get appointments for a specific day
+  const getAppointmentsForDay = (offset: number) => {
+    const targetDate = format(addDays(new Date(), offset), "yyyy-MM-dd");
+    return mockAppointments
+      .filter(app => app.teamId === selectedTeamId && app.date === targetDate)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
   };
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="space-y-6">
-          {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Bookings</h1>
-            <p className="mt-2 text-gray-600">
-              See your scheduled events from your calendar events links.
-            </p>
-          </div>
-
-          {/* Team Selection */}
-          <div className="flex items-center gap-4">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
+        <div className="space-y-4 sm:space-y-6">
+          {/* Header and Team Selection */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Planning</h1>
+              <p className="mt-1 text-sm sm:text-base text-gray-600">
+                Beheer uw dagelijkse afspraken en taken
+              </p>
+            </div>
+            
             <Select value={selectedTeamId} onValueChange={setSelectedTeamId}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px] bg-white">
                 <SelectValue placeholder="Select team" />
               </SelectTrigger>
               <SelectContent>
@@ -60,99 +79,26 @@ export default function EmployeePlanningPage() {
             </Select>
           </div>
 
-          {/* Tabs */}
-          <Tabs defaultValue="upcoming" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="bg-white border-b w-full justify-start rounded-none p-0 h-12">
-              <TabsTrigger
-                value="upcoming"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none h-12"
-              >
-                Upcoming
-              </TabsTrigger>
-              <TabsTrigger
-                value="pending"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none h-12"
-              >
-                Pending
-              </TabsTrigger>
-              <TabsTrigger
-                value="recurring"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none h-12"
-              >
-                Recurring
-              </TabsTrigger>
-              <TabsTrigger
-                value="past"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none h-12"
-              >
-                Past
-              </TabsTrigger>
-              <TabsTrigger
-                value="cancelled"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none h-12"
-              >
-                Cancelled
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {/* Appointments List */}
-          <div className="space-y-4">
-            {getAppointmentsForTeam().map((appointment) => (
-              <AppointmentCard key={appointment.id} appointment={appointment} />
-            ))}
-          </div>
+          {/* Day Tabs and Appointments */}
+          <Card className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <EmployeePlanningTabs
+              days={days}
+              getAppointmentsForDay={getAppointmentsForDay}
+            />
+          </Card>
 
           {/* Open Tasks */}
-          <div className="mt-8">
-            <ProjectOpenTasksCard 
-              openTasks={openTasks}
-              onAddTaskClick={() => {}}
-              onToggleTaskStatus={() => {}}
-            />
-          </div>
+          <Card className="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            <CardContent className="p-0">
+              <ProjectOpenTasksCard 
+                openTasks={openTasks}
+                onAddTaskClick={() => {}}
+                onToggleTaskStatus={() => {}}
+              />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Layout>
   );
 }
-
-interface AppointmentCardProps {
-  appointment: Appointment;
-}
-
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment }) => {
-  return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border">
-      <div className="flex items-start justify-between">
-        <div className="flex gap-6">
-          {/* Date */}
-          <div className="text-center">
-            <div className="text-orange-500 font-medium">{format(new Date(appointment.date), 'EEE')}</div>
-            <div className="text-4xl font-bold">{format(new Date(appointment.date), 'dd')}</div>
-          </div>
-          
-          {/* Appointment Details */}
-          <div>
-            <div className="flex items-center gap-2 text-gray-600 text-sm mb-2">
-              <span>{appointment.startTime} - {appointment.endTime}</span>
-              <span>•</span>
-              <span>{appointment.location || 'Online'}</span>
-            </div>
-            <h3 className="font-medium text-lg mb-2">{appointment.title}</h3>
-            <div className="flex -space-x-2">
-              {/* This is a placeholder for the avatars - you'll need to implement actual user avatars */}
-              <div className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white"></div>
-              <div className="w-8 h-8 rounded-full bg-gray-400 border-2 border-white"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Edit Button */}
-        <button className="text-gray-600 hover:text-gray-900">
-          Edit
-        </button>
-      </div>
-    </div>
-  );
-};

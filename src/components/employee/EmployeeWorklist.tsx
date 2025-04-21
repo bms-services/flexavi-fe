@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Appointment } from "@/types";
 import { EmployeeAppointmentCard } from "./EmployeeAppointmentCard";
@@ -130,23 +129,23 @@ export const EmployeeWorklist: React.FC<EmployeeWorklistProps> = ({ appointments
   const getLead = (leadId: string) => mockLeads.find(l => l.id === leadId);
 
   return (
-    <div className="bg-white w-full overflow-hidden">
-      <div className="flex items-center gap-2 px-3 sm:px-6 py-4 border-b bg-white sticky top-0 z-10">
-        <CalendarDays className="h-5 w-5 text-roof-600" />
-        <h2 className="text-lg font-semibold text-roof-700">
-          {dayLabel} - Werklijst
+    <div className="bg-white w-full">
+      <div className="flex items-center gap-2 px-4 py-3 bg-white sticky top-0 z-10 border-b">
+        <CalendarDays className="h-5 w-5 text-gray-600" />
+        <h2 className="text-base font-medium text-gray-800">
+          {dayLabel}
         </h2>
       </div>
       
       {appointments.length === 0 ? (
-        <div className="py-16 text-center">
+        <div className="py-10 text-center">
           <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
             <CalendarDays className="h-8 w-8 text-gray-400" />
           </div>
-          <p className="text-muted-foreground">Geen afspraken gepland voor deze dag.</p>
+          <p className="text-gray-500">Geen afspraken gepland voor deze dag.</p>
         </div>
       ) : (
-        <div className="p-2 sm:p-4 grid gap-3 sm:gap-4 max-w-full">
+        <div className="p-3 sm:p-4">
           {appointments.map((app) => {
             const lead = getLead(app.leadId);
             const isRescheduled = rescheduledStatus[app.id];

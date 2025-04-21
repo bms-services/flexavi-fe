@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { AppointmentProcessModal } from "./AppointmentProcessModal";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
 
 interface EmployeeAppointmentCardProps {
   app: Appointment;
@@ -78,14 +80,19 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
   const [processTaskChecked, setProcessTaskChecked] = React.useState(false);
   const [processTaskDescription, setProcessTaskDescription] = React.useState("");
   const [processing, setProcessing] = React.useState(false);
+  
   const notities = ["Klant wil graag volgende week extra opties besproken krijgen.", "Vorige keer niet thuis aangetroffen, telefonisch nieuwe afspraak gepland."];
+  
   const historyEntries = isRescheduled && rescheduleReason ? [{
     type: "Afspraak verzet",
     description: rescheduleReason,
     date: app.date
   }] : [];
+  
   const afspraakOmschrijving = app.description || "Hier komt duidelijk te staan wat we er precies moeten doen";
+  
   const handleOpenProcessModal = () => setProcessModalOpen(true);
+  
   const handleCloseProcessModal = () => {
     setProcessModalOpen(false);
     setProcessReason("");
@@ -93,6 +100,7 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
     setProcessTaskDescription("");
     setProcessing(false);
   };
+  
   const handleProcessSubmit = () => {
     setProcessing(true);
     setTimeout(() => {
@@ -103,60 +111,77 @@ export const EmployeeAppointmentCard: React.FC<EmployeeAppointmentCardProps> = (
       setProcessTaskDescription("");
     }, 1200);
   };
-  return <Card className="shadow-md border border-[#F1F1F1] bg-[#EFF7FF] rounded-2xl overflow-hidden hover:shadow-lg transition max-w-full">
-      <div className="relative">
-        <CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-5 border-b-0 flex flex-row justify-between items-center text-gray-900 rounded-t-2xl bg-white">
-          <div className="flex flex-col items-start gap-1 sm:gap-2 min-w-0">
-            <span className="text-xs font-semibold uppercase tracking-wide text-gray-700">
-              Geplande afspraak
-            </span>
-            <div className="text-sm sm:text-lg font-bold text-gray-900 truncate max-w-full">
-              {app.date} · {app.startTime} - {app.endTime}
+  
+  // Format date for display
+  const dateObj = app.date ? new Date(app.date) : new Date();
+  const dayNumber = format(dateObj, 'dd');
+  const dayName = format(dateObj, 'EEE');
+  
+  return (
+    <Card className="shadow-md border border-gray-200 bg-white rounded-xl overflow-hidden hover:shadow-lg transition max-w-full mb-4">
+      <div className="flex items-stretch">
+        {/* Left side with date */}
+        <div className="bg-gray-50 text-center p-4 flex flex-col justify-center items-center min-w-[70px] border-r border-gray-200">
+          <span className="text-gray-500 text-sm">{dayName}</span>
+          <span className="text-3xl font-bold text-gray-900">{dayNumber}</span>
+        </div>
+        
+        <div className="flex-1 flex flex-col">
+          <CardHeader className="pb-2 pt-3 px-4 flex flex-row justify-between items-center text-gray-900">
+            <div className="flex flex-col min-w-0">
+              <div className="text-sm font-medium text-gray-600">
+                {app.startTime} - {app.endTime}
+              </div>
+              <div className="text-base sm:text-lg font-semibold text-gray-900 truncate max-w-full">
+                {app.title}
+              </div>
             </div>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="flex-shrink-0 border-none shadow-none bg-transparent hover:bg-gray-200 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 transition" aria-label="Meer acties">
-                <MoreHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[180px] sm:min-w-[200px] bg-white rounded-xl border border-gray-300 shadow-lg p-1" style={{
-            color: "#00254D"
-          }}>
-              <DropdownMenuItem onClick={onCreateQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadQuote} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Offerte uploaden
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Factuur maken
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadInvoice} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Factuur uploaden
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onCreateAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <FilePlus className="mr-2 w-4 h-4" /> Werkopdracht maken
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenUploadAgreement} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onOpenRescheduleModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <CalendarPlus className="mr-2 w-4 h-4" /> Afspraak verzetten
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleOpenProcessModal} className="hover:bg-[#e6f0fc] font-medium text-gray-800">
-                <Info className="mr-2 w-4 h-4" /> Verwerk afspraak
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardHeader>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="flex-shrink-0">
+                  <MoreHorizontal className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end" className="z-[2000] min-w-[180px] bg-white">
+                <DropdownMenuItem onClick={onCreateQuote}>
+                  <FilePlus className="mr-2 w-4 h-4" /> Offerte maken
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpenUploadQuote}>
+                  <Upload className="mr-2 w-4 h-4" /> Offerte uploaden
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onCreateInvoice}>
+                  <FilePlus className="mr-2 w-4 h-4" /> Factuur maken
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpenUploadInvoice}>
+                  <Upload className="mr-2 w-4 h-4" /> Factuur uploaden
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onCreateAgreement}>
+                  <FilePlus className="mr-2 w-4 h-4" /> Werkopdracht maken
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpenUploadAgreement}>
+                  <Upload className="mr-2 w-4 h-4" /> Werkopdracht uploaden
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onOpenRescheduleModal}>
+                  <CalendarPlus className="mr-2 w-4 h-4" /> Afspraak verzetten
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleOpenProcessModal}>
+                  <Info className="mr-2 w-4 h-4" /> Verwerk afspraak
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardHeader>
+          
+          <CardContent className="p-0 flex-1">
+            {lead && <LeadInfoCard lead={lead} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} description={afspraakOmschrijving} />}
+          </CardContent>
+        </div>
       </div>
-      <CardContent className="p-0">
-        {lead && <LeadInfoCard lead={lead} isRescheduled={isRescheduled} rescheduleReason={rescheduleReason} historyEntries={historyEntries} notes={notities} showMapButton={true} description={afspraakOmschrijving} />}
-      </CardContent>
+      
       <ReceiptUploadDialog open={uploadQuoteDialogOpen} onOpenChange={open => open ? onOpenUploadQuote() : onCloseUploadQuote()} onResult={onQuoteResult} />
-      <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open => open ? onOpenUploadInvoice : onCloseUploadInvoice} onResult={onInvoiceResult} />
-      <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open => open ? onOpenUploadAgreement : onCloseUploadAgreement} onResult={onAgreementResult} />
+      <ReceiptUploadDialog open={uploadInvoiceDialogOpen} onOpenChange={open => open ? onOpenUploadInvoice() : onCloseUploadInvoice()} onResult={onInvoiceResult} />
+      <ReceiptUploadDialog open={uploadAgreementDialogOpen} onOpenChange={open => open ? onOpenUploadAgreement() : onCloseUploadAgreement()} onResult={onAgreementResult} />
       <AppointmentProcessModal open={processModalOpen} reason={processReason} onReasonChange={setProcessReason} taskChecked={processTaskChecked} onTaskCheckedChange={setProcessTaskChecked} taskDescription={processTaskDescription} onTaskDescriptionChange={setProcessTaskDescription} onCancel={handleCloseProcessModal} onSubmit={handleProcessSubmit} loading={processing} />
-    </Card>;
+    </Card>
+  );
 };
