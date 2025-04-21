@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Employee } from "@/types/employee-management";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, Plus } from "lucide-react";
 import { useEmployeeDialog } from "./useEmployeeDialog";
 import { EmployeeDialog } from "./EmployeeDialog";
 
@@ -48,7 +48,21 @@ const mockEmployees: Employee[] = [
 ];
 
 export const EmployeeList = () => {
+  const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const { isOpen, selectedEmployee, openDialog, closeDialog } = useEmployeeDialog();
+
+  const handleSubmit = (data: Employee) => {
+    if (selectedEmployee) {
+      setEmployees(employees.map(emp => emp.id === data.id ? data : emp));
+    } else {
+      setEmployees([...employees, data]);
+    }
+    closeDialog();
+  };
+
+  const handleDelete = (id: string) => {
+    setEmployees(employees.filter(emp => emp.id !== id));
+  };
 
   const roleLabels = {
     sales: "Verkoper",
@@ -57,8 +71,20 @@ export const EmployeeList = () => {
     driver: "Chauffeur",
   };
 
+  const teamLabels = {
+    sales: "Verkoop team",
+    installation: "Uitvoerend team"
+  };
+
   return (
     <>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => openDialog()}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nieuwe Medewerker
+        </Button>
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -67,13 +93,14 @@ export const EmployeeList = () => {
               <TableHead>Functie</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Telefoonnummer</TableHead>
+              <TableHead>Teams</TableHead>
               <TableHead>Dagtarief</TableHead>
               <TableHead>Uurtarief</TableHead>
               <TableHead className="text-right">Acties</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockEmployees.map((employee) => (
+            {employees.map((employee) => (
               <TableRow key={employee.id}>
                 <TableCell>
                   {employee.firstName} {employee.lastName}
@@ -81,6 +108,9 @@ export const EmployeeList = () => {
                 <TableCell>{roleLabels[employee.role]}</TableCell>
                 <TableCell>{employee.email}</TableCell>
                 <TableCell>{employee.phoneNumber || "-"}</TableCell>
+                <TableCell>
+                  {employee.teamIds?.map(teamId => teamLabels[teamId as keyof typeof teamLabels]).join(", ") || "-"}
+                </TableCell>
                 <TableCell>€{employee.rates.dailyRate}</TableCell>
                 <TableCell>€{employee.rates.hourlyRate}</TableCell>
                 <TableCell className="text-right">
@@ -92,7 +122,11 @@ export const EmployeeList = () => {
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleDelete(employee.id)}
+                    >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
@@ -107,6 +141,7 @@ export const EmployeeList = () => {
         isOpen={isOpen}
         onClose={closeDialog}
         employee={selectedEmployee}
+        onSubmit={handleSubmit}
       />
     </>
   );

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,14 +6,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { useForm } from "react-hook-form";
 import { Employee, EmployeeRole } from "@/types/employee-management";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface EmployeeDialogProps {
   isOpen: boolean;
   onClose: () => void;
   employee?: Employee | null;
+  onSubmit: (data: Employee) => void;
 }
 
-export const EmployeeDialog = ({ isOpen, onClose, employee }: EmployeeDialogProps) => {
+export const EmployeeDialog = ({ isOpen, onClose, employee, onSubmit }: EmployeeDialogProps) => {
   const form = useForm<Employee>({
     defaultValues: employee || {
       id: crypto.randomUUID(),
@@ -28,12 +29,13 @@ export const EmployeeDialog = ({ isOpen, onClose, employee }: EmployeeDialogProp
         dailyRate: 0
       },
       availableDays: ["1", "2", "3", "4", "5"],
-      active: true
+      active: true,
+      teamIds: []
     }
   });
 
-  const onSubmit = (data: Employee) => {
-    console.log("Form submitted:", data);
+  const handleSubmit = (data: Employee) => {
+    onSubmit(data);
     onClose();
   };
 
@@ -43,6 +45,14 @@ export const EmployeeDialog = ({ isOpen, onClose, employee }: EmployeeDialogProp
     office: "Kantoor medewerker",
     driver: "Chauffeur"
   };
+
+  const weekDays = [
+    { value: "1", label: "Maandag" },
+    { value: "2", label: "Dinsdag" },
+    { value: "3", label: "Woensdag" },
+    { value: "4", label: "Donderdag" },
+    { value: "5", label: "Vrijdag" }
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -54,7 +64,7 @@ export const EmployeeDialog = ({ isOpen, onClose, employee }: EmployeeDialogProp
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -150,13 +160,64 @@ export const EmployeeDialog = ({ isOpen, onClose, employee }: EmployeeDialogProp
 
             <FormField
               control={form.control}
-              name="startDate"
+              name="availableDays"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Beschikbare dagen</FormLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {weekDays.map((day) => (
+                      <FormField
+                        key={day.value}
+                        control={form.control}
+                        name="availableDays"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center space-x-2">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(day.value)}
+                                onCheckedChange={(checked) => {
+                                  const current = new Set(field.value || []);
+                                  if (checked) {
+                                    current.add(day.value);
+                                  } else {
+                                    current.delete(day.value);
+                                  }
+                                  field.onChange(Array.from(current));
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {day.label}
+                            </FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="teamIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Startdatum</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
+                  <FormLabel>Teams</FormLabel>
+                  <Select
+                    onValueChange={(value) => field.onChange([...field.value || [], value])}
+                    value={field.value?.[0]}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecteer team" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="sales">Verkoop team</SelectItem>
+                      <SelectItem value="installation">Uitvoerend team</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />

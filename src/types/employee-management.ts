@@ -29,6 +29,7 @@ export type Employee = {
   phoneNumber?: string;
   startDate: string;
   rates: EmployeeRate;
-  availableDays: string[]; // Array of weekday numbers (0-6)
+  availableDays: string[]; // Array of weekday numbers (1-5)
   active: boolean;
+  teamIds: string[]; // Array of team IDs ("sales" | "installation")
 };
