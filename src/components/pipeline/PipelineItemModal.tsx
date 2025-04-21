@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Calendar, FileText, Eye, FilePlus, FileMinus, Shield, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-
-// Info cards:
-import { LeadInfoCard } from "./item-modal/LeadInfoCard";
-import { QuoteInfoCard } from "./item-modal/QuoteInfoCard";
-import { InvoiceInfoCard } from "./item-modal/InvoiceInfoCard";
-import { ProjectInfoCard } from "./item-modal/ProjectInfoCard";
-import { LeadCallbackInfoCard } from "./item-modal/LeadCallbackInfoCard";
+import { LeadCallbackModalCard } from "./item-modal/LeadCallbackModalCard";
+import { LeadDefaultModalCard } from "./item-modal/LeadDefaultModalCard";
+import { QuoteModalCard } from "./item-modal/QuoteModalCard";
+import { InvoiceModalCard } from "./item-modal/InvoiceModalCard";
+import { ProjectModalCard } from "./item-modal/ProjectModalCard";
 
 // Dummy NAW details (in praktijk via API laden)
 const demoLeads = [
@@ -51,18 +49,8 @@ export const PipelineItemModal: React.FC<Props> = ({
 }) => {
   if (!item) return null;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("nl", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  };
-
   // Brede modal!
-  const modalWidth = "max-w-3xl w-full"; // Extra breed
+  const modalWidth = "max-w-5xl w-full"; // Extra, extra breed
 
   // ACTIES, direct zichtbaar in de modal
   const handleCreateQuote = () => {
@@ -85,15 +73,15 @@ export const PipelineItemModal: React.FC<Props> = ({
       case "lead":
         if (item.pipelineId === "pipeline-callbacks") {
           // Terugbel-lijst: uitgebreide card
-          return <LeadCallbackInfoCard lead={leadNAW} />;
+          return <LeadCallbackModalCard lead={{...leadNAW, objectId: item.objectId}} />;
         }
-        return <LeadInfoCard />;
+        return <LeadDefaultModalCard />;
       case "quote":
-        return <QuoteInfoCard item={item} />;
+        return <QuoteModalCard item={item} />;
       case "invoice":
-        return <InvoiceInfoCard item={item} />;
+        return <InvoiceModalCard item={item} />;
       case "project":
-        return <ProjectInfoCard item={item} />;
+        return <ProjectModalCard item={item} />;
       default:
         return null;
     }
@@ -141,7 +129,7 @@ export const PipelineItemModal: React.FC<Props> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`${modalWidth} rounded-lg p-0 overflow-hidden`}>
-        <div className="bg-slate-50 p-6 pb-4">
+        <div className="bg-slate-50 p-8 pb-4">
           <DialogHeader>
             <div className="flex items-center justify-between mb-2">
               <Badge variant="outline" className={`font-normal ${getTypeColor()}`}>
@@ -156,14 +144,20 @@ export const PipelineItemModal: React.FC<Props> = ({
               <div>
                 <DialogTitle className="text-xl">{leadNAW.name ?? item.name}</DialogTitle>
                 <DialogDescription className="text-xs mt-1">
-                  Laatst bijgewerkt: {formatDate(item.updatedAt)}
+                  Laatst bijgewerkt: {(new Date(item.updatedAt)).toLocaleDateString("nl", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                  })}
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
         </div>
         {/* Content */}
-        <div className="p-6 pt-4">
+        <div className="p-8 pt-4">
           <h3 className="text-sm font-medium mb-3">{getTypeHeading()}</h3>
           <div className="space-y-6 mb-6">{renderInfoCard()}</div>
 
@@ -205,3 +199,5 @@ export const PipelineItemModal: React.FC<Props> = ({
     </Dialog>
   );
 };
+
+// ... end of file

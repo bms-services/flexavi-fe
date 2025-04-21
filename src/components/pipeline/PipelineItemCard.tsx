@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { PipelineItem } from "@/types/pipeline";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PipelineItemModal } from "./PipelineItemModal";
 import { toast } from "sonner";
@@ -21,7 +20,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Get the appropriate icon based on object type
   const getIcon = () => {
     switch (item.objectType) {
       case "lead":
@@ -37,7 +35,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
     }
   };
 
-  // Get the appropriate color based on object type
   const getTypeColor = () => {
     switch (item.objectType) {
       case "lead":
@@ -53,7 +50,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
     }
   };
 
-  // Get the appropriate type label
   const getTypeLabel = () => {
     switch (item.objectType) {
       case "lead":
@@ -69,7 +65,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
     }
   };
 
-  // Navigate to the appropriate detail page
   const navigateToDetail = () => {
     switch (item.objectType) {
       case "lead":
@@ -87,7 +82,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
     }
   };
 
-  // Handle actions
   const handleAddNote = () => {
     toast.success("Notitie toevoegen functionaliteit zal hier komen");
   };
@@ -96,7 +90,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
     toast.success("Afspraak maken functionaliteit zal hier komen");
   };
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("nl", {
       day: "2-digit",
@@ -107,13 +100,11 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
 
   return (
     <>
-      <Card
-        className={`shadow-sm transition-all cursor-pointer hover:shadow-md ${
-          isDragging ? "shadow-md bg-accent/30" : ""
-        }`}
+      <div
+        className={`rounded-lg shadow border bg-white overflow-hidden hover:shadow-md cursor-pointer transition-all ${isDragging ? "shadow-lg scale-95 bg-accent/40" : ""}`}
         onClick={() => setModalOpen(true)}
       >
-        <CardContent className="p-3 space-y-2">
+        <div className="p-3 space-y-2">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
               {getIcon()}
@@ -131,7 +122,6 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
               <ChevronDown className="h-4 w-4" />
             </Button>
           </div>
-          
           <div className="flex items-center justify-between text-xs">
             <Badge variant="outline" className={`text-xs font-normal ${getTypeColor()}`}>
               {getTypeLabel()}
@@ -140,9 +130,7 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
               {formatDate(item.updatedAt)}
             </span>
           </div>
-          
           <div className="pt-1 text-xs text-muted-foreground">
-            {/* Show context-specific info based on item type */}
             {item.objectType === "lead" && (
               <div className="flex items-center gap-1">
                 <Phone className="h-3 w-3" />
@@ -168,8 +156,8 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
               </div>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
       <PipelineItemModal
         open={modalOpen}
         item={item}
