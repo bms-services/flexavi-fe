@@ -25,6 +25,8 @@ const InvoiceEdit = () => {
     productSuggestions,
     totalAmount,
     isEditing,
+    discountType,
+    discountValue,
     handleLineItemChange,
     handleAddLineItem,
     handleRemoveLineItem,
@@ -32,9 +34,10 @@ const InvoiceEdit = () => {
     handleInvoiceFieldChange,
     getProductSuggestions,
     handleSaveInvoice,
+    setDiscountType,
+    setDiscountValue,
   } = useInvoiceForm(id);
 
-  // Calculate average VAT rate - default to 21%
   const calculateAverageVatRate = () => {
     if (lineItems.length === 0) return 21;
     const totalWithVat = lineItems.reduce((sum, item) => {
@@ -91,6 +94,10 @@ const InvoiceEdit = () => {
               <InvoiceSummary 
                 subtotal={totalAmount} 
                 vatRate={calculateAverageVatRate()}
+                discountType={discountType}
+                discountValue={discountValue}
+                onDiscountTypeChange={setDiscountType}
+                onDiscountValueChange={setDiscountValue}
               />
             </CardContent>
           </Card>

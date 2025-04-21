@@ -1,10 +1,7 @@
-
 import {
   Home,
   Users,
   Calendar,
-  FileText,
-  FileCheck,
   Package,
   Settings,
   Briefcase,
@@ -13,7 +10,6 @@ import {
   Receipt,
   Route,
   Calculator,
-  Satellite,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -27,15 +23,14 @@ export const navigationItems: NavItem[] = [
     href: "#",
     icon: Receipt,
     children: [
-      { name: "Offertes", href: "/quotes", icon: FileText },
-      { name: "Werkovereenkomsten", href: "/workagreements", icon: FileText },
-      { name: "Facturen", href: "/invoices", icon: FileCheck },
+      { name: "Offertes", href: "/quotes" },
+      { name: "Werkovereenkomsten", href: "/workagreements" },
+      { name: "Facturen", href: "/invoices" },
     ],
   },
   { name: "Projecten", href: "/projects", icon: Briefcase },
   { name: "Pijplijn", href: "/pipeline", icon: Route },
   { name: "Calculator", href: "/calculator", icon: Calculator },
-  { name: "Satelliet AI Dakmeting", href: "/roof-measurement", icon: Satellite },
   { name: "Producten", href: "/products", icon: Package },
   { name: "Partners", href: "/partners", icon: Handshake },
   { name: "Instellingen", href: "/settings", icon: Settings },

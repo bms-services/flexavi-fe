@@ -36,7 +36,6 @@ import CustomerPortalWorkOrder from "./pages/CustomerPortalWorkOrder";
 import EmployeePlanningPage from "./pages/EmployeePlanning";
 import CalculatorPage from "./pages/Calculator";
 import CalculatorDetail from "./pages/CalculatorDetail";
-import RoofMeasurement from "./pages/RoofMeasurement";
 
 const queryClient = new QueryClient();
 
@@ -80,7 +79,6 @@ const App = () => (
           <Route path="/employee/planning" element={<EmployeePlanningPage />} />
           <Route path="/calculator" element={<CalculatorPage />} />
           <Route path="/calculator/:id" element={<CalculatorDetail />} />
-          <Route path="/roof-measurement" element={<RoofMeasurement />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

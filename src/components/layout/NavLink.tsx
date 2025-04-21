@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, FileText } from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 interface NavLinkProps extends NavItem {
@@ -20,7 +20,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none",
+            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none", 
             "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
             "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sidebar-accent"
           )}

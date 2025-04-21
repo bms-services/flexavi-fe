@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -32,6 +31,8 @@ const QuoteEdit = () => {
     productSuggestions,
     totalAmount,
     isEditing,
+    discountType,
+    discountValue,
     handleLineItemChange,
     handleAddLineItem,
     handleRemoveLineItem,
@@ -39,6 +40,8 @@ const QuoteEdit = () => {
     handleQuoteFieldChange,
     getProductSuggestions,
     handleSaveQuote,
+    setDiscountType,
+    setDiscountValue,
   } = useQuoteForm(id);
 
   // Check if the quote is accepted, and redirect if trying to edit an accepted quote
@@ -95,7 +98,13 @@ const QuoteEdit = () => {
                 productSuggestions={productSuggestions}
                 onProductSearch={getProductSuggestions}
               />
-              <QuoteSummary subtotal={totalAmount} />
+              <QuoteSummary 
+                subtotal={totalAmount} 
+                discountType={discountType}
+                discountValue={discountValue}
+                onDiscountTypeChange={setDiscountType}
+                onDiscountValueChange={setDiscountValue}
+              />
             </CardContent>
           </Card>
           
