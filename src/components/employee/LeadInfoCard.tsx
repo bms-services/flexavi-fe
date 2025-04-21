@@ -1,5 +1,6 @@
+
 import React from "react";
-import { MapPin, Phone, Mail, FileText, History, Info, User } from "lucide-react";
+import { MapPin, FileText, History, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LeadInfoCardProps {
@@ -62,16 +63,8 @@ export const LeadInfoCard: React.FC<LeadInfoCardProps> = ({
                   </div>
                   
                   <div className="flex items-center gap-2 text-[#1A1F2C]">
-                    <Phone className="w-5 h-5 text-[#6B7280] shrink-0" />
                     <a href={`tel:${lead.phone}`} className="text-sm hover:underline">
                       {lead.phone}
-                    </a>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-[#1A1F2C]">
-                    <Mail className="w-5 h-5 text-[#6B7280] shrink-0" />
-                    <a href={`mailto:${lead.email}`} className="text-sm hover:underline">
-                      {lead.email}
                     </a>
                   </div>
                 </div>

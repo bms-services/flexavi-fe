@@ -9,7 +9,6 @@ import { mockLeads } from "@/data/mockLeads";
 import { Badge } from "@/components/ui/badge";
 import { PlanningHeader } from "./planning/PlanningHeader";
 import { AppointmentsTable } from "./planning/AppointmentsTable";
-import { Card } from "@/components/ui/card";
 
 interface DayTab {
   label: string;
