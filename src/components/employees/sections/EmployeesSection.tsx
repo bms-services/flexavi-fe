@@ -38,8 +38,8 @@ export const EmployeesSection: React.FC<EmployeesSectionProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between mb-4">
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+        <div className="flex flex-wrap gap-2">
           <Button onClick={() => onEdit({} as Employee)}>
             <Plus className="h-4 w-4 mr-2" />
             Nieuwe Medewerker
@@ -49,18 +49,18 @@ export const EmployeesSection: React.FC<EmployeesSectionProps> = ({
             Roosterschema
           </Button>
         </div>
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4" />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 shrink-0" />
           <Input
             placeholder="Zoek medewerkers..."
             value={employeeFilter}
             onChange={(e) => onFilterChange(e.target.value)}
-            className="max-w-xs"
+            className="max-w-full sm:max-w-xs"
           />
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-x-auto">
         <EmployeeTable 
           employees={pagination.paginatedItems}
           onEdit={onEdit}
@@ -70,7 +70,7 @@ export const EmployeesSection: React.FC<EmployeesSectionProps> = ({
       </div>
 
       <Pagination className="mt-4">
-        <PaginationContent>
+        <PaginationContent className="flex-wrap justify-center gap-2">
           <PaginationItem>
             <PaginationPrevious 
               onClick={pagination.prevPage} 

@@ -58,7 +58,7 @@ export const EmployeeList = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-8">
+    <div className="space-y-8 w-full max-w-full overflow-hidden">
       <EmployeesSection
         employees={filteredEmployees}
         employeeFilter={employeeFilter}

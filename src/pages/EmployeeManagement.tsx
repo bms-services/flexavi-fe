@@ -31,9 +31,9 @@ export default function EmployeeManagement() {
 
   return (
     <Layout>
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 py-6 sm:py-8 min-h-[calc(100vh-4rem)]">
         <EmployeeHeader />
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 mt-6">
           <EmployeeList />
         </div>
       </div>
