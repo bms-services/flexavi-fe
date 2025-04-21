@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { PipelineStage as PipelineStageType, PipelineItem } from "@/types/pipeline";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
@@ -8,30 +7,26 @@ import { ColorPopover } from "./ColorPopover";
 import { StageMailSettingsModal } from "./StageMailSettingsModal";
 import { Settings } from "lucide-react";
 
-// Props blijven hetzelfde
 interface PipelineStageProps {
   stage: PipelineStageType;
   items: PipelineItem[];
   onAddItem: (stageId: string) => void;
-  // Voor deze stap géén nieuwe props nodig
+  isFirstStage?: boolean;
 }
 
-// Snel-ID om te bepalen of we in de Nieuwe Leads pipeline zitten
 const NIEUWE_LEADS_PIPELINE_ID = "pipeline-callbacks";
 
 export const PipelineStage: React.FC<PipelineStageProps> = ({
   stage,
   items,
   onAddItem,
+  isFirstStage,
 }) => {
   const isMobile = useIsMobile();
   const stageItems = items.filter((item) => item.stageId === stage.id);
 
-  // Houdt de kleur van de kolom bij in lokale state (begin met stage.color)
   const [color, setColor] = useState(stage.color);
 
-  // ---- Mail instellingen local state (per kolom)
-  // De instellingen zijn "fake/voorlopig" in local state (niet persistent)
   const [mailSettingsOpen, setMailSettingsOpen] = useState(false);
   const [mailEnabled, setMailEnabled] = useState(true);
   const [mailTemplate, setMailTemplate] = useState(
@@ -43,9 +38,9 @@ Met vriendelijke groet,
 Jouw team`
   );
 
-  // ---- Bepalen of we in de Nieuwe Leads pipeline zitten
-  // We halen het pipelineId uit het eerste item in deze stage-lijst (want items zijn altijd gefilterd op pipeline).
   const currentPipelineId = stageItems[0]?.pipelineId;
+
+  const isNieuweLeadsPipeline = stageItems[0]?.pipelineId === NIEUWE_LEADS_PIPELINE_ID;
 
   return (
     <div
@@ -58,8 +53,7 @@ Jouw team`
           <span className="text-base font-medium">{stage.name}</span>
           <span className="text-xs text-muted-foreground">({stageItems.length})</span>
         </div>
-        {/* Instellingenknop: alleen tonen bij Nieuwe Leads pipeline */}
-        {currentPipelineId === NIEUWE_LEADS_PIPELINE_ID && (
+        {isNieuweLeadsPipeline && !isFirstStage && (
           <button
             type="button"
             className="rounded-full hover:bg-accent/30 p-1 transition border border-transparent hover:border-accent"
@@ -72,8 +66,7 @@ Jouw team`
         )}
       </div>
 
-      {/* Modal alleen tonen als open */}
-      {currentPipelineId === NIEUWE_LEADS_PIPELINE_ID && (
+      {isNieuweLeadsPipeline && (
         <StageMailSettingsModal
           open={mailSettingsOpen}
           onOpenChange={setMailSettingsOpen}

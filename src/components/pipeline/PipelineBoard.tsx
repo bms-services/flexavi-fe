@@ -44,18 +44,22 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
     toast.success("Item verplaatst naar een nieuwe fase");
   };
 
+  // Sorteer stadia op volgorde en bepaal de index voor eerste fase
+  const sortedStages = pipeline.stages.sort((a, b) => a.order - b.order);
+
   return (
     <div className="h-[calc(100vh-12rem)] w-full bg-card rounded-lg border shadow-sm overflow-hidden">
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="h-full overflow-x-auto">
           <div className="min-w-max p-4 inline-flex">
             <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
-              {pipeline.stages.sort((a, b) => a.order - b.order).map((stage) => (
+              {sortedStages.map((stage, idx) => (
                 <PipelineStageComponent
                   key={stage.id}
                   stage={stage}
                   items={items}
                   onAddItem={onAddItem}
+                  isFirstStage={idx === 0}
                 />
               ))}
             </div>
