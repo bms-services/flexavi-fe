@@ -5,7 +5,8 @@ import {
   ReviewTemplate, 
   ReputationSettings, 
   ReviewStatus,
-  ReviewPlatform
+  ReviewPlatform,
+  IntegrationCredentials
 } from "@/types/reputation";
 import { mockReviews, mockReviewTemplates, mockReputationSettings } from "@/data/mockReviews";
 import { useToast } from "@/hooks/use-toast";

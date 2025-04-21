@@ -59,7 +59,7 @@ export const RequestReviewDialog = ({
             <div className="mb-4 space-y-2">
               <h3 className="text-sm font-medium">Klant</h3>
               <div className="bg-muted p-3 rounded-md">
-                <p className="font-medium">{lead.firstName} {lead.lastName}</p>
+                <p className="font-medium">{lead.name}</p>
                 <p className="text-sm text-muted-foreground">{lead.email}</p>
               </div>
             </div>
@@ -95,7 +95,7 @@ export const RequestReviewDialog = ({
               </p>
               <div className="text-xs text-muted-foreground whitespace-pre-line">
                 {mockReviewTemplates.find(t => t.id === selectedTemplate)?.emailBody
-                  .replace('[Naam]', `${lead.firstName}`)
+                  .replace('[Naam]', lead.name.split(' ')[0])
                   .replace('[Bedrijfsnaam]', 'Mijn Dakbedrijf')
                   .replace('[ReviewLink]', 'https://example.com/review/123')}
               </div>

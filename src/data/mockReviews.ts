@@ -18,7 +18,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-001",
     leadId: mockLeads[0].id,
-    customerName: `${mockLeads[0].firstName} ${mockLeads[0].lastName}`,
+    customerName: mockLeads[0].name,
     customerEmail: mockLeads[0].email,
     projectId: mockProjects[0].id,
     invoiceId: mockInvoices[0].id,
@@ -33,7 +33,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-002",
     leadId: mockLeads[1].id,
-    customerName: `${mockLeads[1].firstName} ${mockLeads[1].lastName}`,
+    customerName: mockLeads[1].name,
     customerEmail: mockLeads[1].email,
     projectId: mockProjects[1].id,
     invoiceId: mockInvoices[1].id,
@@ -48,7 +48,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-003",
     leadId: mockLeads[2].id,
-    customerName: `${mockLeads[2].firstName} ${mockLeads[2].lastName}`,
+    customerName: mockLeads[2].name,
     customerEmail: mockLeads[2].email,
     projectId: mockProjects[2].id,
     invoiceId: mockInvoices[2].id,
@@ -64,7 +64,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-004",
     leadId: mockLeads[3].id,
-    customerName: `${mockLeads[3].firstName} ${mockLeads[3].lastName}`,
+    customerName: mockLeads[3].name,
     customerEmail: mockLeads[3].email,
     projectId: mockProjects[3].id,
     invoiceId: mockInvoices[3].id,
@@ -82,7 +82,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-005",
     leadId: mockLeads[4].id,
-    customerName: `${mockLeads[4].firstName} ${mockLeads[4].lastName}`,
+    customerName: mockLeads[4].name,
     customerEmail: mockLeads[4].email,
     invoiceId: mockInvoices[4].id,
     rating: 0, // Not rated yet
@@ -97,7 +97,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-006",
     leadId: mockLeads[5].id,
-    customerName: `${mockLeads[5].firstName} ${mockLeads[5].lastName}`,
+    customerName: mockLeads[5].name,
     customerEmail: mockLeads[5].email,
     projectId: mockProjects[4].id,
     invoiceId: mockInvoices[5].id,
@@ -112,7 +112,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-007",
     leadId: mockLeads[6].id,
-    customerName: `${mockLeads[6].firstName} ${mockLeads[6].lastName}`,
+    customerName: mockLeads[6].name,
     customerEmail: mockLeads[6].email,
     projectId: mockProjects[5].id,
     invoiceId: mockInvoices[6].id,
@@ -127,7 +127,7 @@ export const mockReviews: Review[] = [
   {
     id: "rev-008",
     leadId: mockLeads[7].id,
-    customerName: `${mockLeads[7].firstName} ${mockLeads[7].lastName}`,
+    customerName: mockLeads[7].name,
     customerEmail: mockLeads[7].email,
     invoiceId: mockInvoices[7].id,
     rating: 3,
