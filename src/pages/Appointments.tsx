@@ -8,7 +8,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { AppointmentsHeader } from "@/components/appointments/components/AppointmentsHeader";
 import { AppointmentsTabs } from "@/components/appointments/components/AppointmentsTabs";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const mockEnvironments: WorkEnvironment[] = [
   { id: "1", name: "Rotterdam", region: "Zuid-Holland", color: "#0EA5E9" },
@@ -18,7 +17,6 @@ const mockEnvironments: WorkEnvironment[] = [
 
 const Appointments = () => {
   const { toast } = useToast();
-  const isMobile = useIsMobile();
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
   const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
@@ -119,11 +117,11 @@ const Appointments = () => {
   return (
     <Layout>
       <TooltipProvider>
-        <div className={`container py-6 space-y-6 ${isMobile ? 'px-2' : 'px-4'}`}>
+        <div className="container py-6 space-y-6">
           <AppointmentsHeader 
             onNewAppointment={handleNewAppointment}
             onSettingsOpen={handleSettingsOpen}
-            teams={teams}
+            teams={teams}  // Added teams prop here
           />
 
           <AppointmentsTabs

@@ -21,7 +21,7 @@ import {
 import { nl } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Appointment, TeamDetails } from "@/types";
+import { Appointment } from "@/types";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 
@@ -29,18 +29,12 @@ interface AppointmentCalendarProps {
   appointments: Appointment[];
   onDateSelect: (date: string) => void;
   selectedDate?: string;
-  teams?: TeamDetails[];
-  isMobile?: boolean;
-  onAppointmentAssign?: (appointmentId: string, teamId: string) => void;
 }
 
 export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   appointments,
   onDateSelect,
   selectedDate,
-  teams,
-  isMobile,
-  onAppointmentAssign,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const today = new Date();

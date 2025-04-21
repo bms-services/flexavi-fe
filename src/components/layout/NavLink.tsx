@@ -1,73 +1,78 @@
 
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/navigation";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ChevronDown, ChevronUp, FileText } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 interface NavLinkProps extends NavItem {
-  isActive?: boolean;
+  isActive: boolean;
 }
 
-export const NavLink: React.FC<NavLinkProps> = ({
-  name,
-  href,
-  icon: Icon,
-  children,
-  isActive = false,
-}) => {
-  const [isOpen, setIsOpen] = useState(isActive);
-  const isMobile = useIsMobile();
-  const hasChildren = children && children.length > 0;
-
-  const toggleDropdown = (e: React.MouseEvent) => {
-    if (hasChildren) {
-      e.preventDefault();
-      setIsOpen(!isOpen);
-    }
-  };
-
-  return (
-    <div className="nav-item">
-      <a
-        href={href}
-        onClick={toggleDropdown}
-        className={`flex items-center justify-between px-3 py-2 rounded-md transition-colors ${
-          isActive
-            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        }`}
-      >
-        <div className="flex items-center">
-          {Icon && <Icon className="h-5 w-5 mr-2 shrink-0" />}
-          <span className="text-sm">{name}</span>
-        </div>
-        {hasChildren && (
-          <div className="ml-auto">
-            {isOpen ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
+export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, children, isActive }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  
+  if (children) {
+    return (
+      <div className="w-full">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={cn(
+            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none", 
+            "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
+            "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sidebar-accent"
+          )}
+        >
+          {Icon && <Icon className="mr-2 h-4 w-4" aria-hidden="true" />}
+          <span className="flex-1 text-left">{name}</span>
+          {isOpen ? (
+            <ChevronUp className="h-3.5 w-3.5 ml-1 opacity-75" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5 ml-1 opacity-75" />
+          )}
+        </button>
+        
+        {isOpen && (
+          <div className="mt-0.5 space-y-0.5">
+            {children.map((child) => (
+              <Link
+                key={child.name}
+                to={child.href}
+                className={cn(
+                  "flex items-center px-2 py-1.5 rounded-md text-[14px] transition-colors outline-none",
+                  location.pathname === child.href
+                    ? "bg-sidebar-accent/30 text-sidebar-foreground font-medium"
+                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent/20 hover:text-sidebar-foreground"
+                )}
+              >
+                {child.icon && <child.icon className="mr-2 h-4 w-4 opacity-75" />}
+                <span>{child.name}</span>
+              </Link>
+            ))}
           </div>
         )}
-      </a>
-      {hasChildren && isOpen && (
-        <div className="mt-1 ml-6 space-y-1">
-          {children.map((child) => (
-            <a
-              key={child.name}
-              href={child.href}
-              className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                location.pathname === child.href
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              }`}
-            >
-              {child.name}
-            </a>
-          ))}
-        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={href}
+      className={cn(
+        "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none",
+        isActive
+          ? "bg-sidebar-accent text-white"
+          : "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
+        "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sidebar-accent"
       )}
-    </div>
+      role="menuitem"
+      aria-current={isActive ? "page" : undefined}
+      tabIndex={0}
+    >
+      {Icon && <Icon className="mr-2 h-4 w-4" aria-hidden="true" />}
+      <span>{name}</span>
+    </Link>
   );
 };
