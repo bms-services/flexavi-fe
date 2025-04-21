@@ -1,15 +1,15 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { TeamAvailabilityOverview } from "../TeamAvailabilityOverview";
-import { DailyAppointments } from "../DailyAppointments";
-import { DailyTeamAppointments } from "../DailyTeamAppointments";
+import { AppointmentCalendar } from "../AppointmentCalendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { format } from "date-fns";
 import { Appointment, TeamDetails, WorkEnvironment } from "@/types";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AppointmentsTabsProps {
   activeTab: string;
-  setActiveTab: (value: string) => void;
+  setActiveTab: (tab: string) => void;
   selectedDate: string;
   appointments: Appointment[];
   teams: TeamDetails[];
@@ -20,90 +20,71 @@ interface AppointmentsTabsProps {
   onTeamUpdate: (team: TeamDetails) => void;
   onUnavailableDateAdd: (teamId: string, date: string) => void;
   onUnavailableDateRemove: (teamId: string, date: string) => void;
-  onAppointmentAssign?: (appointmentId: string, teamId: string) => void;
+  onAppointmentAssign: (appointmentId: string, teamId: string) => void;
 }
 
 export const AppointmentsTabs: React.FC<AppointmentsTabsProps> = ({
+  activeTab,
+  setActiveTab,
   selectedDate,
   appointments,
   teams,
   environments,
   scheduleSettings,
   unavailableDates,
+  onDateSelect,
   onTeamUpdate,
   onUnavailableDateAdd,
   onUnavailableDateRemove,
-  onDateSelect,
   onAppointmentAssign,
 }) => {
-  const [showDailyView, setShowDailyView] = useState(false);
-  const [showTeamDailyView, setShowTeamDailyView] = useState(false);
-
-  const handleDateClick = (date: string) => {
-    onDateSelect(date);
-    setShowTeamDailyView(true);
-  };
-
-  const handleBackToOverview = () => {
-    setShowDailyView(false);
-    setShowTeamDailyView(false);
-  };
-
-  const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
-    if (onAppointmentAssign) {
-      onAppointmentAssign(appointmentId, teamId);
-    }
-  };
-
-  if (showTeamDailyView) {
-    return (
-      <div className="space-y-6">
-        <DailyTeamAppointments
-          date={selectedDate}
-          appointments={appointments.filter(app => app.date === selectedDate)}
-          teams={teams}
-          onBackToOverview={handleBackToOverview}
-          onAppointmentAssign={handleAppointmentAssign}
-        />
-      </div>
-    );
-  }
-
-  if (showDailyView) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="ghost" 
-            className="gap-2"
-            onClick={handleBackToOverview}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Terug naar planning
-          </Button>
-        </div>
-        <DailyAppointments
-          date={selectedDate}
-          appointments={appointments.filter(app => app.date === selectedDate)}
-        />
-      </div>
-    );
-  }
+  const isMobile = useIsMobile();
+  const formattedDate = format(new Date(selectedDate), "yyyy-MM-dd");
 
   return (
-    <div className="space-y-6">
-      <TeamAvailabilityOverview
-        startDate={selectedDate}
-        appointments={appointments}
-        teams={teams}
-        environments={environments}
-        scheduleSettings={scheduleSettings}
-        unavailableDates={unavailableDates}
-        onTeamUpdate={onTeamUpdate}
-        onUnavailableDateAdd={onUnavailableDateAdd}
-        onUnavailableDateRemove={onUnavailableDateRemove}
-        onDateClick={handleDateClick}
-      />
-    </div>
+    <Tabs defaultValue="planning" className="space-y-6">
+      <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'w-[400px] grid-cols-3'}`}>
+        <TabsTrigger value="planning">Team Planning</TabsTrigger>
+        <TabsTrigger value="calendar">Agenda</TabsTrigger>
+        {!isMobile && <TabsTrigger value="routeplanning">Route Planning</TabsTrigger>}
+      </TabsList>
+      
+      <TabsContent value="planning" className="space-y-6">
+        <TeamAvailabilityOverview
+          startDate={formattedDate}
+          appointments={appointments}
+          teams={teams}
+          environments={environments}
+          scheduleSettings={scheduleSettings}
+          unavailableDates={unavailableDates}
+          onTeamUpdate={onTeamUpdate}
+          onUnavailableDateAdd={onUnavailableDateAdd}
+          onUnavailableDateRemove={onUnavailableDateRemove}
+          onDateClick={onDateSelect}
+        />
+      </TabsContent>
+      
+      <TabsContent value="calendar">
+        <AppointmentCalendar
+          selectedDate={selectedDate}
+          appointments={appointments}
+          teams={teams}
+          onDateSelect={onDateSelect}
+          onAppointmentAssign={onAppointmentAssign}
+          isMobile={isMobile}
+        />
+      </TabsContent>
+      
+      {!isMobile && (
+        <TabsContent value="routeplanning">
+          <div className="rounded-lg border p-8 text-center">
+            <h3 className="text-lg font-medium mb-2">Route Planning</h3>
+            <p className="text-muted-foreground">
+              Functionaliteit voor route planning komt binnenkort beschikbaar.
+            </p>
+          </div>
+        </TabsContent>
+      )}
+    </Tabs>
   );
 };

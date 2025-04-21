@@ -116,9 +116,9 @@ export const TeamAvailabilityOverview = ({
             
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="min-w-[180px] justify-start">
+                <Button variant="outline" className={`${isMobile ? 'min-w-[100px]' : 'min-w-[180px]'} justify-start`}>
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  <span className="text-sm">
+                  <span className="text-sm truncate">
                     {format(parseISO(dates[0]), 'dd MMM')} - {format(parseISO(dates[dates.length - 1]), 'dd MMM yyyy')}
                   </span>
                 </Button>
@@ -143,21 +143,24 @@ export const TeamAvailabilityOverview = ({
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-          <div className="w-full sm:w-64">
-            <Slider
-              defaultValue={[0]}
-              value={[dateOffset]}
-              max={12}
-              step={1}
-              onValueChange={handleSliderChange}
-              className="py-2"
-            />
-          </div>
+          {!isMobile && (
+            <div className="w-full sm:w-64">
+              <Slider
+                defaultValue={[0]}
+                value={[dateOffset]}
+                max={12}
+                step={1}
+                onValueChange={handleSliderChange}
+                className="py-2"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      <ScrollArea className="w-full overflow-auto pb-4">
-        <div className="min-w-[600px]">
+      {/* Responsive ScrollArea */}
+      <ScrollArea className="w-full pb-4" type={isMobile ? "always" : "auto"}>
+        <div className={`${isMobile ? 'min-w-[600px]' : 'w-full'}`}>
           <TeamSection
             title="Verkoopteams"
             icon={<Users className="h-5 w-5 text-primary" />}
@@ -173,7 +176,7 @@ export const TeamAvailabilityOverview = ({
           />
         </div>
         
-        <div className="min-w-[600px] mt-6">
+        <div className={`${isMobile ? 'min-w-[600px]' : 'w-full'} mt-6`}>
           <InstallationTeamSection
             title="Uitvoerende Teams"
             icon={<Building2 className="h-5 w-5 text-primary" />}
