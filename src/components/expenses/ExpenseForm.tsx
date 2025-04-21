@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { ExpenseType, ExpenseStatus, Expense } from "@/types/expenses";
-import { getTypeLabel } from "./ExpenseTypeIcon";
+import { getTypeLabel } from "@/utils/expenseUtils";
 import { mockProjects } from "@/data/mockData";
 import { toast } from "@/components/ui/sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -272,6 +271,13 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 <SelectItem value="transport">{getTypeLabel("transport")}</SelectItem>
                 <SelectItem value="equipment">{getTypeLabel("equipment")}</SelectItem>
                 <SelectItem value="subcontractor">{getTypeLabel("subcontractor")}</SelectItem>
+                <SelectItem value="office">{getTypeLabel("office")}</SelectItem>
+                <SelectItem value="software">{getTypeLabel("software")}</SelectItem>
+                <SelectItem value="marketing">{getTypeLabel("marketing")}</SelectItem>
+                <SelectItem value="training">{getTypeLabel("training")}</SelectItem>
+                <SelectItem value="maintenance">{getTypeLabel("maintenance")}</SelectItem>
+                <SelectItem value="utilities">{getTypeLabel("utilities")}</SelectItem>
+                <SelectItem value="insurance">{getTypeLabel("insurance")}</SelectItem>
                 <SelectItem value="other">{getTypeLabel("other")}</SelectItem>
               </SelectContent>
             </Select>
