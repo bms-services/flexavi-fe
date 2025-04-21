@@ -1,8 +1,20 @@
-
 import { Project } from "./project";
 import { Invoice } from "./invoices";
 
-export type ExpenseType = 'material' | 'transport' | 'equipment' | 'subcontractor' | 'other';
+export type ExpenseType = 
+  | 'material' 
+  | 'transport' 
+  | 'equipment' 
+  | 'subcontractor' 
+  | 'office' 
+  | 'software' 
+  | 'marketing' 
+  | 'training' 
+  | 'maintenance' 
+  | 'utilities' 
+  | 'insurance' 
+  | 'other';
+
 export type ExpenseStatus = 'draft' | 'approved' | 'rejected' | 'pending' | 'processed';
 
 export interface Expense {
