@@ -15,7 +15,7 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) =
   const isMobile = useIsMobile();
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
@@ -41,6 +41,20 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) =
         <CardContent className="p-0 sm:p-4">
           <div className="h-[200px] md:h-[250px] w-full overflow-hidden">
             <LeadConversionRate timeRange={timeRange} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg md:text-xl">Reviews</CardTitle>
+          <CardDescription>Klantbeoordelingen deze maand</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0 sm:p-4">
+          <div className="h-[200px] md:h-[250px] w-full overflow-hidden">
+            <div className="flex items-center justify-center h-full text-gray-500">
+              Nog geen gegevens beschikbaar
+            </div>
           </div>
         </CardContent>
       </Card>
