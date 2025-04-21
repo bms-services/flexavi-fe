@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Trash } from "lucide-react";
 import { QuoteLineItem } from "@/types";
 import { Product } from "@/types/product";
+import { UnitSelect } from "@/components/quotes/line-items/UnitSelect";
 
 interface LineItemRowProps {
   item: QuoteLineItem;
@@ -49,14 +50,21 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
     onProductSearch(e.target.value);
   };
 
+  const handleProductSelect = (product: Product) => {
+    handleChange("description", product.title);
+    handleChange("unit", product.unit);
+    handleChange("pricePerUnit", product.pricePerUnit);
+    handleChange("vatRate", product.vat);
+  };
+
   // Kolom classes & stylings
   const colClasses = [
-    "px-2 py-2 text-center align-middle w-[60px]",     // aantal
-    "px-2 py-2 text-center align-middle w-[90px]",     // eenheid
-    "px-2 py-2 text-left align-middle w-[220px]",      // product/dienst
-    "px-2 py-2 text-right align-middle w-[110px]",     // eenheidsprijs
-    "px-2 py-2 text-center align-middle w-[70px]",     // btw
-    "px-2 py-2 text-right align-middle w-[120px]",     // regel totaal
+    "px-2 py-2 text-center align-middle w-[60px] border-r border-[#E1E3E6]",     // aantal
+    "px-2 py-2 text-center align-middle w-[90px] border-r border-[#E1E3E6]",     // eenheid
+    "px-2 py-2 text-left align-middle w-[220px] border-r border-[#E1E3E6]",      // product/dienst
+    "px-2 py-2 text-right align-middle w-[110px] border-r border-[#E1E3E6]",     // eenheidsprijs
+    "px-2 py-2 text-center align-middle w-[70px] border-r border-[#E1E3E6]",     // btw
+    "px-2 py-2 text-right align-middle w-[120px] border-r border-[#E1E3E6]",     // regel totaal
     "px-2 py-2 text-center align-middle w-[40px]",     // verwijder
   ];
 
@@ -80,43 +88,38 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
         </td>
         {/* Eenheid */}
         <td className={colClasses[1]}>
-          <input
-            type="text"
-            value={item.unit}
-            onChange={(e) => handleChange("unit", e.target.value)}
-            className={`${inlineInputStyle} text-center`}
+          <UnitSelect 
+            value={item.unit} 
+            onChange={(value) => handleChange("unit", value)}
             disabled={disabled}
           />
         </td>
         {/* Product/Dienst */}
         <td className={colClasses[2]}>
-          <input
-            type="text"
-            value={item.description}
-            onChange={handleProductChange}
-            className={`${inlineInputStyle} text-left`}
-            disabled={disabled}
-            autoComplete="off"
-          />
-          {productSuggestions && productSuggestions.length > 0 && !disabled && (
-            <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-              {productSuggestions.map((product, i) => (
-                <div
-                  key={i}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    handleChange("description", product.title);
-                    handleChange("unit", product.unit);
-                    handleChange("pricePerUnit", product.pricePerUnit);
-                    handleChange("vatRate", product.vat);
-                  }}
-                >
-                  <div>{product.title}</div>
-                  <div className="text-xs text-gray-500">{product.pricePerUnit} EUR</div>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="relative">
+            <input
+              type="text"
+              value={item.description}
+              onChange={handleProductChange}
+              className={`${inlineInputStyle} text-left`}
+              disabled={disabled}
+              autoComplete="off"
+            />
+            {productSuggestions && productSuggestions.length > 0 && !disabled && (
+              <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto left-0 right-0">
+                {productSuggestions.map((product, i) => (
+                  <div
+                    key={i}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleProductSelect(product)}
+                  >
+                    <div>{product.title}</div>
+                    <div className="text-xs text-gray-500">{product.pricePerUnit} EUR</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </td>
         {/* Eenheidsprijs */}
         <td className={colClasses[3]}>

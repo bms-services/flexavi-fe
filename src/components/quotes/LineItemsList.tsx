@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -27,15 +28,15 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto rounded-lg border border-gray-400 bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-sm border border-gray-400">
+        <table className="w-full min-w-[1000px] text-sm">
           <thead>
             <tr className="bg-muted">
-              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[60px]">Aantal</th>
-              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[90px]">Eenheid</th>
-              <th className="text-left py-1 px-2 font-medium border-b border-[#E1E3E6] w-[220px]">Product/Dienst</th>
-              <th className="text-right py-1 px-2 font-medium border-b border-[#E1E3E6] w-[110px]">Eenheidsprijs</th>
-              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[70px]">BTW %</th>
-              <th className="text-right py-1 px-2 font-medium border-b border-[#E1E3E6] w-[120px]">Regel totaal</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[60px]">Aantal</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[90px]">Eenheid</th>
+              <th className="text-left py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[220px]">Product/Dienst</th>
+              <th className="text-right py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[110px]">Eenheidsprijs</th>
+              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[70px]">BTW %</th>
+              <th className="text-right py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[120px]">Regel totaal</th>
               <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[40px]"></th>
             </tr>
           </thead>
