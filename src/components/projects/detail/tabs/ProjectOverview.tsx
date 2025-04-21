@@ -10,8 +10,18 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { Project, ProjectNote } from "@/types/project";
-import { CalendarIcon, MapPinIcon, FileTextIcon, Users } from "lucide-react";
+import { 
+  CalendarIcon, 
+  MapPinIcon, 
+  FileTextIcon, 
+  Users, 
+  CheckCircle, 
+  Clock, 
+  PlusCircle 
+} from "lucide-react";
 import { ProjectNotesSection } from "../../../projects/detail/tabs/ProjectNotesSection";
+import { Button } from "@/components/ui/button";
+import { TaskDialog } from "./TaskDialog";
 
 interface ProjectOverviewProps {
   project: Project;
@@ -19,10 +29,28 @@ interface ProjectOverviewProps {
 
 export const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => {
   const [notes, setNotes] = useState(project.notes ?? []);
-
+  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  
   const handleAddNote = (note: ProjectNote) => {
     setNotes((prev) => [...prev, note]);
   };
+  
+  const handleAddTask = (task: ProjectNote) => {
+    setNotes((prev) => [...prev, task]);
+  };
+  
+  const handleToggleTaskStatus = (taskId: string) => {
+    setNotes((prev) => 
+      prev.map(note => 
+        note.id === taskId && note.type === "task" 
+          ? { ...note, status: note.status === "open" ? "completed" : "open" } 
+          : note
+      )
+    );
+  };
+  
+  // Filter voor openstaande taken
+  const openTasks = notes.filter(note => note.type === "task" && note.status === "open");
 
   return (
     <div className="space-y-6">
@@ -78,24 +106,49 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => 
         </Card>
         
         <Card>
-          <CardHeader>
-            <CardTitle>Gekoppelde leads</CardTitle>
-            <CardDescription>Leads verbonden aan dit project</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Openstaande taken</CardTitle>
+              <CardDescription>Taken die aandacht vereisen</CardDescription>
+            </div>
+            <Button size="sm" onClick={() => setIsTaskDialogOpen(true)}>
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Taak toevoegen
+            </Button>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {project.leads.length > 0 ? (
-              <div className="space-y-2">
-                {project.leads.map((leadId) => (
-                  <div key={leadId} className="flex items-center gap-2 rounded-md border p-2">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span>Lead ID: {leadId}</span>
+          <CardContent>
+            {openTasks.length > 0 ? (
+              <div className="space-y-3">
+                {openTasks.map((task) => (
+                  <div key={task.id} className="flex items-start gap-3 border rounded-md p-3">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 mt-1"
+                      onClick={() => handleToggleTaskStatus(task.id)}
+                    >
+                      <div className="h-5 w-5 rounded-full border border-gray-300 flex items-center justify-center" />
+                    </Button>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">{task.note}</div>
+                      <div className="text-xs text-muted-foreground">
+                        Voor: {task.createdFor} • Gemaakt door: {task.createdBy}
+                      </div>
+                      {task.dueDate && (
+                        <div className="flex items-center gap-1 text-xs text-amber-600 mt-1">
+                          <Clock className="h-3 w-3" />
+                          Vervaldatum: {format(new Date(task.dueDate), "d MMMM yyyy", { locale: nl })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">
-                Er zijn nog geen leads gekoppeld aan dit project
-              </p>
+              <div className="text-center py-6 text-muted-foreground">
+                <p>Geen openstaande taken</p>
+                <p className="text-sm">Voeg taken toe om het project te beheren</p>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -148,6 +201,12 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => 
       </div>
       
       <ProjectNotesSection notes={notes} onAddNote={handleAddNote} />
+      
+      <TaskDialog 
+        open={isTaskDialogOpen} 
+        onOpenChange={setIsTaskDialogOpen} 
+        onAddTask={handleAddTask} 
+      />
     </div>
   );
 };

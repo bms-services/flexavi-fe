@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { nl } from "date-fns/locale";
+import { CheckCircle, Clock } from "lucide-react";
 
 interface ProjectNotesSectionProps {
   notes: ProjectNote[];
@@ -30,10 +33,14 @@ export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({ notes,
       createdBy: newNote.createdBy!,
       createdFor: newNote.createdFor!,
       note: newNote.note!,
+      type: "note"
     });
     setNewNote({ note: "", createdBy: "", createdFor: "" });
     toast.success("Notitie toegevoegd");
   };
+
+  // Filter voor alleen notities (geen taken)
+  const filteredNotes = notes.filter(n => n.type !== "task");
 
   return (
     <Card>
@@ -49,10 +56,10 @@ export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({ notes,
             <Button size="sm" onClick={handleAdd}>Toevoegen</Button>
           </div>
           <div className="mt-6 space-y-3">
-            {notes.length === 0 ? (
+            {filteredNotes.length === 0 ? (
               <div className="text-muted-foreground">Nog geen notities voor dit project.</div>
             ) : (
-              notes.slice().reverse().map((n) => (
+              filteredNotes.slice().reverse().map((n) => (
                 <div key={n.id} className="border-t pt-2">
                   <div className="text-xs text-muted-foreground mb-1">
                     {new Date(n.createdAt).toLocaleString()} | Door: {n.createdBy} · Voor: {n.createdFor}

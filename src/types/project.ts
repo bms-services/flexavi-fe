@@ -1,3 +1,4 @@
+
 import { Lead, Quote, Invoice, WorkAgreement } from "./index";
 
 export type ProjectStatus = "active" | "completed" | "on-hold" | "cancelled";
@@ -24,12 +25,17 @@ export type ProjectPersonnel = {
   totalCost: number;
 };
 
+export type ProjectNoteType = "note" | "task";
+
 export type ProjectNote = {
   id: string;
   createdAt: string;
   createdBy: string;
   createdFor: string;
   note: string;
+  type?: ProjectNoteType;
+  status?: "open" | "completed"; // Voor taken
+  dueDate?: string; // Voor taken
 };
 
 export type ProjectAppointment = {
