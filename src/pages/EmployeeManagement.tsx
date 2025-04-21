@@ -5,7 +5,8 @@ import { EmployeeList } from "@/components/employees/EmployeeList";
 import { EmployeeHeader } from "@/components/employees/EmployeeHeader";
 import { Employee, WorkDay } from "@/types/employee-management";
 import { useToast } from "@/hooks/use-toast";
-import { mockEmployees, mockWorkDays } from "@/data/mockEmployees";
+import { mockEmployees } from "@/data/mockEmployees";
+import { mockWorkDays } from "@/data/mockWorkDays";
 
 export default function EmployeeManagement() {
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
@@ -16,7 +17,7 @@ export default function EmployeeManagement() {
     const newWorkDay: WorkDay = {
       id: crypto.randomUUID(),
       employeeId,
-      date: date.toISOString(),
+      date: date.toISOString().split('T')[0],
       hours: 0,
       type: "vacation"
     };
