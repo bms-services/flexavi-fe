@@ -1,9 +1,15 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Logo } from "@/components/ui/logo";
 import { MainFooter } from "@/components/layout/MainFooter";
 import { Button } from "@/components/ui/button";
-import { User, Bell, Menu, ChevronRight } from "lucide-react";
+import { User, Bell, Menu, ChevronRight, X } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose
+} from "@/components/ui/sheet";
 
 interface CustomerPortalLayoutProps {
   children: React.ReactNode;
@@ -41,9 +47,36 @@ export const CustomerPortalLayout: React.FC<CustomerPortalLayoutProps> = ({
                   <span>Mijn Account</span>
                 </Button>
               </div>
-              <Button variant="ghost" className="md:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" className="md:hidden">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[250px]">
+                  <div className="flex flex-col h-full">
+                    <div className="flex justify-end mb-6">
+                      <SheetClose asChild>
+                        <Button variant="ghost" size="icon">
+                          <X className="h-5 w-5" />
+                        </Button>
+                      </SheetClose>
+                    </div>
+                    <nav className="flex flex-col space-y-4">
+                      <a href="/portal/dashboard/1" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Dashboard</a>
+                      <a href="#" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Offertes</a>
+                      <a href="#" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Facturen</a>
+                      <a href="#" className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors">Werkzaamheden</a>
+                    </nav>
+                    <div className="mt-auto">
+                      <Button variant="outline" className="w-full gap-2 mt-4">
+                        <User className="h-4 w-4" />
+                        <span>Mijn Account</span>
+                      </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
