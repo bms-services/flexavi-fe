@@ -5,3 +5,4 @@ export * from './quotes';
 export * from './invoices';
 export * from './work-agreements';
 export * from './employee-management';
+export * from './integrations';

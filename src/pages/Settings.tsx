@@ -17,6 +17,8 @@ import { PermissionsSettings } from "@/components/settings/permissions/Permissio
 import { Building2, Calendar, Users2, User, Paperclip, Mail, Pen, CreditCard, Shield, FileText } from "lucide-react";
 import { EmployeeSettings } from "@/components/settings/employees/EmployeeSettings";
 import { WorkAgreementSettingsForm } from "@/components/settings/workagreements/WorkAgreementSettingsForm";
+import { IntegrationsSettings } from "@/components/settings/integrations/IntegrationsSettings";
+import { Webhook } from "lucide-react";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -119,6 +121,10 @@ const Settings = () => {
                   <FileText className="h-4 w-4 mr-2" />
                   Werkovereenkomsten
                 </TabsTrigger>
+                <TabsTrigger value="integrations" className="w-full justify-start">
+                  <Webhook className="h-4 w-4 mr-2" />
+                  Koppelingen
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -180,6 +186,10 @@ const Settings = () => {
 
               <TabsContent value="workagreements" className="mt-0">
                 <WorkAgreementSettingsForm />
+              </TabsContent>
+
+              <TabsContent value="integrations" className="mt-0">
+                <IntegrationsSettings />
               </TabsContent>
             </div>
           </Tabs>
