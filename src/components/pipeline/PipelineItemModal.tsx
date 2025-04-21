@@ -1,18 +1,24 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Eye, FilePlus, FileMinus, Shield, User, DollarSign } from "lucide-react";
+import { Calendar, FileText, Eye, FilePlus, FileMinus, Shield, User, DollarSign, Phone, Mail, Info, Home, Map, 
+  CreditCard, FileImage, BadgeEuro, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { LeadCallbackModalCard } from "./item-modal/LeadCallbackModalCard";
-import { LeadDefaultModalCard } from "./item-modal/LeadDefaultModalCard";
-import { QuoteModalCard } from "./item-modal/QuoteModalCard";
-import { InvoiceModalCard } from "./item-modal/InvoiceModalCard";
-import { ProjectModalCard } from "./item-modal/ProjectModalCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { mockAppointments } from "@/data/mockAppointments";
+import { mockQuotes } from "@/data/mockQuotes";
+import { mockInvoices } from "@/data/mockInvoices";
+import { mockWorkAgreements } from "@/data/mockWorkAgreements";
+import { LeadLocationMap } from "@/components/leads/components/LeadLocationMap";
+import { formatEuro } from "@/lib/utils";
 
-// Dummy NAW details (in praktijk via API laden)
+// Dummy NAW details
 const demoLeads = [
   {
     objectId: "lead-1",
@@ -20,6 +26,9 @@ const demoLeads = [
     address: "Vijzelstraat 12, 1017 HK Amsterdam",
     phone: "06-12345678",
     email: "niels@voorbeeldbedrijf.nl",
+    requestReason: "Dakgoot vervanging en lekkage reparatie",
+    wozValue: 780000,
+    estimatedProjectValue: 7800,
   },
   {
     objectId: "lead-2",
@@ -27,6 +36,31 @@ const demoLeads = [
     address: "Bloemgracht 55, 1016 KE Amsterdam",
     phone: "06-87654321",
     email: "marco@voorbeeld.nl",
+    requestReason: "Zonnepanelen installatie en dakisolatie",
+    wozValue: 650000,
+    estimatedProjectValue: 16500,
+  }
+];
+
+// Mock guarantees for demo
+const demoGuarantees = [
+  {
+    id: "guarantee-1",
+    objectId: "lead-1",
+    title: "Dakgoot Installatie",
+    description: "10 jaar fabrieksgarantie op materialen, 5 jaar op arbeid",
+    startDate: "2024-01-15",
+    endDate: "2034-01-15",
+    status: "active"
+  },
+  {
+    id: "guarantee-2",
+    objectId: "lead-1",
+    title: "Lekkage Reparatie",
+    description: "2 jaar garantie op waterdichtheid",
+    startDate: "2024-02-10",
+    endDate: "2026-02-10",
+    status: "active"
   }
 ];
 
@@ -47,10 +81,12 @@ export const PipelineItemModal: React.FC<Props> = ({
   onAddNote,
   onSchedule,
 }) => {
+  const [activeDocTab, setActiveDocTab] = useState("quotes");
+  
   if (!item) return null;
 
-  // Brede modal!
-  const modalWidth = "max-w-5xl w-full"; // Extra, extra breed
+  // Extra brede modal
+  const modalWidth = "max-w-7xl w-full";
 
   // ACTIES
   const handleCreateQuote = () => {
@@ -62,28 +98,47 @@ export const PipelineItemModal: React.FC<Props> = ({
   const handleCreateWorkOrder = () => {
     window.location.assign("/projects?leadId=" + item.objectId.split("-")[1]);
   };
+  const handleUploadPhotos = () => {
+    window.location.assign(`/leads/${item.objectId.split("-")[1]}/media`);
+  };
 
   // Zoek NAW voor demo-lead
-  const leadNAW =
-    demoLeads.find(l => l.objectId === item.objectId) || demoLeads[0];
+  const leadNAW = demoLeads.find(l => l.objectId === item.objectId) || demoLeads[0];
 
-  // Afspraakdata ophalen (voor lead-type items)
-  let appointment = undefined;
-  if (item.objectType === "lead") {
-    // Vind een afspraak die hoort bij deze lead (niet gelukte afspraken: status = "canceled", "rescheduled", "no_show", "failed")
-    // Voor demo gebruiken we statuses canceled, rescheduled, toegevoegd no_show en failed als voorbeeld
-    appointment = mockAppointments.find(
-      a =>
-        a.leadId === item.objectId &&
-        ["canceled", "rescheduled", "no_show", "failed"].includes(a.status)
-    );
-  }
+  // Afspraken ophalen (laatste 3)
+  const appointments = mockAppointments
+    .filter(a => a.leadId === item.objectId)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
 
-  // Kolom layout opbouwen
+  // Gerelateerde documenten ophalen
+  const quotes = mockQuotes.filter(q => q.leadId === item.objectId);
+  const invoices = mockInvoices.filter(i => i.leadId === item.objectId);
+  const workAgreements = mockWorkAgreements.filter(w => w.leadId === item.objectId);
+  
+  // Garanties ophalen
+  const guarantees = demoGuarantees.filter(g => g.objectId === item.objectId);
+
+  // Helper voor document status kleur
+  const getStatusColor = (status: string) => {
+    const colorMap: Record<string, string> = {
+      draft: "bg-gray-100 text-gray-800",
+      sent: "bg-blue-100 text-blue-800",
+      accepted: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800",
+      paid: "bg-green-100 text-green-800",
+      overdue: "bg-orange-100 text-orange-800",
+      completed: "bg-green-100 text-green-800",
+      active: "bg-green-100 text-green-800",
+      expired: "bg-gray-100 text-gray-800",
+    };
+    return colorMap[status.toLowerCase()] || "bg-gray-100 text-gray-800";
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`${modalWidth} rounded-lg p-0 overflow-hidden`}>
-        <div className="bg-slate-50 p-8 pb-4 border-b">
+        <div className="bg-slate-50 p-6 border-b">
           <DialogHeader>
             <div className="flex items-center justify-between mb-2">
               <Badge variant="outline" className={`font-normal bg-blue-100 text-blue-800`}>
@@ -96,79 +151,285 @@ export const PipelineItemModal: React.FC<Props> = ({
             <div className="flex items-start gap-3">
               <User className="h-5 w-5 text-blue-600" />
               <div>
-                <DialogTitle className="text-xl">{leadNAW.name ?? item.name}</DialogTitle>
+                <DialogTitle className="text-xl">{leadNAW.name}</DialogTitle>
                 <DialogDescription className="text-xs mt-1">
                   Laatst bijgewerkt: {(new Date(item.updatedAt)).toLocaleDateString("nl", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit"
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
                   })}
                 </DialogDescription>
               </div>
             </div>
           </DialogHeader>
         </div>
-        {/* 2 kolommen: klant (links), afspraak (rechts) */}
-        <div className="flex flex-col md:flex-row gap-8 p-8 pt-4">
-          {/* Klantdata */}
-          <div className="flex-1 min-w-[260px] max-w-md">
-            <h3 className="text-sm font-semibold mb-2">Klantgegevens</h3>
-            <ul className="space-y-1 text-sm">
-              <li><span className="font-medium">Naam:</span> {leadNAW.name ?? item.name}</li>
-              <li><span className="font-medium">Adres:</span> {leadNAW.address ?? "-"}</li>
-              <li><span className="font-medium">Telefoon:</span> {leadNAW.phone ?? "-"}</li>
-              <li><span className="font-medium">E-mail:</span> {leadNAW.email ?? "-"}</li>
-            </ul>
-          </div>
-          {/* Afspraakdata */}
-          <div className="flex-1 min-w-[260px] flex flex-col">
-            <h3 className="text-sm font-semibold mb-2">Afspraakgegevens</h3>
-            {appointment ? (
-              <div className="space-y-2 text-sm flex-grow">
-                <div>
-                  <span className="font-medium">Datum:</span>{" "}
-                  {appointment.date}{" "}
-                  <span className="ml-1">{appointment.startTime}-{appointment.endTime}</span>
+        
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* LINKER KOLOM */}
+          <div className="space-y-6">
+            {/* Klantinformatie */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <User className="h-5 w-5 text-primary" />
+                  Klantinformatie
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="font-medium">{leadNAW.name}</p>
+                        <p className="text-sm text-muted-foreground">{leadNAW.address}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <a href={`tel:${leadNAW.phone}`} className="text-sm hover:underline">
+                        {leadNAW.phone}
+                      </a>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <a href={`mailto:${leadNAW.email}`} className="text-sm hover:underline">
+                        {leadNAW.email}
+                      </a>
+                    </div>
+                    
+                    <div className="flex items-start gap-3">
+                      <Info className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-sm font-medium">Reden van aanvraag</p>
+                        <p className="text-sm">{leadNAW.requestReason}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Home className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">WOZ Waarde</p>
+                        <p className="text-sm">{formatEuro(leadNAW.wozValue)}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <BadgeEuro className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p className="text-sm font-medium">Geschatte opdrachtwaarde (AI)</p>
+                        <p className="text-sm font-semibold text-green-600">{formatEuro(leadNAW.estimatedProjectValue)}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-medium">Titel:</span> {appointment.title}
-                </div>
-                <div>
-                  <span className="font-medium">Beschrijving:</span>{" "}
-                  <span className="inline-block align-top">{appointment.description}</span>
-                </div>
-                {/* Prijs tonen indien 'klus' of 'geld ophalen' → dummy check */}
-                {(appointment.status === "new_assignment" || appointment.status === "extra_assignment") && (
-                  <div className="flex items-center gap-1">
-                    <DollarSign className="h-4 w-4 text-green-700" /> <span className="font-medium">Prijs:</span> € 750
+              </CardContent>
+            </Card>
+            
+            {/* Locatie kaart */}
+            <LeadLocationMap address={leadNAW.address} />
+            
+            {/* Garanties */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" />
+                  Garanties
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {guarantees.length > 0 ? (
+                  <div className="space-y-4">
+                    {guarantees.map(guarantee => (
+                      <div key={guarantee.id} className="bg-slate-50 rounded-md p-3 border">
+                        <div className="flex justify-between items-start">
+                          <h4 className="font-medium">{guarantee.title}</h4>
+                          <Badge className={getStatusColor(guarantee.status)}>
+                            {guarantee.status === "active" ? "Actief" : "Verlopen"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm mt-1">{guarantee.description}</p>
+                        <div className="text-xs text-muted-foreground mt-2">
+                          Geldig tot: {new Date(guarantee.endDate).toLocaleDateString("nl")}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-muted-foreground italic text-sm">
+                    Geen lopende garanties gevonden voor deze klant.
                   </div>
                 )}
-              </div>
-            ) : (
-              <div className="text-muted-foreground italic text-sm">Geen niet gelukte afspraak gevonden voor deze lead.</div>
-            )}
-            {/* Actieknoppen naast onder afspraakdata */}
-            <div className="flex flex-wrap gap-2 mt-6">
-              <Button onClick={handleCreateQuote} variant="outline" className="min-w-[140px] flex gap-2">
-                <FilePlus className="h-4 w-4" />
-                Maak offerte
-              </Button>
-              <Button onClick={handleCreateInvoice} variant="outline" className="min-w-[140px] flex gap-2">
-                <FileMinus className="h-4 w-4" />
-                Maak factuur
-              </Button>
-              <Button onClick={handleCreateWorkOrder} variant="outline" className="min-w-[140px] flex gap-2">
-                <Shield className="h-4 w-4" />
-                Maak werkopdracht
-              </Button>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* RECHTER KOLOM */}
+          <div className="space-y-6">
+            {/* Afspraken */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  Recente Afspraken
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {appointments.length > 0 ? (
+                  <div className="space-y-4">
+                    {appointments.map(appointment => (
+                      <div key={appointment.id} className="bg-slate-50 rounded-md p-3 border">
+                        <div className="flex justify-between items-start">
+                          <h4 className="font-medium">{appointment.title}</h4>
+                          <Badge variant="outline" className={
+                            appointment.status === "completed" ? "bg-green-100 text-green-800" :
+                            appointment.status === "scheduled" ? "bg-blue-100 text-blue-800" :
+                            appointment.status === "canceled" ? "bg-red-100 text-red-800" :
+                            "bg-orange-100 text-orange-800"
+                          }>
+                            {appointment.status}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                          <Calendar className="h-3 w-3" />
+                          {appointment.date} {appointment.startTime}-{appointment.endTime}
+                        </div>
+                        <p className="text-sm mt-2">{appointment.description}</p>
+                        
+                        {/* Prijs tonen indien 'klus' of 'geld ophalen' */}
+                        {(appointment.status === "new_assignment" || appointment.status === "extra_assignment") && (
+                          <div className="flex items-center gap-1 mt-2 text-sm">
+                            <DollarSign className="h-4 w-4 text-green-600" />
+                            <span className="font-medium text-green-600">Prijs: €750</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-muted-foreground italic text-sm">
+                    Geen recente afspraken gevonden voor deze klant.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Documenten */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-primary" />
+                  Documenten
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="quotes" value={activeDocTab} onValueChange={setActiveDocTab}>
+                  <TabsList className="w-full grid grid-cols-3 mb-4">
+                    <TabsTrigger value="quotes">Offertes ({quotes.length})</TabsTrigger>
+                    <TabsTrigger value="invoices">Facturen ({invoices.length})</TabsTrigger>
+                    <TabsTrigger value="workorders">Werkopdrachten ({workAgreements.length})</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="quotes" className="mt-0">
+                    {quotes.length > 0 ? (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Omschrijving</TableHead>
+                            <TableHead>Bedrag</TableHead>
+                            <TableHead>Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {quotes.map(quote => (
+                            <TableRow key={quote.id}>
+                              <TableCell className="font-medium truncate max-w-[200px]">{quote.description}</TableCell>
+                              <TableCell>{formatEuro(quote.amount)}</TableCell>
+                              <TableCell>
+                                <Badge className={getStatusColor(quote.status)}>{quote.status}</Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    ) : (
+                      <div className="text-muted-foreground italic text-sm">
+                        Geen offertes gevonden voor deze klant.
+                      </div>
+                    )}
+                  </TabsContent>
+                  
+                  <TabsContent value="invoices" className="mt-0">
+                    {invoices.length > 0 ? (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Omschrijving</TableHead>
+                            <TableHead>Bedrag</TableHead>
+                            <TableHead>Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {invoices.map(invoice => (
+                            <TableRow key={invoice.id}>
+                              <TableCell className="font-medium truncate max-w-[200px]">{invoice.description}</TableCell>
+                              <TableCell>{formatEuro(invoice.amount)}</TableCell>
+                              <TableCell>
+                                <Badge className={getStatusColor(invoice.status)}>{invoice.status}</Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    ) : (
+                      <div className="text-muted-foreground italic text-sm">
+                        Geen facturen gevonden voor deze klant.
+                      </div>
+                    )}
+                  </TabsContent>
+                  
+                  <TabsContent value="workorders" className="mt-0">
+                    {workAgreements.length > 0 ? (
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Omschrijving</TableHead>
+                            <TableHead>Bedrag</TableHead>
+                            <TableHead>Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {workAgreements.map(agreement => (
+                            <TableRow key={agreement.id}>
+                              <TableCell className="font-medium truncate max-w-[200px]">{agreement.description}</TableCell>
+                              <TableCell>{formatEuro(agreement.totalAmount)}</TableCell>
+                              <TableCell>
+                                <Badge className={getStatusColor(agreement.status)}>{agreement.status}</Badge>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    ) : (
+                      <div className="text-muted-foreground italic text-sm">
+                        Geen werkopdrachten gevonden voor deze klant.
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
           </div>
         </div>
+        
         <Separator className="my-3" />
-        {/* Standaard acties */}
-        <div className="px-8 pb-8 flex flex-wrap gap-3">
+        
+        {/* Footer acties */}
+        <div className="px-6 pb-6 flex flex-wrap gap-3">
           <Button onClick={onAddNote} variant="outline" className="min-w-[140px] flex gap-2">
             <FileText className="h-4 w-4" />
             Notitie toevoegen
@@ -177,6 +438,34 @@ export const PipelineItemModal: React.FC<Props> = ({
             <Calendar className="h-4 w-4" />
             Afspraak maken
           </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="min-w-[140px] flex gap-2">
+                <FilePlus className="h-4 w-4" />
+                Document maken
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleCreateQuote}>
+                <FilePlus className="h-4 w-4 mr-2" />
+                Maak offerte
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateInvoice}>
+                <FileMinus className="h-4 w-4 mr-2" />
+                Maak factuur
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateWorkOrder}>
+                <Shield className="h-4 w-4 mr-2" />
+                Maak werkopdracht
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleUploadPhotos}>
+                <FileImage className="h-4 w-4 mr-2" />
+                Upload foto's
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
           <Button onClick={onGoToDetail} variant="default" className="min-w-[140px] flex gap-2">
             <Eye className="h-4 w-4" />
             Ga naar details
