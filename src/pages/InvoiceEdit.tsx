@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -92,6 +93,7 @@ const InvoiceEdit = () => {
               />
               <InvoiceSummary 
                 subtotal={totalAmount} 
+                vatRate={calculateAverageVatRate()}
                 discountType={discountType}
                 discountValue={discountValue}
                 onDiscountTypeChange={setDiscountType}
