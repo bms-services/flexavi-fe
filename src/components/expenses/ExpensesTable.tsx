@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -39,13 +38,11 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
   const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
 
   const filteredExpenses = expenses.filter((expense) => {
-    // Apply filters
     if (filters.status && expense.status !== filters.status) return false;
     if (filters.type && expense.type !== filters.type) return false;
     if (filters.projectId && expense.projectId !== filters.projectId) return false;
     if (filters.invoiceId && expense.invoiceId !== filters.invoiceId) return false;
     
-    // Apply date range filter
     if (filters.dateRange && filters.dateRange[0] && filters.dateRange[1]) {
       const expenseDate = new Date(expense.date);
       const fromDate = filters.dateRange[0];
@@ -56,7 +53,6 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
       }
     }
     
-    // Apply search filter
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
       return (
@@ -98,7 +94,6 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
 
   const handleDelete = () => {
     if (expenseToDelete) {
-      // In a real app, here we would call an API to delete the expense
       toast.success("Uitgave verwijderd", {
         description: `${expenseToDelete.description} is verwijderd.`
       });
@@ -113,7 +108,6 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
       description: `Actie uitgevoerd op ${selectedExpenses.length} uitgaven.`
     });
     
-    // Reset selection after action
     setSelectedExpenses([]);
   };
 
@@ -326,3 +320,4 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
       </Dialog>
     </>
   );
+};
