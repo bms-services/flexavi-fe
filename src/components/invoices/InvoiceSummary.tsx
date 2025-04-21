@@ -47,49 +47,51 @@ export const InvoiceSummary: React.FC<InvoiceSummaryProps> = ({
   const total = subtotalAfterDiscount + totalVat;
 
   return (
-    <div className="border-t mt-6 pt-4">
+    <div className="border-t mt-6 pt-5">
       <div className="flex justify-end">
-        <div className="w-full max-w-xs space-y-3">
+        <div className="w-full max-w-sm space-y-3">
           {/* Subtotal */}
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>Subtotaal</span>
-            <span className="font-medium text-gray-900">{formatCurrency(subtotal)}</span>
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-gray-700 font-medium">Subtotaal:</span>
+            <span className="font-semibold text-gray-900">{formatCurrency(subtotal)}</span>
           </div>
           
-          {/* Discount Section */}
-          <DiscountSection
-            subtotal={subtotal}
-            discountType={discountType}
-            discountValue={discountValue}
-            onDiscountTypeChange={onDiscountTypeChange}
-            onDiscountValueChange={onDiscountValueChange}
-            className="mb-2"
-          />
+          {/* Discount Section when editing */}
+          {(onDiscountTypeChange !== undefined && onDiscountValueChange !== undefined) && (
+            <DiscountSection
+              subtotal={subtotal}
+              discountType={discountType}
+              discountValue={discountValue}
+              onDiscountTypeChange={onDiscountTypeChange}
+              onDiscountValueChange={onDiscountValueChange}
+              className="mb-2"
+            />
+          )}
 
           {/* Show discount amount if there is one */}
           {discountAmount > 0 && (
-            <div className="flex justify-between text-sm text-red-600">
-              <span>Korting</span>
-              <span>-{formatCurrency(discountAmount)}</span>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-700 font-medium">Korting:</span>
+              <span className="font-semibold text-red-600">-{formatCurrency(discountAmount)}</span>
             </div>
           )}
 
           {/* Separator before VAT */}
-          <div className="border-t border-gray-200 my-2" />
+          <div className="border-t border-gray-200 my-3" />
 
           {/* Show each VAT rate separately */}
           {Array.from(vatAmounts.entries())
             .sort(([rateA], [rateB]) => rateA - rateB)
             .map(([rate, amount]) => (
-              <div key={rate} className="flex justify-between text-sm text-gray-600">
-                <span>BTW {rate}%</span>
-                <span className="font-medium text-gray-900">{formatCurrency(amount)}</span>
+              <div key={rate} className="flex justify-between items-center text-sm">
+                <span className="text-gray-700 font-medium">{rate}% BTW:</span>
+                <span className="font-semibold text-gray-900">{formatCurrency(amount)}</span>
               </div>
             ))}
 
           {/* Total including VAT */}
-          <div className="flex justify-between font-medium border-t border-gray-200 pt-3 mt-2">
-            <span className="text-gray-900">Totaal (incl. BTW)</span>
+          <div className="flex justify-between items-center border-t border-gray-300 pt-3 mt-3">
+            <span className="text-gray-900 font-medium text-base">Totaal (incl. BTW):</span>
             <span className="text-lg font-bold text-primary">
               {formatCurrency(total)}
             </span>
