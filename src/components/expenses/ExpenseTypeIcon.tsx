@@ -2,8 +2,8 @@
 import React from "react";
 import { 
   Box, FileText, Wrench, Users, 
-  Receipt, ShoppingCart, BriefCase, 
-  DollarSign, Category, CreditCard, Euro 
+  Receipt, ShoppingCart, Briefcase, 
+  DollarSign, Menu, CreditCard, Euro 
 } from "lucide-react";
 import { ExpenseType } from "@/types/expenses";
 
@@ -29,9 +29,9 @@ export const ExpenseTypeIcon: React.FC<ExpenseTypeIconProps> = ({
       case "subcontractor":
         return <Users size={size} className={className} />;
       case "office":
-        return <BriefCase size={size} className={className} />;
+        return <Briefcase size={size} className={className} />;
       case "software":
-        return <Category size={size} className={className} />;
+        return <Menu size={size} className={className} />;
       case "marketing":
         return <Receipt size={size} className={className} />;
       case "training":
