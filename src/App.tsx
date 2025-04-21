@@ -16,7 +16,6 @@ import WorkAgreements from "./pages/WorkAgreements";
 import WorkAgreementEdit from "./pages/WorkAgreementEdit";
 import Invoices from "./pages/Invoices";
 import InvoiceEdit from "./pages/InvoiceEdit";
-import InvoicesMain from "./pages/InvoicesMain";
 import Products from "./pages/Products";
 import Partners from "./pages/Partners";
 import Settings from "./pages/Settings";
@@ -58,10 +57,8 @@ function App() {
         <Route path="/quotes/edit/:id" element={<QuoteEdit />} />
         <Route path="/workagreements" element={<WorkAgreements />} />
         <Route path="/workagreements/create" element={<WorkAgreementEdit />} />
-        <Route path="/workagreements/:id" element={<WorkAgreementEdit />} />
-        <Route path="/invoices" element={<InvoicesMain />}>
-          <Route index element={<Invoices />} />
-        </Route>
+        <Route path="/workagreements/edit/:id" element={<WorkAgreementEdit />} />
+        <Route path="/invoices" element={<Invoices />} />
         <Route path="/invoices/create" element={<InvoiceEdit />} />
         <Route path="/invoices/edit/:id" element={<InvoiceEdit />} />
         <Route path="/expenses" element={<Expenses />} />

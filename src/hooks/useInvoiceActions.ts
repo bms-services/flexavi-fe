@@ -60,7 +60,7 @@ export const useInvoiceActions = () => {
       });
       
       setTimeout(() => {
-        navigate("/invoices/create?creditFor=" + selectedInvoice.id);
+        navigate(`/invoices/create?creditFor=${selectedInvoice.id}`);
       }, 500);
     }
     
