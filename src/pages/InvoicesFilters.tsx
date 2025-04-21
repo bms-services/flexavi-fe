@@ -41,14 +41,14 @@ export const InvoicesFilters: React.FC<InvoicesFiltersProps> = ({
         <Filter size={16} /> Filters:
       </span>
       <Select
-        value={filters.status || ""}
+        value={filters.status || "all"}
         onValueChange={(val) => onChange("status", val)}
       >
         <SelectTrigger className="w-[130px]">
           <SelectValue placeholder="Alle statussen" />
         </SelectTrigger>
         <SelectContent className="z-50">
-          <SelectItem value="">Alle statussen</SelectItem>
+          <SelectItem value="all">Alle statussen</SelectItem>
           {statusOptions.map(opt => (
             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
           ))}
@@ -112,4 +112,3 @@ export const InvoicesFilters: React.FC<InvoicesFiltersProps> = ({
     </div>
   </>
 );
-

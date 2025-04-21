@@ -33,7 +33,7 @@ const InvoicesMain = () => {
     createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
     expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
     searchTerm: "",
-    status: "",
+    status: "all",
   });
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
