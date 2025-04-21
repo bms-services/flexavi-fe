@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -46,7 +45,6 @@ const itemsPerPageOptions = [10, 25, 100];
 const Invoices = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  // Voeg filters toe zoals bij offertes
   const [filters, setFilters] = useState({
     createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
     expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
@@ -60,7 +58,6 @@ const Invoices = () => {
     return lead ? lead.name : "Onbekend";
   };
 
-  // Filtering en sorteren, vergelijkbaar met offertes
   const filteredInvoices = useMemo(() => {
     return mockInvoices.filter((invoice) => {
       const createdAt = new Date(invoice.createdAt);
@@ -111,7 +108,6 @@ const Invoices = () => {
   };
 
   const handleDeleteInvoice = (invoice: Invoice) => {
-    // In een echte applicatie zou dit een delete request doen
     console.log("Delete invoice:", invoice);
   };
 
@@ -202,7 +198,6 @@ const Invoices = () => {
                   <TableHead>Vervaldatum</TableHead>
                   <TableHead>Bedrag</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Klantportaal</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -257,16 +252,6 @@ const Invoices = () => {
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleViewCustomerDashboard(invoice.leadId)}
-                          title="Bekijk klantportaal"
-                        >
-                          <Users className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -280,4 +265,3 @@ const Invoices = () => {
 };
 
 export default Invoices;
-
