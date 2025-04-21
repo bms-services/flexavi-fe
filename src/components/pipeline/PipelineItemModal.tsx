@@ -3,9 +3,15 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Eye, Clock, User, Phone, Mail, MapPin, FilePlus, FileMinus, Shield } from "lucide-react";
+import { Calendar, FileText, Eye, User, FilePlus, FileMinus, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+
+// Info cards:
+import { LeadInfoCard } from "./item-modal/LeadInfoCard";
+import { QuoteInfoCard } from "./item-modal/QuoteInfoCard";
+import { InvoiceInfoCard } from "./item-modal/InvoiceInfoCard";
+import { ProjectInfoCard } from "./item-modal/ProjectInfoCard";
 
 interface Props {
   open: boolean;
@@ -86,6 +92,22 @@ export const PipelineItemModal: React.FC<Props> = ({
     }
   };
 
+  // Choose which info card to render
+  const renderInfoCard = () => {
+    switch (item.objectType) {
+      case "lead":
+        return <LeadInfoCard />;
+      case "quote":
+        return <QuoteInfoCard item={item} />;
+      case "invoice":
+        return <InvoiceInfoCard item={item} />;
+      case "project":
+        return <ProjectInfoCard item={item} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md w-full rounded-lg p-0 overflow-hidden">
@@ -115,73 +137,7 @@ export const PipelineItemModal: React.FC<Props> = ({
           <h3 className="text-sm font-medium mb-3">{getTypeHeading()}</h3>
           
           <div className="space-y-3 mb-6">
-            {item.objectType === "lead" && (
-              <>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span>06-12345678</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <span>contact@voorbeeld.nl</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>Amsterdam, Nederland</span>
-                </div>
-              </>
-            )}
-            
-            {item.objectType === "quote" && (
-              <>
-                <div className="flex items-center gap-2 text-sm">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span>Klant: {item.name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <FilePlus className="h-4 w-4 text-muted-foreground" />
-                  <span>Offerte #OFR-{Math.floor(Math.random() * 1000)}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Verstuurd op: {formatDate(item.createdAt)}</span>
-                </div>
-              </>
-            )}
-            
-            {item.objectType === "invoice" && (
-              <>
-                <div className="flex items-center gap-2 text-sm">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span>Klant: {item.name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <FileMinus className="h-4 w-4 text-muted-foreground" />
-                  <span>Factuur #INV-{Math.floor(Math.random() * 1000)}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Betaaltermijn: {formatDate(new Date(new Date(item.createdAt).getTime() + 14 * 24 * 60 * 60 * 1000).toISOString())}</span>
-                </div>
-              </>
-            )}
-            
-            {item.objectType === "project" && (
-              <>
-                <div className="flex items-center gap-2 text-sm">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span>Klant: {item.name}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                  <span>Garantie: Dakwerk</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Project datum: {formatDate(item.createdAt)}</span>
-                </div>
-              </>
-            )}
+            {renderInfoCard()}
           </div>
           
           <Separator className="my-4" />
