@@ -6,7 +6,7 @@ import { PipelineItemCard } from "./PipelineItemCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ColorPopover } from "./ColorPopover";
 import { StageMailSettingsModal } from "./StageMailSettingsModal";
-import { settings } from "lucide-react";
+import { Settings } from "lucide-react";
 
 // Props blijven hetzelfde
 interface PipelineStageProps {
@@ -66,7 +66,7 @@ Jouw team`
             title="Instellingen e-mail na slepen"
             onClick={() => setMailSettingsOpen(true)}
           >
-            <settings size={20} className="text-muted-foreground" />
+            <Settings size={20} className="text-muted-foreground" />
             <span className="sr-only">Instellingen e-mail</span>
           </button>
         )}
