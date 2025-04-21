@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -18,12 +19,14 @@ import { mockReviews } from "@/data/mockReviews";
 import { mockProjects } from "@/data/mockProjects";
 import { ProjectsKPIs } from "@/components/projects/ProjectsKPIs";
 import { RecentReviewsWidget } from "@/components/reputation/widgets/RecentReviewsWidget";
+import { useReputationManagement } from "@/hooks/useReputationManagement";
 
 const Dashboard = () => {
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
+  const reputation = useReputationManagement();
 
   const activeEmployees = mockEmployees.filter(emp => emp.active).length;
   const latestReviews = mockReviews.slice(0, 5);
@@ -137,7 +140,10 @@ const Dashboard = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <RecentReviewsWidget reviews={latestReviews} />
+              <RecentReviewsWidget 
+                reviews={latestReviews} 
+                onUpdateStatus={reputation.updateReviewStatus}
+              />
             </CardContent>
           </Card>
         </div>
