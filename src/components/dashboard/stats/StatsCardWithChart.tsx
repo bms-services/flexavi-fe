@@ -46,7 +46,7 @@ export const StatsCardWithChart = ({
         <div className="space-y-3">
           <div>
             <div className="text-xl font-bold">{value}</div>
-            {change && (
+            {change !== undefined && (
               <div className={cn(
                 "text-xs",
                 change > 0 ? "text-emerald-500" : "text-red-500"
