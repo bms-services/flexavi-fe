@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Employee } from "@/types/employee-management";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Calendar } from "lucide-react";
+import { Edit, Trash2, Calendar, Plus, CalendarDays } from "lucide-react";
 import { useEmployeeDialog } from "./useEmployeeDialog";
 import { EmployeeDialog } from "./EmployeeDialog";
 import { useNavigate } from "react-router-dom";
