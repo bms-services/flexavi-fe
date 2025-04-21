@@ -84,6 +84,7 @@ export type QuoteLineItem = {
   pricePerUnit: number;
   total: number;
   vatRate?: number; // Added VAT rate property as optional
+  detailedDescription?: string; // Added detailed description field
 };
 
 export type Quote = {

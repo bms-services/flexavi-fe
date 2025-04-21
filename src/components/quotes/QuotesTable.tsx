@@ -48,6 +48,9 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({
         ) : (
           quotes.map((quote) => {
             const statusConfig = useQuoteStatusBadge(quote.status);
+            const isAccepted = quote.status === "accepted";
+            const isDraft = quote.status === "draft";
+            
             return (
               <TableRow key={quote.id}>
                 <TableCell>
@@ -63,6 +66,8 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(quote)}
+                      disabled={isAccepted}
+                      title={isAccepted ? "Geaccepteerde offertes kunnen niet bewerkt worden" : "Bewerk offerte"}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -70,6 +75,8 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({
                       variant="ghost"
                       size="icon"
                       onClick={() => onDelete(quote)}
+                      disabled={!isDraft}
+                      title={!isDraft ? "Alleen concepten kunnen verwijderd worden" : "Verwijder offerte"}
                     >
                       <Trash className="h-4 w-4" />
                     </Button>

@@ -1,14 +1,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { mockQuotes } from "@/data/mockQuotes";
-import { mockLeads } from "@/data/mockLeads";
+import { mockQuotes } from "@/data/mockData";
+import { mockLeads } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 import { QuotePortalLoading } from "@/components/customer-portal/quote/QuotePortalLoading";
 import { QuotePortalNotFound } from "@/components/customer-portal/quote/QuotePortalNotFound";
 import { QuotePortalContent } from "@/components/customer-portal/quote/QuotePortalContent";
 import { FloatingActions } from "@/components/customer-portal/quote/FloatingActions";
 import { QuoteRevisionDialog } from "@/components/customer-portal/quote/QuoteRevisionDialog";
+import { AcceptQuoteDialog } from "@/components/customer-portal/quote/AcceptQuoteDialog";
+import { RejectQuoteDialog } from "@/components/customer-portal/quote/RejectQuoteDialog";
 
 const CustomerPortalQuote = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,8 @@ const CustomerPortalQuote = () => {
   const [customer, setCustomer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [revisionDialogOpen, setRevisionDialogOpen] = useState(false);
+  const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [revisionComment, setRevisionComment] = useState("");
 
   useEffect(() => {
@@ -50,10 +54,18 @@ const CustomerPortalQuote = () => {
   ];
 
   const handleAccept = () => {
+    setAcceptDialogOpen(true);
+  };
+
+  const handleAcceptWithSignature = (signatureData: string) => {
+    console.log("Quote accepted with signature:", signatureData);
+    
     toast({
       title: "Offerte geaccepteerd",
-      description: "We nemen zo spoedig mogelijk contact met u op.",
+      description: "Bedankt voor uw acceptatie. We nemen zo spoedig mogelijk contact met u op.",
     });
+    
+    // In a real app, we would update the quote status in the database here
   };
 
   const handleRevisionRequest = () => {
@@ -62,18 +74,30 @@ const CustomerPortalQuote = () => {
 
   const handleRevisionSubmit = () => {
     setRevisionDialogOpen(false);
+    console.log("Revision requested with comment:", revisionComment);
     setRevisionComment("");
+    
     toast({
       title: "Revisie verzoek verzonden",
       description: "We nemen zo spoedig mogelijk contact met u op.",
     });
+    
+    // In a real app, we would update the quote status in the database here
   };
 
   const handleReject = () => {
+    setRejectDialogOpen(true);
+  };
+  
+  const handleRejectWithReason = (reason: string) => {
+    console.log("Quote rejected with reason:", reason);
+    
     toast({
       title: "Offerte geweigerd",
-      description: "We nemen zo spoedig mogelijk contact met u op.",
+      description: "Bedankt voor uw feedback. We nemen zo spoedig mogelijk contact met u op.",
     });
+    
+    // In a real app, we would update the quote status in the database here
   };
 
   if (loading) {
@@ -107,6 +131,18 @@ const CustomerPortalQuote = () => {
         revisionComment={revisionComment}
         onRevisionCommentChange={setRevisionComment}
         onSubmit={handleRevisionSubmit}
+      />
+      
+      <AcceptQuoteDialog
+        open={acceptDialogOpen}
+        onOpenChange={setAcceptDialogOpen}
+        onAcceptWithSignature={handleAcceptWithSignature}
+      />
+      
+      <RejectQuoteDialog
+        open={rejectDialogOpen}
+        onOpenChange={setRejectDialogOpen}
+        onReject={handleRejectWithReason}
       />
     </div>
   );

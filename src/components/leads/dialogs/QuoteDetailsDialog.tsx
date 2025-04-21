@@ -16,6 +16,7 @@ import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { QuoteStats } from "@/components/quotes/QuoteStats";
 
 interface QuoteDetailsDialogProps {
   quote: Quote;
@@ -69,6 +70,14 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
             </div>
 
             <Separator />
+            
+            {/* Bekijk statistieken */}
+            <div>
+              <h3 className="font-semibold mb-3">Statistieken</h3>
+              <QuoteStats quoteId={quote.id} />
+            </div>
+            
+            <Separator />
 
             {/* Werk specificatie */}
             <div>
@@ -88,7 +97,14 @@ export const QuoteDetailsDialog: React.FC<QuoteDetailsDialogProps> = ({
                     <TableBody>
                       {lineItems.map((item) => (
                         <TableRow key={item.id}>
-                          <TableCell className="align-top">{item.description}</TableCell>
+                          <TableCell className="align-top">
+                            <div>
+                              <p>{item.description}</p>
+                              {item.detailedDescription && (
+                                <p className="text-xs text-muted-foreground mt-1">{item.detailedDescription}</p>
+                              )}
+                            </div>
+                          </TableCell>
                           <TableCell className="text-right">{item.quantity}</TableCell>
                           <TableCell className="text-right">{item.unit}</TableCell>
                           <TableCell className="text-right">{formatCurrency(item.pricePerUnit)}</TableCell>
