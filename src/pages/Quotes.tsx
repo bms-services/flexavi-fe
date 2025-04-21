@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -57,12 +56,10 @@ const Quotes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Filter state
+  // Filter state (gecombineerde datumbereiken)
   const [filters, setFilters] = useState({
-    createdFrom: undefined as Date | undefined,
-    createdTo: undefined as Date | undefined,
-    expireFrom: undefined as Date | undefined,
-    expireTo: undefined as Date | undefined,
+    createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
+    expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
     quoteNumber: "",
     klant: "",
     minBedrag: "",
@@ -76,19 +73,21 @@ const Quotes = () => {
   // Filter
   const filteredQuotes = useMemo(() => {
     return mockQuotes.filter((quote) => {
-      // Created date
+      // Aangemaakt datum range filter
       const createdAt = new Date(quote.createdAt);
-      if (filters.createdFrom && createdAt < filters.createdFrom) return false;
-      if (filters.createdTo && createdAt > filters.createdTo) return false;
+      const [createdFrom, createdTo] = filters.createdRange;
+      if (createdFrom && createdAt < createdFrom) return false;
+      if (createdTo && createdAt > createdTo) return false;
 
-      // Expiration date (vervaldatum)
-      if (filters.expireFrom || filters.expireTo) {
+      // Expiratiedatum range filter (plannedStartDate)
+      const [expireFrom, expireTo] = filters.expireRange;
+      if (expireFrom || expireTo) {
         const hasPlanned = !!quote.plannedStartDate;
-        if (filters.expireFrom && (!hasPlanned || new Date(quote.plannedStartDate!) < filters.expireFrom)) return false;
-        if (filters.expireTo && (!hasPlanned || new Date(quote.plannedStartDate!) > filters.expireTo)) return false;
+        if (expireFrom && (!hasPlanned || new Date(quote.plannedStartDate!) < expireFrom)) return false;
+        if (expireTo && (!hasPlanned || new Date(quote.plannedStartDate!) > expireTo)) return false;
       }
 
-      // Quote Number
+      // Quote nummer zoeken (vrij veld)
       if (filters.quoteNumber && !quote.id.replace("quote-", "OF-").toLowerCase().includes(filters.quoteNumber.toLowerCase())) return false;
 
       // Klant
@@ -99,7 +98,7 @@ const Quotes = () => {
       if (filters.maxBedrag && quote.amount > Number(filters.maxBedrag)) return false;
 
       // Status
-      if (filters.status && quote.status !== filters.status) return false;
+      if (filters.status && filters.status !== "all" && quote.status !== filters.status) return false;
 
       // Losse zoekterm (op description, klant, nummer)
       if (filters.searchTerm) {
@@ -133,6 +132,59 @@ const Quotes = () => {
   const handleViewQuote = (quote: Quote) => navigate(`/portal/quote/${quote.id}`);
   const handleEditQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
   const handleDeleteQuote = (quote: Quote) => console.log("Delete quote:", quote);
+
+  // Eigen datumrange picker component (simple, binnen Quotes zelf)
+  function DateRangeFilter({
+    value,
+    onChange,
+    label,
+  }: {
+    value: [Date | undefined, Date | undefined];
+    onChange: (range: [Date | undefined, Date | undefined]) => void;
+    label: string;
+  }) {
+    return (
+      <div className="flex flex-col gap-1 min-w-[220px] w-full md:w-auto">
+        <label className="text-xs font-medium text-muted-foreground">{label}</label>
+        <div className="flex gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="justify-start w-full md:w-[110px]">
+                {value[0] ? format(value[0], "dd-MM-yyyy") : <span>Vanaf</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 z-50" align="start">
+              <Calendar
+                mode="single"
+                selected={value[0]}
+                onSelect={(date) => onChange([date, value[1]])}
+                className="p-3 pointer-events-auto"
+                initialFocus
+                disabled={(date) => value[1] ? date > value[1] : false}
+              />
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="justify-start w-full md:w-[110px]">
+                {value[1] ? format(value[1], "dd-MM-yyyy") : <span>Tot</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 z-50" align="start">
+              <Calendar
+                mode="single"
+                selected={value[1]}
+                onSelect={(date) => onChange([value[0], date])}
+                className="p-3 pointer-events-auto"
+                initialFocus
+                disabled={(date) => value[0] ? date < value[0] : false}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Layout>
@@ -169,92 +221,25 @@ const Quotes = () => {
             </div>
           </CardHeader>
           <CardContent>
-            {/* Filterbalk */}
+            {/* Filterbalk, vernieuwd */}
             <div className="bg-muted/40 rounded-lg p-3 flex flex-col md:flex-row md:items-end gap-3 mb-4 overflow-x-auto">
-              <div className="flex flex-col gap-1 min-w-[130px] w-full md:w-auto">
-                <label className="text-xs font-medium text-muted-foreground">Aangemaakt van</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {filters.createdFrom ? format(filters.createdFrom, "dd-MM-yyyy") : <span>Selecteer</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={filters.createdFrom}
-                      onSelect={(date) => handleChangeFilter("createdFrom", date)}
-                      className="p-3 pointer-events-auto"
-                      initialFocus
-                      disabled={(date) => (filters.createdTo ? date > filters.createdTo : false)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col gap-1 min-w-[130px] w-full md:w-auto">
-                <label className="text-xs font-medium text-muted-foreground">Aangemaakt tot</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {filters.createdTo ? format(filters.createdTo, "dd-MM-yyyy") : <span>Selecteer</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={filters.createdTo}
-                      onSelect={(date) => handleChangeFilter("createdTo", date)}
-                      className="p-3 pointer-events-auto"
-                      initialFocus
-                      disabled={(date) => (filters.createdFrom ? date < filters.createdFrom : false)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col gap-1 min-w-[130px] w-full md:w-auto">
-                <label className="text-xs font-medium text-muted-foreground">Vervaldatum van</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {filters.expireFrom ? format(filters.expireFrom, "dd-MM-yyyy") : <span>Selecteer</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={filters.expireFrom}
-                      onSelect={(date) => handleChangeFilter("expireFrom", date)}
-                      className="p-3 pointer-events-auto"
-                      initialFocus
-                      disabled={(date) => (filters.expireTo ? date > filters.expireTo : false)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col gap-1 min-w-[130px] w-full md:w-auto">
-                <label className="text-xs font-medium text-muted-foreground">Vervaldatum tot</label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {filters.expireTo ? format(filters.expireTo, "dd-MM-yyyy") : <span>Selecteer</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={filters.expireTo}
-                      onSelect={(date) => handleChangeFilter("expireTo", date)}
-                      className="p-3 pointer-events-auto"
-                      initialFocus
-                      disabled={(date) => (filters.expireFrom ? date < filters.expireFrom : false)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="flex flex-col gap-1 min-w-[120px] w-full md:w-auto">
+              {/* Aangemaakt datum-bereik */}
+              <DateRangeFilter
+                value={filters.createdRange}
+                onChange={(range) => handleChangeFilter("createdRange", range)}
+                label="Aangemaakt van/tot"
+              />
+              {/* Vervaldatum datum-bereik */}
+              <DateRangeFilter
+                value={filters.expireRange}
+                onChange={(range) => handleChangeFilter("expireRange", range)}
+                label="Vervaldatum van/tot"
+              />
+              {/* Offertenummer, nu vrij tekstveld */}
+              <div className="flex flex-col gap-1 min-w-[140px] w-full md:w-auto">
                 <label className="text-xs font-medium text-muted-foreground">Offertenummer</label>
                 <Input
-                  placeholder="Bijv. OF-123"
+                  placeholder="Zoek op nummer"
                   value={filters.quoteNumber}
                   onChange={(e) => handleChangeFilter("quoteNumber", e.target.value)}
                 />
