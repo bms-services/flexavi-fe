@@ -9,7 +9,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { format } from "date-fns";
+import { format, addDays, subDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Filter, FileText, Upload, Calendar, CalendarPlus, Info } from "lucide-react";
@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { LeadInfoCard } from "./LeadInfoCard";
 import { mockLeads } from "@/data/mockLeads";
+import { Badge } from "@/components/ui/badge";
 
 interface DayTab {
   label: string;
