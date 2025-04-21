@@ -11,6 +11,7 @@ import { QuotesFilterBar } from "@/components/quotes/QuotesFilterBar";
 import { QuotesTable } from "@/components/quotes/QuotesTable";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/utils/format";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 const getLeadName = (leadId: string) => {
   const lead = mockLeads.find((l) => l.id === leadId);
