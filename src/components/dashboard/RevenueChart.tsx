@@ -12,12 +12,15 @@ import {
 import { mockInvoices } from "@/data/mockData";
 import { format, parseISO, subMonths } from "date-fns";
 import { nl } from "date-fns/locale";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface RevenueChartProps {
   timeRange: string;
 }
 
 export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
+  const isMobile = useIsMobile();
+  
   // Generate sample data based on invoices
   const generateChartData = () => {
     const now = new Date();
@@ -67,9 +70,17 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   };
 
   return (
-    <div className="w-full h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+    <div className="w-full h-full">
+      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+        <LineChart 
+          data={data} 
+          margin={{ 
+            top: 10, 
+            right: isMobile ? 10 : 30, 
+            left: isMobile ? 0 : 10, 
+            bottom: 10 
+          }}
+        >
           <CartesianGrid 
             strokeDasharray="3 3" 
             vertical={false} 
@@ -79,8 +90,9 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
             dataKey="month" 
             axisLine={false} 
             tickLine={false}
-            tick={{ fontSize: 12 }}
-            label={{
+            tick={{ fontSize: isMobile ? 10 : 12 }}
+            interval={isMobile ? 1 : 0}
+            label={isMobile ? undefined : {
               value: 'Maanden',
               position: 'insideBottom',
               offset: -10,
@@ -91,9 +103,10 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
           <YAxis 
             axisLine={false} 
             tickLine={false} 
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: isMobile ? 10 : 12 }}
             tickFormatter={formatYAxis}
-            label={{
+            width={isMobile ? 40 : 60}
+            label={isMobile ? undefined : {
               value: 'Omzet (EUR)',
               angle: -90,
               position: 'insideLeft',
@@ -117,7 +130,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
             dataKey="revenue" 
             stroke="#0c97e8" 
             strokeWidth={3}
-            dot={{ strokeWidth: 3, r: 4, fill: "white" }}
+            dot={isMobile ? false : { strokeWidth: 3, r: 4, fill: "white" }}
             activeDot={{ r: 6, fill: "#0c97e8" }}
             name="Omzet"
           />
@@ -135,4 +148,3 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
     </div>
   );
 };
-

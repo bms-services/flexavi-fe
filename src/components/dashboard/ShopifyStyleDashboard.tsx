@@ -43,7 +43,7 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
   const { totalQuoteAmount } = calculateQuoteMetrics(mockQuotes);
 
   return (
-    <div className="space-y-4 sm:space-y-6 max-w-full">
+    <div className="space-y-4 max-w-full pb-4">
       {/* Top row - Summary metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <SalesMetrics totalAmount={totalInvoiceAmount} formatCurrency={formatCurrency} />

@@ -33,17 +33,17 @@ export const StatsCardWithChart = ({
   const isMobile = useIsMobile();
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <Card className="h-full flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 flex-shrink-0">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {viewReportLink && (
-          <a href={viewReportLink} className="text-xs text-primary hover:underline">
+          <a href={viewReportLink} className="text-xs text-primary hover:underline whitespace-nowrap">
             Bekijk rapport
           </a>
         )}
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+      <CardContent className="flex-1 flex flex-col pb-4">
+        <div className="space-y-3 h-full flex flex-col">
           <div>
             <div className="text-xl font-bold">{value}</div>
             {change !== undefined && (
@@ -72,8 +72,8 @@ export const StatsCardWithChart = ({
 
           {chart && (
             <div className={cn(
-              "mt-3",
-              isMobile ? "-mx-4" : "mx-0"
+              "mt-3 w-full flex-1 min-h-[120px] flex items-center justify-center overflow-hidden",
+              isMobile ? "-mx-2 px-2" : "mx-0"
             )}>
               {chart}
             </div>

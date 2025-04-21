@@ -12,29 +12,33 @@ interface DashboardChartsProps {
 
 export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) => {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-2">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Card className="lg:col-span-2 h-[350px] flex flex-col">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <div>
-            <CardTitle>Omzet overzicht</CardTitle>
-            <CardDescription>Omzet per maand gebaseerd op facturen</CardDescription>
+            <CardTitle className="text-base">Omzet overzicht</CardTitle>
+            <CardDescription className="text-xs">Omzet per maand gebaseerd op facturen</CardDescription>
           </div>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
             <RefreshCw className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent>
-          <RevenueChart timeRange={timeRange} />
+        <CardContent className="flex-1 pb-2">
+          <div className="w-full h-full">
+            <RevenueChart timeRange={timeRange} />
+          </div>
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Lead conversie</CardTitle>
-          <CardDescription>Van lead naar betaalde factuur</CardDescription>
+      <Card className="h-[350px] flex flex-col">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Lead conversie</CardTitle>
+          <CardDescription className="text-xs">Van lead naar betaalde factuur</CardDescription>
         </CardHeader>
-        <CardContent>
-          <LeadConversionRate timeRange={timeRange} />
+        <CardContent className="flex-1 pb-2">
+          <div className="w-full h-full">
+            <LeadConversionRate timeRange={timeRange} />
+          </div>
         </CardContent>
       </Card>
     </div>
