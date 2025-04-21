@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { mockInvoices } from "@/data/mockData";
 import { mockLeads } from "@/data/mockLeads";
 import { Invoice } from "@/types";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
 import { InvoicesTable } from "@/components/invoices/InvoicesTable";
 import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
@@ -39,6 +38,7 @@ const InvoicesMain = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getLeadName = (leadId: string) => {
     const lead = mockLeads.find((l) => l.id === leadId);
@@ -158,6 +158,30 @@ const InvoicesMain = () => {
     setSelectedInvoice(null);
   };
 
+  // Depending on pathname, render either the main content or filters
+  const renderContent = () => {
+    // Check if we're on the filters route
+    if (location.pathname.includes("/filter")) {
+      return (
+        <InvoicesFilters
+          filters={filters}
+          onChange={handleChangeFilter}
+          totalValue={filteredInvoices.reduce((sum, q) => sum + q.amount, 0)}
+          itemsPerPage={itemsPerPage}
+          setItemsPerPage={setItemsPerPage}
+          itemsPerPageOptions={itemsPerPageOptions}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+          filteredInvoices={filteredInvoices}
+        />
+      );
+    }
+
+    // Otherwise use Outlet to render child routes
+    return <Outlet />;
+  };
+
   return (
     <Layout>
       <div className="container py-6 space-y-6">
@@ -182,26 +206,31 @@ const InvoicesMain = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <InvoicesFilters
-              filters={filters}
-              onChange={handleChangeFilter}
-              totalValue={filteredInvoices.reduce((sum, q) => sum + q.amount, 0)}
-              itemsPerPage={itemsPerPage}
-              setItemsPerPage={setItemsPerPage}
-              itemsPerPageOptions={itemsPerPageOptions}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-              filteredInvoices={filteredInvoices}
-            />
-            <InvoicesTable
-              invoices={pageInvoices}
-              getLeadName={getLeadName}
-              onView={handleViewInvoice}
-              onEdit={handleEditInvoice}
-              onDelete={handleDeleteInvoice}
-              onCredit={handleCreditInvoice}
-            />
+            {renderContent()}
+            {!location.pathname.includes("/filter") && (
+              <>
+                <InvoicesFilters
+                  filters={filters}
+                  onChange={handleChangeFilter}
+                  totalValue={filteredInvoices.reduce((sum, q) => sum + q.amount, 0)}
+                  itemsPerPage={itemsPerPage}
+                  setItemsPerPage={setItemsPerPage}
+                  itemsPerPageOptions={itemsPerPageOptions}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                  filteredInvoices={filteredInvoices}
+                />
+                <InvoicesTable
+                  invoices={pageInvoices}
+                  getLeadName={getLeadName}
+                  onView={handleViewInvoice}
+                  onEdit={handleEditInvoice}
+                  onDelete={handleDeleteInvoice}
+                  onCredit={handleCreditInvoice}
+                />
+              </>
+            )}
           </CardContent>
         </Card>
       </div>

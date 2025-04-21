@@ -17,7 +17,7 @@ import WorkAgreementEdit from "./pages/WorkAgreementEdit";
 import Invoices from "./pages/Invoices";
 import InvoiceEdit from "./pages/InvoiceEdit";
 import InvoicesMain from "./pages/InvoicesMain";
-import { InvoicesFilters } from "./pages/InvoicesFilters";
+// We don't need to import InvoicesFilters here anymore as it will be managed by InvoicesMain
 import Products from "./pages/Products";
 import Partners from "./pages/Partners";
 import Settings from "./pages/Settings";
@@ -58,7 +58,7 @@ function App() {
         <Route path="/workagreements/:id" element={<WorkAgreementEdit />} />
         <Route path="/invoices" element={<InvoicesMain />}>
           <Route index element={<Invoices />} />
-          <Route path="filter" element={<InvoicesFilters />} />
+          {/* Removed the direct route to InvoicesFilters as it's now handled by InvoicesMain */}
         </Route>
         <Route path="/invoices/new" element={<InvoiceEdit />} />
         <Route path="/invoices/:id" element={<InvoiceEdit />} />
