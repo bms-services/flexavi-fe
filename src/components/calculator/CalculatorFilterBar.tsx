@@ -41,7 +41,7 @@ export const CalculatorFilterBar: React.FC<CalculatorFilterBarProps> = ({
           <SelectValue placeholder="Type dak..." />
         </SelectTrigger>
         <SelectContent className="z-50">
-          <SelectItem value="">Alle typen</SelectItem>
+          <SelectItem value="all">Alle typen</SelectItem>
           <SelectItem value="plat">Plat dak</SelectItem>
           <SelectItem value="schuin">Schuin dak</SelectItem>
           <SelectItem value="anders">Anders</SelectItem>

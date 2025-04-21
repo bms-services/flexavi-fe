@@ -24,7 +24,7 @@ const CalculatorPage = () => {
   const [calculators, setCalculators] = useState<Calculator[]>(mockCalculators);
   const [filters, setFilters] = useState<CalculatorFilterValues>({
     search: "",
-    roofType: "",
+    roofType: "all",
     minArea: "",
     maxArea: "",
   });
@@ -38,7 +38,7 @@ const CalculatorPage = () => {
       calc.description.toLowerCase().includes(filters.search.toLowerCase());
 
     const matchesType =
-      !filters.roofType ||
+      filters.roofType === "all" ||
       calc.roofParams.roofType === filters.roofType;
 
     const minArea = filters.minArea === "" ? 0 : parseFloat(filters.minArea);
@@ -68,7 +68,7 @@ const CalculatorPage = () => {
   };
 
   const handleFilterReset = () => {
-    setFilters({ search: "", roofType: "", minArea: "", maxArea: "" });
+    setFilters({ search: "", roofType: "all", minArea: "", maxArea: "" });
   };
 
   const handleSearch = () => {
