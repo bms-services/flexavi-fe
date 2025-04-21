@@ -1,4 +1,6 @@
 
+import { QuoteLineItem, Discount } from './quotes';
+
 export type Invoice = {
   id: string;
   leadId: string;

@@ -1,10 +1,6 @@
 
-export type WorkEnvironment = {
-  id: string;
-  name: string;
-  region: string;
-  color: string;
-};
+import { QuoteLineItem } from './quotes';
+import { WorkEnvironment } from './appointments';
 
 export type PaymentMethod = "bank" | "cash" | "both";
 

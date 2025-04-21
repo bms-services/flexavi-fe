@@ -1,4 +1,9 @@
 
+import { Appointment } from './appointments';
+import { Quote } from './quotes';
+import { Invoice } from './invoices';
+import { WorkAgreement } from './work-agreements';
+
 export type Lead = {
   id: string;
   name: string;

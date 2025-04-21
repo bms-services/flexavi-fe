@@ -39,3 +39,20 @@ export type Team = {
   members: string[];
   color: string;
 };
+
+// Add the TeamDetails type that was missing
+export type TeamDetails = {
+  id: string;
+  name: string;
+  type: TeamType;
+  environmentId?: string;
+  color: string;
+  members?: string[];
+};
+
+export type WorkEnvironment = {
+  id: string;
+  name: string;
+  region: string;
+  color: string;
+};
