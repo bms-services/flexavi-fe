@@ -20,6 +20,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 import { nl } from "date-fns/locale";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface RecentLeadsProps {
   leads: Lead[];
@@ -41,6 +43,8 @@ const getStatusBadge = (status: Lead["status"]) => {
 };
 
 export const RecentLeads: React.FC<RecentLeadsProps> = ({ leads }) => {
+  const isMobile = useIsMobile();
+
   return (
     <Card>
       <CardHeader>
@@ -55,38 +59,42 @@ export const RecentLeads: React.FC<RecentLeadsProps> = ({ leads }) => {
             Geen recente leads gevonden.
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Naam</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Bron</TableHead>
-                <TableHead>Toegevoegd</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {leads.map((lead) => (
-                <TableRow key={lead.id}>
-                  <TableCell>
-                    <Link
-                      to={`/leads/${lead.id}`}
-                      className="font-medium text-primary hover:underline"
-                    >
-                      {lead.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(lead.status)}</TableCell>
-                  <TableCell>{lead.source}</TableCell>
-                  <TableCell>
-                    {formatDistanceToNow(new Date(lead.createdAt), {
-                      addSuffix: true,
-                      locale: nl,
-                    })}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <ScrollArea className="w-full">
+            <div className={isMobile ? "-mx-4" : "mx-0"}>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Naam</TableHead>
+                    <TableHead>Status</TableHead>
+                    {!isMobile && <TableHead>Bron</TableHead>}
+                    <TableHead>Toegevoegd</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {leads.map((lead) => (
+                    <TableRow key={lead.id}>
+                      <TableCell className="font-medium">
+                        <Link
+                          to={`/leads/${lead.id}`}
+                          className="text-primary hover:underline"
+                        >
+                          {lead.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(lead.status)}</TableCell>
+                      {!isMobile && <TableCell>{lead.source}</TableCell>}
+                      <TableCell className="whitespace-nowrap">
+                        {formatDistanceToNow(new Date(lead.createdAt), {
+                          addSuffix: true,
+                          locale: nl,
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </ScrollArea>
         )}
       </CardContent>
     </Card>

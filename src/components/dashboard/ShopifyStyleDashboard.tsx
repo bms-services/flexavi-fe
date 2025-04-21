@@ -22,12 +22,15 @@ import { ProductMetrics } from "./sections/ProductMetrics";
 import { ReviewsMetrics } from "./sections/ReviewsMetrics";
 import { EmployeeMetrics } from "./sections/EmployeeMetrics";
 import { WorkAgreementMetrics } from "./sections/WorkAgreementMetrics";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ShopifyStyleDashboardProps {
   timeRange: string;
 }
 
 export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ timeRange }) => {
+  const isMobile = useIsMobile();
+  
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
@@ -40,16 +43,16 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
   const { totalQuoteAmount } = calculateQuoteMetrics(mockQuotes);
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="space-y-4 sm:space-y-6 max-w-full">
       {/* Top row - Summary metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <SalesMetrics totalAmount={totalInvoiceAmount} formatCurrency={formatCurrency} />
         <QuoteMetrics totalQuoteAmount={totalQuoteAmount} formatCurrency={formatCurrency} />
         <ConversionMetrics leads={mockLeads} quotes={mockQuotes} />
       </div>
 
       {/* Second row - Detailed metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <WorkAgreementMetrics workAgreements={mockWorkAgreements} />
         <ProductMetrics products={mockProducts} />
         <EmployeeMetrics employees={mockEmployees} />
