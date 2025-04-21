@@ -8,7 +8,6 @@ import { QuoteLineItem } from "@/types";
 import { ProductSearch } from "@/components/quotes/line-items/ProductSearch";
 import { QuantityInput } from "@/components/quotes/line-items/QuantityInput";
 import { UnitSelect } from "@/components/quotes/line-items/UnitSelect";
-import { Label } from "@/components/ui/label";
 import { Product } from "@/types/product";
 
 interface LineItemRowProps {
@@ -21,7 +20,17 @@ interface LineItemRowProps {
   disabled?: boolean;
 }
 
-const LineItemRow: React.FC<LineItemRowProps> = ({
+const colClasses = [
+  "px-2 py-1 text-center w-[70px]",   // aantal
+  "px-2 py-1 text-center w-[90px]",   // eenheid
+  "px-2 py-1 text-left  w-[210px]",   // product/dienst
+  "px-2 py-1 text-left  w-[260px]",   // beschrijving
+  "px-2 py-1 text-right w-[120px]",   // eenheidsprijs
+  "px-2 py-1 text-right w-[130px]",   // regel totaal
+  "px-2 py-1 text-center w-[46px]",   // verwijder
+];
+
+export const LineItemRow: React.FC<LineItemRowProps> = ({
   item,
   index,
   onRemove,
@@ -30,111 +39,103 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
   onProductSearch,
   disabled = false,
 }) => {
-  // Handle updating a specific field of the line item
+  // Veld update handler
   const handleChange = (field: keyof QuoteLineItem, value: any) => {
     const updatedItem = { ...item, [field]: value };
-    
-    // Calculate the total when price or quantity changes
     if (field === "pricePerUnit" || field === "quantity") {
       const price = field === "pricePerUnit" ? value : item.pricePerUnit;
       const quantity = field === "quantity" ? value : item.quantity;
       updatedItem.total = price * quantity;
     }
-    
     onChange(updatedItem);
   };
 
   return (
-    <div className="space-y-3 border rounded-md p-3 bg-white">
-      <div className="grid grid-cols-12 gap-3 items-center">
-        {/* Quantity */}
-        <div className="col-span-2 md:col-span-1 flex flex-col">
-          <Label htmlFor={`quantity-${index}`} className="mb-1">Aantal</Label>
-          <QuantityInput
-            value={item.quantity}
-            onChange={(value) => handleChange("quantity", value)}
-            disabled={disabled}
-          />
-        </div>
-        
-        {/* Unit */}
-        <div className="col-span-3 md:col-span-1 flex flex-col">
-          <Label htmlFor={`unit-${index}`} className="mb-1">Eenheid</Label>
-          <UnitSelect
-            value={item.unit}
-            onChange={(value) => handleChange("unit", value)}
-            disabled={disabled}
-          />
-        </div>
-        
-        {/* Product/Service */}
-        <div className="col-span-7 md:col-span-4 flex flex-col">
-          <Label htmlFor={`product-${index}`} className="mb-1">Product/Dienst</Label>
-          <ProductSearch
-            value={item.description}
-            onChange={(value) => handleChange("description", value)}
-            onSearch={onProductSearch}
-            suggestions={productSuggestions || []}
-            disabled={disabled}
-          />
-        </div>
-        
-        {/* Unit Price */}
-        <div className="col-span-4 md:col-span-2 flex flex-col">
-          <Label htmlFor={`price-${index}`} className="mb-1">Eenheidsprijs</Label>
-          <Input
-            id={`price-${index}`}
-            type="number"
-            min="0"
-            step="0.01"
-            value={item.pricePerUnit}
-            onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
-            className="w-full"
-            disabled={disabled}
-          />
-        </div>
-        
-        {/* Line Total */}
-        <div className="col-span-6 md:col-span-3 flex flex-col">
-          <Label htmlFor={`total-${index}`} className="mb-1">Regel totaal</Label>
-          <Input
-            id={`total-${index}`}
-            type="number"
-            value={item.total}
-            readOnly
-            className="w-full bg-muted"
-            disabled={disabled}
-          />
-        </div>
-        
-        {/* Remove Button */}
-        <div className="col-span-2 md:col-span-1 flex items-end justify-end">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onRemove}
-            className="h-10 w-10"
-            disabled={disabled}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-      
-      {/* Description Field (moved below the main fields) */}
-      <div>
-        <Label htmlFor={`description-${index}`}>Extra toelichting</Label>
+    <tr className="border-b hover:bg-muted transition-colors">
+      {/* Aantal */}
+      <td className={colClasses[0]}>
+        <QuantityInput
+          value={item.quantity}
+          onChange={(value) => handleChange("quantity", value)}
+          disabled={disabled}
+        />
+      </td>
+
+      {/* Eenheid */}
+      <td className={colClasses[1]}>
+        <UnitSelect
+          value={item.unit}
+          onChange={(value) => handleChange("unit", value)}
+          disabled={disabled}
+        />
+      </td>
+
+      {/* Product/Dienst */}
+      <td className={colClasses[2]}>
+        <ProductSearch
+          value={item.description}
+          onChange={(value) => handleChange("description", value)}
+          onSearch={onProductSearch}
+          suggestions={productSuggestions || []}
+          disabled={disabled}
+          label="" // geen label nodig in tabel
+        />
+      </td>
+
+      {/* Uitgebreide beschrijving */}
+      <td className={colClasses[3]}>
         <Textarea
-          id={`description-${index}`}
-          placeholder="Voeg hier extra details toe over deze dienst/product..."
+          id={`detailedDescription-${index}`}
+          placeholder="Extra toelichting (optioneel)"
           value={item.detailedDescription || ""}
           onChange={(e) => handleChange("detailedDescription", e.target.value)}
           rows={2}
+          className="resize-none min-h-[38px] max-h-[58px] text-sm"
           disabled={disabled}
         />
-      </div>
-    </div>
+      </td>
+
+      {/* Eenheidsprijs */}
+      <td className={colClasses[4]}>
+        <Input
+          id={`price-${index}`}
+          type="number"
+          min="0"
+          step="0.01"
+          value={item.pricePerUnit}
+          onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
+          className="text-right"
+          disabled={disabled}
+        />
+      </td>
+
+      {/* Regel totaal */}
+      <td className={colClasses[5]}>
+        <Input
+          id={`total-${index}`}
+          type="number"
+          value={item.total}
+          readOnly
+          className="bg-muted text-right"
+          disabled={disabled}
+        />
+      </td>
+
+      {/* Verwijderknop */}
+      <td className={colClasses[6]}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onRemove}
+          className="h-8 w-8"
+          disabled={disabled}
+          tabIndex={-1}
+        >
+          <Trash className="w-4 h-4" />
+        </Button>
+      </td>
+    </tr>
   );
 };
 
