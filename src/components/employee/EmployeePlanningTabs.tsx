@@ -130,42 +130,52 @@ export const EmployeePlanningTabs: React.FC<EmployeePlanningTabsProps> = ({
         ))}
       </Tabs>
 
+      {/* Completely redesigned appointment modal */}
       <Dialog open={appointmentDialogOpen} onOpenChange={setAppointmentDialogOpen}>
         <DialogContent className="max-w-4xl overflow-y-auto max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>Afspraak Details</DialogTitle>
+            <DialogTitle className="text-xl font-bold">
+              {selectedAppointment?.title}
+              <Badge variant="outline" className="ml-2 capitalize">
+                {selectedAppointment?.status}
+              </Badge>
+            </DialogTitle>
+            <p className="text-gray-600 mt-1">
+              {selectedAppointment && format(new Date(selectedAppointment.date), "EEEE d MMMM yyyy")} • {selectedAppointment?.startTime} - {selectedAppointment?.endTime}
+            </p>
           </DialogHeader>
           
-          {selectedAppointment && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-xl font-bold">{selectedAppointment.title}</h2>
-                  <p className="text-gray-600">
-                    {format(new Date(selectedAppointment.date), "EEEE d MMMM yyyy")} • {selectedAppointment.startTime} - {selectedAppointment.endTime}
-                  </p>
-                </div>
-                <Badge variant="outline" className="capitalize">
-                  {selectedAppointment.status}
-                </Badge>
-              </div>
-              
-              <div className="border-t pt-4">
-                {selectedAppointment.leadId && (
-                  <LeadInfoCard 
-                    lead={getLead(selectedAppointment.leadId) || {
-                      name: "Unknown Customer",
-                      address: "Unknown Address",
-                      phone: "Unknown Phone",
-                      email: "Unknown Email"
-                    }}
-                    historyEntries={[]}
-                    notes={[]}
-                    showMapButton={true}
-                    description={selectedAppointment.description}
-                  />
-                )}
-              </div>
+          {selectedAppointment && selectedAppointment.leadId && (
+            <div className="mt-4">
+              <LeadInfoCard 
+                lead={getLead(selectedAppointment.leadId) || {
+                  name: "Unknown Customer",
+                  address: "Unknown Address",
+                  phone: "Unknown Phone",
+                  email: "Unknown Email"
+                }}
+                historyEntries={[
+                  {
+                    type: "Bezichtiging",
+                    description: "Eerste bezichtiging voltooid",
+                    date: "21 April 2025"
+                  },
+                  {
+                    type: "Contact",
+                    description: "Telefonisch contact gehad over offerte",
+                    date: "20 April 2025"
+                  }
+                ]}
+                notes={[
+                  "Klant heeft specifiek gevraagd naar zonnepanelen op het schuine dak",
+                  "Let op: er is een hond aanwezig die in de tuin loopt"
+                ]}
+                isRescheduled={selectedAppointment.status === "rescheduled"}
+                rescheduleReason="Klant was niet beschikbaar op de oorspronkelijke datum"
+                showMapButton={true}
+                description={selectedAppointment.description}
+                wozValue={780000}
+              />
             </div>
           )}
         </DialogContent>

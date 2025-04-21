@@ -54,8 +54,8 @@ export default function EmployeePlanningPage() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
-        <div className="space-y-4 sm:space-y-6">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 sm:py-8">
+        <div className="space-y-6">
           {/* Header and Team Selection */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
