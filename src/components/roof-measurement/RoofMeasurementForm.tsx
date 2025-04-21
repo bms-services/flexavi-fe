@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { v4 as uuidv4 } from "uuid";
-import { RoofMeasurement, RoofMaterialType, RoofCondition } from "@/types/roof-measurement";
+import { RoofMeasurement, RoofMaterialType, RoofCondition, RoofPhotoAnalysis } from "@/types/roof-measurement";
+import { RoofPhotoUpload } from "./RoofPhotoUpload";
 
 const formSchema = z.object({
   address: z.string().min(5, {
@@ -65,6 +65,13 @@ export function RoofMeasurementForm({
     },
   });
 
+  const handlePhotoAnalysis = (analysis: RoofPhotoAnalysis) => {
+    form.setValue("area", analysis.estimatedArea);
+    form.setValue("materialType", analysis.estimatedMaterial);
+    form.setValue("condition", analysis.estimatedCondition);
+    form.setValue("notes", (form.getValues("notes") || "") + "\nAI Analyse: " + analysis.notes);
+  };
+
   const handleSubmit = (values: FormValues) => {
     const measurementData: RoofMeasurement = {
       id: initialData?.id || uuidv4(),
@@ -88,6 +95,8 @@ export function RoofMeasurementForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <RoofPhotoUpload onAnalysisComplete={handlePhotoAnalysis} />
+        
         <FormField
           control={form.control}
           name="address"
