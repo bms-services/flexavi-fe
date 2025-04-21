@@ -73,14 +73,14 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="99%" height="99%">
       <LineChart 
         data={data} 
         margin={{ 
-          top: 20, 
-          right: isMobile ? 10 : 30, 
-          left: isMobile ? 10 : 20, 
-          bottom: 20 
+          top: 5, 
+          right: isMobile ? 5 : 20, 
+          left: isMobile ? 0 : 10, 
+          bottom: 5 
         }}
       >
         <CartesianGrid 
@@ -93,16 +93,16 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
           dataKey="month" 
           axisLine={false} 
           tickLine={false}
-          tick={{ fontSize: isMobile ? 10 : 12 }}
+          tick={{ fontSize: isMobile ? 9 : 11 }}
           interval={isMobile ? 0 : "preserveStartEnd"}
           dy={5}
         />
         <YAxis 
           axisLine={false} 
           tickLine={false} 
-          tick={{ fontSize: isMobile ? 10 : 12 }}
+          tick={{ fontSize: isMobile ? 9 : 11 }}
           tickFormatter={formatYAxis}
-          width={isMobile ? 40 : 60}
+          width={isMobile ? 35 : 50}
           tickCount={isMobile ? 3 : 5}
         />
         <Tooltip 
@@ -114,25 +114,25 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
             borderRadius: 8,
             border: '1px solid #e2e8f0',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
-            fontSize: isMobile ? '11px' : '12px',
-            padding: isMobile ? '4px 8px' : '8px 10px'
+            fontSize: isMobile ? '10px' : '11px',
+            padding: isMobile ? '2px 4px' : '4px 6px'
           }}
         />
         <Line 
           type="monotone" 
           dataKey="revenue" 
           stroke="#0c97e8" 
-          strokeWidth={3}
-          dot={{ strokeWidth: 3, r: isMobile ? 2 : 4, fill: "white" }}
-          activeDot={{ r: isMobile ? 4 : 6, fill: "#0c97e8" }}
+          strokeWidth={2}
+          dot={{ strokeWidth: 2, r: isMobile ? 1 : 3, fill: "white" }}
+          activeDot={{ r: isMobile ? 3 : 5, fill: "#0c97e8" }}
           name="Omzet"
         />
         <Line 
           type="monotone" 
           dataKey="target" 
           stroke="#d4d4d4" 
-          strokeWidth={2}
-          strokeDasharray="5 5"
+          strokeWidth={1.5}
+          strokeDasharray="4 4"
           dot={false}
           name="Doelstelling"
         />

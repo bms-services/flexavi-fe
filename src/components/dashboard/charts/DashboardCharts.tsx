@@ -26,8 +26,8 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) =
             <RefreshCw className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent className="p-1 sm:p-4">
-          <div className="h-[250px] md:h-[300px] w-full">
+        <CardContent className="p-0 sm:p-4">
+          <div className="h-[250px] md:h-[300px] w-full overflow-hidden">
             <RevenueChart timeRange={timeRange} />
           </div>
         </CardContent>
@@ -38,8 +38,8 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) =
           <CardTitle className="text-lg md:text-xl">Lead conversie</CardTitle>
           <CardDescription>Van lead naar betaalde factuur</CardDescription>
         </CardHeader>
-        <CardContent className="p-1 sm:p-4">
-          <div className="h-[200px] md:h-[250px] w-full">
+        <CardContent className="p-0 sm:p-4">
+          <div className="h-[200px] md:h-[250px] w-full overflow-hidden">
             <LeadConversionRate timeRange={timeRange} />
           </div>
         </CardContent>

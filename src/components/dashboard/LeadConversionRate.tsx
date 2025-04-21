@@ -65,7 +65,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
     outerRadius, 
     percent 
   }: any) => {
-    // Don't render labels on mobile
+    // Don't render labels on mobile or if percentage is small
     if (isMobile || percent < 0.1) return null;
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -79,7 +79,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
         fill="white" 
         textAnchor="middle" 
         dominantBaseline="central"
-        fontSize={12}
+        fontSize={10}
         fontWeight="bold"
       >
         {`${(percent * 100).toFixed(0)}%`}
@@ -88,7 +88,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="99%" height="99%">
       <PieChart>
         <Pie
           data={data}
@@ -96,7 +96,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
           cy="50%"
           labelLine={false}
           label={renderCustomizedLabel}
-          outerRadius={isMobile ? 50 : 80}
+          outerRadius={isMobile ? 45 : 80}
           fill="#8884d8"
           dataKey="value"
         >
@@ -107,11 +107,11 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
         <Tooltip 
           formatter={(value: number) => [`${value} leads`, null]}
           contentStyle={{ 
-            borderRadius: 8,
+            borderRadius: 6,
             border: '1px solid #e2e8f0',
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', 
-            fontSize: isMobile ? '11px' : '12px',
-            padding: isMobile ? '4px 8px' : '8px 10px'
+            fontSize: isMobile ? '9px' : '11px',
+            padding: isMobile ? '2px 4px' : '6px 8px'
           }}
         />
         <Legend 
@@ -124,8 +124,8 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
             <span className={`text-${isMobile ? 'xs' : 'sm'}`}>{value}</span>
           }
           wrapperStyle={{
-            paddingTop: "10px",
-            fontSize: isMobile ? "10px" : "12px"
+            fontSize: isMobile ? "8px" : "10px",
+            paddingTop: "6px"
           }}
         />
       </PieChart>

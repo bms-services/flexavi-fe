@@ -111,12 +111,12 @@ export const StatsCardWithChart: React.FC<StatsCardWithChartProps> = ({
           </div>
         )}
         
-        <div className={`${isMobile ? 'h-[80px]' : 'h-[100px]'} overflow-visible`}>
+        <div className={`${isMobile ? 'h-[80px]' : 'h-[100px]'} overflow-hidden relative`}>
           {chart}
         </div>
         
         {chartLegend && (
-          <div className="flex items-center justify-center gap-3 md:gap-4 flex-wrap">
+          <div className="flex items-center justify-center gap-3 md:gap-4 flex-wrap pt-2">
             {chartLegend.map((item, index) => (
               <div key={index} className="flex items-center gap-1 text-xs text-muted-foreground">
                 <div 

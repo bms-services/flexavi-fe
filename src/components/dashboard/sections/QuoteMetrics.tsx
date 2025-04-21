@@ -58,7 +58,7 @@ export const QuoteMetrics: React.FC<QuoteMetricsProps> = ({
       ]}
       subTitle="OFFERTES DEZE MAAND"
       chart={
-        <ResponsiveContainer width="100%" height={180}>
+        <ResponsiveContainer width="99%" height="99%">
           <LineChart data={quoteData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <XAxis 
               dataKey="time" 
@@ -74,13 +74,13 @@ export const QuoteMetrics: React.FC<QuoteMetricsProps> = ({
               tick={{ fontSize: 8 }}
               tickLine={false}
               axisLine={false}
-              width={30}
+              width={25}
             />
             <Tooltip 
               formatter={(value: number) => [formatTooltip(value), 'Offerte']}
               labelFormatter={(label) => `Dag: ${label}`}
               contentStyle={{ 
-                fontSize: '10px', 
+                fontSize: '9px', 
                 borderRadius: '4px',
                 padding: '2px 4px'
               }}
@@ -89,7 +89,7 @@ export const QuoteMetrics: React.FC<QuoteMetricsProps> = ({
               type="monotone" 
               dataKey="value" 
               stroke="#2563eb" 
-              strokeWidth={2} 
+              strokeWidth={1.5} 
               dot={false} 
             />
           </LineChart>
