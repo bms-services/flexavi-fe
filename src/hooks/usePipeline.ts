@@ -6,7 +6,7 @@ import { toast } from "sonner";
 const fixedPipelines: Pipeline[] = [
   {
     id: "pipeline-callbacks",
-    name: "Terug bel lijst",
+    name: "Nieuwe Leads",
     description: "Opvolging van terug te bellen klanten",
     isDefault: true,
     createdAt: new Date().toISOString(),
