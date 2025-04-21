@@ -12,6 +12,7 @@ interface PipelineBoardProps {
   items: PipelineItem[];
   onItemMove: (itemId: string, newStageId: string) => void;
   onAddItem: (stageId: string) => void;
+  onItemReorder: (stageId: string, fromIndex: number, toIndex: number) => void; // NIEUW
 }
 
 export const PipelineBoard: React.FC<PipelineBoardProps> = ({
@@ -19,32 +20,27 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
   items,
   onItemMove,
   onAddItem,
+  onItemReorder,
 }) => {
   const isMobile = useIsMobile();
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
-
-    // Dropped outside the list
-    if (!destination) {
-      return;
-    }
-
-    // Dropped in the same position
+    if (!destination) return;
+    // Zelfde kolom = reorder:
     if (
       destination.droppableId === source.droppableId &&
-      destination.index === source.index
+      destination.index !== source.index
     ) {
+      onItemReorder(destination.droppableId, source.index, destination.index);
       return;
     }
-
-    // Handle the move
-    onItemMove(draggableId, destination.droppableId);
-    
-    toast.success("Item verplaatst naar een nieuwe fase");
+    // Anderes kolom = move:
+    if (destination.droppableId !== source.droppableId) {
+      onItemMove(draggableId, destination.droppableId);
+    }
   };
 
-  // Sorteer stadia op volgorde en bepaal de index voor eerste fase
   const sortedStages = pipeline.stages.sort((a, b) => a.order - b.order);
 
   return (

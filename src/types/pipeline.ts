@@ -32,4 +32,5 @@ export type PipelineItem = {
   objectType: "lead" | "project" | "quote" | "invoice";
   createdAt: string;
   updatedAt: string;
+  order?: number; // NIEUW: bepaalt de volgorde binnen de fase
 };

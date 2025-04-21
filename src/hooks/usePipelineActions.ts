@@ -18,6 +18,33 @@ export function movePipelineItem(
   toast.success("Item verplaatst naar een nieuwe fase");
 }
 
+// NIEUW: reorderPipelineItem voor sorteren binnen stadium
+export function reorderPipelineItem(
+  items: PipelineItem[],
+  setItems: (x: PipelineItem[]) => void,
+  stageId: string,
+  fromIndex: number,
+  toIndex: number
+) {
+  const copied = [...items];
+  const stageItems = copied.filter(i => i.stageId === stageId).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const item = stageItems[fromIndex];
+  if (!item) return;
+
+  stageItems.splice(fromIndex, 1);
+  stageItems.splice(toIndex, 0, item);
+  // Nieuwe order toewijzen
+  stageItems.forEach((item, idx) => (item.order = idx));
+
+  // Alles terugzetten in kopie
+  const newItems = copied.map(i =>
+    i.stageId === stageId
+      ? stageItems.find(si => si.id === i.id) ?? i
+      : i
+  );
+  setItems(newItems);
+}
+
 export function addPipelineItem(
   items: PipelineItem[],
   setItems: (x: PipelineItem[]) => void,
@@ -41,6 +68,12 @@ export function addPipelineItem(
       break;
   }
 
+  // Volgorde op einde zetten
+  const order = Math.max(
+    0,
+    ...items.filter(i => i.stageId === stageId).map(i => i.order ?? 0)
+  ) + 1;
+
   const newItem: PipelineItem = {
     id: `item-${crypto.randomUUID()}`,
     name: `Nieuwe ${objectType === "lead" ? "klant" : objectType} ${items.length + 1}`,
@@ -50,6 +83,7 @@ export function addPipelineItem(
     objectType,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order,
   };
 
   setItems([...items, newItem]);

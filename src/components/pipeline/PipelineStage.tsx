@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PipelineStage as PipelineStageType, PipelineItem } from "@/types/pipeline";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
@@ -23,7 +24,10 @@ export const PipelineStage: React.FC<PipelineStageProps> = ({
   isFirstStage,
 }) => {
   const isMobile = useIsMobile();
-  const stageItems = items.filter((item) => item.stageId === stage.id);
+  // Sorteer per order:
+  const stageItems = items
+    .filter((item) => item.stageId === stage.id)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const [color, setColor] = useState(stage.color);
 

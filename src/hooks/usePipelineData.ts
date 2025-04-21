@@ -1,4 +1,3 @@
-
 import type { Pipeline, PipelineItem } from "@/types/pipeline";
 
 // Define the 5 fixed pipelines with their stages
@@ -98,6 +97,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "item-2",
@@ -108,6 +108,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "item-3",
@@ -118,6 +119,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "quote",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "item-4",
@@ -128,6 +130,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "invoice",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "item-5",
@@ -138,8 +141,8 @@ export const sampleItems: PipelineItem[] = [
     objectType: "project",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
-  // TESTDATA voor Terug Bel Lijst:
   {
     id: "reschedule-1",
     name: "Anouk Peeters • Geen gehoor, nummer klopt niet",
@@ -149,6 +152,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "reschedule-2",
@@ -159,6 +163,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "reschedule-3",
@@ -169,6 +174,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 0,
   },
   {
     id: "reschedule-4",
@@ -179,6 +185,7 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 1,
   },
   {
     id: "reschedule-5",
@@ -189,5 +196,6 @@ export const sampleItems: PipelineItem[] = [
     objectType: "lead",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    order: 1,
   },
 ];

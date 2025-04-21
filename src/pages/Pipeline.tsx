@@ -21,6 +21,7 @@ const Pipeline = () => {
     handlePipelineDelete,
     handleItemMove,
     handleAddItem,
+    handleItemReorder,
   } = usePipeline();
 
   const [managePipelineOpen, setManagePipelineOpen] = useState(false);
@@ -44,7 +45,8 @@ const Pipeline = () => {
             <AlertTitle>Vaste pijplijnen</AlertTitle>
             <AlertDescription>
               Dit systeem gebruikt 5 vaste pijplijnen voor verschillende werkprocessen. Sleep items naar 
-              de gewenste fase om ze te verplaatsen. Klik op een item voor meer acties.
+              de gewenste fase om ze te verplaatsen. Of versleep ze binnen één fase om hun volgorde te veranderen.
+              Klik op een item voor meer acties.
             </AlertDescription>
           </Alert>
           
@@ -53,6 +55,7 @@ const Pipeline = () => {
             items={items}
             onItemMove={handleItemMove}
             onAddItem={handleAddItem}
+            onItemReorder={handleItemReorder} // NIEUW
           />
         </div>
       </div>
