@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarIcon, Check, Save, XCircle } from "lucide-react";
+import { CalendarIcon, Save, XCircle } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
@@ -280,14 +280,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           <div className="space-y-2">
             <Label htmlFor="projectId">Project (optioneel)</Label>
             <Select
-              value={formData.projectId || ""}
-              onValueChange={(value) => handleSelectChange("projectId", value)}
+              value={formData.projectId || "none"}
+              onValueChange={(value) => handleSelectChange("projectId", value === "none" ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Koppel aan project" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Geen project</SelectItem>
+                <SelectItem value="none">Geen project</SelectItem>
                 {mockProjects.map((project) => (
                   <SelectItem key={project.id} value={project.id}>
                     {project.name}
