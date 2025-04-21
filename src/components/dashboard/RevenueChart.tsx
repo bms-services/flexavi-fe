@@ -69,22 +69,43 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
   return (
     <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+        <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+          <CartesianGrid 
+            strokeDasharray="3 3" 
+            vertical={false} 
+            stroke="#f0f0f0" 
+          />
           <XAxis 
             dataKey="month" 
             axisLine={false} 
             tickLine={false}
             tick={{ fontSize: 12 }}
+            label={{
+              value: 'Maanden',
+              position: 'insideBottom',
+              offset: -10,
+              fontSize: 12,
+              fill: '#666'
+            }}
           />
           <YAxis 
             axisLine={false} 
             tickLine={false} 
             tick={{ fontSize: 12 }}
             tickFormatter={formatYAxis}
+            label={{
+              value: 'Omzet (EUR)',
+              angle: -90,
+              position: 'insideLeft',
+              fontSize: 12,
+              fill: '#666'
+            }}
           />
           <Tooltip 
-            formatter={(value: number) => [formatTooltip(value)]}
+            formatter={(value: number, name: string) => [
+              formatTooltip(Number(value)), 
+              name === 'revenue' ? 'Omzet' : 'Doelstelling'
+            ]}
             contentStyle={{ 
               borderRadius: 8,
               border: '1px solid #e2e8f0',
@@ -107,10 +128,11 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ timeRange }) => {
             strokeWidth={2}
             strokeDasharray="5 5"
             dot={false}
-            name="Target"
+            name="Doelstelling"
           />
         </LineChart>
       </ResponsiveContainer>
     </div>
   );
 };
+
