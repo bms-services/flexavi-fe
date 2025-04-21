@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -8,8 +9,9 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { Project } from "@/types/project";
+import { Project, ProjectNote } from "@/types/project";
 import { CalendarIcon, MapPinIcon, FileTextIcon, Users } from "lucide-react";
+import { ProjectNotesSection } from "../../../projects/detail/tabs/ProjectNotesSection";
 
 interface ProjectOverviewProps {
   project: Project;
@@ -18,7 +20,7 @@ interface ProjectOverviewProps {
 export const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => {
   const [notes, setNotes] = useState(project.notes ?? []);
 
-  const handleAddNote = (note: any) => {
+  const handleAddNote = (note: ProjectNote) => {
     setNotes((prev) => [...prev, note]);
   };
 
