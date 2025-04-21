@@ -3,7 +3,7 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Eye, FilePlus, FileMinus, Shield, User } from "lucide-react";
+import { Calendar, FileText, Eye, FilePlus, FileMinus, Shield, User, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { LeadCallbackModalCard } from "./item-modal/LeadCallbackModalCard";
@@ -11,6 +11,7 @@ import { LeadDefaultModalCard } from "./item-modal/LeadDefaultModalCard";
 import { QuoteModalCard } from "./item-modal/QuoteModalCard";
 import { InvoiceModalCard } from "./item-modal/InvoiceModalCard";
 import { ProjectModalCard } from "./item-modal/ProjectModalCard";
+import { mockAppointments } from "@/data/mockAppointments";
 
 // Dummy NAW details (in praktijk via API laden)
 const demoLeads = [
@@ -52,7 +53,7 @@ export const PipelineItemModal: React.FC<Props> = ({
   // Brede modal!
   const modalWidth = "max-w-5xl w-full"; // Extra, extra breed
 
-  // ACTIES, direct zichtbaar in de modal
+  // ACTIES
   const handleCreateQuote = () => {
     window.location.assign("/quotes/create?leadId=" + item.objectId.split("-")[1]);
   };
@@ -67,80 +68,33 @@ export const PipelineItemModal: React.FC<Props> = ({
   const leadNAW =
     demoLeads.find(l => l.objectId === item.objectId) || demoLeads[0];
 
-  // Content cards op basis van type
-  const renderInfoCard = () => {
-    switch (item.objectType) {
-      case "lead":
-        if (item.pipelineId === "pipeline-callbacks") {
-          // Terugbel-lijst: uitgebreide card
-          return <LeadCallbackModalCard lead={{...leadNAW, objectId: item.objectId}} />;
-        }
-        return <LeadDefaultModalCard />;
-      case "quote":
-        return <QuoteModalCard item={item} />;
-      case "invoice":
-        return <InvoiceModalCard item={item} />;
-      case "project":
-        return <ProjectModalCard item={item} />;
-      default:
-        return null;
-    }
-  };
+  // Afspraakdata ophalen (voor lead-type items)
+  let appointment = undefined;
+  if (item.objectType === "lead") {
+    // Vind een afspraak die hoort bij deze lead (niet gelukte afspraken: status = "canceled", "rescheduled", "quote_request")
+    appointment = mockAppointments.find(
+      a =>
+        a.leadId === item.objectId &&
+        ["canceled", "rescheduled", "quote_request"].includes(a.status)
+    );
+  }
 
-  // Titel, label, kleur etc
-  const getTypeIcon = () => {
-    switch (item.objectType) {
-      case "lead":    return <User className="h-5 w-5 text-blue-600" />;
-      case "quote":   return <FilePlus className="h-5 w-5 text-purple-600" />;
-      case "invoice": return <FileMinus className="h-5 w-5 text-amber-600" />;
-      case "project": return <Shield className="h-5 w-5 text-green-600" />;
-      default:        return <User className="h-5 w-5" />;
-    }
-  };
-  const getTypeLabel = () => {
-    switch (item.objectType) {
-      case "lead":    return "Klant";
-      case "quote":   return "Offerte";
-      case "invoice": return "Factuur";
-      case "project": return "Garantie";
-      default:        return "Item";
-    }
-  };
-  const getTypeColor = () => {
-    switch (item.objectType) {
-      case "lead":    return "bg-blue-100 text-blue-800";
-      case "quote":   return "bg-purple-100 text-purple-800";
-      case "invoice": return "bg-amber-100 text-amber-800";
-      case "project": return "bg-green-100 text-green-800";
-      default:        return "bg-gray-100 text-gray-800";
-    }
-  };
-  const getTypeHeading = () => {
-    switch (item.objectType) {
-      case "lead": return item.pipelineId === "pipeline-callbacks"
-        ? "Klantdetails & Opdrachtinschatting" : "Klant Informatie";
-      case "quote": return "Offerte Details";
-      case "invoice": return "Factuur Details";
-      case "project": return "Garantie Details";
-      default: return "Details";
-    }
-  };
-
+  // Kolom layout opbouwen
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`${modalWidth} rounded-lg p-0 overflow-hidden`}>
-        <div className="bg-slate-50 p-8 pb-4">
+        <div className="bg-slate-50 p-8 pb-4 border-b">
           <DialogHeader>
             <div className="flex items-center justify-between mb-2">
-              <Badge variant="outline" className={`font-normal ${getTypeColor()}`}>
-                {getTypeLabel()}
+              <Badge variant="outline" className={`font-normal bg-blue-100 text-blue-800`}>
+                Klant
               </Badge>
               <span className="text-xs text-muted-foreground">
                 ID: {item.objectId.substring(0, 8)}
               </span>
             </div>
             <div className="flex items-start gap-3">
-              {getTypeIcon()}
+              <User className="h-5 w-5 text-blue-600" />
               <div>
                 <DialogTitle className="text-xl">{leadNAW.name ?? item.name}</DialogTitle>
                 <DialogDescription className="text-xs mt-1">
@@ -156,44 +110,77 @@ export const PipelineItemModal: React.FC<Props> = ({
             </div>
           </DialogHeader>
         </div>
-        {/* Content */}
-        <div className="p-8 pt-4">
-          <h3 className="text-sm font-medium mb-3">{getTypeHeading()}</h3>
-          <div className="space-y-6 mb-6">{renderInfoCard()}</div>
-
-          <Separator className="my-6" />
-
-          <h3 className="text-sm font-medium mb-3">Acties</h3>
-          <div className="flex flex-wrap gap-3 mb-2">
-            <Button onClick={onAddNote} variant="outline" className="min-w-[140px] flex gap-2">
-              <FileText className="h-4 w-4" />
-              Notitie toevoegen
-            </Button>
-            <Button onClick={onSchedule} variant="outline" className="min-w-[140px] flex gap-2">
-              <Calendar className="h-4 w-4" />
-              Afspraak maken
-            </Button>
-            <Button onClick={onGoToDetail} variant="default" className="min-w-[140px] flex gap-2">
-              <Eye className="h-4 w-4" />
-              Ga naar details
-            </Button>
-            {item.objectType === "lead" && item.pipelineId === "pipeline-callbacks" && (
-              <>
-                <Button onClick={handleCreateQuote} variant="outline" className="min-w-[140px] flex gap-2">
-                  <FilePlus className="h-4 w-4" />
-                  Offerte maken
-                </Button>
-                <Button onClick={handleCreateInvoice} variant="outline" className="min-w-[140px] flex gap-2">
-                  <FileMinus className="h-4 w-4" />
-                  Factuur maken
-                </Button>
-                <Button onClick={handleCreateWorkOrder} variant="outline" className="min-w-[140px] flex gap-2">
-                  <Shield className="h-4 w-4" />
-                  Werkopdracht
-                </Button>
-              </>
-            )}
+        {/* 2 kolommen: klant (links), afspraak (rechts) */}
+        <div className="flex flex-col md:flex-row gap-8 p-8 pt-4">
+          {/* Klantdata */}
+          <div className="flex-1 min-w-[260px] max-w-md">
+            <h3 className="text-sm font-semibold mb-2">Klantgegevens</h3>
+            <ul className="space-y-1 text-sm">
+              <li><span className="font-medium">Naam:</span> {leadNAW.name ?? item.name}</li>
+              <li><span className="font-medium">Adres:</span> {leadNAW.address ?? "-"}</li>
+              <li><span className="font-medium">Telefoon:</span> {leadNAW.phone ?? "-"}</li>
+              <li><span className="font-medium">E-mail:</span> {leadNAW.email ?? "-"}</li>
+            </ul>
           </div>
+          {/* Afspraakdata */}
+          <div className="flex-1 min-w-[260px]">
+            <h3 className="text-sm font-semibold mb-2">Afspraakgegevens</h3>
+            {appointment ? (
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="font-medium">Datum:</span>{" "}
+                  {appointment.date}{" "}
+                  <span className="ml-1">{appointment.startTime}-{appointment.endTime}</span>
+                </div>
+                <div>
+                  <span className="font-medium">Titel:</span> {appointment.title}
+                </div>
+                <div>
+                  <span className="font-medium">Beschrijving:</span>{" "}
+                  <span className="inline-block align-top">{appointment.description}</span>
+                </div>
+                {/* Prijs tonen indien 'klus' of 'geld ophalen' → dummy check */}
+                {(appointment.status === "new_assignment" || appointment.status === "extra_assignment") && (
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="h-4 w-4 text-green-700" /> <span className="font-medium">Prijs:</span> € 750
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-muted-foreground italic text-sm">Geen mislukte afspraak gevonden voor deze lead.</div>
+            )}
+            {/* Actieknoppen */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              <Button onClick={handleCreateQuote} variant="outline" className="min-w-[140px] flex gap-2">
+                <FilePlus className="h-4 w-4" />
+                Maak offerte
+              </Button>
+              <Button onClick={handleCreateInvoice} variant="outline" className="min-w-[140px] flex gap-2">
+                <FileMinus className="h-4 w-4" />
+                Maak factuur
+              </Button>
+              <Button onClick={handleCreateWorkOrder} variant="outline" className="min-w-[140px] flex gap-2">
+                <Shield className="h-4 w-4" />
+                Maak werkopdracht
+              </Button>
+            </div>
+          </div>
+        </div>
+        <Separator className="my-3" />
+        {/* Standaard acties */}
+        <div className="px-8 pb-8 flex flex-wrap gap-3">
+          <Button onClick={onAddNote} variant="outline" className="min-w-[140px] flex gap-2">
+            <FileText className="h-4 w-4" />
+            Notitie toevoegen
+          </Button>
+          <Button onClick={onSchedule} variant="outline" className="min-w-[140px] flex gap-2">
+            <Calendar className="h-4 w-4" />
+            Afspraak maken
+          </Button>
+          <Button onClick={onGoToDetail} variant="default" className="min-w-[140px] flex gap-2">
+            <Eye className="h-4 w-4" />
+            Ga naar details
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
