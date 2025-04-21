@@ -2,8 +2,7 @@
 import React from "react";
 import { StatsCardWithChart } from "../stats/StatsCardWithChart";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { Invoice } from "@/types";
-import { format, parseISO, startOfMonth, endOfMonth, addDays } from "date-fns";
+import { format, startOfMonth, endOfMonth, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
 
 interface SalesMetricsProps {
@@ -23,7 +22,7 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
     const dailyData = [];
     let currentDay = monthStart;
     
-    while (currentDay <= monthEnd) {
+    while (currentDay <= monthEnd && dailyData.length < 31) {
       const baseAmount = Math.random() * 2000 + 1000; // Random base between 1000-3000
       dailyData.push({
         time: format(currentDay, 'd MMM', { locale: nl }),
@@ -44,7 +43,7 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
       value={formatCurrency(totalAmount)}
       change={2.6}
       chipData={[
-        { label: "Bedrijfsales", value: formatCurrency(totalAmount), change: 3.2 }
+        { label: "Bedrijfsales", value: formatCurrency(totalAmount * 0.7), change: 3.2 }
       ]}
       subTitle="OMZET DEZE MAAND"
       chart={
