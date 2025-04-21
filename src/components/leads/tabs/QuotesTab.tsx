@@ -23,6 +23,7 @@ import { PlusCircle, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { formatCurrency } from "@/utils/format";
+import { useNavigate } from "react-router-dom";
 
 interface QuotesTabProps {
   quotes: Quote[];
@@ -45,6 +46,7 @@ const getStatusBadge = (status: Quote["status"]) => {
 export const QuotesTab: React.FC<QuotesTabProps> = ({ quotes, leadId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const navigate = useNavigate();
   
   const totalPages = Math.ceil(quotes.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -53,10 +55,14 @@ export const QuotesTab: React.FC<QuotesTabProps> = ({ quotes, leadId }) => {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(startIndex, endIndex);
 
+  const handleCreateQuote = () => {
+    navigate("/quotes/create");
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button>
+        <Button onClick={handleCreateQuote}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Nieuwe Offerte
         </Button>

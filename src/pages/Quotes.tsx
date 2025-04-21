@@ -10,7 +10,6 @@ import { Quote, QuoteStatus } from "@/types";
 import { QuotesFilterBar } from "@/components/quotes/QuotesFilterBar";
 import { QuotesTable } from "@/components/quotes/QuotesTable";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/utils/format";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 const getLeadName = (leadId: string) => {
@@ -82,13 +81,14 @@ const Quotes = () => {
   };
 
   const handleCreateQuote = () => navigate("/quotes/create");
+  
   const handleViewQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
   const handleEditQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
   const handleDeleteQuote = (quote: Quote) => console.log("Delete quote:", quote);
 
   return (
     <Layout>
-      <div className="container max-w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-20 py-6 space-y-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 py-6 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Offertes</h1>

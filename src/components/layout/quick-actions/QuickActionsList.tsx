@@ -24,6 +24,10 @@ export const QuickActionsList = () => {
       icon: FileText,
       label: 'Offerte maken',
       href: '/quotes/create',
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        navigate('/quotes/create');
+      },
     },
     {
       icon: FileText,
