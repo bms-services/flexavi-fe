@@ -10,6 +10,7 @@ interface DashboardStatsProps {
   timeRange: string;
 }
 
+// This component is now hidden as we're using the ShopifyStyleDashboard instead
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ timeRange }) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
@@ -19,12 +20,6 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ timeRange }) => 
     }).format(amount);
   };
 
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <QuoteStats quotes={mockQuotes} formatCurrency={formatCurrency} />
-      <WorkAgreementStats workAgreements={mockWorkAgreements} formatCurrency={formatCurrency} />
-      <InvoiceStats invoices={mockInvoices} formatCurrency={formatCurrency} />
-      <ProjectStats projects={mockProjects} formatCurrency={formatCurrency} />
-    </div>
-  );
+  // Return null to hide this component, as we're using ShopifyStyleDashboard instead
+  return null;
 };

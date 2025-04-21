@@ -1,29 +1,19 @@
 
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { DashboardStats } from "@/components/dashboard/DashboardStats";
-import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointments";
-import { RecentLeads } from "@/components/dashboard/RecentLeads";
+import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
+import { ShopifyStyleDashboard } from "@/components/dashboard/ShopifyStyleDashboard";
 import { getUpcomingAppointments, getRecentLeads } from "@/data/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, PlusCircle } from "lucide-react";
-import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
-import { OverviewStats } from "@/components/dashboard/stats/OverviewStats";
-import { DashboardCharts } from "@/components/dashboard/charts/DashboardCharts";
-import { InvoiceKPIs } from "@/components/invoices/InvoiceKPIs";
-import { ProjectsKPIs } from "@/components/projects/ProjectsKPIs";
-import { mockInvoices, mockProjects } from "@/data/mockData";
+import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointments";
+import { RecentLeads } from "@/components/dashboard/RecentLeads";
 
 const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
-
-  const totalInvoiceAmount = mockInvoices.reduce((sum, inv) => sum + inv.amount, 0);
-  const paidInvoices = mockInvoices.filter(inv => inv.status === "paid");
-  const paidAmount = paidInvoices.reduce((sum, inv) => sum + inv.amount, 0);
-  const outstandingAmount = totalInvoiceAmount - paidAmount;
 
   return (
     <Layout>
@@ -34,20 +24,8 @@ const Dashboard = () => {
           lastUpdated={lastUpdated}
         />
 
-        <DashboardStats timeRange={timeRange} />
+        <ShopifyStyleDashboard timeRange={timeRange} />
         
-        <OverviewStats />
-
-        <InvoiceKPIs
-          total={totalInvoiceAmount}
-          paid={paidAmount}
-          outstanding={outstandingAmount}
-        />
-
-        <ProjectsKPIs projects={mockProjects} />
-
-        <DashboardCharts timeRange={timeRange} />
-
         <Tabs defaultValue="appointments" className="w-full">
           <TabsList className="grid w-full md:w-auto grid-cols-2">
             <TabsTrigger value="appointments" className="flex items-center gap-2">
