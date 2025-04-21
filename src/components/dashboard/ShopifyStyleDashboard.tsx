@@ -42,7 +42,7 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
   const { totalQuoteAmount } = calculateQuoteMetrics(mockQuotes);
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Top row - Summary metrics */}
       <div className="grid grid-cols-1 gap-4">
         <SalesMetrics totalAmount={totalInvoiceAmount} formatCurrency={formatCurrency} />
@@ -51,7 +51,7 @@ export const ShopifyStyleDashboard: React.FC<ShopifyStyleDashboardProps> = ({ ti
       </div>
 
       {/* Second row - Detailed metrics */}
-      <div className="grid grid-cols-1 gap-4 mt-4">
+      <div className="grid grid-cols-1 gap-4">
         <WorkAgreementMetrics workAgreements={mockWorkAgreements} />
         <ProductMetrics products={mockProducts} />
         <EmployeeMetrics employees={mockEmployees} />
