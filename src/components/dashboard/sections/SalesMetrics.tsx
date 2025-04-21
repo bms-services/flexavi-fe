@@ -64,7 +64,7 @@ export const SalesMetrics: React.FC<SalesMetricsProps> = ({
       ]}
       subTitle="OMZET DEZE MAAND"
       chart={
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={180}>
           <LineChart data={salesData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
             <XAxis 
               dataKey="time" 
