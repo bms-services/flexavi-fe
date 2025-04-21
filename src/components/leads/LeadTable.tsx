@@ -66,25 +66,25 @@ export const LeadTable: React.FC<LeadTableProps> = ({
         onFilterChange={handleFilterChange} 
         filters={filters}
         searchTerm={searchTerm}
-        onSearchChange={() => {}} // This is handled by the parent component
+        onSearchChange={() => {}}
       />
       
-      <div className="border rounded-md sm:border">
+      <div className="border rounded-md">
         <Table>
-          <TableHeader className="hidden sm:table-header-group">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="h-8">Naam</TableHead>
-              <TableHead className="h-8 hidden md:table-cell">Email</TableHead>
-              <TableHead className="h-8 hidden lg:table-cell">Telefoon</TableHead>
-              <TableHead className="h-8 hidden md:table-cell">Adres</TableHead>
-              <TableHead className="h-8">Status</TableHead>
-              <TableHead className="h-8">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Naam</TableHead>
+              <TableHead className="hidden sm:table-cell">Email</TableHead>
+              <TableHead className="hidden sm:table-cell">Telefoon</TableHead>
+              <TableHead className="hidden sm:table-cell">Adres</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>
                 <div className="flex items-center gap-1">
                   <TrendingUp className="h-3.5 w-3.5" />
                   <span>Waarde</span>
                 </div>
               </TableHead>
-              <TableHead className="h-8">
+              <TableHead className="hidden sm:table-cell">
                 <div className="flex items-center gap-1">
                   <FileText className="h-3.5 w-3.5" />
                   <span>Status</span>
