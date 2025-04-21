@@ -46,19 +46,9 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
 
   return (
     <div className="space-y-3 border rounded-md p-3 bg-white">
-      <div className="grid grid-cols-12 gap-2 items-center">
-        <div className="col-span-12 md:col-span-5">
-          <ProductSearch
-            value={item.description}
-            onChange={(value) => handleChange("description", value)}
-            onSearch={onProductSearch}
-            suggestions={productSuggestions || []}
-            label="Product/Dienst"
-            disabled={disabled}
-          />
-        </div>
-        
-        <div className="col-span-3 md:col-span-2 flex flex-col">
+      <div className="grid grid-cols-12 gap-3 items-center">
+        {/* Quantity */}
+        <div className="col-span-2 md:col-span-1 flex flex-col">
           <Label htmlFor={`quantity-${index}`} className="mb-1">Aantal</Label>
           <QuantityInput
             value={item.quantity}
@@ -67,7 +57,8 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-4 md:col-span-2 flex flex-col">
+        {/* Unit */}
+        <div className="col-span-3 md:col-span-1 flex flex-col">
           <Label htmlFor={`unit-${index}`} className="mb-1">Eenheid</Label>
           <UnitSelect
             value={item.unit}
@@ -76,8 +67,21 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-5 md:col-span-2 flex flex-col">
-          <Label htmlFor={`price-${index}`} className="mb-1">Prijs</Label>
+        {/* Product/Service */}
+        <div className="col-span-7 md:col-span-4 flex flex-col">
+          <Label htmlFor={`product-${index}`} className="mb-1">Product/Dienst</Label>
+          <ProductSearch
+            value={item.description}
+            onChange={(value) => handleChange("description", value)}
+            onSearch={onProductSearch}
+            suggestions={productSuggestions || []}
+            disabled={disabled}
+          />
+        </div>
+        
+        {/* Unit Price */}
+        <div className="col-span-4 md:col-span-2 flex flex-col">
+          <Label htmlFor={`price-${index}`} className="mb-1">Eenheidsprijs</Label>
           <Input
             id={`price-${index}`}
             type="number"
@@ -90,8 +94,9 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
-        <div className="col-span-5 md:col-span-2 flex flex-col relative">
-          <Label htmlFor={`total-${index}`} className="mb-1">Totaal</Label>
+        {/* Line Total */}
+        <div className="col-span-6 md:col-span-3 flex flex-col">
+          <Label htmlFor={`total-${index}`} className="mb-1">Regel totaal</Label>
           <Input
             id={`total-${index}`}
             type="number"
@@ -102,6 +107,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           />
         </div>
         
+        {/* Remove Button */}
         <div className="col-span-2 md:col-span-1 flex items-end justify-end">
           <Button
             type="button"
@@ -116,6 +122,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
         </div>
       </div>
       
+      {/* Description Field (moved below the main fields) */}
       <div>
         <Label htmlFor={`description-${index}`}>Extra toelichting</Label>
         <Textarea
