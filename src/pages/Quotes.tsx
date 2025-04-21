@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -32,7 +31,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { formatCurrency } from "@/utils/format";
 
-// Helper: Klantnaam ophalen
 const getLeadName = (leadId: string) => {
   const lead = mockLeads.find((l) => l.id === leadId);
   return lead ? lead.name : "Onbekend";
@@ -48,7 +46,6 @@ const statusOptions: { value: QuoteStatus, label: string }[] = [
 
 const itemsPerPageOptions = [10, 25, 100];
 
-// DateRangePicker component
 function DateRangePicker({
   value,
   onChange,
@@ -128,11 +125,9 @@ function DateRangePicker({
 }
 
 const Quotes = () => {
-  // Paginering
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Filter state (gecombineerde datumbereiken)
   const [filters, setFilters] = useState({
     createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
     expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
@@ -146,16 +141,13 @@ const Quotes = () => {
 
   const navigate = useNavigate();
 
-  // Filter
   const filteredQuotes = useMemo(() => {
     return mockQuotes.filter((quote) => {
-      // Aangemaakt datum range filter
       const createdAt = new Date(quote.createdAt);
       const [createdFrom, createdTo] = filters.createdRange;
       if (createdFrom && createdAt < createdFrom) return false;
       if (createdTo && createdAt > createdTo) return false;
 
-      // Expiratiedatum range filter (plannedStartDate)
       const [expireFrom, expireTo] = filters.expireRange;
       if (expireFrom || expireTo) {
         const hasPlanned = !!quote.plannedStartDate;
@@ -163,20 +155,15 @@ const Quotes = () => {
         if (expireTo && (!hasPlanned || new Date(quote.plannedStartDate!) > expireTo)) return false;
       }
 
-      // Quote nummer zoeken (vrij veld)
       if (filters.quoteNumber && !quote.id.replace("quote-", "OF-").toLowerCase().includes(filters.quoteNumber.toLowerCase())) return false;
 
-      // Klant
       if (filters.klant && !getLeadName(quote.leadId).toLowerCase().includes(filters.klant.toLowerCase())) return false;
 
-      // Min/max bedrag
       if (filters.minBedrag && quote.amount < Number(filters.minBedrag)) return false;
       if (filters.maxBedrag && quote.amount > Number(filters.maxBedrag)) return false;
 
-      // Status
       if (filters.status && filters.status !== "all" && quote.status !== filters.status) return false;
 
-      // Losse zoekterm (op description, klant, nummer)
       if (filters.searchTerm) {
         const lower = filters.searchTerm.toLowerCase();
         if (
@@ -190,18 +177,16 @@ const Quotes = () => {
     });
   }, [filters]);
 
-  // Paginering berekenen
   const totalPages = Math.max(1, Math.ceil(filteredQuotes.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageQuotes = filteredQuotes.slice(startIndex, startIndex + itemsPerPage);
 
-  // Handlers
   const handleChangeFilter = (field: string, value: any) => {
     setFilters((prev) => ({
       ...prev,
       [field]: value,
     }));
-    if (currentPage !== 1) setCurrentPage(1); // reset naar eerste pagina bij filteren
+    if (currentPage !== 1) setCurrentPage(1);
   };
 
   const handleCreateQuote = () => navigate("/quotes/create");
@@ -223,7 +208,6 @@ const Quotes = () => {
           </Button>
         </div>
 
-        {/* Filters */}
         <Card>
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -244,23 +228,17 @@ const Quotes = () => {
             </div>
           </CardHeader>
           <CardContent>
-            {/* Filterbalk, vernieuwd */}
             <div className="bg-muted/40 rounded-lg p-3 flex flex-col md:flex-row md:items-end gap-3 mb-4 overflow-x-auto">
-              {/* Aangemaakt datumbereik - nu één veld */}
               <DateRangePicker
                 value={filters.createdRange}
                 onChange={(range) => handleChangeFilter("createdRange", range)}
                 label="Aangemaakt datumbereik"
               />
-              
-              {/* Vervaldatum bereik - nu één veld */}
               <DateRangePicker
                 value={filters.expireRange}
                 onChange={(range) => handleChangeFilter("expireRange", range)}
                 label="Vervaldatum bereik"
               />
-              
-              {/* Offertenummer, nu vrij tekstveld */}
               <div className="flex flex-col gap-1 min-w-[140px] w-full md:w-auto">
                 <label className="text-xs font-medium text-muted-foreground">Offertenummer</label>
                 <Input
@@ -317,7 +295,12 @@ const Quotes = () => {
                 </Select>
               </div>
             </div>
-            {/* Items-per-page en paginering */}
+
+            <div className="flex items-center gap-2 pb-2 px-2">
+              <span className="text-sm font-medium">Totale offerte waarde (gefilterd):</span>
+              <span className="text-base font-bold">{formatCurrency(filteredQuotes.reduce((sum, q) => sum + q.amount, 0))}</span>
+            </div>
+
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 px-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Offertes per pagina:</span>
@@ -344,7 +327,7 @@ const Quotes = () => {
                 </Button>
               </div>
             </div>
-            {/* Tabel */}
+
             <div className="overflow-x-auto rounded">
               <Table>
                 <TableHeader>
