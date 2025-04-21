@@ -34,7 +34,6 @@ const Dashboard = () => {
   const activeEmployees = mockEmployees.filter(emp => emp.active).length;
   const latestReviews = mockReviews.slice(0, 5);
 
-  // Calculate KPIs
   const totalInvoiceAmount = mockInvoices.reduce((sum, inv) => sum + inv.amount, 0);
   const paidInvoices = mockInvoices.filter(inv => inv.status === "paid");
   const paidAmount = paidInvoices.reduce((sum, inv) => sum + inv.amount, 0);
@@ -45,7 +44,7 @@ const Dashboard = () => {
   const quoteConversionRate = totalQuotes > 0 ? (acceptedQuotes / totalQuotes) * 100 : 0;
 
   const totalWorkAgreements = mockWorkAgreements.length;
-  const activeWorkAgreements = mockWorkAgreements.filter(wa => !wa.completedAt).length;
+  const activeWorkAgreements = mockWorkAgreements.filter(wa => wa.status === "active").length;
 
   return (
     <Layout>
