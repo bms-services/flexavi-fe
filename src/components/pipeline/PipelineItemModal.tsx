@@ -161,7 +161,7 @@ export const PipelineItemModal: React.FC<Props> = ({
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Betaaltermijn: {formatDate(new Date(new Date(item.createdAt).getTime() + 14 * 24 * 60 * 60 * 1000))}</span>
+                  <span>Betaaltermijn: {formatDate(new Date(new Date(item.createdAt).getTime() + 14 * 24 * 60 * 60 * 1000).toISOString())}</span>
                 </div>
               </>
             )}
