@@ -14,6 +14,7 @@ import { WizardPersonnelStep } from './steps/WizardPersonnelStep';
 import { WizardMaterialStep } from './steps/WizardMaterialStep';
 import { WizardTransportStep } from './steps/WizardTransportStep';
 import { WizardPhotosStep } from './steps/WizardPhotosStep';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProjectWizardProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
   } = useProjectWizard();
 
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const handleFinish = () => {
     console.log('Wizard completed with data:', wizardData);
@@ -69,29 +71,64 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0">
-        <div className="flex min-h-[600px]">
-          <ProjectWizardSteps currentStep={currentStep} />
-          
-          <div className="flex-1 p-6 flex flex-col">
-            <div className="flex-1 mb-6">
-              {renderStepContent()}
-            </div>
-            
-            <ProjectWizardNav 
-              currentStep={currentStep} 
-              onNext={goToNextStep}
-              onPrevious={goToPreviousStep}
-              canGoNext={canGoNext}
-              canGoPrevious={canGoPrevious}
-              isLastStep={isLastStep}
-              onFinish={handleFinish}
-              wizardData={wizardData}
-              setWizardData={setWizardData}
-            />
-          </div>
+      <DialogContent
+        className={`p-0 max-w-4xl w-full rounded-md !overflow-visible
+        ${isMobile ? 'max-w-full min-h-[90vh] p-0 flex flex-col' : 'p-0'}
+        `}
+      >
+        <div
+          className={`
+            flex ${isMobile ? 'flex-col min-h-[90vh] h-full' : 'min-h-[600px]'}
+          `}
+        >
+          {/* Sidebar on desktop, bottom bar on mobile */}
+          {isMobile ? (
+            <>
+              <div className="flex-1 p-4 pt-6 flex flex-col min-h-0">
+                <div className="flex-1 mb-4 min-h-0">
+                  {renderStepContent()}
+                </div>
+                <ProjectWizardNav
+                  currentStep={currentStep}
+                  onNext={goToNextStep}
+                  onPrevious={goToPreviousStep}
+                  canGoNext={canGoNext}
+                  canGoPrevious={canGoPrevious}
+                  isLastStep={isLastStep}
+                  onFinish={handleFinish}
+                  wizardData={wizardData}
+                  setWizardData={setWizardData}
+                />
+              </div>
+              <div className="border-t bg-muted/50 w-full py-2">
+                <ProjectWizardSteps currentStep={currentStep} />
+              </div>
+            </>
+          ) : (
+            <>
+              <ProjectWizardSteps currentStep={currentStep} />
+              <div className="flex-1 p-6 flex flex-col">
+                <div className="flex-1 mb-6">
+                  {renderStepContent()}
+                </div>
+
+                <ProjectWizardNav
+                  currentStep={currentStep}
+                  onNext={goToNextStep}
+                  onPrevious={goToPreviousStep}
+                  canGoNext={canGoNext}
+                  canGoPrevious={canGoPrevious}
+                  isLastStep={isLastStep}
+                  onFinish={handleFinish}
+                  wizardData={wizardData}
+                  setWizardData={setWizardData}
+                />
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
   );
 };
+
