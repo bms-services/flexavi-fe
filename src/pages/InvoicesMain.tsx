@@ -8,11 +8,11 @@ import { mockLeads } from "@/data/mockLeads";
 import { Invoice } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-
 import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
 import { InvoicesTable } from "@/components/invoices/InvoicesTable";
 import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
 import { InvoicesFilters } from "./InvoicesFilters";
+import { InvoiceKPIs } from "@/components/invoices/InvoiceKPIs";
 
 const itemsPerPageOptions = [10, 25, 100];
 
@@ -78,6 +78,13 @@ const InvoicesMain = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageInvoices = filteredInvoices.slice(startIndex, startIndex + itemsPerPage);
 
+  // KPI-BEREKENINGEN afh. van filtering:
+  const kpiTotal = filteredInvoices.reduce((sum, q) => sum + q.amount, 0);
+  const kpiPaid = filteredInvoices.filter(q => q.status === "paid").reduce((sum, q) => sum + q.amount, 0);
+  const kpiOutstanding = filteredInvoices
+    .filter(q => ["sent", "overdue", "collection", "legal"].includes(q.status))
+    .reduce((sum, q) => sum + q.amount, 0);
+
   const handleChangeFilter = (field: string, value: any) => {
     setFilters((prev) => ({
       ...prev,
@@ -121,6 +128,7 @@ const InvoicesMain = () => {
     <Layout>
       <div className="container py-6 space-y-6">
         <InvoicesHeader onCreateNewInvoice={handleCreateNewInvoice} />
+        <InvoiceKPIs total={kpiTotal} paid={kpiPaid} outstanding={kpiOutstanding} />
         <Card>
           <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -150,6 +158,7 @@ const InvoicesMain = () => {
               currentPage={currentPage}
               totalPages={totalPages}
               setCurrentPage={setCurrentPage}
+              filteredInvoices={filteredInvoices}
             />
             <InvoicesTable
               invoices={pageInvoices}
@@ -173,4 +182,3 @@ const InvoicesMain = () => {
 };
 
 export default InvoicesMain;
-
