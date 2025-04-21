@@ -5,15 +5,18 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { LeadConversionRate } from "@/components/dashboard/LeadConversionRate";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardChartsProps {
   timeRange: string;
 }
 
 export const DashboardCharts: React.FC<DashboardChartsProps> = ({ timeRange }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-2">
+      <Card className={isMobile ? "" : "lg:col-span-2"}>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
             <CardTitle>Omzet overzicht</CardTitle>

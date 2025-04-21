@@ -2,12 +2,15 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { mockLeads } from "@/data/mockData";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LeadConversionRateProps {
   timeRange: string;
 }
 
 export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRange }) => {
+  const isMobile = useIsMobile();
+  
   // Calculate conversion rates based on lead statuses
   const calculateConversionData = () => {
     const totalLeads = mockLeads.length;
@@ -62,7 +65,8 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
     outerRadius, 
     percent 
   }: any) => {
-    if (percent < 0.05) return null;
+    // Hide labels on small segments or on mobile
+    if (percent < 0.05 || isMobile) return null;
     
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -93,7 +97,7 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
             cy="50%"
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={80}
+            outerRadius={isMobile ? 60 : 80}
             fill="#8884d8"
             dataKey="value"
           >
@@ -110,12 +114,13 @@ export const LeadConversionRate: React.FC<LeadConversionRateProps> = ({ timeRang
             }}
           />
           <Legend 
-            layout="vertical" 
-            verticalAlign="middle" 
-            align="right"
+            layout={isMobile ? "horizontal" : "vertical"} 
+            verticalAlign={isMobile ? "bottom" : "middle"} 
+            align={isMobile ? "center" : "right"}
             iconSize={8}
             iconType="circle"
             formatter={(value) => <span className="text-xs">{value}</span>}
+            wrapperStyle={isMobile ? { paddingTop: "10px" } : undefined}
           />
         </PieChart>
       </ResponsiveContainer>

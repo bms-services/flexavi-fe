@@ -18,22 +18,22 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   lastUpdated,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between gap-4">
+    <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:justify-between">
       <div>
         <h1 className="text-2xl font-bold">Dashboard overzicht</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Laatste update: {format(lastUpdated, "d MMMM yyyy, HH:mm", { locale: nl })}
         </p>
       </div>
-      <div className="flex gap-2">
-        <Button variant="outline" className="h-9">
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" className="h-9 text-sm">
           Vandaag
         </Button>
-        <Button variant="outline" className="h-9">
-          Vergeleken met vorige dag
+        <Button variant="outline" className="h-9 text-sm whitespace-nowrap">
+          Vgl. vorige dag
         </Button>
         <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px] h-9">
+          <SelectTrigger className="w-[150px] h-9 text-sm">
             <SelectValue placeholder="Selecteer periode" />
           </SelectTrigger>
           <SelectContent>
