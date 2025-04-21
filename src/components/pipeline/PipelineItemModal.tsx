@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PipelineItem } from "@/types/pipeline";
@@ -18,7 +17,6 @@ import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 import { LeadLocationMap } from "@/components/leads/components/LeadLocationMap";
 import { formatEuro } from "@/lib/utils";
 
-// Dummy NAW details
 const demoLeads = [
   {
     objectId: "lead-1",
@@ -42,7 +40,6 @@ const demoLeads = [
   }
 ];
 
-// Mock guarantees for demo
 const demoGuarantees = [
   {
     id: "guarantee-1",
@@ -85,41 +82,23 @@ export const PipelineItemModal: React.FC<Props> = ({
   
   if (!item) return null;
 
-  // Extra brede modal
-  const modalWidth = "max-w-7xl w-full";
+  const modalWidth = "w-full max-w-7xl md:max-w-6xl sm:max-w-full";
+  const modalMaxHeight = "max-h-[98vh]";
+  const modalClass = `${modalWidth} ${modalMaxHeight} flex flex-col rounded-lg p-0 overflow-hidden`;
 
-  // ACTIES
-  const handleCreateQuote = () => {
-    window.location.assign("/quotes/create?leadId=" + item.objectId.split("-")[1]);
-  };
-  const handleCreateInvoice = () => {
-    window.location.assign("/invoices/create?leadId=" + item.objectId.split("-")[1]);
-  };
-  const handleCreateWorkOrder = () => {
-    window.location.assign("/projects?leadId=" + item.objectId.split("-")[1]);
-  };
-  const handleUploadPhotos = () => {
-    window.location.assign(`/leads/${item.objectId.split("-")[1]}/media`);
-  };
-
-  // Zoek NAW voor demo-lead
   const leadNAW = demoLeads.find(l => l.objectId === item.objectId) || demoLeads[0];
 
-  // Afspraken ophalen (laatste 3)
   const appointments = mockAppointments
     .filter(a => a.leadId === item.objectId)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 
-  // Gerelateerde documenten ophalen
   const quotes = mockQuotes.filter(q => q.leadId === item.objectId);
   const invoices = mockInvoices.filter(i => i.leadId === item.objectId);
   const workAgreements = mockWorkAgreements.filter(w => w.leadId === item.objectId);
   
-  // Garanties ophalen
   const guarantees = demoGuarantees.filter(g => g.objectId === item.objectId);
 
-  // Helper voor document status kleur
   const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       draft: "bg-gray-100 text-gray-800",
@@ -137,8 +116,8 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${modalWidth} rounded-lg p-0 overflow-hidden`}>
-        <div className="bg-slate-50 p-6 border-b">
+      <DialogContent className={modalClass}>
+        <div className="bg-slate-50 p-6 border-b shrink-0">
           <DialogHeader>
             <div className="flex items-center justify-between mb-2">
               <Badge variant="outline" className={`font-normal bg-blue-100 text-blue-800`}>
@@ -166,10 +145,8 @@ export const PipelineItemModal: React.FC<Props> = ({
           </DialogHeader>
         </div>
         
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* LINKER KOLOM */}
+        <div className="p-6 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0">
           <div className="space-y-6">
-            {/* Klantinformatie */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -230,10 +207,8 @@ export const PipelineItemModal: React.FC<Props> = ({
               </CardContent>
             </Card>
             
-            {/* Locatie kaart */}
             <LeadLocationMap address={leadNAW.address} />
             
-            {/* Garanties */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -268,9 +243,7 @@ export const PipelineItemModal: React.FC<Props> = ({
             </Card>
           </div>
           
-          {/* RECHTER KOLOM */}
           <div className="space-y-6">
-            {/* Afspraken */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -300,7 +273,6 @@ export const PipelineItemModal: React.FC<Props> = ({
                         </div>
                         <p className="text-sm mt-2">{appointment.description}</p>
                         
-                        {/* Prijs tonen indien 'klus' of 'geld ophalen' */}
                         {(appointment.status === "new_assignment" || appointment.status === "extra_assignment") && (
                           <div className="flex items-center gap-1 mt-2 text-sm">
                             <DollarSign className="h-4 w-4 text-green-600" />
@@ -318,7 +290,6 @@ export const PipelineItemModal: React.FC<Props> = ({
               </CardContent>
             </Card>
             
-            {/* Documenten */}
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -426,10 +397,9 @@ export const PipelineItemModal: React.FC<Props> = ({
           </div>
         </div>
         
-        <Separator className="my-3" />
+        <Separator className="my-0" />
         
-        {/* Footer acties */}
-        <div className="px-6 pb-6 flex flex-wrap gap-3">
+        <div className="px-6 py-6 flex flex-wrap gap-3 justify-start bg-white shrink-0">
           <Button onClick={onAddNote} variant="outline" className="min-w-[140px] flex gap-2">
             <FileText className="h-4 w-4" />
             Notitie toevoegen
