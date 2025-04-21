@@ -5,15 +5,14 @@ import { CompanyTabContent } from "./CompanyTabContent";
 import { AppointmentsTabContent } from "./AppointmentsTabContent";
 import { TeamsTabContent } from "./TeamsTabContent";
 import { EmployeesTabContent } from "./EmployeesTabContent";
-import { PermissionsSettings } from "../permissions/PermissionsSettings";
-import { PersonalInfoSettings } from "../account/PersonalInfoSettings";
-import { PasswordSettings } from "../account/PasswordSettings";
-import { DefaultAttachmentsSettings } from "../attachments/DefaultAttachmentsSettings";
-import { EmailTemplatesSettings } from "../email/EmailTemplatesSettings";
-import { SignatureSettings } from "../signature/SignatureSettings";
-import { SubscriptionSettings } from "../subscription/SubscriptionSettings";
-import { WorkAgreementSettingsForm } from "../workagreements/WorkAgreementSettingsForm";
-import { IntegrationsSettings } from "../integrations/IntegrationsSettings";
+import { AttachmentsTabContent } from "./AttachmentsTabContent";
+import { EmailTemplatesTabContent } from "./EmailTemplatesTabContent";
+import { SignatureTabContent } from "./SignatureTabContent";
+import { SubscriptionTabContent } from "./SubscriptionTabContent";
+import { WorkAgreementsTabContent } from "./WorkAgreementsTabContent";
+import { IntegrationsTabContent } from "./IntegrationsTabContent";
+import { AccountTabContent } from "./AccountTabContent";
+import { PermissionsTabContent } from "./PermissionsTabContent";
 
 interface SettingsTabContentProps {
   timeBlocks: Array<{ id: number; start: string; end: string; label: string }>;
@@ -74,36 +73,35 @@ export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
       </TabsContent>
       
       <TabsContent value="permissions" className="mt-0">
-        <PermissionsSettings />
+        <PermissionsTabContent />
       </TabsContent>
       
       <TabsContent value="account" className="mt-0">
-        <PersonalInfoSettings />
-        <PasswordSettings />
+        <AccountTabContent />
       </TabsContent>
 
       <TabsContent value="attachments" className="mt-0">
-        <DefaultAttachmentsSettings />
+        <AttachmentsTabContent />
       </TabsContent>
 
       <TabsContent value="email" className="mt-0">
-        <EmailTemplatesSettings />
+        <EmailTemplatesTabContent />
       </TabsContent>
 
       <TabsContent value="signature" className="mt-0">
-        <SignatureSettings />
+        <SignatureTabContent />
       </TabsContent>
 
       <TabsContent value="subscription" className="mt-0">
-        <SubscriptionSettings />
+        <SubscriptionTabContent />
       </TabsContent>
 
       <TabsContent value="workagreements" className="mt-0">
-        <WorkAgreementSettingsForm />
+        <WorkAgreementsTabContent />
       </TabsContent>
 
       <TabsContent value="integrations" className="mt-0">
-        <IntegrationsSettings />
+        <IntegrationsTabContent />
       </TabsContent>
     </>
   );
