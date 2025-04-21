@@ -1,13 +1,38 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { EmployeeList } from "@/components/employees/EmployeeList";
 import { Button } from "@/components/ui/button";
 import { Plus, Users } from "lucide-react";
 import { useEmployeeDialog } from "@/components/employees/useEmployeeDialog";
+import { EmployeeCalendarView } from "@/components/employees/EmployeeCalendarView";
+import { Employee, WorkDay } from "@/types/employee-management";
+import { useToast } from "@/hooks/use-toast";
+
+// Mock workdays data - replace with actual data later
+const mockWorkDays: WorkDay[] = [];
 
 export default function EmployeeManagement() {
   const { openDialog } = useEmployeeDialog();
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [workDays, setWorkDays] = useState<WorkDay[]>(mockWorkDays);
+  const { toast } = useToast();
+
+  const handleAddDayOff = (employeeId: string, date: Date) => {
+    const newWorkDay: WorkDay = {
+      id: crypto.randomUUID(),
+      employeeId,
+      date: date.toISOString(),
+      hours: 0,
+      type: "vacation"
+    };
+
+    setWorkDays([...workDays, newWorkDay]);
+    toast({
+      title: "Vrije dag toegevoegd",
+      description: "De medewerker is succesvol vrij gegeven op de geselecteerde datum."
+    });
+  };
 
   return (
     <Layout>
@@ -22,7 +47,15 @@ export default function EmployeeManagement() {
             Nieuwe Medewerker
           </Button>
         </div>
-        <EmployeeList />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <EmployeeList />
+          <EmployeeCalendarView 
+            employees={employees}
+            workDays={workDays}
+            onAddDayOff={handleAddDayOff}
+          />
+        </div>
       </div>
     </Layout>
   );

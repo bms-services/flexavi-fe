@@ -28,6 +28,19 @@ export const EmployeeDialog = ({ isOpen, onClose, employee, onSubmit }: Employee
         hourlyRate: 0,
         dailyRate: 0
       },
+      workingDays: {
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: false,
+        sunday: false
+      },
+      workingHours: {
+        start: "09:00",
+        end: "17:00"
+      },
       availableDays: ["1", "2", "3", "4", "5"],
       active: true,
       teamIds: []
@@ -130,15 +143,41 @@ export const EmployeeDialog = ({ isOpen, onClose, employee, onSubmit }: Employee
               )}
             />
 
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium">Werkdagen</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {Object.entries(form.watch("workingDays")).map(([day, isChecked]) => (
+                  <FormField
+                    key={day}
+                    control={form.control}
+                    name={`workingDays.${day}`}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {day.charAt(0).toUpperCase() + day.slice(1)}
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="rates.hourlyRate"
+                name="workingHours.start"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Uurtarief (€)</FormLabel>
+                    <FormLabel>Start tijd</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type="time" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -146,12 +185,12 @@ export const EmployeeDialog = ({ isOpen, onClose, employee, onSubmit }: Employee
 
               <FormField
                 control={form.control}
-                name="rates.dailyRate"
+                name="workingHours.end"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Dagtarief (€)</FormLabel>
+                    <FormLabel>Eind tijd</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type="time" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
