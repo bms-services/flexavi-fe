@@ -17,7 +17,6 @@ import WorkAgreementEdit from "./pages/WorkAgreementEdit";
 import Invoices from "./pages/Invoices";
 import InvoiceEdit from "./pages/InvoiceEdit";
 import InvoicesMain from "./pages/InvoicesMain";
-// We don't need to import InvoicesFilters here anymore as it will be managed by InvoicesMain
 import Products from "./pages/Products";
 import Partners from "./pages/Partners";
 import Settings from "./pages/Settings";
@@ -37,6 +36,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import Pricing from "./pages/Pricing";
 import Landing from "./pages/Landing";
 import Requests from "./pages/Requests";
+import ReputationManagement from "./pages/ReputationManagement";
 
 function App() {
   return (
@@ -58,7 +58,6 @@ function App() {
         <Route path="/workagreements/:id" element={<WorkAgreementEdit />} />
         <Route path="/invoices" element={<InvoicesMain />}>
           <Route index element={<Invoices />} />
-          {/* Removed the direct route to InvoicesFilters as it's now handled by InvoicesMain */}
         </Route>
         <Route path="/invoices/new" element={<InvoiceEdit />} />
         <Route path="/invoices/:id" element={<InvoiceEdit />} />
@@ -70,6 +69,7 @@ function App() {
         <Route path="/employee/planning" element={<EmployeePlanning />} />
         <Route path="/employees" element={<EmployeeManagement />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/reputation" element={<ReputationManagement />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

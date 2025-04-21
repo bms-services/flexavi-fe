@@ -9,6 +9,7 @@ import IntegrationSection from "@/components/landing/IntegrationSection";
 import PricingSection from "@/components/landing/PricingSection";
 import StatsSection from "@/components/landing/StatsSection";
 import CTASection from "@/components/landing/CTASection";
+import ReviewsWidget from "@/components/landing/ReviewsWidget";
 import { useEffect } from "react";
 
 export default function Landing() {
@@ -50,6 +51,7 @@ export default function Landing() {
       <FeatureSection />
       <DemoSection />
       <TestimonialSection />
+      <ReviewsWidget />
       <IntegrationSection />
       <PricingSection />
       <CTASection />

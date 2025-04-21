@@ -3,7 +3,7 @@ import React from "react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Building2, Calendar, Users2, User, Paperclip, Mail, 
-  Pen, CreditCard, Shield, FileText, Webhook
+  Pen, CreditCard, Shield, FileText, Webhook, Star
 } from "lucide-react";
 
 export const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
@@ -62,6 +62,10 @@ export const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
             <TabsTrigger value="workagreements" className="w-full justify-start">
               <FileText className="h-4 w-4 mr-2" />
               Werkovereenkomsten
+            </TabsTrigger>
+            <TabsTrigger value="reputation" className="w-full justify-start">
+              <Star className="h-4 w-4 mr-2" />
+              Reputatiebeheer
             </TabsTrigger>
             <TabsTrigger value="integrations" className="w-full justify-start">
               <Webhook className="h-4 w-4 mr-2" />

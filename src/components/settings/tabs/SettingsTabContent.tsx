@@ -2,40 +2,20 @@
 import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { CompanyTabContent } from "./CompanyTabContent";
-import { AppointmentsTabContent } from "./AppointmentsTabContent";
 import { TeamsTabContent } from "./TeamsTabContent";
 import { EmployeesTabContent } from "./EmployeesTabContent";
+import { PermissionsTabContent } from "./PermissionsTabContent";
+import { AppointmentsTabContent } from "./AppointmentsTabContent";
+import { AccountTabContent } from "./AccountTabContent";
 import { AttachmentsTabContent } from "./AttachmentsTabContent";
 import { EmailTemplatesTabContent } from "./EmailTemplatesTabContent";
 import { SignatureTabContent } from "./SignatureTabContent";
 import { SubscriptionTabContent } from "./SubscriptionTabContent";
 import { WorkAgreementsTabContent } from "./WorkAgreementsTabContent";
 import { IntegrationsTabContent } from "./IntegrationsTabContent";
-import { AccountTabContent } from "./AccountTabContent";
-import { PermissionsTabContent } from "./PermissionsTabContent";
+import { ReputationTabContent } from "./ReputationTabContent";
 
-interface SettingsTabContentProps {
-  timeBlocks: Array<{ id: number; start: string; end: string; label: string }>;
-  slotSettings: {
-    salesMorningSlots: number;
-    salesAfternoonSlots: number;
-    salesEveningSlots: number;
-    installationMorningSlots: number;
-    installationAfternoonSlots: number;
-    installationEveningSlots: number;
-  };
-  colors: {
-    emptyBorder: string;
-    fullBorder: string;
-  };
-  onTimeBlocksChange: (blocks: Array<{ id: number; start: string; end: string; label: string }>) => void;
-  onSlotSettingsChange: (settings: Record<string, number>) => void;
-  onSaveSlots: () => void;
-  onSaveColors: () => void;
-  onColorsChange: (colors: { emptyBorder: string; fullBorder: string }) => void;
-}
-
-export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
+export const SettingsTabContent = ({ 
   timeBlocks,
   slotSettings,
   colors,
@@ -43,16 +23,33 @@ export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
   onSlotSettingsChange,
   onSaveSlots,
   onSaveColors,
-  onColorsChange,
+  onColorsChange
+}: { 
+  timeBlocks: any;
+  slotSettings: any;
+  colors: any;
+  onTimeBlocksChange: any;
+  onSlotSettingsChange: any;
+  onSaveSlots: any;
+  onSaveColors: any;
+  onColorsChange: any;
 }) => {
   return (
     <>
-      <TabsContent value="company" className="mt-0">
+      <TabsContent value="company">
         <CompanyTabContent />
       </TabsContent>
-      
-      <TabsContent value="appointments" className="mt-0">
-        <AppointmentsTabContent
+      <TabsContent value="teams">
+        <TeamsTabContent />
+      </TabsContent>
+      <TabsContent value="employees">
+        <EmployeesTabContent />
+      </TabsContent>
+      <TabsContent value="permissions">
+        <PermissionsTabContent />
+      </TabsContent>
+      <TabsContent value="appointments">
+        <AppointmentsTabContent 
           timeBlocks={timeBlocks}
           slotSettings={slotSettings}
           colors={colors}
@@ -63,44 +60,28 @@ export const SettingsTabContent: React.FC<SettingsTabContentProps> = ({
           onColorsChange={onColorsChange}
         />
       </TabsContent>
-      
-      <TabsContent value="teams" className="mt-0">
-        <TeamsTabContent />
-      </TabsContent>
-      
-      <TabsContent value="employees" className="mt-0">
-        <EmployeesTabContent />
-      </TabsContent>
-      
-      <TabsContent value="permissions" className="mt-0">
-        <PermissionsTabContent />
-      </TabsContent>
-      
-      <TabsContent value="account" className="mt-0">
+      <TabsContent value="account">
         <AccountTabContent />
       </TabsContent>
-
-      <TabsContent value="attachments" className="mt-0">
+      <TabsContent value="attachments">
         <AttachmentsTabContent />
       </TabsContent>
-
-      <TabsContent value="email" className="mt-0">
+      <TabsContent value="email">
         <EmailTemplatesTabContent />
       </TabsContent>
-
-      <TabsContent value="signature" className="mt-0">
+      <TabsContent value="signature">
         <SignatureTabContent />
       </TabsContent>
-
-      <TabsContent value="subscription" className="mt-0">
+      <TabsContent value="subscription">
         <SubscriptionTabContent />
       </TabsContent>
-
-      <TabsContent value="workagreements" className="mt-0">
+      <TabsContent value="workagreements">
         <WorkAgreementsTabContent />
       </TabsContent>
-
-      <TabsContent value="integrations" className="mt-0">
+      <TabsContent value="reputation">
+        <ReputationTabContent />
+      </TabsContent>
+      <TabsContent value="integrations">
         <IntegrationsTabContent />
       </TabsContent>
     </>

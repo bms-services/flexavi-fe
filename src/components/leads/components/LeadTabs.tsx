@@ -1,68 +1,101 @@
 
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { NotesTab } from "../tabs/NotesTab";
+import { LeadOverview } from "./LeadOverview";
 import { AppointmentsTab } from "../tabs/AppointmentsTab";
+import { NotesTab } from "../tabs/NotesTab";
 import { QuotesTab } from "../tabs/QuotesTab";
-import { InvoicesTab } from "../tabs/InvoicesTab";
-import { ProjectsTab } from "../tabs/ProjectsTab";
 import { WorkOrdersTab } from "../tabs/WorkOrdersTab";
-import { LeadDetail } from "@/types";
-import { ListPlus, Briefcase } from "lucide-react";
+import { InvoicesTab } from "../tabs/InvoicesTab";
+import { Lead } from "@/types";
+import { ProjectsTab } from "../tabs/ProjectsTab";
+import { ReviewsTab } from "../tabs/ReviewsTab";
 
 interface LeadTabsProps {
-  lead: LeadDetail;
+  lead: Lead;
+  appointments: any[];
+  notes: any[];
+  quotes: any[];
+  workAgreements: any[];
+  invoices: any[];
+  projects: any[];
 }
 
-export const LeadTabs: React.FC<LeadTabsProps> = ({ lead }) => {
+export const LeadTabs = ({
+  lead,
+  appointments,
+  notes,
+  quotes,
+  workAgreements,
+  invoices,
+  projects,
+}: LeadTabsProps) => {
   return (
-    <Card>
-      <Tabs defaultValue="notes" className="w-full">
-        <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 overflow-x-auto">
-          <TabsTrigger value="notes" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            Notities
-          </TabsTrigger>
-          <TabsTrigger value="appointments" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            Afspraken
-          </TabsTrigger>
-          <TabsTrigger value="quotes" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            Offertes
-          </TabsTrigger>
-          <TabsTrigger value="invoices" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            Facturen
-          </TabsTrigger>
-          <TabsTrigger value="workorders" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            <Briefcase className="h-4 w-4 mr-2" />
-            Werkopdrachten
-          </TabsTrigger>
-          <TabsTrigger value="projects" className="rounded-none px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary">
-            <ListPlus className="h-4 w-4 mr-2" />
-            Projecten
-          </TabsTrigger>
-        </TabsList>
-        
-        <div className="p-6">
-          <TabsContent value="notes">
-            <NotesTab notes={lead.notes} leadId={lead.id} />
-          </TabsContent>
-          <TabsContent value="appointments">
-            <AppointmentsTab appointments={lead.appointments} leadId={lead.id} />
-          </TabsContent>
-          <TabsContent value="quotes">
-            <QuotesTab quotes={lead.quotes} leadId={lead.id} />
-          </TabsContent>
-          <TabsContent value="invoices">
-            <InvoicesTab invoices={lead.invoices} leadId={lead.id} />
-          </TabsContent>
-          <TabsContent value="workorders">
-            <WorkOrdersTab leadId={lead.id} />
-          </TabsContent>
-          <TabsContent value="projects">
-            <ProjectsTab leadId={lead.id} />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </Card>
+    <Tabs defaultValue="overview" className="mt-8">
+      <TabsList className="w-full justify-start border-b rounded-none px-0">
+        <TabsTrigger value="overview" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Overzicht
+        </TabsTrigger>
+        <TabsTrigger value="quotes" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Offertes {quotes.length > 0 && `(${quotes.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="workorders" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Werkovereenkomsten {workAgreements.length > 0 && `(${workAgreements.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="invoices" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Facturen {invoices.length > 0 && `(${invoices.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="projects" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Projecten {projects.length > 0 && `(${projects.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="appointments" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Afspraken {appointments.length > 0 && `(${appointments.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="notes" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Notities {notes.length > 0 && `(${notes.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="reviews" className="rounded-b-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+          Reviews
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="overview">
+        <LeadOverview
+          lead={lead}
+          quotes={quotes}
+          invoices={invoices}
+          workAgreements={workAgreements}
+          appointments={appointments}
+        />
+      </TabsContent>
+
+      <TabsContent value="quotes">
+        <QuotesTab quotes={quotes} leadId={lead.id} />
+      </TabsContent>
+
+      <TabsContent value="workorders">
+        <WorkOrdersTab workAgreements={workAgreements} leadId={lead.id} />
+      </TabsContent>
+
+      <TabsContent value="invoices">
+        <InvoicesTab invoices={invoices} leadId={lead.id} />
+      </TabsContent>
+
+      <TabsContent value="projects">
+        <ProjectsTab projects={projects} leadId={lead.id} />
+      </TabsContent>
+
+      <TabsContent value="appointments">
+        <AppointmentsTab appointments={appointments} leadId={lead.id} />
+      </TabsContent>
+
+      <TabsContent value="notes">
+        <NotesTab notes={notes} leadId={lead.id} />
+      </TabsContent>
+      
+      <TabsContent value="reviews">
+        <ReviewsTab lead={lead} />
+      </TabsContent>
+    </Tabs>
   );
 };
