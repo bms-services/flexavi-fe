@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -27,8 +26,8 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-sm border border-gray-300">
+      <div className="overflow-x-auto rounded-lg border border-gray-400 bg-white shadow-sm">
+        <table className="w-full min-w-[1000px] text-sm border border-gray-400">
           <thead>
             <tr className="bg-muted">
               <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[60px]">Aantal</th>
