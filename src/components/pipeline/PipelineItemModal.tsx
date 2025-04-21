@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
@@ -11,6 +12,9 @@ import { mockAppointments } from "@/data/mockAppointments";
 import { mockQuotes } from "@/data/mockQuotes";
 import { mockInvoices } from "@/data/mockInvoices";
 import { mockWorkAgreements } from "@/data/mockWorkAgreements";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { NewAppointmentForm } from "@/components/appointments/components/form/NewAppointmentForm";
 
 const demoLeads = [
   {
@@ -74,6 +78,9 @@ export const PipelineItemModal: React.FC<Props> = ({
   onSchedule,
 }) => {
   const [activeDocTab, setActiveDocTab] = useState("quotes");
+  const [showNoteDialog, setShowNoteDialog] = useState(false);
+  const [showAppointmentDialog, setShowAppointmentDialog] = useState(false);
+  const [noteValue, setNoteValue] = useState("");
 
   if (!item) return null;
 
@@ -109,7 +116,7 @@ export const PipelineItemModal: React.FC<Props> = ({
     return colorMap[status.toLowerCase()] || "bg-gray-100 text-gray-800";
   };
 
-  // Footer menu handlers (keep as local functions)
+  // Footer menu handlers
   const handleCreateQuote = () => {
     toast.success("Offerte aanmaken gestart");
   };
@@ -123,38 +130,95 @@ export const PipelineItemModal: React.FC<Props> = ({
     toast.success("Upload foto's gestart");
   };
 
+  // Notitie toevoegen modal
+  const handleSaveNote = () => {
+    if (!noteValue.trim()) {
+      toast.error("Notitie mag niet leeg zijn");
+      return;
+    }
+    // Hier kun je uiteraard later een save functie koppelen
+    toast.success("Notitie toegevoegd!");
+    setNoteValue("");
+    setShowNoteDialog(false);
+  };
+
+  // Afspraak toevoegen modal submit
+  const handleNewAppointmentSubmit = (data: any) => {
+    // Later kun je hier de data uploaden of verwerken
+    toast.success("Afspraak is toegevoegd!");
+    setShowAppointmentDialog(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={modalClass}>
-        <div className="bg-slate-50 p-6 border-b shrink-0">
-          <PipelineItemModalHeader
-            objectId={item.objectId}
-            name={leadNAW.name}
-            updatedAt={item.updatedAt}
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className={modalClass}>
+          <div className="bg-slate-50 p-6 border-b shrink-0">
+            <PipelineItemModalHeader
+              objectId={item.objectId}
+              name={leadNAW.name}
+              updatedAt={item.updatedAt}
+            />
+          </div>
+          <PipelineItemModalContent
+            leadNAW={leadNAW}
+            guarantees={guarantees}
+            appointments={appointments}
+            quotes={quotes}
+            invoices={invoices}
+            workAgreements={workAgreements}
+            activeDocTab={activeDocTab}
+            setActiveDocTab={setActiveDocTab}
+            getStatusColor={getStatusColor}
           />
-        </div>
-        <PipelineItemModalContent
-          leadNAW={leadNAW}
-          guarantees={guarantees}
-          appointments={appointments}
-          quotes={quotes}
-          invoices={invoices}
-          workAgreements={workAgreements}
-          activeDocTab={activeDocTab}
-          setActiveDocTab={setActiveDocTab}
-          getStatusColor={getStatusColor}
-        />
-        <Separator className="my-0" />
-        <PipelineItemModalFooterActions
-          onAddNote={onAddNote}
-          onSchedule={onSchedule}
-          onGoToDetail={onGoToDetail}
-          onCreateQuote={handleCreateQuote}
-          onCreateInvoice={handleCreateInvoice}
-          onCreateWorkOrder={handleCreateWorkOrder}
-          onUploadPhotos={handleUploadPhotos}
-        />
-      </DialogContent>
-    </Dialog>
+          <Separator className="my-0" />
+
+          <PipelineItemModalFooterActions
+            onAddNote={() => setShowNoteDialog(true)}
+            onSchedule={() => setShowAppointmentDialog(true)}
+            onGoToDetail={onGoToDetail}
+            onCreateQuote={handleCreateQuote}
+            onCreateInvoice={handleCreateInvoice}
+            onCreateWorkOrder={handleCreateWorkOrder}
+            onUploadPhotos={handleUploadPhotos}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Notitie toevoegen modal */}
+      <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
+        <DialogContent className="max-w-md w-full">
+          <DialogHeader>
+            <DialogTitle>Nieuwe Notitie toevoegen</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            value={noteValue}
+            onChange={(e) => setNoteValue(e.target.value)}
+            placeholder="Schrijf je notitie..."
+            className="min-h-[120px] mt-3"
+          />
+          <div className="flex justify-end gap-3 mt-4">
+            <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
+              Annuleren
+            </Button>
+            <Button onClick={handleSaveNote} disabled={!noteValue.trim()}>
+              Notitie toevoegen
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Afspraak toevoegen modal */}
+      <Dialog open={showAppointmentDialog} onOpenChange={setShowAppointmentDialog}>
+        <DialogContent className="w-full max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Nieuwe Afspraak maken</DialogTitle>
+          </DialogHeader>
+          <div className="pt-3">
+            <NewAppointmentForm onSubmit={handleNewAppointmentSubmit} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
