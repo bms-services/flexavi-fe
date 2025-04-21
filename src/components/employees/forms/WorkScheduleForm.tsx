@@ -19,12 +19,12 @@ export const WorkScheduleForm = ({ form }: WorkScheduleFormProps) => {
             <FormField
               key={day}
               control={form.control}
-              name={`workingDays.${day}`}
+              name={`workingDays.${day}` as keyof Employee}
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2">
                   <FormControl>
                     <Checkbox
-                      checked={field.value}
+                      checked={field.value as boolean}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
