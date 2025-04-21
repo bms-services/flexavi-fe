@@ -44,7 +44,7 @@ const Dashboard = () => {
   const quoteConversionRate = totalQuotes > 0 ? (acceptedQuotes / totalQuotes) * 100 : 0;
 
   const totalWorkAgreements = mockWorkAgreements.length;
-  const activeWorkAgreements = mockWorkAgreements.filter(wa => wa.status === "active").length;
+  const activeWorkAgreements = mockWorkAgreements.filter(wa => wa.status === "signed").length;
 
   return (
     <Layout>
