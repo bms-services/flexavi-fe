@@ -5,7 +5,10 @@ import { TeamDetails, Appointment } from "@/types";
 import { format, addDays } from "date-fns";
 import { EmployeePlanningTabs } from "@/components/employee/EmployeePlanningTabs";
 import { Layout } from "@/components/layout/Layout";
-import { Users, Calendar } from "lucide-react";
+import { Users, Calendar, ListCheck } from "lucide-react";
+import { ProjectOpenTasksCard } from "@/components/projects/detail/tabs/ProjectOpenTasksCard";
+import { mockProjects } from "@/data/mockProjects";
+import { ProjectNote } from "@/types/project";
 
 // Teams hardcoded for now (can be fetched from API later)
 const teams: TeamDetails[] = [
@@ -15,6 +18,16 @@ const teams: TeamDetails[] = [
 
 export default function EmployeePlanningPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
+
+  // Verzamel alle 'openstaande taken' uit alle projecten
+  const openTasks: ProjectNote[] = mockProjects.flatMap(project =>
+    (project.notes ?? [])
+      .filter(note => note.type === "task" && note.status === "open")
+      .map(task => ({
+        ...task,
+        createdFor: project.name // Laat projectnaam zien als 'voor'
+      }))
+  );
 
   // Filter appointments for the selected team by day
   const getAppointmentsForDay = (dayOffset: number) => {
@@ -67,6 +80,15 @@ export default function EmployeePlanningPage() {
               </select>
             </div>
           </div>
+        </div>
+
+        {/* Openstaande taken blok */}
+        <div className="mb-6">
+          <ProjectOpenTasksCard 
+            openTasks={openTasks}
+            onAddTaskClick={() => {}} // geen functionaliteit, alleen tonen
+            onToggleTaskStatus={() => {}} // geen functionaliteit, alleen tonen
+          />
         </div>
         
         <EmployeePlanningTabs days={days} getAppointmentsForDay={getAppointmentsForDay} />
