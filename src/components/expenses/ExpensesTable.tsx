@@ -163,7 +163,10 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
                   <TableCell className="py-2">
                     <Checkbox
                       checked={selectedExpenses.includes(expense.id)}
-                      onCheckedChange={(e) => toggleSelectExpense(expense.id, e as React.MouseEvent)}
+                      onCheckedChange={(checked) => {
+                        const e = { stopPropagation: () => {} } as React.MouseEvent;
+                        toggleSelectExpense(expense.id, e);
+                      }}
                       onClick={(e) => e.stopPropagation()}
                     />
                   </TableCell>
@@ -323,4 +326,3 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
       </Dialog>
     </>
   );
-};

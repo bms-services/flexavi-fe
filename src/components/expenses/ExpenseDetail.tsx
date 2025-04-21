@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseTypeIcon, getTypeLabel } from "./ExpenseTypeIcon";
 import { ExpenseStatusBadge } from "./ExpenseStatusBadge";
 import { Button } from "@/components/ui/button";
-import { Edit, Link, Receipt, Download, FileText, ArrowLeft } from "lucide-react";
+import { Edit, Link, Receipt, Download, FileText, ArrowLeft, Check } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { mockProjects } from "@/data/mockData";
 import { useNavigate } from "react-router-dom";
