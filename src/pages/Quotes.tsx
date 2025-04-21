@@ -299,7 +299,7 @@ const Quotes = () => {
                     <SelectValue placeholder="Status..." />
                   </SelectTrigger>
                   <SelectContent className="z-50">
-                    <SelectItem value="">Alle</SelectItem>
+                    <SelectItem value="all">Alle</SelectItem>
                     {statusOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
