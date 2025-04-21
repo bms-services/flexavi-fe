@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Logo } from "@/components/ui/logo";
-import { QuickActions } from "./QuickActions";
+import QuickActions from "./QuickActions";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
