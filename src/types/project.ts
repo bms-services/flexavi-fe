@@ -24,6 +24,25 @@ export type ProjectPersonnel = {
   totalCost: number;
 };
 
+export type ProjectNote = {
+  id: string;
+  createdAt: string;
+  createdBy: string;
+  createdFor: string;
+  note: string;
+};
+
+export type ProjectAppointment = {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  createdBy: string;
+};
+
 export type Project = {
   id: string;
   name: string;
@@ -44,4 +63,6 @@ export type Project = {
   photos: { name: string; url: string }[];
   createdAt: string;
   updatedAt: string;
+  appointments?: ProjectAppointment[]; // Toegevoegd
+  notes?: ProjectNote[]; // Toegevoegd
 };
