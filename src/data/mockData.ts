@@ -9,3 +9,4 @@ export * from './mockProjects';
 export * from './mockWorkAgreements';
 export * from './mockReviews';
 export * from './mockEmployees';
+export * from './mockWorkDays';
