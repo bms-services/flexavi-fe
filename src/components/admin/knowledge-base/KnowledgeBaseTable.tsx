@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   ColumnDef,
@@ -38,7 +39,7 @@ export function KnowledgeBaseTable({ entries, categories, onEdit, onDelete }: Kn
       cell: ({ row }) => {
         const type = row.getValue("type") as KnowledgeBaseEntryType;
         let badgeText = "";
-        let badgeVariant = "default";
+        let badgeVariant: "default" | "secondary" | "outline" | "destructive" | "success" | "warning" | "primary" = "default";
 
         switch (type) {
           case "text":
