@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -55,8 +54,7 @@ export function SupportTicketActions({ ticket }: SupportTicketActionsProps) {
   
   const handleCopyId = () => {
     navigator.clipboard.writeText(ticket.id);
-    toast({
-      title: "Ticket ID gekopieerd",
+    toast("Ticket ID gekopieerd", {
       description: `Ticket ID ${ticket.id} is gekopieerd naar het klembord.`
     });
   };
