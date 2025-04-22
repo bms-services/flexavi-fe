@@ -4,6 +4,10 @@ import { PipelineItemMainDialog } from "./item-modal/PipelineItemMainDialog";
 import { PipelineItemNoteDialog } from "./item-modal/PipelineItemNoteDialog";
 import { PipelineItemAppointmentDialog } from "./item-modal/PipelineItemAppointmentDialog";
 import { usePipeline } from "@/hooks/usePipeline";
+import { mockAppointments } from "@/data/mockAppointments";
+import { mockQuotes } from "@/data/mockQuotes";
+import { mockInvoices } from "@/data/mockInvoices";
+import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 
 const demoLeads = [
   {
@@ -80,11 +84,6 @@ export const PipelineItemModal: React.FC<Props> = ({
   const leadNAW = demoLeads.find((l) => l.objectId === item.objectId) || demoLeads[0];
 
   // We keep filtering logic local, could be optimized by moving or memoizing outside
-  const { mockAppointments } = require("@/data/mockAppointments");
-  const { mockQuotes } = require("@/data/mockQuotes");
-  const { mockInvoices } = require("@/data/mockInvoices");
-  const { mockWorkAgreements } = require("@/data/mockWorkAgreements");
-
   const appointments = mockAppointments
     .filter((a: any) => a.leadId === item.objectId)
     .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
