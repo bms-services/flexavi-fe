@@ -38,14 +38,37 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const { handleLike, handleDislike } = useCommunityReactions();
   
+  // Create default author object if not present
+  const author = post.author || {
+    id: post.authorId,
+    name: post.authorName,
+    avatar: post.authorAvatar,
+    badge: undefined
+  };
+
+  // Create default group object if not present
+  const group = post.group || {
+    id: post.groupId,
+    name: post.groupName,
+    description: "",
+    icon: "",
+    memberCount: 0,
+    postCount: 0,
+    color: ""
+  };
+  
+  // Ensure likes and dislikes are available
+  const likes = post.likes || post.likeCount || 0;
+  const dislikes = post.dislikes || post.dislikeCount || 0;
+  
   const handleReport = (reason: string, details: string) => {
     console.log("Reporting post:", post.id, reason, details);
     toast.success("Bedankt voor je melding. We zullen dit bericht beoordelen.");
     setShowReportDialog(false);
   };
   
-  const handleSubmitComment = (content: string) => {
-    console.log("New comment:", content, "replying to:", replyingTo);
+  const handleSubmitComment = (content: string, parentId?: string) => {
+    console.log("New comment:", content, "replying to:", parentId || "main post");
     setReplyingTo(null);
     toast.success("Reactie geplaatst");
   };
@@ -61,6 +84,9 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
   const handleDislikeComment = (commentId: string) => {
     console.log("Dislike comment:", commentId);
   };
+
+  // Get the image URL from either direct image property or first media item
+  const imageUrl = post.image || (post.media && post.media.length > 0 ? post.media[0].url : undefined);
   
   return (
     <div className="space-y-4">
@@ -72,21 +98,21 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       <Card>
         <CardHeader className="p-4 pb-0 flex-row items-start gap-3">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={post.author.avatar} />
-            <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={author.avatar} />
+            <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
           </Avatar>
           
           <div className="flex-1 space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium">{post.author.name}</span>
-              {post.author.badge && (
+              <span className="font-medium">{author.name}</span>
+              {author.badge && (
                 <Badge variant="outline" className="text-xs font-normal">
-                  {post.author.badge}
+                  {author.badge}
                 </Badge>
               )}
-              {post.group && (
+              {group && (
                 <Badge variant="secondary" className="text-xs font-normal">
-                  {post.group.name}
+                  {group.name}
                 </Badge>
               )}
             </div>
@@ -122,10 +148,10 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
             {post.content}
           </div>
           
-          {post.image && (
+          {imageUrl && (
             <div className="mt-4 rounded-md overflow-hidden">
               <img 
-                src={post.image} 
+                src={imageUrl} 
                 alt={post.title}
                 className="w-full object-cover" 
               />
@@ -144,7 +170,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
               <Heart 
                 className={`h-4 w-4 ${post.hasLiked ? "fill-red-500 text-red-500" : ""}`} 
               />
-              <span>{post.likes}</span>
+              <span>{likes}</span>
             </Button>
             
             <Button 
@@ -156,7 +182,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
               <ThumbsDown 
                 className={`h-4 w-4 ${post.hasDisliked ? "fill-gray-500 text-gray-500" : ""}`} 
               />
-              <span>{post.dislikes}</span>
+              <span>{dislikes}</span>
             </Button>
             
             <Button 
@@ -201,9 +227,9 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
                   {replyingTo === comment.id && (
                     <div className="pl-6">
                       <CommentReplyForm 
+                        parentId={comment.id}
                         onSubmit={handleSubmitComment}
                         onCancel={() => setReplyingTo(null)}
-                        autoFocus
                         replyingTo={comment.author.name}
                       />
                     </div>
@@ -221,9 +247,9 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
                       {replyingTo === reply.id && (
                         <div className="pl-6">
                           <CommentReplyForm 
+                            parentId={reply.id}
                             onSubmit={handleSubmitComment}
                             onCancel={() => setReplyingTo(null)}
-                            autoFocus
                             replyingTo={reply.author.name}
                           />
                         </div>

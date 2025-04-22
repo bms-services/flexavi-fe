@@ -16,7 +16,7 @@ import {
   Share
 } from "lucide-react";
 import { formatTimeAgo } from "@/utils/format";
-import { Post } from "@/types/community";
+import { Post, PostType } from "@/types/community";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -44,36 +44,59 @@ export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
   
   const getPostTypeIcon = () => {
     switch (post.type) {
-      case "image":
+      case PostType.IMAGE:
         return <Image className="h-4 w-4" />;
-      case "article":
+      case PostType.ARTICLE:
         return <FileText className="h-4 w-4" />;
-      case "link":
+      case PostType.LINK:
         return <LinkIcon className="h-4 w-4" />;
       default:
         return <MessageSquare className="h-4 w-4" />;
     }
   };
   
+  // Create default author object if not present
+  const author = post.author || {
+    id: post.authorId,
+    name: post.authorName,
+    avatar: post.authorAvatar,
+    badge: undefined
+  };
+
+  // Create default group object if not present
+  const group = post.group || {
+    id: post.groupId,
+    name: post.groupName,
+    description: "",
+    icon: "",
+    memberCount: 0,
+    postCount: 0,
+    color: ""
+  };
+  
+  // Ensure likes and dislikes are available
+  const likes = post.likes || post.likeCount || 0;
+  const dislikes = post.dislikes || post.dislikeCount || 0;
+  
   return (
     <Card className="overflow-hidden hover:border-primary/50 transition-colors">
       <CardHeader className="p-4 pb-0 flex-row items-start gap-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={post.author.avatar} />
-          <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+          <AvatarImage src={author.avatar} />
+          <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
         </Avatar>
         
         <div className="flex-1 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium">{post.author.name}</span>
-            {post.author.badge && (
+            <span className="font-medium">{author.name}</span>
+            {author.badge && (
               <Badge variant="outline" className="text-xs font-normal">
-                {post.author.badge}
+                {author.badge}
               </Badge>
             )}
-            {post.group && (
+            {group && (
               <Badge variant="secondary" className="text-xs font-normal">
-                {post.group.name}
+                {group.name}
               </Badge>
             )}
           </div>
@@ -119,10 +142,10 @@ export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
             </div>
           )}
           
-          {post.image && (
+          {(post.image || (post.media && post.media.length > 0)) && (
             <div className="mt-3 rounded-md overflow-hidden">
               <img 
-                src={post.image} 
+                src={post.image || (post.media && post.media[0]?.url)}
                 alt={post.title}
                 className="w-full h-[200px] object-cover" 
               />
@@ -142,7 +165,7 @@ export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
             <Heart 
               className={`h-4 w-4 ${post.hasLiked ? "fill-red-500 text-red-500" : ""}`} 
             />
-            <span>{post.likes}</span>
+            <span>{likes}</span>
           </Button>
           
           <Button 
@@ -154,7 +177,7 @@ export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
             <ThumbsDown 
               className={`h-4 w-4 ${post.hasDisliked ? "fill-gray-500 text-gray-500" : ""}`} 
             />
-            <span>{post.dislikes}</span>
+            <span>{dislikes}</span>
           </Button>
           
           <Button 

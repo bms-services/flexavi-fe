@@ -49,3 +49,7 @@ export function formatRelativeDate(date: Date): string {
   
   return format(date, "d MMM yyyy", { locale: nl });
 }
+
+export function formatTimeAgo(date: Date): string {
+  return formatDistanceToNow(date, { addSuffix: true, locale: nl });
+}

@@ -5,7 +5,27 @@ export enum PostType {
   PROJECT_SHOWCASE = "project_showcase",
   OUTSOURCE_WORK = "outsource_work",
   TECHNICAL_ADVICE = "technical_advice",
-  LEGAL_ADVICE = "legal_advice"
+  LEGAL_ADVICE = "legal_advice",
+  IMAGE = "image",
+  ARTICLE = "article",
+  LINK = "link"
+}
+
+export interface Author {
+  id: string;
+  name: string;
+  avatar?: string;
+  badge?: string;
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  memberCount: number;
+  postCount: number;
+  color: string;
 }
 
 export interface Post {
@@ -24,6 +44,16 @@ export interface Post {
   commentCount: number;
   media?: PostMedia[];
   userReaction?: 'like' | 'dislike' | null;
+  
+  // Additional properties needed by components
+  author?: Author;
+  group?: Group;
+  image?: string;
+  likes?: number;
+  dislikes?: number;
+  hasLiked?: boolean;
+  hasDisliked?: boolean;
+  comments?: Comment[];
 }
 
 export type PostMedia = {
