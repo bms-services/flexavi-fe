@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { formatTimeAgo } from "@/utils/format";
-import { Post } from "@/types/community";
+import { Post, Comment } from "@/types/community";
 import { CommentItem } from "./CommentItem";
 import { CommentReplyForm } from "./CommentReplyForm";
 import { 
@@ -87,6 +87,26 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
 
   // Get the image URL from either direct image property or first media item
   const imageUrl = post.image || (post.media && post.media.length > 0 ? post.media[0].url : undefined);
+  
+  // Helper function to create author object for comments
+  const createCommentAuthor = (comment: Comment) => {
+    return comment.author || {
+      id: comment.authorId,
+      name: comment.authorName,
+      avatar: comment.authorAvatar,
+      badge: undefined
+    };
+  };
+  
+  // Helper function to prepare comment for CommentItem
+  const prepareCommentForDisplay = (comment: Comment) => {
+    return {
+      ...comment,
+      author: createCommentAuthor(comment),
+      likes: comment.likes || comment.likeCount || 0,
+      dislikes: comment.dislikes || comment.dislikeCount || 0
+    };
+  };
   
   return (
     <div className="space-y-4">
@@ -211,66 +231,81 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
         </CardHeader>
         
         <CardContent className="p-4">
-          <CommentReplyForm onSubmit={handleSubmitComment} />
+          <CommentReplyForm 
+            onSubmit={handleSubmitComment}
+            parentId="" 
+          />
           
           <Separator className="my-4" />
           
           <div className="space-y-1">
-            {post.comments?.map((comment) => (
-              <div key={comment.id}>
-                <CommentItem 
-                  comment={comment}
-                  onReply={handleReply}
-                  onLike={handleLikeComment}
-                  onDislike={handleDislikeComment}
-                >
-                  {replyingTo === comment.id && (
-                    <div className="pl-6">
-                      <CommentReplyForm 
-                        parentId={comment.id}
-                        onSubmit={handleSubmitComment}
-                        onCancel={() => setReplyingTo(null)}
-                        replyingTo={comment.author.name}
-                      />
-                    </div>
-                  )}
-                  
-                  {comment.replies?.map((reply) => (
-                    <CommentItem 
-                      key={reply.id}
-                      comment={reply}
-                      onReply={() => handleReply(reply.id)}
-                      onLike={handleLikeComment}
-                      onDislike={handleDislikeComment}
-                      depth={1}
-                    >
-                      {replyingTo === reply.id && (
-                        <div className="pl-6">
-                          <CommentReplyForm 
-                            parentId={reply.id}
-                            onSubmit={handleSubmitComment}
-                            onCancel={() => setReplyingTo(null)}
-                            replyingTo={reply.author.name}
-                          />
-                        </div>
-                      )}
+            {post.comments?.map((comment) => {
+              const preparedComment = prepareCommentForDisplay(comment);
+              
+              return (
+                <div key={comment.id}>
+                  <CommentItem 
+                    comment={preparedComment}
+                    onReply={handleReply}
+                    onLike={handleLikeComment}
+                    onDislike={handleDislikeComment}
+                  >
+                    {replyingTo === comment.id && (
+                      <div className="pl-6">
+                        <CommentReplyForm 
+                          parentId={comment.id}
+                          onSubmit={handleSubmitComment}
+                          onCancel={() => setReplyingTo(null)}
+                          replyingTo={preparedComment.author.name}
+                        />
+                      </div>
+                    )}
+                    
+                    {comment.replies?.map((reply) => {
+                      const preparedReply = prepareCommentForDisplay(reply);
                       
-                      {reply.replies?.map((nestedReply) => (
+                      return (
                         <CommentItem 
-                          key={nestedReply.id}
-                          comment={nestedReply}
-                          onReply={() => handleReply(nestedReply.id)}
+                          key={reply.id}
+                          comment={preparedReply}
+                          onReply={() => handleReply(reply.id)}
                           onLike={handleLikeComment}
                           onDislike={handleDislikeComment}
-                          depth={2}
-                        />
-                      ))}
-                    </CommentItem>
-                  ))}
-                </CommentItem>
-                <Separator />
-              </div>
-            ))}
+                          depth={1}
+                        >
+                          {replyingTo === reply.id && (
+                            <div className="pl-6">
+                              <CommentReplyForm 
+                                parentId={reply.id}
+                                onSubmit={handleSubmitComment}
+                                onCancel={() => setReplyingTo(null)}
+                                replyingTo={preparedReply.author.name}
+                              />
+                            </div>
+                          )}
+                          
+                          {reply.replies?.map((nestedReply) => {
+                            const preparedNestedReply = prepareCommentForDisplay(nestedReply);
+                            
+                            return (
+                              <CommentItem 
+                                key={nestedReply.id}
+                                comment={preparedNestedReply}
+                                onReply={() => handleReply(nestedReply.id)}
+                                onLike={handleLikeComment}
+                                onDislike={handleDislikeComment}
+                                depth={2}
+                              />
+                            );
+                          })}
+                        </CommentItem>
+                      );
+                    })}
+                  </CommentItem>
+                  <Separator />
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>

@@ -19,28 +19,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ReportDialog } from "./ReportDialog";
 import { toast } from "sonner";
-
-interface Author {
-  id: string;
-  name: string;
-  avatar?: string;
-  badge?: string;
-}
-
-interface Comment {
-  id: string;
-  author: Author;
-  content: string;
-  createdAt: string;
-  likes: number;
-  dislikes: number;
-  hasLiked?: boolean;
-  hasDisliked?: boolean;
-  isAuthor?: boolean;
-}
+import { Comment, Author } from "@/types/community";
 
 interface CommentItemProps {
-  comment: Comment;
+  comment: Comment & { author: Author };  // Ensure comment has author property
   onReply: (commentId: string) => void;
   onLike: (commentId: string) => void;
   onDislike: (commentId: string) => void;
@@ -66,6 +48,10 @@ export function CommentItem({
     toast.success("Bedankt voor je melding. We zullen deze reactie beoordelen.");
     setShowReportDialog(false);
   };
+  
+  // Use the likes/dislikes from the Comment or fallback to likeCount/dislikeCount
+  const likes = comment.likes || comment.likeCount || 0;
+  const dislikes = comment.dislikes || comment.dislikeCount || 0;
   
   return (
     <div className={`${isNested ? 'ml-6 pl-4 border-l' : ''}`}>
@@ -105,7 +91,7 @@ export function CommentItem({
                 <Heart 
                   className={`h-3.5 w-3.5 mr-1 ${comment.hasLiked ? "fill-red-500 text-red-500" : ""}`} 
                 />
-                {comment.likes}
+                {likes}
               </Button>
               
               <Button 
@@ -117,7 +103,7 @@ export function CommentItem({
                 <ThumbsDown 
                   className={`h-3.5 w-3.5 mr-1 ${comment.hasDisliked ? "fill-gray-500 text-gray-500" : ""}`} 
                 />
-                {comment.dislikes}
+                {dislikes}
               </Button>
               
               {depth < maxDepth && (

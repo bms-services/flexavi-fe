@@ -6,15 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, X } from "lucide-react";
 
 interface CommentReplyFormProps {
-  parentId?: string;  // Made optional for the main comment form
+  parentId: string;  // No longer optional for consistency
   onSubmit: (content: string, parentId?: string) => void;
-  onCancel?: () => void;  // Made optional for the main comment form
+  onCancel?: () => void;  // Still optional for the main comment form
   placeholder?: string;
-  replyingTo?: string;  // Add this prop for indicating who we're replying to
+  replyingTo?: string;  // For indicating who we're replying to
 }
 
 export function CommentReplyForm({ 
-  parentId = "", 
+  parentId, 
   onSubmit, 
   onCancel, 
   placeholder = "Schrijf een reactie...",

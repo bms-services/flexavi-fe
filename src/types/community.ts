@@ -76,6 +76,13 @@ export interface Comment {
   userReaction?: 'like' | 'dislike' | null;
   parentId?: string; // ID van de ouder-reactie (voor reacties op reacties)
   replies?: Comment[]; // Reacties op deze reactie
+  
+  // Additional properties needed by components
+  author?: Author;
+  likes?: number;
+  dislikes?: number;
+  hasLiked?: boolean;
+  hasDisliked?: boolean;
 }
 
 export interface Group {
