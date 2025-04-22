@@ -1,4 +1,3 @@
-
 import {
   Home,
   Users,
@@ -53,11 +52,18 @@ export const navigationItems: NavItem[] = [
     ],
   },
   { name: "Community", href: "/community", icon: MessageSquare },
-  { name: "Kennisbank", href: "/knowledge-base", icon: Book },
-  { name: "Support", href: "/support", icon: HeadphonesIcon },
-  { name: "Reputatiebeheer", href: "/reputation", icon: Star },
-  { name: "Request Idee", href: "/requests", icon: Lamp },
   { name: "Partners", href: "/partners", icon: Briefcase },
+  {
+    name: "Hulp",
+    href: "#",
+    icon: Book,
+    children: [
+      { name: "Kennisbank", href: "/knowledge-base" },
+      { name: "Support", href: "/support" },
+      { name: "Request Idee", href: "/requests" },
+      { name: "Community", href: "/community" },
+    ],
+  },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { 
     name: "Admin Dashboard", 
@@ -68,4 +74,3 @@ export const navigationItems: NavItem[] = [
     ]
   },
 ];
-
