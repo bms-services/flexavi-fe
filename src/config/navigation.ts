@@ -54,10 +54,10 @@ export const navigationItems: NavItem[] = [
     icon: Star,
     children: [
       { name: "Reputatiebeheer", href: "/reputation" },
-      { name: "Aanvragen", href: "/requests" },
-      { name: "Partners", href: "/partners" },
     ],
   },
+  { name: "Request Idee", href: "/requests", icon: Star },
+  { name: "Partners", href: "/partners", icon: Briefcase },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
