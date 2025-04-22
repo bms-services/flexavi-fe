@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -11,6 +12,7 @@ import { PackageManagement } from '@/components/admin/PackageManagement';
 import { PartnersManagement } from '@/components/admin/PartnersManagement';
 import { MembersManagement } from '@/components/admin/MembersManagement';
 import { SupportManagement } from '@/components/admin/SupportManagement';
+import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
