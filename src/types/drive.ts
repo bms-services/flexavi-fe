@@ -12,6 +12,9 @@ export interface DriveFile {
   content?: DocumentContent | SpreadsheetContent;
   starred?: boolean;
   isShared?: boolean;
+  lastOpened?: string;
+  color?: string;
+  description?: string;
 }
 
 // Document content type
@@ -21,6 +24,15 @@ export interface DocumentContent {
     id: string;
     timestamp: string;
     content: string;
+    author?: string;
+  }[];
+  comments?: {
+    id: string;
+    content: string;
+    author: string;
+    timestamp: string;
+    resolved?: boolean;
+    position?: { x: number, y: number };
   }[];
 }
 
@@ -36,12 +48,20 @@ export interface Sheet {
   cells: Record<string, Cell>;
   columns: number;
   rows: number;
+  frozenRows?: number;
+  frozenColumns?: number;
+  conditionalFormatting?: ConditionalFormatting[];
 }
 
 export interface Cell {
   value: string;
   formula?: string;
   style?: CellStyle;
+  comment?: string;
+  merged?: {
+    rowspan: number;
+    colspan: number;
+  };
 }
 
 export interface CellStyle {
@@ -53,6 +73,16 @@ export interface CellStyle {
   bgColor?: string;
   horizontalAlign?: 'left' | 'center' | 'right';
   verticalAlign?: 'top' | 'middle' | 'bottom';
+  border?: {
+    top?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+    left?: boolean;
+    color?: string;
+    style?: 'solid' | 'dashed' | 'dotted';
+  };
+  textWrap?: 'wrap' | 'nowrap' | 'clip';
+  numberFormat?: string;
 }
 
 export interface SortSettings {
@@ -64,4 +94,14 @@ export interface FilterSettings {
   column: string;
   value: string;
   operator: 'equals' | 'contains' | 'startsWith' | 'endsWith' | 'greaterThan' | 'lessThan';
+}
+
+export interface ConditionalFormatting {
+  range: string;
+  condition: {
+    type: 'greaterThan' | 'lessThan' | 'equals' | 'between' | 'contains' | 'notContains';
+    value: string | number;
+    value2?: string | number; // For 'between' condition
+  };
+  style: Partial<CellStyle>;
 }
