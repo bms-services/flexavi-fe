@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { MessageSquare } from "lucide-react";
-import { Comment, Post } from "@/types/community";
+import { Author, Comment, Post } from "@/types/community";
 import { CommentItem } from "../CommentItem";
 import { CommentReplyForm } from "../CommentReplyForm";
 
@@ -27,6 +26,21 @@ export function PostComments({
   onLikeComment,
   onDislikeComment
 }: PostCommentsProps) {
+  const ensureAuthor = (comment: Comment): Comment & { author: Author } => {
+    if (comment.author) {
+      return comment as Comment & { author: Author };
+    }
+    
+    return {
+      ...comment,
+      author: {
+        id: comment.authorId,
+        name: comment.authorName,
+        avatar: comment.authorAvatar
+      }
+    };
+  };
+
   return (
     <Card>
       <CardHeader className="p-4 pb-0">
@@ -48,7 +62,7 @@ export function PostComments({
           {comments.map((comment) => (
             <div key={comment.id}>
               <CommentItem 
-                comment={comment}
+                comment={ensureAuthor(comment)}
                 onReply={onReply}
                 onLike={onLikeComment}
                 onDislike={onDislikeComment}
@@ -59,7 +73,7 @@ export function PostComments({
                       parentId={comment.id}
                       onSubmit={onSubmitComment}
                       onCancel={onCancelReply}
-                      replyingTo={comment.author.name}
+                      replyingTo={ensureAuthor(comment).author.name}
                     />
                   </div>
                 )}
@@ -67,7 +81,7 @@ export function PostComments({
                 {comment.replies?.map((reply) => (
                   <CommentItem 
                     key={reply.id}
-                    comment={reply}
+                    comment={ensureAuthor(reply)}
                     onReply={() => onReply(reply.id)}
                     onLike={onLikeComment}
                     onDislike={onDislikeComment}
@@ -79,7 +93,7 @@ export function PostComments({
                           parentId={reply.id}
                           onSubmit={onSubmitComment}
                           onCancel={onCancelReply}
-                          replyingTo={reply.author.name}
+                          replyingTo={ensureAuthor(reply).author.name}
                         />
                       </div>
                     )}
