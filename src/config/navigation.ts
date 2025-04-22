@@ -42,7 +42,7 @@ export const navigationItems: NavItem[] = [
     ],
   },
   {
-    name: "Projecten & Partners",
+    name: "Projecten",
     href: "#",
     icon: Briefcase,
     children: [
