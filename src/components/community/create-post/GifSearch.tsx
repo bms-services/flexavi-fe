@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { PostMedia } from "@/types/community";
-import { Search, Gif as GifIcon } from "lucide-react";
+import { Search, Image as ImageIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 
 // Mock GIF zoekresultaten
@@ -59,7 +58,7 @@ export function GifSearch({ onGifSelected }: GifSearchProps) {
         className="flex items-center gap-1"
         onClick={() => setOpen(true)}
       >
-        <GifIcon className="h-4 w-4" />
+        <ImageIcon className="h-4 w-4" />
         <span>GIFs</span>
       </Button>
       
