@@ -28,7 +28,7 @@ export interface Post {
 
 export type PostMedia = {
   id: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'gif';
   url: string;
   thumbnailUrl?: string;
 }
@@ -44,6 +44,8 @@ export interface Comment {
   likeCount: number;
   dislikeCount: number;
   userReaction?: 'like' | 'dislike' | null;
+  parentId?: string; // ID van de ouder-reactie (voor reacties op reacties)
+  replies?: Comment[]; // Reacties op deze reactie
 }
 
 export interface Group {

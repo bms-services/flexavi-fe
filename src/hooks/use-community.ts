@@ -367,16 +367,42 @@ export function useCommunityComments(postId: string) {
     // Add user reactions
     const userReactions = getUserReactions();
     
-    const commentsWithReactions = postComments.map(comment => ({
-      ...comment,
-      userReaction: userReactions[comment.id] || null,
-    }));
+    // Structureer reacties om reacties op reacties te ondersteunen
+    const commentsWithReplies: Comment[] = [];
+    const replyMap: Record<string, Comment[]> = {};
     
-    setComments(commentsWithReactions);
+    // Eerst alle reacties sorteren op parentId
+    postComments.forEach(comment => {
+      const commentWithReaction = {
+        ...comment,
+        userReaction: userReactions[comment.id] || null,
+        replies: [],
+      };
+      
+      if (!comment.parentId) {
+        // Dit is een top-level reactie
+        commentsWithReplies.push(commentWithReaction);
+      } else {
+        // Dit is een reactie op een reactie
+        if (!replyMap[comment.parentId]) {
+          replyMap[comment.parentId] = [];
+        }
+        replyMap[comment.parentId].push(commentWithReaction);
+      }
+    });
+    
+    // Voeg reacties toe aan hun ouders
+    commentsWithReplies.forEach(comment => {
+      if (replyMap[comment.id]) {
+        comment.replies = replyMap[comment.id];
+      }
+    });
+    
+    setComments(commentsWithReplies);
   }, [postId]);
   
   // Add comment
-  const addComment = (commentData: { content: string; postId: string }) => {
+  const addComment = (commentData: { content: string; postId: string; parentId?: string }) => {
     const newComment: Comment = {
       id: `comment-${postId}-${uuidv4()}`,
       postId: commentData.postId,
@@ -387,10 +413,29 @@ export function useCommunityComments(postId: string) {
       createdAt: new Date().toISOString(),
       likeCount: 0,
       dislikeCount: 0,
+      parentId: commentData.parentId,
     };
     
-    // Add to comments
-    setComments(prev => [newComment, ...prev]);
+    // Als dit geen nieuwe reactie op reacties is, voeg dan toe aan de lijst
+    if (!commentData.parentId) {
+      setComments(prev => {
+        const newCommentWithReplies = {...newComment, replies: []};
+        return [newCommentWithReplies, ...prev];
+      });
+    } else {
+      // Als dit een reactie op een reactie is, voeg het toe aan de replies van de parent
+      setComments(prev => {
+        return prev.map(comment => {
+          if (comment.id === commentData.parentId) {
+            return {
+              ...comment,
+              replies: [...(comment.replies || []), newComment]
+            };
+          }
+          return comment;
+        });
+      });
+    }
     
     // If this is the first comment for this post, initialize the array
     if (!commentsMap[postId]) {

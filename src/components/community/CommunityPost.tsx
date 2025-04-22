@@ -14,6 +14,7 @@ import { useCommunityComments, useCommunityReactions } from "@/hooks/use-communi
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { CarouselItem, CarouselPrevious, CarouselContent, Carousel, CarouselNext } from "@/components/ui/carousel";
+import { CommentItem } from "./CommentItem";
 
 interface CommunityPostProps {
   post: Post;
@@ -44,6 +45,14 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       setComment("");
     }
   };
+  
+  const handleReplyComment = (content: string, parentId: string) => {
+    addComment({
+      content,
+      postId: post.id,
+      parentId
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -60,7 +69,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       </div>
       
       {/* Main post */}
-      <Card>
+      <Card className="shadow-md hover:shadow-lg transition-shadow">
         <CardHeader className="pb-2">
           <div className="flex items-start gap-3">
             <Avatar>
@@ -104,7 +113,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
             <div className="mt-4">
               {post.media.length === 1 ? (
                 <div className="rounded-md overflow-hidden">
-                  {post.media[0].type === 'image' ? (
+                  {post.media[0].type === 'image' || post.media[0].type === 'gif' ? (
                     <img 
                       src={post.media[0].url} 
                       alt="" 
@@ -130,7 +139,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
                       <CarouselItem key={index}>
                         <div className="p-1">
                           <div className="rounded-md overflow-hidden">
-                            {media.type === 'image' ? (
+                            {media.type === 'image' || media.type === 'gif' ? (
                               <img 
                                 src={media.url} 
                                 alt="" 
@@ -215,7 +224,7 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       </Card>
       
       {/* Comment input */}
-      <Card>
+      <Card className="shadow-md">
         <CardContent className="p-4">
           <div className="flex gap-3">
             <Avatar className="h-8 w-8">
@@ -245,67 +254,27 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       </Card>
       
       {/* Comments */}
-      <Card>
-        <CardHeader className="pb-2">
-          <h3 className="font-medium">Reacties ({comments.length})</h3>
+      <Card className="shadow-md">
+        <CardHeader className="pb-2 border-b">
+          <h3 className="font-semibold">Reacties ({comments.length})</h3>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="p-4 space-y-4">
           {comments.length === 0 ? (
             <div className="text-center py-6 text-muted-foreground">
               <p>Nog geen reacties. Wees de eerste!</p>
             </div>
           ) : (
-            <>
+            <div className="space-y-4">
               {comments.map((comment) => (
-                <div key={comment.id} className="flex gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={comment.authorAvatar} alt={comment.authorName} />
-                    <AvatarFallback>{comment.authorName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-sm">{comment.authorName}</h4>
-                        <span className="text-xs text-muted-foreground">
-                          {formatDistance(new Date(comment.createdAt), new Date(), { 
-                            addSuffix: true,
-                            locale: nl
-                          })}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm">{comment.content}</p>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1 ml-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className={cn(
-                          "h-6 px-2 text-xs text-muted-foreground",
-                          comment.userReaction === 'like' && "text-green-600"
-                        )}
-                        onClick={() => handleLike(comment.id, true)}
-                      >
-                        <ThumbsUp className="h-3 w-3 mr-1" />
-                        <span>{comment.likeCount}</span>
-                      </Button>
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className={cn(
-                          "h-6 px-2 text-xs text-muted-foreground",
-                          comment.userReaction === 'dislike' && "text-red-600"
-                        )}
-                        onClick={() => handleDislike(comment.id, true)}
-                      >
-                        <ThumbsDown className="h-3 w-3 mr-1" />
-                        <span>{comment.dislikeCount}</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onLike={handleLike}
+                  onDislike={handleDislike}
+                  onReply={handleReplyComment}
+                />
               ))}
-            </>
+            </div>
           )}
         </CardContent>
       </Card>

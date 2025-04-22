@@ -70,7 +70,7 @@ export function PostCard({ post, onClick }: PostCardProps) {
               <div className="mt-3 cursor-pointer" onClick={onClick}>
                 {post.media.length === 1 ? (
                   <div className="rounded-md overflow-hidden">
-                    {post.media[0].type === 'image' ? (
+                    {post.media[0].type === 'image' || post.media[0].type === 'gif' ? (
                       <img 
                         src={post.media[0].url} 
                         alt="" 
@@ -96,7 +96,7 @@ export function PostCard({ post, onClick }: PostCardProps) {
                         <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
                           <div className="p-1">
                             <div className="rounded-md overflow-hidden">
-                              {media.type === 'image' ? (
+                              {media.type === 'image' || media.type === 'gif' ? (
                                 <img 
                                   src={media.url} 
                                   alt="" 

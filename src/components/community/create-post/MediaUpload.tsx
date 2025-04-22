@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PostMedia } from "@/types/community";
 import { Image, Video, X, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { GifSearch } from "./GifSearch";
 
 export function MediaUpload() {
   const [mediaFiles, setMediaFiles] = useState<PostMedia[]>([]);
@@ -46,6 +47,15 @@ export function MediaUpload() {
     }
   };
   
+  const handleGifSelected = (gif: PostMedia) => {
+    if (mediaFiles.length >= 10) {
+      toast.error("Je kunt maximaal 10 bestanden uploaden");
+      return;
+    }
+    
+    setMediaFiles(prev => [...prev, gif]);
+  };
+  
   const removeMedia = (mediaId: string) => {
     setMediaFiles(prev => prev.filter(media => media.id !== mediaId));
   };
@@ -84,6 +94,8 @@ export function MediaUpload() {
           <Video className="h-4 w-4" />
           <span>Video's</span>
         </Button>
+        
+        <GifSearch onGifSelected={handleGifSelected} />
       </div>
       
       {mediaFiles.length > 0 && (
@@ -92,7 +104,7 @@ export function MediaUpload() {
             {mediaFiles.map((media) => (
               <div key={media.id} className="relative group">
                 <div className="aspect-square rounded-md overflow-hidden border">
-                  {media.type === 'image' ? (
+                  {media.type === 'image' || media.type === 'gif' ? (
                     <img 
                       src={media.url} 
                       alt="" 
