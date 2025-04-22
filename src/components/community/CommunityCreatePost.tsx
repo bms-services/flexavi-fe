@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +32,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { PostEditor } from './PostEditor';
 
 interface CommunityCreatePostProps {
   onPostCreated: () => void;
@@ -201,10 +201,10 @@ export function CommunityCreatePost({ onPostCreated, preselectedGroup }: Communi
               <FormItem>
                 <FormLabel>Inhoud</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="Waar gaat je bericht over?" 
-                    className="min-h-[150px] resize-none"
-                    {...field} 
+                  <PostEditor 
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Waar gaat je bericht over?"
                   />
                 </FormControl>
                 <FormMessage />
