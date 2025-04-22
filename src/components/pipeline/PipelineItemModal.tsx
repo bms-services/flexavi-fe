@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -15,6 +14,7 @@ import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { NewAppointmentForm } from "@/components/appointments/components/form/NewAppointmentForm";
+import { usePipeline } from "@/hooks/usePipeline";
 
 const demoLeads = [
   {
@@ -149,6 +149,16 @@ export const PipelineItemModal: React.FC<Props> = ({
     setShowAppointmentDialog(false);
   };
 
+  const {
+    selectedPipeline,
+    handleItemMove,
+  } = usePipeline();
+
+  const handleStageChange = (newStageId: string) => {
+    handleItemMove(item.id, newStageId);
+    toast.success("Fase succesvol gewijzigd");
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -170,6 +180,9 @@ export const PipelineItemModal: React.FC<Props> = ({
             activeDocTab={activeDocTab}
             setActiveDocTab={setActiveDocTab}
             getStatusColor={getStatusColor}
+            pipeline={selectedPipeline}
+            currentStageId={item.stageId}
+            onStageChange={handleStageChange}
           />
           <Separator className="my-0" />
 
