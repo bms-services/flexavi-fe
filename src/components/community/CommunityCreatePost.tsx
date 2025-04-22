@@ -24,7 +24,8 @@ export function CommunityCreatePost({ onPostCreated, preselectedGroup }: Communi
 
   return (
     <CreatePostForm 
-      onPostCreated={handlePostCreate}
+      onSubmit={handlePostCreate}
+      onCancel={onPostCreated}
       preselectedGroup={preselectedGroup}
     />
   );

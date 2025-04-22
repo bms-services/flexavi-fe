@@ -19,11 +19,12 @@ const formSchema = z.object({
 });
 
 interface CreatePostFormProps {
-  onPostCreated: () => void;
+  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
+  onCancel: () => void;
   preselectedGroup?: { id: string } | null;
 }
 
-export function CreatePostForm({ onPostCreated, preselectedGroup }: CreatePostFormProps) {
+export function CreatePostForm({ onSubmit, onCancel, preselectedGroup }: CreatePostFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,7 +40,7 @@ export function CreatePostForm({ onPostCreated, preselectedGroup }: CreatePostFo
       <h2 className="text-2xl font-bold">Nieuw bericht</h2>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onPostCreated)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <PostTitleField control={form.control} />
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -49,7 +50,7 @@ export function CreatePostForm({ onPostCreated, preselectedGroup }: CreatePostFo
           
           <PostContentField control={form.control} />
           <MediaUpload />
-          <FormActions onCancel={onPostCreated} />
+          <FormActions onCancel={onCancel} />
         </form>
       </Form>
     </div>
