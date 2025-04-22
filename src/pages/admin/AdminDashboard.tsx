@@ -1,19 +1,21 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
-import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Users, CreditCard, Package, Handshake, Shield, HeadphonesIcon, MessageSquare } from 'lucide-react';
+import { 
+  BarChart3, Users, CreditCard, Package, 
+  Handshake, HeadphonesIcon, MessageSquare, Book 
+} from 'lucide-react';
 import { PackageManagement } from '@/components/admin/PackageManagement';
 import { PartnersManagement } from '@/components/admin/PartnersManagement';
 import { MembersManagement } from '@/components/admin/MembersManagement';
 import { SupportManagement } from '@/components/admin/SupportManagement';
 import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 import { CommunityManagement } from '@/components/admin/CommunityManagement';
+import { KnowledgeBaseManagement } from '@/components/admin/KnowledgeBaseManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -43,6 +45,10 @@ export default function AdminDashboard() {
                   <Package className="h-4 w-4 mr-2" />
                   Pakketten
                 </TabsTrigger>
+                <TabsTrigger value="knowledge-base" className="w-full justify-start">
+                  <Book className="h-4 w-4 mr-2" />
+                  Kennisbank
+                </TabsTrigger>
                 <TabsTrigger value="partners" className="w-full justify-start">
                   <Handshake className="h-4 w-4 mr-2" />
                   Partners
@@ -59,6 +65,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="flex-1 border-l bg-background ml-4 pl-6">
+              
               <TabsContent value="overview" className="mt-0">
                 <AdminStats />
                 <Card className="mt-6">
@@ -95,6 +102,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="packages" className="mt-0">
                 <PackageManagement />
+              </TabsContent>
+              
+              <TabsContent value="knowledge-base" className="mt-0">
+                <KnowledgeBaseManagement />
               </TabsContent>
               
               <TabsContent value="partners" className="mt-0">
