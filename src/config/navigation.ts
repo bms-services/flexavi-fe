@@ -23,7 +23,7 @@ export const navigationItems: NavItem[] = [
     icon: Calendar,
     children: [
       { name: "Agenda", href: "/appointments" },
-      { name: "Medewerker planning", href: "/employee/planning" },
+      { name: "Dag planning", href: "/employee/planning" },
       { name: "Werknemers", href: "/employees" },
     ],
   },
@@ -48,14 +48,7 @@ export const navigationItems: NavItem[] = [
       { name: "Calculator", href: "/calculator" },
     ],
   },
-  {
-    name: "Marketing",
-    href: "#",
-    icon: Star,
-    children: [
-      { name: "Reputatiebeheer", href: "/reputation" },
-    ],
-  },
+  { name: "Reputatiebeheer", href: "/reputation", icon: Star },
   { name: "Request Idee", href: "/requests", icon: Star },
   { name: "Partners", href: "/partners", icon: Briefcase },
   { name: "Instellingen", href: "/settings", icon: Settings },
