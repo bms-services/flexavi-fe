@@ -10,7 +10,7 @@ import { PostHeader } from "./post/PostHeader";
 import { PostContent } from "./post/PostContent";
 import { PostActions } from "./post/PostActions";
 import { PostComments } from "./post/PostComments";
-import { useCommunityComments, useCommunityReactions } from "@/hooks/use-community";
+import { useCommunityComments, useCommunityReactions } from "@/hooks/community";
 
 interface CommunityPostProps {
   post: Post;

@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Comment } from "@/types/community";
-import { getUserReactions } from "../utils/reactions";
-import { currentUser } from "../utils/current-user";
-import { commentsMap } from "../utils/mock-comments";
-import { getBasePosts } from "../utils/mock-posts";
+import { getUserReactions } from "./utils/reactions";
+import { currentUser } from "./utils/current-user";
+import { commentsMap } from "./utils/mock-comments";
+import { getBasePosts } from "./utils/mock-posts";
 
 export function useCommunityComments(postId: string) {
   const [comments, setComments] = useState<Comment[]>([]);

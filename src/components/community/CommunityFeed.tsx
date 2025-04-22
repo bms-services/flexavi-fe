@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useCommunityPosts, useCommunityReactions } from "@/hooks/use-community";
+import { useCommunityPosts, useCommunityReactions } from "@/hooks/community";
 import { CommunityPost } from "./CommunityPost";
 import { PostCard } from "./PostCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

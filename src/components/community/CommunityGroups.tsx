@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Group } from "@/types/community";
-import { useCommunityGroups } from "@/hooks/use-community";
+import { useCommunityGroups } from "@/hooks/community";
 import { Users, Camera, Briefcase, MessageSquare, FileImage, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
 

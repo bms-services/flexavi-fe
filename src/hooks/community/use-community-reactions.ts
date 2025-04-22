@@ -1,7 +1,7 @@
 
-import { getBasePosts } from "../utils/mock-posts";
-import { commentsMap } from "../utils/mock-comments";
-import { getUserReactions, setUserReactions } from "../utils/reactions";
+import { getBasePosts } from "./utils/mock-posts";
+import { commentsMap } from "./utils/mock-comments";
+import { getUserReactions, setUserReactions } from "./utils/reactions";
 
 export function useCommunityReactions() {
   const handleReaction = (

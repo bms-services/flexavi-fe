@@ -1,9 +1,13 @@
 
-export const getUserReactions = () => {
-  const stored = localStorage.getItem('communityReactions');
-  return stored ? JSON.parse(stored) : {};
-};
+// This file manages user reactions (likes/dislikes)
 
-export const setUserReactions = (reactions: Record<string, 'like' | 'dislike' | null>) => {
-  localStorage.setItem('communityReactions', JSON.stringify(reactions));
-};
+// Get user reactions from localStorage
+export function getUserReactions(): { [key: string]: 'like' | 'dislike' | null } {
+  const reactionsString = localStorage.getItem('userReactions');
+  return reactionsString ? JSON.parse(reactionsString) : {};
+}
+
+// Save user reactions to localStorage
+export function setUserReactions(reactions: { [key: string]: 'like' | 'dislike' | null }): void {
+  localStorage.setItem('userReactions', JSON.stringify(reactions));
+}

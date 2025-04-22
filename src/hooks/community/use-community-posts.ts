@@ -2,13 +2,15 @@
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Post, PostFilters } from "@/types/community";
-import { getUserReactions, setUserReactions } from "../utils/reactions";
-import { currentUser } from "../utils/current-user";
-import { getBasePosts } from "../utils/mock-posts";
+import { getUserReactions, setUserReactions } from "./utils/reactions";
+import { currentUser } from "./utils/current-user";
+import { getBasePosts } from "./utils/mock-posts";
+import { useCommunityGroups } from "./use-community-groups";
 
 export function useCommunityPosts(filters?: PostFilters) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { groups } = useCommunityGroups();
   
   useEffect(() => {
     setIsLoading(true);
@@ -72,7 +74,7 @@ export function useCommunityPosts(filters?: PostFilters) {
           authorAvatar: currentUser.avatar,
           createdAt: new Date().toISOString(),
           groupId: postData.groupId,
-          groupName: communityGroups.find(g => g.id === postData.groupId)?.name || "Onbekende groep",
+          groupName: groups.find(g => g.id === postData.groupId)?.name || "Onbekende groep",
           type: postData.type,
           likeCount: 0,
           dislikeCount: 0,

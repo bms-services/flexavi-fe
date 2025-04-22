@@ -1,5 +1,5 @@
 
-import { useCommunityPosts } from "@/hooks/use-community";
+import { useCommunityPosts } from "@/hooks/community";
 import { toast } from "sonner";
 import { Group } from "@/types/community";
 import { CreatePostForm } from "./create-post/CreatePostForm";

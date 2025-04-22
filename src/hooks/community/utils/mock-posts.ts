@@ -1,3 +1,4 @@
+
 import { Post, PostType } from "@/types/community";
 
 // Mock posts data
