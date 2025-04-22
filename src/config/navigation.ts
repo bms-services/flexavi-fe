@@ -1,4 +1,3 @@
-
 import {
   Home,
   Users,
@@ -10,6 +9,7 @@ import {
   Receipt,
   Calculator,
   Star,
+  Lamp,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -49,9 +49,8 @@ export const navigationItems: NavItem[] = [
     ],
   },
   { name: "Reputatiebeheer", href: "/reputation", icon: Star },
-  { name: "Request Idee", href: "/requests", icon: Star },
+  { name: "Request Idee", href: "/requests", icon: Lamp },
   { name: "Partners", href: "/partners", icon: Briefcase },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
-
