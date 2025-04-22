@@ -40,6 +40,9 @@ import ReputationManagement from "./pages/ReputationManagement";
 import Expenses from "./pages/Expenses";
 import ExpenseDetail from "./pages/ExpenseDetail";
 import WorkAgreementDetail from "./pages/WorkAgreementDetail";
+import Drive from "./pages/Drive";
+import DocsEditor from "./pages/DocsEditor";
+import SheetsEditor from "./pages/SheetsEditor";
 
 function App() {
   return (
@@ -75,6 +78,13 @@ function App() {
         <Route path="/employees/schedule" element={<EmployeeSchedule />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/reputation" element={<ReputationManagement />} />
+
+        {/* Drive Module Routes */}
+        <Route path="/drive" element={<Drive />} />
+        <Route path="/drive/docs/:id" element={<DocsEditor />} />
+        <Route path="/drive/docs/new" element={<DocsEditor />} />
+        <Route path="/drive/sheets/:id" element={<SheetsEditor />} />
+        <Route path="/drive/sheets/new" element={<SheetsEditor />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

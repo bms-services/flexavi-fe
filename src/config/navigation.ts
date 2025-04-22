@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Star,
   FileText,
+  FolderOpen,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -61,7 +62,7 @@ export const navigationItems: NavItem[] = [
       { name: "Aanvragen", href: "/requests" },
     ],
   },
+  { name: "Drive", href: "/drive", icon: FolderOpen },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
-
