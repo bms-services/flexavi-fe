@@ -18,6 +18,7 @@ import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 import { CommunityManagement } from '@/components/admin/CommunityManagement';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { KnowledgeBaseManagement } from '@/components/admin/KnowledgeBaseManagement';
+import { ShopifyStyleDashboard } from '@/components/dashboard/ShopifyStyleDashboard';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -28,7 +29,7 @@ export default function AdminDashboard() {
         <AdminHeader title="Admin Dashboard" />
         
         <div className="flex mt-6 min-h-[calc(100vh-10rem)]">
-          <Tabs defaultValue="overview" orientation="vertical" className="flex min-h-full">
+          <Tabs defaultValue="overview" orientation="vertical" className="flex min-h-full w-full">
             <div className="shrink-0">
               <TabsList className="flex flex-col h-auto space-y-1 min-w-[200px] bg-muted p-2 rounded-l-md">
                 <TabsTrigger value="overview" className="w-full justify-start">
@@ -66,11 +67,14 @@ export default function AdminDashboard() {
               </TabsList>
             </div>
 
-            <div className="flex-1 border-l bg-background ml-4 pl-6">
+            <div className="flex-1 border-l bg-background ml-4 pl-6 w-full">
               
-              <TabsContent value="overview" className="mt-0">
-                <AdminStats />
-                <Card className="mt-6">
+              <TabsContent value="overview" className="mt-0 w-full">
+                <div className="mb-6">
+                  <AdminStats />
+                </div>
+                
+                <Card className="mb-6">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Omzet Overzicht</CardTitle>
                     <Select
@@ -92,33 +96,35 @@ export default function AdminDashboard() {
                     <RevenueChart timeRange={timeRange} />
                   </CardContent>
                 </Card>
+                
+                <ShopifyStyleDashboard timeRange={timeRange} />
               </TabsContent>
               
-              <TabsContent value="members" className="mt-0">
+              <TabsContent value="members" className="mt-0 w-full">
                 <MembersManagement />
               </TabsContent>
               
-              <TabsContent value="subscriptions" className="mt-0">
+              <TabsContent value="subscriptions" className="mt-0 w-full">
                 <SubscriptionOverview />
               </TabsContent>
               
-              <TabsContent value="packages" className="mt-0">
+              <TabsContent value="packages" className="mt-0 w-full">
                 <PackageManagement />
               </TabsContent>
               
-              <TabsContent value="knowledge-base" className="mt-0">
+              <TabsContent value="knowledge-base" className="mt-0 w-full">
                 <KnowledgeBaseManagement />
               </TabsContent>
               
-              <TabsContent value="partners" className="mt-0">
+              <TabsContent value="partners" className="mt-0 w-full">
                 <PartnersManagement />
               </TabsContent>
               
-              <TabsContent value="community" className="mt-0">
+              <TabsContent value="community" className="mt-0 w-full">
                 <CommunityManagement />
               </TabsContent>
               
-              <TabsContent value="support" className="mt-0">
+              <TabsContent value="support" className="mt-0 w-full">
                 <SupportManagement />
               </TabsContent>
             </div>

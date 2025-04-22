@@ -1,139 +1,164 @@
 
-import { useState } from "react";
-import { Comment } from "@/types/community";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Reply, Flag, MoreVertical } from "lucide-react";
-import { formatDistance } from "date-fns";
-import { nl } from "date-fns/locale";
-import { cn } from "@/lib/utils";
-import { CommentReplyForm } from "./CommentReplyForm";
+import { Badge } from "@/components/ui/badge";
 import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
+  Heart, 
+  Reply, 
+  ThumbsDown, 
+  MoreHorizontal,
+  Flag
+} from "lucide-react";
+import { formatTimeAgo } from "@/utils/format";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { ReportDialog } from "./ReportDialog";
+import { toast } from "sonner";
+
+interface Author {
+  id: string;
+  name: string;
+  avatar?: string;
+  badge?: string;
+}
+
+interface Comment {
+  id: string;
+  author: Author;
+  content: string;
+  createdAt: string;
+  likes: number;
+  dislikes: number;
+  hasLiked?: boolean;
+  hasDisliked?: boolean;
+  isAuthor?: boolean;
+}
 
 interface CommentItemProps {
   comment: Comment;
-  onLike: (commentId: string, isComment: boolean) => void;
-  onDislike: (commentId: string, isComment: boolean) => void;
-  onReply: (content: string, parentId: string) => void;
-  onReport: (commentId: string) => void;
-  indentLevel?: number;
+  onReply: (commentId: string) => void;
+  onLike: (commentId: string) => void;
+  onDislike: (commentId: string) => void;
+  depth?: number;
+  children?: React.ReactNode;
 }
 
-export function CommentItem({ comment, onLike, onDislike, onReply, onReport, indentLevel = 0 }: CommentItemProps) {
-  const [showReplyForm, setShowReplyForm] = useState(false);
+export function CommentItem({ 
+  comment, 
+  onReply, 
+  onLike, 
+  onDislike, 
+  depth = 0,
+  children 
+}: CommentItemProps) {
+  const [showReportDialog, setShowReportDialog] = useState(false);
   
-  const handleReply = (content: string, parentId: string) => {
-    onReply(content, parentId);
-    setShowReplyForm(false);
+  const maxDepth = 3;
+  const isNested = depth > 0;
+  
+  const handleReport = (reason: string, details: string) => {
+    console.log("Reporting comment:", comment.id, reason, details);
+    toast.success("Bedankt voor je melding. We zullen deze reactie beoordelen.");
+    setShowReportDialog(false);
   };
   
   return (
-    <div className={cn("transition-all", indentLevel > 0 && "ml-8 mt-2")}>
-      <div className="flex gap-3">
-        <Avatar className={cn("h-8 w-8", indentLevel > 0 && "h-6 w-6")}>
-          <AvatarImage src={comment.authorAvatar} alt={comment.authorName} />
-          <AvatarFallback>{comment.authorName.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <div className="bg-gray-50 rounded-lg p-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <h4 className="font-medium text-sm">{comment.authorName}</h4>
-                <span className="text-xs text-muted-foreground">
-                  {formatDistance(new Date(comment.createdAt), new Date(), { 
-                    addSuffix: true,
-                    locale: nl
-                  })}
-                </span>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                    <MoreVertical className="h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem 
-                    className="text-red-600 cursor-pointer"
-                    onClick={() => onReport(comment.id)}
-                  >
-                    <Flag className="h-4 w-4 mr-2" />
-                    <span>Rapporteren</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+    <div className={`${isNested ? 'ml-6 pl-4 border-l' : ''}`}>
+      <div className="py-3">
+        <div className="flex items-start gap-3">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={comment.author.avatar} />
+            <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm">
+                {comment.author.name}
+              </span>
+              {comment.author.badge && (
+                <Badge variant="outline" className="text-xs">
+                  {comment.author.badge}
+                </Badge>
+              )}
+              <span className="text-xs text-muted-foreground">
+                {formatTimeAgo(new Date(comment.createdAt))}
+              </span>
             </div>
-            <p className="mt-1 text-sm">{comment.content}</p>
-          </div>
-          <div className="flex items-center gap-2 mt-1 ml-2">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className={cn(
-                "h-6 px-2 text-xs text-muted-foreground",
-                comment.userReaction === 'like' && "text-green-600"
-              )}
-              onClick={() => onLike(comment.id, true)}
-            >
-              <ThumbsUp className="h-3 w-3 mr-1" />
-              <span>{comment.likeCount}</span>
-            </Button>
             
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className={cn(
-                "h-6 px-2 text-xs text-muted-foreground",
-                comment.userReaction === 'dislike' && "text-red-600"
-              )}
-              onClick={() => onDislike(comment.id, true)}
-            >
-              <ThumbsDown className="h-3 w-3 mr-1" />
-              <span>{comment.dislikeCount}</span>
-            </Button>
+            <div className="text-sm">
+              {comment.content}
+            </div>
             
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 px-2 text-xs text-muted-foreground"
-              onClick={() => setShowReplyForm(!showReplyForm)}
-            >
-              <Reply className="h-3 w-3 mr-1" />
-              <span>Reageren</span>
-            </Button>
+            <div className="flex items-center gap-2 pt-1">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-muted-foreground"
+                onClick={() => onLike(comment.id)}
+              >
+                <Heart 
+                  className={`h-3.5 w-3.5 mr-1 ${comment.hasLiked ? "fill-red-500 text-red-500" : ""}`} 
+                />
+                {comment.likes}
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-muted-foreground"
+                onClick={() => onDislike(comment.id)}
+              >
+                <ThumbsDown 
+                  className={`h-3.5 w-3.5 mr-1 ${comment.hasDisliked ? "fill-gray-500 text-gray-500" : ""}`} 
+                />
+                {comment.dislikes}
+              </Button>
+              
+              {depth < maxDepth && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 px-2 text-muted-foreground"
+                  onClick={() => onReply(comment.id)}
+                >
+                  <Reply className="h-3.5 w-3.5 mr-1" />
+                  Reageren
+                </Button>
+              )}
+            </div>
           </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7">
+                <MoreHorizontal className="h-3.5 w-3.5" />
+                <span className="sr-only">Menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setShowReportDialog(true)}>
+                <Flag className="h-4 w-4 mr-2" />
+                Rapporteren
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       
-      {showReplyForm && (
-        <CommentReplyForm
-          parentId={comment.id}
-          onSubmit={handleReply}
-          onCancel={() => setShowReplyForm(false)}
-          placeholder={`Reageer op ${comment.authorName}...`}
-        />
-      )}
+      {children}
       
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="mt-2">
-          {comment.replies.map((reply) => (
-            <CommentItem
-              key={reply.id}
-              comment={reply}
-              onLike={onLike}
-              onDislike={onDislike}
-              onReply={onReply}
-              onReport={onReport}
-              indentLevel={indentLevel + 1}
-            />
-          ))}
-        </div>
-      )}
+      <ReportDialog 
+        open={showReportDialog}
+        onOpenChange={setShowReportDialog}
+        itemType="comment"
+        onSubmit={handleReport}
+      />
     </div>
   );
 }

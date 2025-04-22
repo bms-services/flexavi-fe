@@ -9,10 +9,6 @@ import {
   Shield,
   Receipt,
   Calculator,
-  Star,
-  Lamp,
-  HeadphonesIcon,
-  MessageSquare,
   Book,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";

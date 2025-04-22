@@ -1,217 +1,180 @@
 
-import { useState } from "react";
-import { Post, PostType } from "@/types/community";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, MessageSquare, Flag, MoreVertical } from "lucide-react";
-import { formatDistance } from "date-fns";
-import { nl } from "date-fns/locale";
-import { cn } from "@/lib/utils";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { 
-  DropdownMenu,
+  MessageSquare, 
+  Heart, 
+  ThumbsDown, 
+  Image,
+  FileText,
+  Link as LinkIcon,
+  MoreHorizontal,
+  Flag,
+  Share
+} from "lucide-react";
+import { formatTimeAgo } from "@/utils/format";
+import { Post } from "@/types/community";
+import { 
+  DropdownMenu, 
   DropdownMenuContent, 
-  DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { ReportDialog } from "./ReportDialog";
+import { toast } from "sonner";
 
-interface PostCardProps {
+export interface PostCardProps {
   post: Post;
-  onClick: (postId: string) => void;
+  onClick: () => void;
   onLike: (postId: string) => void;
   onDislike: (postId: string) => void;
 }
 
 export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
-  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [showReportDialog, setShowReportDialog] = useState(false);
   
-  const postTypeMap = {
-    [PostType.GENERAL]: { label: 'Algemeen', color: 'bg-gray-100 text-gray-800' },
-    [PostType.JOB_LISTING]: { label: 'Personeel gezocht', color: 'bg-blue-100 text-blue-800' },
-    [PostType.PROJECT_SHOWCASE]: { label: 'Project showcase', color: 'bg-green-100 text-green-800' },
-    [PostType.OUTSOURCE_WORK]: { label: 'Werk uitbesteden', color: 'bg-amber-100 text-amber-800' },
-    [PostType.TECHNICAL_ADVICE]: { label: 'Technisch advies', color: 'bg-purple-100 text-purple-800' },
-    [PostType.LEGAL_ADVICE]: { label: 'Juridisch advies', color: 'bg-red-100 text-red-800' },
+  const handleReport = (reason: string, details: string) => {
+    console.log("Reporting post:", post.id, reason, details);
+    toast.success("Bedankt voor je melding. We zullen dit bericht beoordelen.");
+    setShowReportDialog(false);
   };
   
-  const handlePostClick = (e: React.MouseEvent) => {
-    // Don't trigger post click when clicking buttons or links inside the post
-    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) {
-      return;
+  const getPostTypeIcon = () => {
+    switch (post.type) {
+      case "image":
+        return <Image className="h-4 w-4" />;
+      case "article":
+        return <FileText className="h-4 w-4" />;
+      case "link":
+        return <LinkIcon className="h-4 w-4" />;
+      default:
+        return <MessageSquare className="h-4 w-4" />;
     }
-    onClick(post.id);
   };
-  
-  const handleReportSubmit = (reason: string, details: string) => {
-    // Here we would call API to submit the report
-    console.log(`Reported post ${post.id}: ${reason} - ${details}`);
-    setReportDialogOpen(false);
-  };
-  
-  const hasMedia = post.media && post.media.length > 0;
-  const firstMedia = hasMedia ? post.media[0] : null;
   
   return (
-    <>
-      <Card 
-        className={cn(
-          "shadow-sm hover:shadow-md transition-shadow", 
-          "cursor-pointer overflow-hidden"
-        )}
-        onClick={handlePostClick}
-      >
-        <CardHeader className="p-4 pb-2">
-          <div className="flex items-start gap-3">
-            <Avatar>
-              <AvatarImage src={post.authorAvatar} alt={post.authorName} />
-              <AvatarFallback>{post.authorName.charAt(0)}</AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="font-medium">{post.authorName}</h3>
-                <span className="text-sm text-muted-foreground">
-                  {formatDistance(new Date(post.createdAt), new Date(), { 
-                    addSuffix: true,
-                    locale: nl
-                  })}
-                </span>
-                
-                <Badge 
-                  className={cn(
-                    "ml-auto",
-                    postTypeMap[post.type].color
-                  )}
-                  variant="outline"
-                >
-                  {postTypeMap[post.type].label}
-                </Badge>
-              </div>
-              
-              <Badge variant="outline" className="mt-1 bg-indigo-50 text-indigo-700">
-                {post.groupName}
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
+    <Card className="overflow-hidden hover:border-primary/50 transition-colors">
+      <CardHeader className="p-4 pb-0 flex-row items-start gap-3">
+        <Avatar className="h-10 w-10">
+          <AvatarImage src={post.author.avatar} />
+          <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+        </Avatar>
         
-        <CardContent className="p-4 pt-2">
-          <h2 className="text-lg font-semibold mb-2">{post.title}</h2>
-          <p className="line-clamp-3 text-sm text-gray-600">{post.content}</p>
+        <div className="flex-1 space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-medium">{post.author.name}</span>
+            {post.author.badge && (
+              <Badge variant="outline" className="text-xs font-normal">
+                {post.author.badge}
+              </Badge>
+            )}
+            {post.group && (
+              <Badge variant="secondary" className="text-xs font-normal">
+                {post.group.name}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <span>{formatTimeAgo(new Date(post.createdAt))}</span>
+            <span className="mx-1">•</span>
+            <span className="flex items-center">
+              {getPostTypeIcon()}
+              <span className="ml-1 capitalize">{post.type}</span>
+            </span>
+          </div>
+        </div>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setShowReportDialog(true)}>
+              <Flag className="h-4 w-4 mr-2" />
+              Rapporteren
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Share className="h-4 w-4 mr-2" />
+              Delen
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardHeader>
+      
+      <div onClick={onClick} className="cursor-pointer">
+        <CardContent className="p-4 pt-3">
+          <h3 className="text-lg font-semibold">{post.title}</h3>
           
-          {hasMedia && (
-            <div className="mt-3">
-              <div className="rounded-md overflow-hidden">
-                {firstMedia?.type === 'image' || firstMedia?.type === 'gif' ? (
-                  <AspectRatio ratio={16/9} className="bg-gray-100">
-                    <img 
-                      src={firstMedia.url} 
-                      alt="" 
-                      className="w-full h-full object-cover"
-                    />
-                    {post.media.length > 1 && (
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                        +{post.media.length - 1} meer
-                      </div>
-                    )}
-                  </AspectRatio>
-                ) : firstMedia?.type === 'video' && (
-                  <AspectRatio ratio={16/9} className="bg-gray-900">
-                    <div className="relative w-full h-full">
-                      <img 
-                        src={firstMedia.thumbnailUrl || firstMedia.url} 
-                        alt="" 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-black/60 rounded-full p-3">
-                          <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </AspectRatio>
-                )}
-              </div>
+          {post.content && (
+            <div className="mt-2 text-sm">
+              {post.content.length > 200
+                ? `${post.content.slice(0, 200)}...`
+                : post.content}
+            </div>
+          )}
+          
+          {post.image && (
+            <div className="mt-3 rounded-md overflow-hidden">
+              <img 
+                src={post.image} 
+                alt={post.title}
+                className="w-full h-[200px] object-cover" 
+              />
             </div>
           )}
         </CardContent>
-        
-        <CardFooter className="p-4 pt-0 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className={cn(
-                post.userReaction === 'like' && "text-green-600"
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
-                onLike(post.id);
-              }}
-            >
-              <ThumbsUp className="h-4 w-4 mr-1" />
-              <span>{post.likeCount}</span>
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className={cn(
-                post.userReaction === 'dislike' && "text-red-600"
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDislike(post.id);
-              }}
-            >
-              <ThumbsDown className="h-4 w-4 mr-1" />
-              <span>{post.dislikeCount}</span>
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              size="sm"
-            >
-              <MessageSquare className="h-4 w-4 mr-1" />
-              <span>{post.commentCount}</span>
-            </Button>
-          </div>
+      </div>
+      
+      <CardFooter className="p-3 pt-0 border-t flex justify-between">
+        <div className="flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center text-muted-foreground gap-1"
+            onClick={() => onLike(post.id)}
+          >
+            <Heart 
+              className={`h-4 w-4 ${post.hasLiked ? "fill-red-500 text-red-500" : ""}`} 
+            />
+            <span>{post.likes}</span>
+          </Button>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem 
-                className="text-red-600 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setReportDialogOpen(true);
-                }}
-              >
-                <Flag className="h-4 w-4 mr-2" />
-                <span>Rapporteren</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardFooter>
-      </Card>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center text-muted-foreground gap-1"
+            onClick={() => onDislike(post.id)}
+          >
+            <ThumbsDown 
+              className={`h-4 w-4 ${post.hasDisliked ? "fill-gray-500 text-gray-500" : ""}`} 
+            />
+            <span>{post.dislikes}</span>
+          </Button>
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center text-muted-foreground gap-1"
+            onClick={onClick}
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span>{post.commentCount}</span>
+          </Button>
+        </div>
+      </CardFooter>
       
       <ReportDialog 
-        open={reportDialogOpen} 
-        onOpenChange={setReportDialogOpen}
+        open={showReportDialog}
+        onOpenChange={setShowReportDialog}
         itemType="post"
-        onSubmit={handleReportSubmit}
+        onSubmit={handleReport}
       />
-    </>
+    </Card>
   );
 }

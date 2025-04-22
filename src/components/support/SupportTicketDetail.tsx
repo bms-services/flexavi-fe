@@ -22,16 +22,27 @@ import {
   Tag,
   MessageCircle,
   AlertCircle,
-  Edit2 
+  Edit2,
+  CheckCircle,
+  UserPlus,
+  AlertTriangle,
+  XCircle
 } from "lucide-react";
 import { formatDateTime } from "@/utils/format";
 import { SupportTicket } from "@/types";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
 export const SupportTicketDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getTicket, addMessage } = useSupportTickets();
+  const { getTicket, addMessage, updateTicketStatus, updateTicketPriority, assignTicket } = useSupportTickets();
   const [newMessage, setNewMessage] = useState("");
+  const [showAssignDialog, setShowAssignDialog] = useState(false);
+  const [showPriorityDialog, setShowPriorityDialog] = useState(false);
+  const [selectedPriority, setSelectedPriority] = useState("");
+  const [selectedStaff, setSelectedStaff] = useState("");
   
   const ticket = getTicket(id || "");
   
@@ -84,6 +95,45 @@ export const SupportTicketDetail = () => {
     });
     
     setNewMessage("");
+  };
+  
+  const handleMarkAsResolved = () => {
+    updateTicketStatus(ticket.id, "resolved");
+    toast.success("Ticket gemarkeerd als opgelost");
+  };
+  
+  const handleAssignTicket = () => {
+    if (!selectedStaff) return;
+    
+    const staffInfo = {
+      "staff-1": "Henk Visser",
+      "staff-2": "Jessica van der Berg",
+      "staff-3": "Pieter Janssen",
+      "staff-4": "Eva Willemsen"
+    };
+    
+    assignTicket(
+      ticket.id, 
+      selectedStaff, 
+      staffInfo[selectedStaff as keyof typeof staffInfo]
+    );
+    
+    setShowAssignDialog(false);
+  };
+  
+  const handleUpdatePriority = () => {
+    if (!selectedPriority) return;
+    
+    updateTicketPriority(ticket.id, selectedPriority as any);
+    setShowPriorityDialog(false);
+    toast.success(`Prioriteit gewijzigd naar ${selectedPriority}`);
+  };
+  
+  const handleCloseTicket = () => {
+    if (confirm("Weet u zeker dat u deze ticket wilt sluiten?")) {
+      updateTicketStatus(ticket.id, "closed");
+      toast.success("Ticket gesloten");
+    }
   };
   
   const getStatusBadge = (status: string) => {
@@ -281,16 +331,101 @@ export const SupportTicketDetail = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={handleMarkAsResolved}
+                  disabled={ticket.status === 'resolved' || ticket.status === 'closed'}
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
                   Markeren als opgelost
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Toewijzen aan medewerker
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Prioriteit wijzigen
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
+                
+                <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start">
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Toewijzen aan medewerker
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Ticket toewijzen</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Select 
+                        value={selectedStaff} 
+                        onValueChange={setSelectedStaff}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Selecteer medewerker" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="staff-1">Henk Visser</SelectItem>
+                          <SelectItem value="staff-2">Jessica van der Berg</SelectItem>
+                          <SelectItem value="staff-3">Pieter Janssen</SelectItem>
+                          <SelectItem value="staff-4">Eva Willemsen</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <DialogFooter>
+                      <Button 
+                        type="submit" 
+                        onClick={handleAssignTicket}
+                        disabled={!selectedStaff}
+                      >
+                        Toewijzen
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                <Dialog open={showPriorityDialog} onOpenChange={setShowPriorityDialog}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start">
+                      <AlertTriangle className="h-4 w-4 mr-2" />
+                      Prioriteit wijzigen
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Prioriteit wijzigen</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Select 
+                        value={selectedPriority} 
+                        onValueChange={setSelectedPriority}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Selecteer prioriteit" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Laag</SelectItem>
+                          <SelectItem value="medium">Gemiddeld</SelectItem>
+                          <SelectItem value="high">Hoog</SelectItem>
+                          <SelectItem value="urgent">Urgent</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <DialogFooter>
+                      <Button 
+                        type="submit" 
+                        onClick={handleUpdatePriority}
+                        disabled={!selectedPriority}
+                      >
+                        Bevestigen
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={handleCloseTicket}
+                  disabled={ticket.status === 'closed'}
+                >
+                  <XCircle className="h-4 w-4 mr-2" />
                   Sluiten
                 </Button>
               </div>
