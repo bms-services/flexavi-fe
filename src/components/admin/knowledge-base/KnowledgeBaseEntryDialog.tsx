@@ -1,218 +1,184 @@
-
-import React from "react";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogFooter 
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { KnowledgeBaseEntry, KnowledgeBaseCategory, KnowledgeBaseEntryType } from "@/types/knowledge-base";
 import { Switch } from "@/components/ui/switch";
-import { KnowledgeBaseEntry, KnowledgeBaseCategory } from "@/types/knowledge-base";
-import { useForm, Controller } from "react-hook-form";
+import { toast } from "sonner";
 
 interface KnowledgeBaseEntryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (entry: Omit<KnowledgeBaseEntry, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSave: (entryData: Omit<KnowledgeBaseEntry, 'id' | 'createdAt' | 'updatedAt'>) => void;
   entry?: KnowledgeBaseEntry;
   categories: KnowledgeBaseCategory[];
 }
 
-type FormValues = Omit<KnowledgeBaseEntry, 'id' | 'createdAt' | 'updatedAt'>;
-
-export function KnowledgeBaseEntryDialog({ 
-  open, 
-  onOpenChange, 
-  onSave, 
+export function KnowledgeBaseEntryDialog({
+  open,
+  onOpenChange,
+  onSave,
   entry,
-  categories 
+  categories
 }: KnowledgeBaseEntryDialogProps) {
-  const { register, control, handleSubmit, watch, formState: { errors }, reset } = useForm<FormValues>({
-    defaultValues: entry ? {
-      question: entry.question,
-      answer: entry.answer,
-      type: entry.type,
-      mediaUrl: entry.mediaUrl || "",
-      categoryId: entry.categoryId || "",
-      published: entry.published
-    } : {
-      question: "",
-      answer: "",
-      type: "text",
-      mediaUrl: "",
-      categoryId: "",
-      published: false
-    }
-  });
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [type, setType] = useState<KnowledgeBaseEntryType>("text");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
+  const [published, setPublished] = useState(false);
 
-  const entryType = watch("type");
-
-  React.useEffect(() => {
-    if (open) {
-      reset(entry ? {
-        question: entry.question,
-        answer: entry.answer,
-        type: entry.type,
-        mediaUrl: entry.mediaUrl || "",
-        categoryId: entry.categoryId || "",
-        published: entry.published
-      } : {
-        question: "",
-        answer: "",
-        type: "text",
-        mediaUrl: "",
-        categoryId: "",
-        published: false
-      });
+  useEffect(() => {
+    if (entry) {
+      setQuestion(entry.question);
+      setAnswer(entry.answer);
+      setType(entry.type);
+      setMediaUrl(entry.mediaUrl || "");
+      setCategoryId(entry.categoryId);
+      setPublished(entry.published);
+    } else {
+      // Reset form when creating a new entry
+      setQuestion("");
+      setAnswer("");
+      setType("text");
+      setMediaUrl("");
+      setCategoryId(undefined);
+      setPublished(false);
     }
-  }, [open, entry, reset]);
+  }, [entry]);
 
-  const onSubmit = (data: FormValues) => {
-    // If type is text, remove mediaUrl
-    if (data.type === 'text') {
-      data.mediaUrl = undefined;
+  const handleSave = () => {
+    if (!question || !answer) {
+      toast.error("Vraag en antwoord zijn verplicht");
+      return;
     }
+
+    const entryData: Omit<KnowledgeBaseEntry, 'id' | 'createdAt' | 'updatedAt'> = {
+      question,
+      answer,
+      type,
+      mediaUrl: isMediaType(type) ? mediaUrl : undefined,
+      categoryId,
+      published
+    };
     
-    onSave(data);
+    onSave(entryData);
     onOpenChange(false);
   };
 
+  const isMediaType = (type: KnowledgeBaseEntryType) => 
+    type === "image" || type === "video";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle>{entry ? "Kennisbank item bewerken" : "Nieuw kennisbank item"}</DialogTitle>
+          <DialogTitle>{entry ? "Bewerk FAQ" : "Nieuwe FAQ"}</DialogTitle>
+          <DialogDescription>
+            Maak of bewerk een veelgestelde vraag.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="question">Vraag</Label>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="question" className="text-right">
+              Vraag
+            </Label>
+            <Input
+              id="question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="answer" className="text-right">
+              Antwoord
+            </Label>
+            <Textarea
+              id="answer"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="type" className="text-right">
+              Type
+            </Label>
+            <Select value={type} onValueChange={(value) => setType(value as KnowledgeBaseEntryType)}>
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Selecteer een type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="text">Tekst</SelectItem>
+                <SelectItem value="image">Afbeelding</SelectItem>
+                <SelectItem value="video">Video</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {isMediaType(type) && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="mediaUrl" className="text-right">
+                Media URL
+              </Label>
               <Input
-                id="question"
-                {...register("question", { required: "Vraag is verplicht" })}
-                placeholder="Stel een veelgestelde vraag"
-              />
-              {errors.question && (
-                <p className="text-sm text-destructive">{errors.question.message}</p>
-              )}
-            </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="type">Type antwoord</Label>
-              <Controller
-                name="type"
-                control={control}
-                render={({ field }) => (
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger id="type">
-                      <SelectValue placeholder="Kies het type antwoord" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="text">Tekst</SelectItem>
-                      <SelectItem value="image">Afbeelding</SelectItem>
-                      <SelectItem value="video">Video</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
+                id="mediaUrl"
+                value={mediaUrl}
+                onChange={(e) => setMediaUrl(e.target.value)}
+                className="col-span-3"
               />
             </div>
-            
-            <div className="grid gap-2">
-              <Label htmlFor="answer">Antwoord</Label>
-              <Textarea
-                id="answer"
-                {...register("answer", { required: "Antwoord is verplicht" })}
-                placeholder="Geef een antwoord op de vraag"
-                rows={4}
+          )}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="categoryId" className="text-right">
+              Categorie
+            </Label>
+            <Select
+              value={categoryId || ""}
+              onValueChange={(value) => setCategoryId(value === "" ? undefined : value)}
+            >
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Selecteer een categorie" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Geen categorie</SelectItem>
+                {categories.map(category => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="published" className="text-right">
+              Gepubliceerd
+            </Label>
+            <div className="col-span-3 flex items-center">
+              <Switch
+                id="published"
+                checked={published}
+                onCheckedChange={(checked) => setPublished(checked)}
               />
-              {errors.answer && (
-                <p className="text-sm text-destructive">{errors.answer.message}</p>
-              )}
-            </div>
-            
-            {entryType !== 'text' && (
-              <div className="grid gap-2">
-                <Label htmlFor="mediaUrl">
-                  {entryType === 'image' ? 'Afbeelding URL' : 'Video URL'}
-                </Label>
-                <Input
-                  id="mediaUrl"
-                  {...register("mediaUrl", { 
-                    required: entryType !== 'text' ? `${entryType === 'image' ? 'Afbeelding' : 'Video'} URL is verplicht` : false 
-                  })}
-                  placeholder={entryType === 'image' 
-                    ? 'https://voorbeeld.com/afbeelding.jpg' 
-                    : 'https://www.youtube.com/embed/video-id'
-                  }
-                />
-                {errors.mediaUrl && (
-                  <p className="text-sm text-destructive">{errors.mediaUrl.message}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  {entryType === 'image' 
-                    ? 'Voer de URL in van een afbeelding (JPG, PNG of GIF)' 
-                    : 'Voer een embed URL in van YouTube, Vimeo of een andere videodienst'
-                  }
-                </p>
-              </div>
-            )}
-            
-            <div className="grid gap-2">
-              <Label htmlFor="categoryId">Categorie</Label>
-              <Controller
-                name="categoryId"
-                control={control}
-                render={({ field }) => (
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger id="categoryId">
-                      <SelectValue placeholder="Kies een categorie (optioneel)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map(category => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Controller
-                name="published"
-                control={control}
-                render={({ field }) => (
-                  <Switch 
-                    id="published"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
-              />
-              <Label htmlFor="published">Gepubliceerd</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Annuleren
-            </Button>
-            <Button type="submit">Opslaan</Button>
-          </DialogFooter>
-        </form>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="secondary" onClick={() => onOpenChange(false)}>
+            Annuleren
+          </Button>
+          <Button type="submit" onClick={handleSave}>Opslaan</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

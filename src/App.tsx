@@ -1,4 +1,3 @@
-
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -45,6 +44,7 @@ import Support from "./pages/Support";
 import SupportTicketDetailPage from "./pages/SupportTicketDetailPage";
 import Community from "./pages/Community";
 import FAQ from "./pages/FAQ";
+import KnowledgeBase from "./pages/KnowledgeBase";
 
 function App() {
   return (
@@ -85,6 +85,7 @@ function App() {
         <Route path="/support/:id" element={<SupportTicketDetailPage />} />
         <Route path="/community" element={<Community />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/knowledge-base" element={<KnowledgeBase />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

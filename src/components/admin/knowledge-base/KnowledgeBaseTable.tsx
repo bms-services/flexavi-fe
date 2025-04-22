@@ -1,106 +1,157 @@
-
 import React from "react";
-import { KnowledgeBaseEntry, KnowledgeBaseCategory } from "@/types/knowledge-base";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { KnowledgeBaseEntry } from "@/types/knowledge-base";
 import { Button } from "@/components/ui/button";
+import { Edit, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash, FileText, Image, Video } from "lucide-react";
-import { format } from "date-fns";
+import { KnowledgeBaseEntryType } from "@/types/knowledge-base";
 
 interface KnowledgeBaseTableProps {
   entries: KnowledgeBaseEntry[];
-  categories: KnowledgeBaseCategory[];
+  categories: { id: string; name: string }[];
   onEdit: (entry: KnowledgeBaseEntry) => void;
   onDelete: (entry: KnowledgeBaseEntry) => void;
 }
 
-export function KnowledgeBaseTable({ 
-  entries, 
-  categories, 
-  onEdit, 
-  onDelete 
-}: KnowledgeBaseTableProps) {
-  const getCategoryName = (categoryId?: string) => {
-    if (!categoryId) return "Geen categorie";
-    const category = categories.find(c => c.id === categoryId);
-    return category ? category.name : "Onbekend";
-  };
-  
-  const getTypeIcon = (type: KnowledgeBaseEntryType) => {
-    switch (type) {
-      case 'text':
-        return <FileText className="h-4 w-4" />;
-      case 'image':
-        return <Image className="h-4 w-4" />;
-      case 'video':
-        return <Video className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
-    }
-  };
+export function KnowledgeBaseTable({ entries, categories, onEdit, onDelete }: KnowledgeBaseTableProps) {
+  const columns: ColumnDef<KnowledgeBaseEntry>[] = [
+    {
+      accessorKey: "question",
+      header: "Vraag",
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: ({ row }) => {
+        const type = row.getValue("type") as KnowledgeBaseEntryType;
+        let badgeText = "";
+        let badgeVariant = "default";
+
+        switch (type) {
+          case "text":
+            badgeText = "Tekst";
+            break;
+          case "image":
+            badgeText = "Afbeelding";
+            badgeVariant = "secondary";
+            break;
+          case "video":
+            badgeText = "Video";
+            badgeVariant = "outline";
+            break;
+          default:
+            badgeText = "Onbekend";
+        }
+
+        return <Badge variant={badgeVariant}>{badgeText}</Badge>;
+      },
+    },
+    {
+      accessorKey: "categoryId",
+      header: "Categorie",
+      cell: ({ row }) => {
+        const categoryId = row.getValue("categoryId") as string;
+        const category = categories.find((cat) => cat.id === categoryId);
+        return <span>{category?.name || "Geen categorie"}</span>;
+      },
+    },
+    {
+      accessorKey: "published",
+      header: "Status",
+      cell: ({ row }) => {
+        const published = row.getValue("published") as boolean;
+        return (
+          <Badge variant={published ? "success" : "destructive"}>
+            {published ? "Gepubliceerd" : "Concept"}
+          </Badge>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Acties",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => onEdit(row.original)}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => onDelete(row.original)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const table = useReactTable({
+    data: entries,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Vraag</TableHead>
-            <TableHead>Categorie</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Laatste update</TableHead>
-            <TableHead className="w-[100px]">Acties</TableHead>
-          </TableRow>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
         </TableHeader>
         <TableBody>
-          {entries.length === 0 ? (
+          {table.getRowModel().rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center h-24 text-muted-foreground">
-                Geen kennisbank items gevonden. Maak een nieuwe aan.
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center"
+              >
+                Geen resultaten gevonden.
               </TableCell>
             </TableRow>
           ) : (
-            entries.map(entry => (
-              <TableRow key={entry.id}>
-                <TableCell className="font-medium">{entry.question}</TableCell>
-                <TableCell>{getCategoryName(entry.categoryId)}</TableCell>
-                <TableCell className="flex items-center gap-1">
-                  {getTypeIcon(entry.type)}
-                  <span className="capitalize">{entry.type}</span>
-                </TableCell>
-                <TableCell>
-                  {entry.published ? (
-                    <Badge variant="default" className="bg-green-500">Gepubliceerd</Badge>
-                  ) : (
-                    <Badge variant="outline">Concept</Badge>
-                  )}
-                </TableCell>
-                <TableCell>{format(new Date(entry.updatedAt), 'dd/MM/yyyy')}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      onClick={() => onEdit(entry)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      onClick={() => onDelete(entry)}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
               </TableRow>
             ))
           )}

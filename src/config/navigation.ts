@@ -53,7 +53,7 @@ export const navigationItems: NavItem[] = [
     ],
   },
   { name: "Community", href: "/community", icon: MessageSquare },
-  { name: "FAQ", href: "/faq", icon: Book },
+  { name: "Kennisbank", href: "/knowledge-base", icon: Book },
   { name: "Support", href: "/support", icon: HeadphonesIcon },
   { name: "Reputatiebeheer", href: "/reputation", icon: Star },
   { name: "Request Idee", href: "/requests", icon: Lamp },
@@ -65,7 +65,7 @@ export const navigationItems: NavItem[] = [
     icon: Shield,
     children: [
       { name: "Overzicht", href: "/admin" },
-      { name: "Kennisbank", href: "/admin/knowledge-base" },
     ]
   },
 ];
+
