@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ThumbsUp, ThumbsDown, MessageSquare, Share, ArrowLeft, Send } from "lucide-react";
+import { ThumbsUp, ThumbsDown, MessageSquare, Share, ArrowLeft, Send, Flag, MoreVertical } from "lucide-react";
 import { formatDistance, format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +15,16 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import { CarouselItem, CarouselPrevious, CarouselContent, Carousel, CarouselNext } from "@/components/ui/carousel";
 import { CommentItem } from "./CommentItem";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { ReportDialog } from "./ReportDialog";
 
 interface CommunityPostProps {
   post: Post;
@@ -26,6 +36,8 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
   const commentInputRef = useRef<HTMLTextAreaElement>(null);
   const { comments, addComment } = useCommunityComments(post.id);
   const { handleLike, handleDislike } = useCommunityReactions();
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportingItem, setReportingItem] = useState<{id: string, type: 'post' | 'comment'} | null>(null);
   
   const postTypeMap = {
     [PostType.GENERAL]: { label: 'Algemeen', color: 'bg-gray-100 text-gray-800' },
@@ -52,6 +64,18 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
       postId: post.id,
       parentId
     });
+  };
+
+  const handleReportItem = (id: string, type: 'post' | 'comment') => {
+    setReportingItem({ id, type });
+    setReportDialogOpen(true);
+  };
+
+  const handleReportSubmit = (reason: string, details: string) => {
+    // Here we would call API to submit the report
+    console.log(`Reported ${reportingItem?.type} ${reportingItem?.id}: ${reason} - ${details}`);
+    setReportDialogOpen(false);
+    setReportingItem(null);
   };
 
   return (
@@ -209,16 +233,35 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
               </Button>
             </div>
             
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => {
-                navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
-              }}
-            >
-              <Share className="h-4 w-4 mr-1" />
-              <span>Delen</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
+                }}
+              >
+                <Share className="h-4 w-4 mr-1" />
+                <span>Delen</span>
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem 
+                    className="text-red-600 cursor-pointer"
+                    onClick={() => handleReportItem(post.id, 'post')}
+                  >
+                    <Flag className="h-4 w-4 mr-2" />
+                    <span>Rapporteren</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -272,12 +315,20 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
                   onLike={handleLike}
                   onDislike={handleDislike}
                   onReply={handleReplyComment}
+                  onReport={(commentId) => handleReportItem(commentId, 'comment')}
                 />
               ))}
             </div>
           )}
         </CardContent>
       </Card>
+      
+      <ReportDialog 
+        open={reportDialogOpen} 
+        onOpenChange={setReportDialogOpen} 
+        itemType={reportingItem?.type || 'post'}
+        onSubmit={handleReportSubmit}
+      />
     </div>
   );
 }

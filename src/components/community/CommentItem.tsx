@@ -3,21 +3,28 @@ import { useState } from "react";
 import { Comment } from "@/types/community";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, Reply } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Reply, Flag, MoreVertical } from "lucide-react";
 import { formatDistance } from "date-fns";
 import { nl } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { CommentReplyForm } from "./CommentReplyForm";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface CommentItemProps {
   comment: Comment;
   onLike: (commentId: string, isComment: boolean) => void;
   onDislike: (commentId: string, isComment: boolean) => void;
   onReply: (content: string, parentId: string) => void;
+  onReport: (commentId: string) => void;
   indentLevel?: number;
 }
 
-export function CommentItem({ comment, onLike, onDislike, onReply, indentLevel = 0 }: CommentItemProps) {
+export function CommentItem({ comment, onLike, onDislike, onReply, onReport, indentLevel = 0 }: CommentItemProps) {
   const [showReplyForm, setShowReplyForm] = useState(false);
   
   const handleReply = (content: string, parentId: string) => {
@@ -34,14 +41,32 @@ export function CommentItem({ comment, onLike, onDislike, onReply, indentLevel =
         </Avatar>
         <div className="flex-1">
           <div className="bg-gray-50 rounded-lg p-3">
-            <div className="flex items-center gap-2">
-              <h4 className="font-medium text-sm">{comment.authorName}</h4>
-              <span className="text-xs text-muted-foreground">
-                {formatDistance(new Date(comment.createdAt), new Date(), { 
-                  addSuffix: true,
-                  locale: nl
-                })}
-              </span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <h4 className="font-medium text-sm">{comment.authorName}</h4>
+                <span className="text-xs text-muted-foreground">
+                  {formatDistance(new Date(comment.createdAt), new Date(), { 
+                    addSuffix: true,
+                    locale: nl
+                  })}
+                </span>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                    <MoreVertical className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem 
+                    className="text-red-600 cursor-pointer"
+                    onClick={() => onReport(comment.id)}
+                  >
+                    <Flag className="h-4 w-4 mr-2" />
+                    <span>Rapporteren</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <p className="mt-1 text-sm">{comment.content}</p>
           </div>
@@ -103,6 +128,7 @@ export function CommentItem({ comment, onLike, onDislike, onReply, indentLevel =
               onLike={onLike}
               onDislike={onDislike}
               onReply={onReply}
+              onReport={onReport}
               indentLevel={indentLevel + 1}
             />
           ))}

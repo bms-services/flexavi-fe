@@ -1,3 +1,4 @@
+
 import {
   Home,
   Users,
@@ -51,7 +52,6 @@ export const navigationItems: NavItem[] = [
       { name: "Calculator", href: "/calculator" },
     ],
   },
-  { name: "Community", href: "/community", icon: MessageSquare },
   { name: "Partners", href: "/partners", icon: Briefcase },
   {
     name: "Hulp",
@@ -65,12 +65,5 @@ export const navigationItems: NavItem[] = [
     ],
   },
   { name: "Instellingen", href: "/settings", icon: Settings },
-  { 
-    name: "Admin Dashboard", 
-    href: "/admin", 
-    icon: Shield,
-    children: [
-      { name: "Overzicht", href: "/admin" },
-    ]
-  },
+  { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];

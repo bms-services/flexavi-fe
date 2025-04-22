@@ -1,23 +1,32 @@
 
-import { formatDistance } from "date-fns";
-import { nl } from "date-fns/locale";
+import { useState } from "react";
 import { Post, PostType } from "@/types/community";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, ThumbsDown, MessageSquare, Share } from "lucide-react";
-import { useCommunityReactions } from "@/hooks/use-community";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
+import { ThumbsUp, ThumbsDown, MessageSquare, Flag, MoreVertical } from "lucide-react";
+import { formatDistance } from "date-fns";
+import { nl } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { 
+  DropdownMenu,
+  DropdownMenuContent, 
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { ReportDialog } from "./ReportDialog";
 
 interface PostCardProps {
   post: Post;
-  onClick: () => void;
+  onClick: (postId: string) => void;
+  onLike: (postId: string) => void;
+  onDislike: (postId: string) => void;
 }
 
-export function PostCard({ post, onClick }: PostCardProps) {
-  const { handleLike, handleDislike } = useCommunityReactions();
+export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
   
   const postTypeMap = {
     [PostType.GENERAL]: { label: 'Algemeen', color: 'bg-gray-100 text-gray-800' },
@@ -27,172 +36,182 @@ export function PostCard({ post, onClick }: PostCardProps) {
     [PostType.TECHNICAL_ADVICE]: { label: 'Technisch advies', color: 'bg-purple-100 text-purple-800' },
     [PostType.LEGAL_ADVICE]: { label: 'Juridisch advies', color: 'bg-red-100 text-red-800' },
   };
-
+  
+  const handlePostClick = (e: React.MouseEvent) => {
+    // Don't trigger post click when clicking buttons or links inside the post
+    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) {
+      return;
+    }
+    onClick(post.id);
+  };
+  
+  const handleReportSubmit = (reason: string, details: string) => {
+    // Here we would call API to submit the report
+    console.log(`Reported post ${post.id}: ${reason} - ${details}`);
+    setReportDialogOpen(false);
+  };
+  
+  const hasMedia = post.media && post.media.length > 0;
+  const firstMedia = hasMedia ? post.media[0] : null;
+  
   return (
-    <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-      <div className="p-4">
-        <div className="flex items-start gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={post.authorAvatar} alt={post.authorName} />
-            <AvatarFallback>{post.authorName.charAt(0)}</AvatarFallback>
-          </Avatar>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-medium">{post.authorName}</h3>
-              <span className="text-sm text-muted-foreground">
-                {formatDistance(new Date(post.createdAt), new Date(), { 
-                  addSuffix: true,
-                  locale: nl
-                })}
-              </span>
+    <>
+      <Card 
+        className={cn(
+          "shadow-sm hover:shadow-md transition-shadow", 
+          "cursor-pointer overflow-hidden"
+        )}
+        onClick={handlePostClick}
+      >
+        <CardHeader className="p-4 pb-2">
+          <div className="flex items-start gap-3">
+            <Avatar>
+              <AvatarImage src={post.authorAvatar} alt={post.authorName} />
+              <AvatarFallback>{post.authorName.charAt(0)}</AvatarFallback>
+            </Avatar>
+            
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-medium">{post.authorName}</h3>
+                <span className="text-sm text-muted-foreground">
+                  {formatDistance(new Date(post.createdAt), new Date(), { 
+                    addSuffix: true,
+                    locale: nl
+                  })}
+                </span>
+                
+                <Badge 
+                  className={cn(
+                    "ml-auto",
+                    postTypeMap[post.type].color
+                  )}
+                  variant="outline"
+                >
+                  {postTypeMap[post.type].label}
+                </Badge>
+              </div>
               
-              <Badge 
-                className={cn(
-                  "ml-auto",
-                  postTypeMap[post.type].color
-                )}
-                variant="outline"
-              >
-                {postTypeMap[post.type].label}
+              <Badge variant="outline" className="mt-1 bg-indigo-50 text-indigo-700">
+                {post.groupName}
               </Badge>
             </div>
-            
-            <div 
-              className="mt-1 text-sm text-gray-800 cursor-pointer"
-              onClick={onClick}
-            >
-              <h4 className="font-medium text-base mt-2 mb-1">{post.title}</h4>
-              <p className="line-clamp-3">{post.content}</p>
-            </div>
-            
-            {post.media && post.media.length > 0 && (
-              <div className="mt-3 cursor-pointer" onClick={onClick}>
-                {post.media.length === 1 ? (
-                  <div className="rounded-md overflow-hidden">
-                    {post.media[0].type === 'image' || post.media[0].type === 'gif' ? (
-                      <img 
-                        src={post.media[0].url} 
-                        alt="" 
-                        className="w-full h-auto max-h-[400px] object-cover"
-                      />
-                    ) : (
-                      <div className="relative">
-                        <AspectRatio ratio={16/9}>
-                          <video 
-                            src={post.media[0].url} 
-                            poster={post.media[0].thumbnailUrl}
-                            className="w-full h-full object-cover"
-                            controls={false}
-                          />
-                        </AspectRatio>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="p-4 pt-2">
+          <h2 className="text-lg font-semibold mb-2">{post.title}</h2>
+          <p className="line-clamp-3 text-sm text-gray-600">{post.content}</p>
+          
+          {hasMedia && (
+            <div className="mt-3">
+              <div className="rounded-md overflow-hidden">
+                {firstMedia?.type === 'image' || firstMedia?.type === 'gif' ? (
+                  <AspectRatio ratio={16/9} className="bg-gray-100">
+                    <img 
+                      src={firstMedia.url} 
+                      alt="" 
+                      className="w-full h-full object-cover"
+                    />
+                    {post.media.length > 1 && (
+                      <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                        +{post.media.length - 1} meer
                       </div>
                     )}
-                  </div>
-                ) : (
-                  <Carousel className="w-full">
-                    <CarouselContent>
-                      {post.media.map((media, index) => (
-                        <CarouselItem key={index} className="basis-full sm:basis-1/2 md:basis-1/3">
-                          <div className="p-1">
-                            <div className="rounded-md overflow-hidden">
-                              {media.type === 'image' || media.type === 'gif' ? (
-                                <img 
-                                  src={media.url} 
-                                  alt="" 
-                                  className="w-full h-[200px] object-cover"
-                                />
-                              ) : (
-                                <div className="relative">
-                                  <AspectRatio ratio={16/9}>
-                                    <video 
-                                      src={media.url} 
-                                      poster={media.thumbnailUrl}
-                                      className="w-full h-full object-cover"
-                                      controls={false}
-                                    />
-                                  </AspectRatio>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="left-2" />
-                    <CarouselNext className="right-2" />
-                  </Carousel>
+                  </AspectRatio>
+                ) : firstMedia?.type === 'video' && (
+                  <AspectRatio ratio={16/9} className="bg-gray-900">
+                    <div className="relative w-full h-full">
+                      <img 
+                        src={firstMedia.thumbnailUrl || firstMedia.url} 
+                        alt="" 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-black/60 rounded-full p-3">
+                          <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </AspectRatio>
                 )}
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      <div className="px-4 py-2 border-t flex items-center justify-between flex-wrap gap-y-2">
-        <div className="flex items-center gap-1">
-          <Badge variant="outline" className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
-            {post.groupName}
-          </Badge>
-        </div>
+            </div>
+          )}
+        </CardContent>
         
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className={cn(
-              "text-muted-foreground", 
-              post.userReaction === 'like' && "text-green-600"
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleLike(post.id);
-            }}
-          >
-            <ThumbsUp className="h-4 w-4 mr-1" />
-            <span>{post.likeCount}</span>
-          </Button>
+        <CardFooter className="p-4 pt-0 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className={cn(
+                post.userReaction === 'like' && "text-green-600"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onLike(post.id);
+              }}
+            >
+              <ThumbsUp className="h-4 w-4 mr-1" />
+              <span>{post.likeCount}</span>
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className={cn(
+                post.userReaction === 'dislike' && "text-red-600"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDislike(post.id);
+              }}
+            >
+              <ThumbsDown className="h-4 w-4 mr-1" />
+              <span>{post.dislikeCount}</span>
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+            >
+              <MessageSquare className="h-4 w-4 mr-1" />
+              <span>{post.commentCount}</span>
+            </Button>
+          </div>
           
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className={cn(
-              "text-muted-foreground",
-              post.userReaction === 'dislike' && "text-red-600" 
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDislike(post.id);
-            }}
-          >
-            <ThumbsDown className="h-4 w-4 mr-1" />
-            <span>{post.dislikeCount}</span>
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-muted-foreground"
-            onClick={onClick}
-          >
-            <MessageSquare className="h-4 w-4 mr-1" />
-            <span>{post.commentCount}</span>
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-muted-foreground"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Share functionality
-              navigator.clipboard.writeText(window.location.href + '?post=' + post.id);
-            }}
-          >
-            <Share className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem 
+                className="text-red-600 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setReportDialogOpen(true);
+                }}
+              >
+                <Flag className="h-4 w-4 mr-2" />
+                <span>Rapporteren</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardFooter>
+      </Card>
+      
+      <ReportDialog 
+        open={reportDialogOpen} 
+        onOpenChange={setReportDialogOpen}
+        itemType="post"
+        onSubmit={handleReportSubmit}
+      />
+    </>
   );
 }

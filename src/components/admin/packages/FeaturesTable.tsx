@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Textarea } from '@/components/ui/textarea';
 
 interface FeaturesTableProps {
   features: PackageFeature[];
@@ -50,7 +51,7 @@ export function FeaturesTable({ features, onFeatureToggle, onAddFeature }: Featu
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <Label htmlFor="categoryFilter">Categorie:</Label>
@@ -76,11 +77,11 @@ export function FeaturesTable({ features, onFeatureToggle, onAddFeature }: Featu
               Nieuwe feature
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-lg">
             <DialogHeader>
               <DialogTitle>Nieuwe feature toevoegen</DialogTitle>
               <DialogDescription>
-                Voeg een nieuwe feature toe aan je pakketten.
+                Voeg een nieuwe feature toe aan je pakketten. Geef een duidelijke beschrijving om klanten te helpen begrijpen wat de feature doet.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -95,11 +96,12 @@ export function FeaturesTable({ features, onFeatureToggle, onAddFeature }: Featu
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="featureDescription">Beschrijving</Label>
-                <Input 
+                <Textarea 
                   id="featureDescription" 
                   value={newFeature.description} 
                   onChange={(e) => setNewFeature({...newFeature, description: e.target.value})}
-                  placeholder="Beschrijf wat deze feature doet"
+                  placeholder="Beschrijf wat deze feature doet en hoe het de gebruiker helpt"
+                  className="min-h-[100px]"
                 />
               </div>
               <div className="grid gap-2">
@@ -157,11 +159,11 @@ export function FeaturesTable({ features, onFeatureToggle, onAddFeature }: Featu
         </Dialog>
       </div>
       
-      <div className="rounded-md border">
+      <div className="w-full rounded-md border overflow-x-auto">
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead className="w-[40%]">Feature</TableHead>
+              <TableHead className="w-[60%]">Feature</TableHead>
               <TableHead className="text-center">Starter</TableHead>
               <TableHead className="text-center">Professional</TableHead>
               <TableHead className="text-center">Enterprise</TableHead>
@@ -180,7 +182,7 @@ export function FeaturesTable({ features, onFeatureToggle, onAddFeature }: Featu
                             <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="w-[200px] text-sm">{feature.description}</p>
+                            <p className="w-[300px] text-sm">{feature.description}</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
