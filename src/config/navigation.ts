@@ -1,3 +1,4 @@
+
 import {
   Home,
   Users,
@@ -10,6 +11,7 @@ import {
   Calculator,
   Star,
   Lamp,
+  HeadphonesIcon,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -48,6 +50,7 @@ export const navigationItems: NavItem[] = [
       { name: "Calculator", href: "/calculator" },
     ],
   },
+  { name: "Support", href: "/support", icon: HeadphonesIcon },
   { name: "Reputatiebeheer", href: "/reputation", icon: Star },
   { name: "Request Idee", href: "/requests", icon: Lamp },
   { name: "Partners", href: "/partners", icon: Briefcase },

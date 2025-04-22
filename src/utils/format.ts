@@ -1,31 +1,44 @@
 
-/**
- * Format a number as currency (Euro)
- */
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('nl-NL', { 
-    style: 'currency', 
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { format, formatDistanceToNow, isToday, isYesterday, differenceInDays } from "date-fns";
+import { nl } from "date-fns/locale";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function formatEuro(amount: number): string {
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
     currency: 'EUR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
-};
+}
 
-/**
- * Format a date to a localized string (Dutch)
- */
-export const formatDate = (date: string | Date): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleDateString('nl-NL', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-};
+export function formatDate(date: Date): string {
+  return format(date, "d MMMM yyyy", { locale: nl });
+}
 
-/**
- * Format a percentage
- */
-export const formatPercentage = (value: number): string => {
-  return `${value}%`;
-};
+export function formatDateTime(date: Date): string {
+  return format(date, "d MMM yyyy HH:mm", { locale: nl });
+}
+
+export function formatRelativeDate(date: Date): string {
+  if (isToday(date)) {
+    return `Vandaag ${format(date, "HH:mm")}`;
+  }
+  
+  if (isYesterday(date)) {
+    return `Gisteren ${format(date, "HH:mm")}`;
+  }
+  
+  const daysAgo = differenceInDays(new Date(), date);
+  
+  if (daysAgo < 7) {
+    return formatDistanceToNow(date, { addSuffix: true, locale: nl });
+  }
+  
+  return format(date, "d MMM yyyy", { locale: nl });
+}
