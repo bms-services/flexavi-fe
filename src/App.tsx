@@ -33,6 +33,7 @@ import EmployeePlanning from "./pages/EmployeePlanning";
 import EmployeeManagement from "./pages/EmployeeManagement";
 import EmployeeSchedule from "./pages/EmployeeSchedule";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import KnowledgeBaseManagement from "./pages/admin/KnowledgeBaseManagement";
 import Pricing from "./pages/Pricing";
 import Landing from "./pages/Landing";
 import Requests from "./pages/Requests";
@@ -43,6 +44,7 @@ import WorkAgreementDetail from "./pages/WorkAgreementDetail";
 import Support from "./pages/Support";
 import SupportTicketDetailPage from "./pages/SupportTicketDetailPage";
 import Community from "./pages/Community";
+import FAQ from "./pages/FAQ";
 
 function App() {
   return (
@@ -77,10 +79,12 @@ function App() {
         <Route path="/employees" element={<EmployeeManagement />} />
         <Route path="/employees/schedule" element={<EmployeeSchedule />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/knowledge-base" element={<KnowledgeBaseManagement />} />
         <Route path="/reputation" element={<ReputationManagement />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/:id" element={<SupportTicketDetailPage />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/faq" element={<FAQ />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />

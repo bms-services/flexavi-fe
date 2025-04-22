@@ -12,3 +12,4 @@ export * from './expenses';
 export * from './support';
 export * from './community';
 export * from './navigation';
+export * from './knowledge-base';

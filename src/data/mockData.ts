@@ -12,3 +12,4 @@ export * from './mockEmployees';
 export * from './mockWorkDays';
 export * from './mockExpenses';
 export * from './mockSupportTickets';
+export * from './mockKnowledgeBase';
