@@ -17,6 +17,13 @@ export function formatEuro(amount: number): string {
   }).format(amount);
 }
 
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(amount);
+}
+
 export function formatDate(date: Date): string {
   return format(date, "d MMMM yyyy", { locale: nl });
 }

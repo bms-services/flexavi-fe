@@ -1,298 +1,340 @@
 
-import { SupportTicket } from "@/types/support";
-import { v4 as uuidv4 } from 'uuid';
+import { SupportTicket, SupportTicketMessage } from "@/types";
+import { v4 as uuidv4 } from "uuid";
 
-export const mockSupportTickets: SupportTicket[] = [
+// Helper function to create dates in the past
+const daysAgo = (days: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return date.toISOString();
+};
+
+// Helper function to create dates in the future
+const daysAhead = (days: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString();
+};
+
+// Sample staff members
+const staff = [
   {
-    id: "ticket-1",
-    title: "Cannot access invoice dashboard",
-    customerId: "customer-1",
-    customerName: "Janssen B.V.",
-    customerEmail: "contact@janssen.nl",
-    status: "open",
-    priority: "high",
-    category: "technical",
-    createdAt: "2023-11-05T10:30:00.000Z",
-    updatedAt: "2023-11-05T10:30:00.000Z",
-    lastReplyAt: "2023-11-05T10:30:00.000Z",
-    lastReplyBy: "customer-1",
-    messages: [
-      {
-        id: "message-1",
-        ticketId: "ticket-1",
-        content: "Ik probeer mijn facturen dashboard te bekijken, maar ik krijg steeds een foutmelding. Kunnen jullie dit controleren?",
-        createdAt: "2023-11-05T10:30:00.000Z",
-        createdBy: {
-          id: "customer-1",
-          name: "Janssen B.V.",
-          email: "contact@janssen.nl",
-          role: "customer"
-        }
-      }
-    ]
+    id: "staff-1",
+    name: "Jessica van der Berg",
+    email: "jessica@solarinstall.nl",
+    avatar: "/avatars/jessica.jpg",
+    role: "staff"
   },
   {
-    id: "ticket-2",
-    title: "Issue with payment processing",
-    customerId: "customer-2",
-    customerName: "De Boer Installaties",
-    customerEmail: "info@deboer.nl",
-    status: "in-progress",
-    priority: "urgent",
-    category: "billing",
-    assignedTo: {
-      id: "staff-1",
-      name: "Henk Visser",
-    },
-    createdAt: "2023-11-01T14:20:00.000Z",
-    updatedAt: "2023-11-02T09:15:00.000Z",
-    lastReplyAt: "2023-11-02T09:15:00.000Z",
-    lastReplyBy: "staff-1",
-    messages: [
-      {
-        id: "message-2-1",
-        ticketId: "ticket-2",
-        content: "Ik heb geprobeerd te betalen voor mijn maandelijkse abonnement, maar de betaling wordt telkens geweigerd.",
-        createdAt: "2023-11-01T14:20:00.000Z",
-        createdBy: {
-          id: "customer-2",
-          name: "De Boer Installaties",
-          email: "info@deboer.nl",
-          role: "customer"
-        }
-      },
-      {
-        id: "message-2-2",
-        ticketId: "ticket-2",
-        content: "Dank voor uw bericht. Ik zie dat er inderdaad een probleem is met de betalingsverwerking. We zijn dit aan het onderzoeken en komen zo snel mogelijk bij u terug.",
-        createdAt: "2023-11-02T09:15:00.000Z",
-        createdBy: {
-          id: "staff-1",
-          name: "Henk Visser",
-          email: "henk@yoursaas.nl",
-          role: "staff"
-        }
-      }
-    ]
+    id: "staff-2",
+    name: "Martijn de Vries",
+    email: "martijn@solarinstall.nl",
+    avatar: "/avatars/martijn.jpg",
+    role: "staff"
   },
   {
-    id: "ticket-3",
-    title: "Feature request: Dark mode",
-    customerId: "customer-3",
-    customerName: "Van Dijk Groep",
-    customerEmail: "service@vandijk.nl",
-    status: "waiting-for-staff",
-    priority: "low",
-    category: "feature-request",
-    createdAt: "2023-10-25T11:45:00.000Z",
-    updatedAt: "2023-10-28T16:20:00.000Z",
-    lastReplyAt: "2023-10-28T16:20:00.000Z",
-    lastReplyBy: "customer-3",
-    messages: [
-      {
-        id: "message-3-1",
-        ticketId: "ticket-3",
-        content: "Zou het mogelijk zijn om een dark mode toe te voegen aan het platform? Dit zou erg fijn zijn voor nachtelijk gebruik.",
-        createdAt: "2023-10-25T11:45:00.000Z",
-        createdBy: {
-          id: "customer-3",
-          name: "Van Dijk Groep",
-          email: "service@vandijk.nl",
-          role: "customer"
-        }
-      },
-      {
-        id: "message-3-2",
-        ticketId: "ticket-3",
-        content: "Hartelijk dank voor uw suggestie. We hebben uw verzoek doorgestuurd naar ons product team.",
-        createdAt: "2023-10-26T09:30:00.000Z",
-        createdBy: {
-          id: "staff-2",
-          name: "Lisa De Jong",
-          email: "lisa@yoursaas.nl",
-          role: "staff"
-        }
-      },
-      {
-        id: "message-3-3",
-        ticketId: "ticket-3",
-        content: "Geweldig, bedankt voor het doorgeven! Ik kijk ernaar uit.",
-        createdAt: "2023-10-28T16:20:00.000Z",
-        createdBy: {
-          id: "customer-3",
-          name: "Van Dijk Groep",
-          email: "service@vandijk.nl",
-          role: "customer"
-        }
-      }
-    ]
-  },
-  {
-    id: "ticket-4",
-    title: "Login problems after password reset",
-    customerId: "customer-4",
-    customerName: "Bakker Techniek",
-    customerEmail: "support@bakker.nl",
-    status: "resolved",
-    priority: "medium",
-    category: "account",
-    assignedTo: {
-      id: "staff-3",
-      name: "Martijn Jansen",
-    },
-    createdAt: "2023-11-03T08:10:00.000Z",
-    updatedAt: "2023-11-03T15:45:00.000Z",
-    lastReplyAt: "2023-11-03T15:45:00.000Z",
-    lastReplyBy: "staff-3",
-    messages: [
-      {
-        id: "message-4-1",
-        ticketId: "ticket-4",
-        content: "Na het resetten van mijn wachtwoord kan ik niet meer inloggen. Ik krijg steeds een foutmelding.",
-        createdAt: "2023-11-03T08:10:00.000Z",
-        createdBy: {
-          id: "customer-4",
-          name: "Bakker Techniek",
-          email: "support@bakker.nl",
-          role: "customer"
-        }
-      },
-      {
-        id: "message-4-2",
-        ticketId: "ticket-4",
-        content: "Ik heb uw account gecontroleerd en het probleem gevonden. Ik heb een nieuwe reset link naar uw e-mail gestuurd, kunt u die proberen te gebruiken?",
-        createdAt: "2023-11-03T10:20:00.000Z",
-        createdBy: {
-          id: "staff-3",
-          name: "Martijn Jansen",
-          email: "martijn@yoursaas.nl",
-          role: "staff"
-        }
-      },
-      {
-        id: "message-4-3",
-        ticketId: "ticket-4",
-        content: "Bedankt, de nieuwe link werkt perfect. Ik kan nu weer inloggen.",
-        createdAt: "2023-11-03T13:30:00.000Z",
-        createdBy: {
-          id: "customer-4",
-          name: "Bakker Techniek",
-          email: "support@bakker.nl",
-          role: "customer"
-        }
-      },
-      {
-        id: "message-4-4",
-        ticketId: "ticket-4",
-        content: "Perfect! Ik markeer deze ticket als opgelost. Als u nog vragen heeft, laat het me weten.",
-        createdAt: "2023-11-03T15:45:00.000Z",
-        createdBy: {
-          id: "staff-3",
-          name: "Martijn Jansen",
-          email: "martijn@yoursaas.nl",
-          role: "staff"
-        }
-      }
-    ]
-  },
-  {
-    id: "ticket-5",
-    title: "How to export data to Excel?",
-    customerId: "customer-5",
-    customerName: "Smit & Zonen",
-    customerEmail: "info@smit.nl",
-    status: "closed",
-    priority: "low",
-    category: "general",
-    createdAt: "2023-10-15T13:20:00.000Z",
-    updatedAt: "2023-10-16T11:10:00.000Z",
-    lastReplyAt: "2023-10-16T11:10:00.000Z",
-    lastReplyBy: "customer-5",
-    messages: [
-      {
-        id: "message-5-1",
-        ticketId: "ticket-5",
-        content: "Ik wil graag mijn data exporteren naar Excel, maar ik kan de optie niet vinden. Waar kan ik dit doen?",
-        createdAt: "2023-10-15T13:20:00.000Z",
-        createdBy: {
-          id: "customer-5",
-          name: "Smit & Zonen",
-          email: "info@smit.nl",
-          role: "customer"
-        }
-      },
-      {
-        id: "message-5-2",
-        ticketId: "ticket-5",
-        content: "Op het dashboard kunt u rechtsboven op het 'Export' icoon klikken, selecteer daarna Excel als formaat. Als u specifieke rapporten wilt exporteren, kunt u dat doen vanuit het rapport scherm met dezelfde export knop.",
-        createdAt: "2023-10-16T09:15:00.000Z",
-        createdBy: {
-          id: "staff-4",
-          name: "Emma de Vries",
-          email: "emma@yoursaas.nl",
-          role: "staff"
-        }
-      },
-      {
-        id: "message-5-3",
-        ticketId: "ticket-5",
-        content: "Gevonden, dank u wel voor de snelle hulp!",
-        createdAt: "2023-10-16T11:10:00.000Z",
-        createdBy: {
-          id: "customer-5",
-          name: "Smit & Zonen",
-          email: "info@smit.nl",
-          role: "customer"
-        }
-      }
-    ]
+    id: "admin-1",
+    name: "Sander Janssen",
+    email: "sander@solarinstall.nl",
+    avatar: "/avatars/sander.jpg",
+    role: "admin"
   }
 ];
 
-export const createNewTicket = (ticketData: Partial<SupportTicket>): SupportTicket => {
-  const newId = uuidv4();
-  const now = new Date().toISOString();
+// Sample customers
+const customers = [
+  {
+    id: "customer-1",
+    name: "Pieter Bakker",
+    email: "pieter.bakker@example.com",
+    avatar: "/avatars/customer1.jpg",
+    role: "customer"
+  },
+  {
+    id: "customer-2",
+    name: "Anna de Jong",
+    email: "anna.dejong@example.com",
+    avatar: "/avatars/customer2.jpg",
+    role: "customer"
+  },
+  {
+    id: "customer-3",
+    name: "Willem van Dijk",
+    email: "willem.vandijk@example.com",
+    avatar: "/avatars/customer3.jpg",
+    role: "customer"
+  },
+  {
+    id: "customer-4",
+    name: "Eva Smit",
+    email: "eva.smit@example.com",
+    avatar: "/avatars/customer4.jpg",
+    role: "customer"
+  },
+  {
+    id: "customer-5",
+    name: "Jeroen Visser",
+    email: "jeroen.visser@example.com",
+    avatar: "/avatars/customer5.jpg",
+    role: "customer"
+  }
+];
+
+// Create mock support ticket messages
+const createMessages = (
+  ticketId: string, 
+  count: number, 
+  status: string, 
+  createdAt: string
+): SupportTicketMessage[] => {
+  const messages: SupportTicketMessage[] = [];
   
+  // Initial customer message
+  messages.push({
+    id: uuidv4(),
+    ticketId,
+    content: "Ik heb een vraag over mijn recente installatie. Kunnen jullie me helpen?",
+    createdAt,
+    createdBy: { ...customers[Math.floor(Math.random() * customers.length)], role: "customer" }
+  });
+  
+  // Add varying numbers of replies based on status
+  if (status !== "open") {
+    // Staff response
+    messages.push({
+      id: uuidv4(),
+      ticketId,
+      content: "Dank voor uw bericht. Wat is uw vraag precies? Kunt u meer details geven?",
+      createdAt: new Date(new Date(createdAt).getTime() + 4 * 60 * 60 * 1000).toISOString(), // 4 hours later
+      createdBy: { ...staff[Math.floor(Math.random() * staff.length)], role: "staff" }
+    });
+    
+    // If there's a back-and-forth
+    if (count > 2 && status !== "waiting-for-customer") {
+      // Customer reply
+      messages.push({
+        id: uuidv4(),
+        ticketId,
+        content: "De zonnepanelen lijken niet volledig te werken. Ik zie in de app dat de opbrengst lager is dan verwacht.",
+        createdAt: new Date(new Date(createdAt).getTime() + 8 * 60 * 60 * 1000).toISOString(), // 8 hours later
+        createdBy: messages[0].createdBy
+      });
+      
+      // Final staff reply if resolved or in progress
+      if (status === "resolved" || status === "in-progress" || status === "waiting-for-staff") {
+        messages.push({
+          id: uuidv4(),
+          ticketId,
+          content: "Bedankt voor de extra informatie. We zullen dit onderzoeken en komen zo snel mogelijk bij u terug.",
+          createdAt: new Date(new Date(createdAt).getTime() + 12 * 60 * 60 * 1000).toISOString(), // 12 hours later
+          createdBy: { ...staff[Math.floor(Math.random() * staff.length)], role: "staff" }
+        });
+        
+        // Internal note
+        messages.push({
+          id: uuidv4(),
+          ticketId,
+          content: "Interne notitie: Controleer de installatie en plan zo nodig een bezoek in.",
+          createdAt: new Date(new Date(createdAt).getTime() + 12.5 * 60 * 60 * 1000).toISOString(), // 12.5 hours later
+          createdBy: { ...staff[Math.floor(Math.random() * staff.length)], role: "staff" },
+          isInternal: true
+        });
+      }
+      
+      // If resolved, add resolution message
+      if (status === "resolved") {
+        messages.push({
+          id: uuidv4(),
+          ticketId,
+          content: "We hebben het probleem opgelost. Er was een configuratiefout in de omvormer. Dit hebben we op afstand kunnen herstellen. Controleert u of de opbrengst nu weer normaal is?",
+          createdAt: new Date(new Date(createdAt).getTime() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours later
+          createdBy: { ...staff[Math.floor(Math.random() * staff.length)], role: "staff" }
+        });
+        
+        // Customer acknowledgment
+        messages.push({
+          id: uuidv4(),
+          ticketId,
+          content: "Ja, alles werkt nu prima! Bedankt voor de snelle service.",
+          createdAt: new Date(new Date(createdAt).getTime() + 30 * 60 * 60 * 1000).toISOString(), // 30 hours later
+          createdBy: messages[0].createdBy
+        });
+      }
+    }
+  }
+  
+  return messages;
+};
+
+// Create mock support tickets with varying statuses, priorities, and categories
+export const mockSupportTickets: SupportTicket[] = [
+  // Open tickets
+  {
+    id: "ticket-001",
+    title: "Vraag over zonnepaneel installatie",
+    customerId: customers[0].id,
+    customerName: customers[0].name,
+    customerEmail: customers[0].email,
+    status: "open",
+    priority: "medium",
+    category: "technical",
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+    messages: createMessages("ticket-001", 1, "open", daysAgo(2)),
+    tags: ["installatie", "nieuw"]
+  },
+  {
+    id: "ticket-002",
+    title: "Facturatie probleem",
+    customerId: customers[1].id,
+    customerName: customers[1].name,
+    customerEmail: customers[1].email,
+    status: "open",
+    priority: "high",
+    category: "billing",
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+    messages: createMessages("ticket-002", 1, "open", daysAgo(1)),
+    tags: ["facturatie", "urgent"]
+  },
+  
+  // In-progress tickets
+  {
+    id: "ticket-003",
+    title: "App toont verkeerde gegevens",
+    customerId: customers[2].id,
+    customerName: customers[2].name,
+    customerEmail: customers[2].email,
+    status: "in-progress",
+    priority: "medium",
+    category: "technical",
+    assignedTo: {
+      id: staff[0].id,
+      name: staff[0].name,
+      avatar: staff[0].avatar
+    },
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(3),
+    lastReplyAt: daysAgo(3),
+    lastReplyBy: staff[0].id,
+    messages: createMessages("ticket-003", 3, "in-progress", daysAgo(5)),
+    tags: ["app", "bug"]
+  },
+  
+  // Waiting for customer
+  {
+    id: "ticket-004",
+    title: "Verzoek om meer informatie over garantie",
+    customerId: customers[3].id,
+    customerName: customers[3].name,
+    customerEmail: customers[3].email,
+    status: "waiting-for-customer",
+    priority: "low",
+    category: "general",
+    assignedTo: {
+      id: staff[1].id,
+      name: staff[1].name,
+      avatar: staff[1].avatar
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(4),
+    lastReplyAt: daysAgo(4),
+    lastReplyBy: staff[1].id,
+    messages: createMessages("ticket-004", 2, "waiting-for-customer", daysAgo(7)),
+    tags: ["garantie", "info"]
+  },
+  
+  // Resolved tickets
+  {
+    id: "ticket-005",
+    title: "Zonnepanelen werken niet optimaal",
+    customerId: customers[4].id,
+    customerName: customers[4].name,
+    customerEmail: customers[4].email,
+    status: "resolved",
+    priority: "high",
+    category: "technical",
+    assignedTo: {
+      id: staff[0].id,
+      name: staff[0].name,
+      avatar: staff[0].avatar
+    },
+    createdAt: daysAgo(14),
+    updatedAt: daysAgo(10),
+    lastReplyAt: daysAgo(10),
+    lastReplyBy: customers[4].id,
+    messages: createMessages("ticket-005", 5, "resolved", daysAgo(14)),
+    tags: ["opgelost", "technisch"]
+  },
+  
+  // Waiting for staff
+  {
+    id: "ticket-006",
+    title: "Verzoek om speciale offerte",
+    customerId: customers[0].id,
+    customerName: customers[0].name,
+    customerEmail: customers[0].email,
+    status: "waiting-for-staff",
+    priority: "medium",
+    category: "feature-request",
+    assignedTo: {
+      id: staff[2].id,
+      name: staff[2].name,
+      avatar: staff[2].avatar
+    },
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
+    lastReplyAt: daysAgo(1),
+    lastReplyBy: customers[0].id,
+    messages: createMessages("ticket-006", 3, "waiting-for-staff", daysAgo(3)),
+    tags: ["offerte", "wachten"]
+  },
+  
+  // Closed tickets
+  {
+    id: "ticket-007",
+    title: "Account toegang problemen",
+    customerId: customers[1].id,
+    customerName: customers[1].name,
+    customerEmail: customers[1].email,
+    status: "closed",
+    priority: "medium",
+    category: "account",
+    createdAt: daysAgo(21),
+    updatedAt: daysAgo(18),
+    messages: createMessages("ticket-007", 4, "resolved", daysAgo(21)),
+    tags: ["account", "gesloten"]
+  }
+];
+
+// Function to get messages for a specific ticket
+export const getTicketMessages = (ticketId: string): SupportTicketMessage[] => {
+  const ticket = mockSupportTickets.find(t => t.id === ticketId);
+  return ticket ? ticket.messages : [];
+};
+
+// Create a mock function to add a new support ticket
+export const createMockTicket = (ticketData: Partial<SupportTicket>): SupportTicket => {
   const newTicket: SupportTicket = {
-    id: newId,
-    title: ticketData.title || "New Support Ticket",
-    customerId: ticketData.customerId || "unknown-customer",
-    customerName: ticketData.customerName || "Unknown Customer",
-    customerEmail: ticketData.customerEmail || "unknown@example.com",
+    id: `ticket-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+    title: ticketData.title || "Nieuwe support aanvraag",
+    customerId: ticketData.customerId || customers[0].id,
+    customerName: ticketData.customerName || customers[0].name,
+    customerEmail: ticketData.customerEmail || customers[0].email,
     status: ticketData.status || "open",
     priority: ticketData.priority || "medium",
     category: ticketData.category || "general",
-    createdAt: now,
-    updatedAt: now,
-    messages: ticketData.messages || [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    messages: [],
     tags: ticketData.tags || [],
+    ...ticketData
   };
+  
+  // Add initial message if provided
+  if (ticketData.messages && ticketData.messages.length > 0) {
+    newTicket.messages = ticketData.messages;
+  }
   
   return newTicket;
-};
-
-export const addMessageToTicket = (
-  ticketId: string, 
-  content: string, 
-  userId: string, 
-  userName: string,
-  userEmail: string,
-  userRole: 'customer' | 'staff' | 'admin',
-  isInternal = false
-): SupportTicketMessage => {
-  const newMessage: SupportTicketMessage = {
-    id: uuidv4(),
-    ticketId: ticketId,
-    content: content,
-    createdAt: new Date().toISOString(),
-    createdBy: {
-      id: userId,
-      name: userName,
-      email: userEmail,
-      role: userRole
-    },
-    isInternal: isInternal
-  };
-  
-  return newMessage;
 };

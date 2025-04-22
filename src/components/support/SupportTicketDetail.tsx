@@ -3,47 +3,62 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter
+} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { SupportTicketStatusBadge, SupportTicketPriorityBadge } from "./SupportTicketStatusBadge";
-import { formatDate } from "@/utils/format";
-import { ArrowLeft, Check, MessagesSquare, User, Send, PaperclipIcon } from "lucide-react";
-import { SupportTicketActions } from "./SupportTicketActions";
-import { SupportTicketMessage } from "@/types/support";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { 
+  ArrowLeft, 
+  Send, 
+  User,
+  Calendar, 
+  Tag,
+  MessageCircle,
+  AlertCircle,
+  Edit2 
+} from "lucide-react";
+import { formatDateTime } from "@/utils/format";
+import { SupportTicket } from "@/types";
 
-export function SupportTicketDetail() {
+export const SupportTicketDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tickets, getTicketById, addMessage, updateTicketStatus } = useSupportTickets();
-  const [replyMessage, setReplyMessage] = useState("");
-  const [internalNote, setInternalNote] = useState("");
-  const [showInternalNotes, setShowInternalNotes] = useState(false);
+  const { getTicket, addMessage } = useSupportTickets();
+  const [newMessage, setNewMessage] = useState("");
   
-  const ticket = id ? getTicketById(id) : null;
+  const ticket = getTicket(id || "");
   
   if (!ticket) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="flex items-center mb-6">
-          <Button variant="ghost" onClick={() => navigate("/support")}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Terug naar tickets
-          </Button>
-        </div>
+      <div className="container mx-auto p-6">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/support")}
+          className="mb-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Terug naar overzicht
+        </Button>
         <Card>
           <CardContent className="pt-6">
             <div className="text-center py-12">
-              <h2 className="text-xl font-semibold">Ticket niet gevonden</h2>
-              <p className="text-muted-foreground mt-2">
-                De gevraagde ticket bestaat niet of is verwijderd.
+              <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h2 className="mt-4 text-xl font-semibold">Ticket niet gevonden</h2>
+              <p className="text-muted-foreground">
+                Het opgevraagde support ticket bestaat niet of is verwijderd.
               </p>
-              <Button className="mt-4" onClick={() => navigate("/support")}>
-                Terug naar overzicht
+              <Button 
+                className="mt-4" 
+                onClick={() => navigate("/support")}
+              >
+                Terug naar support
               </Button>
             </div>
           </CardContent>
@@ -51,246 +66,233 @@ export function SupportTicketDetail() {
       </div>
     );
   }
-
-  const handleReply = () => {
-    if (!replyMessage.trim()) return;
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
     
-    // In a real app, these values would come from your auth system
-    addMessage(
-      ticket.id, 
-      replyMessage, 
-      "staff-1", 
-      "Support Medewerker",
-      "support@yoursaas.nl",
-      "staff"
-    );
+    addMessage(ticket.id, {
+      content: newMessage,
+      createdAt: new Date().toISOString(),
+      createdBy: {
+        id: "staff-1",
+        name: "Jessica van der Berg",
+        email: "jessica@solarinstall.nl",
+        avatar: "/avatars/jessica.jpg",
+        role: "staff"
+      }
+    });
     
-    setReplyMessage("");
+    setNewMessage("");
   };
-
-  const handleInternalNote = () => {
-    if (!internalNote.trim()) return;
+  
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      'open': { variant: 'default' as const, label: 'Open' },
+      'in-progress': { variant: 'secondary' as const, label: 'In behandeling' },
+      'waiting-for-customer': { variant: 'warning' as const, label: 'Wacht op klant' },
+      'waiting-for-staff': { variant: 'warning' as const, label: 'Wacht op medewerker' },
+      'resolved': { variant: 'success' as const, label: 'Opgelost' },
+      'closed': { variant: 'outline' as const, label: 'Gesloten' },
+    };
     
-    // In a real app, these values would come from your auth system
-    addMessage(
-      ticket.id, 
-      internalNote, 
-      "staff-1", 
-      "Support Medewerker",
-      "support@yoursaas.nl",
-      "staff",
-      true // Internal note
-    );
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig['open'];
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+  
+  const getPriorityBadge = (priority: string) => {
+    const priorityConfig = {
+      'low': { variant: 'outline' as const, label: 'Laag' },
+      'medium': { variant: 'secondary' as const, label: 'Middel' },
+      'high': { variant: 'destructive' as const, label: 'Hoog' },
+      'urgent': { variant: 'destructive' as const, label: 'Urgent' },
+    };
     
-    setInternalNote("");
+    const config = priorityConfig[priority as keyof typeof priorityConfig] || priorityConfig['medium'];
+    return <Badge variant={config.variant}>{config.label}</Badge>;
   };
-
-  const handleResolve = () => {
-    updateTicketStatus(ticket.id, "resolved");
-  };
-
-  const handleClose = () => {
-    updateTicketStatus(ticket.id, "closed");
-  };
-
-  const handleReopen = () => {
-    updateTicketStatus(ticket.id, "open");
-  };
-
-  const filteredMessages = showInternalNotes 
-    ? ticket.messages 
-    : ticket.messages.filter(msg => !msg.isInternal);
-
+  
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <Button variant="ghost" onClick={() => navigate("/support")}>
+    <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/support")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Terug naar tickets
+          Terug naar overzicht
         </Button>
-        
-        <SupportTicketActions ticket={ticket} />
+        <Button 
+          variant="outline"
+          onClick={() => navigate(`/support/${id}/edit`)}
+        >
+          <Edit2 className="mr-2 h-4 w-4" />
+          Bewerken
+        </Button>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <Card>
+        <div className="md:col-span-2">
+          <Card className="mb-6">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
                   <CardTitle className="text-xl">{ticket.title}</CardTitle>
-                  <CardDescription>
-                    Ticket #{ticket.id} • Aangemaakt op {formatDate(new Date(ticket.createdAt))}
-                  </CardDescription>
+                  <CardDescription>#{ticket.id}</CardDescription>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <SupportTicketStatusBadge status={ticket.status} />
-                  <SupportTicketPriorityBadge priority={ticket.priority} />
+                <div className="flex items-center gap-2">
+                  {getStatusBadge(ticket.status)}
+                  {getPriorityBadge(ticket.priority)}
                 </div>
               </div>
             </CardHeader>
-            
             <CardContent>
-              <div className="flex justify-between mb-4">
-                <div className="flex items-center">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-xs"
-                    onClick={() => setShowInternalNotes(!showInternalNotes)}
+              <div className="space-y-6">
+                {ticket.messages.map((message) => (
+                  <div 
+                    key={message.id} 
+                    className={`flex gap-4 ${message.isInternal ? 'bg-secondary/20 p-4 rounded-lg' : ''}`}
                   >
-                    {showInternalNotes ? "Verberg interne notities" : "Toon interne notities"}
-                  </Button>
-                </div>
-                
-                <div>
-                  {ticket.status !== 'resolved' && ticket.status !== 'closed' && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mr-2"
-                      onClick={handleResolve}
-                    >
-                      <Check className="mr-2 h-4 w-4" />
-                      Markeer als opgelost
-                    </Button>
-                  )}
-                  
-                  {ticket.status !== 'closed' && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleClose}
-                    >
-                      Sluiten
-                    </Button>
-                  )}
-                  
-                  {(ticket.status === 'resolved' || ticket.status === 'closed') && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleReopen}
-                    >
-                      Heropen
-                    </Button>
-                  )}
-                </div>
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={message.createdBy.avatar} />
+                      <AvatarFallback>
+                        {message.createdBy.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-baseline justify-between">
+                        <div className="font-medium flex items-center gap-2">
+                          {message.createdBy.name}
+                          {message.isInternal && (
+                            <Badge variant="outline">Interne notitie</Badge>
+                          )}
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {formatDateTime(new Date(message.createdAt))}
+                        </span>
+                      </div>
+                      <div className="mt-2 text-sm whitespace-pre-wrap">
+                        {message.content}
+                      </div>
+                      {message.attachments && message.attachments.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-sm font-medium">Bijlagen:</p>
+                          <div className="flex flex-wrap gap-2 mt-1">
+                            {message.attachments.map((attachment, index) => (
+                              <Badge key={index} variant="secondary">
+                                {attachment}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-              
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-4">
-                  {filteredMessages.map((message) => (
-                    <MessageItem key={message.id} message={message} />
-                  ))}
-                </div>
-              </ScrollArea>
             </CardContent>
-            
-            {ticket.status !== 'closed' && (
-              <CardFooter className="flex-col space-y-4">
-                <div className="w-full">
+            <CardFooter>
+              <form onSubmit={handleSubmit} className="w-full">
+                <div className="flex flex-col space-y-2">
                   <Textarea
-                    placeholder="Schrijf een reactie..."
-                    className="min-h-[100px]"
-                    value={replyMessage}
-                    onChange={(e) => setReplyMessage(e.target.value)}
+                    placeholder="Typ hier je bericht..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    className="min-h-32"
                   />
-                  <div className="flex justify-between mt-2">
-                    <Button variant="outline" size="sm">
-                      <PaperclipIcon className="h-4 w-4 mr-2" />
-                      Bijlage
-                    </Button>
-                    <Button onClick={handleReply}>
-                      <Send className="h-4 w-4 mr-2" />
-                      Verstuur
+                  <div className="flex justify-end gap-2">
+                    <Button type="submit" disabled={!newMessage.trim()}>
+                      <Send className="mr-2 h-4 w-4" />
+                      Versturen
                     </Button>
                   </div>
                 </div>
-                
-                <div className="w-full pt-4 border-t">
-                  <div className="text-sm font-medium mb-2">Interne notitie (alleen zichtbaar voor team)</div>
-                  <Textarea
-                    placeholder="Schrijf een interne notitie..."
-                    className="min-h-[80px]"
-                    value={internalNote}
-                    onChange={(e) => setInternalNote(e.target.value)}
-                  />
-                  <div className="flex justify-end mt-2">
-                    <Button variant="secondary" onClick={handleInternalNote}>
-                      Notitie toevoegen
-                    </Button>
-                  </div>
-                </div>
-              </CardFooter>
-            )}
+              </form>
+            </CardFooter>
           </Card>
         </div>
         
-        <div className="space-y-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Klantgegevens</CardTitle>
+        <div>
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Ticket Informatie</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-3 mb-4">
-                <Avatar>
-                  <AvatarFallback>{ticket.customerName.charAt(0)}</AvatarFallback>
-                </Avatar>
+              <div className="space-y-4">
                 <div>
-                  <div className="font-medium">{ticket.customerName}</div>
-                  <div className="text-sm text-muted-foreground">{ticket.customerEmail}</div>
+                  <h3 className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                    <User className="h-4 w-4" /> Klant
+                  </h3>
+                  <p className="mt-1">{ticket.customerName}</p>
+                  <p className="text-sm text-muted-foreground">{ticket.customerEmail}</p>
                 </div>
-              </div>
-              <div className="text-sm">
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Klantnummer</span>
-                  <span>{ticket.customerId}</span>
+                
+                <div>
+                  <h3 className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                    <Calendar className="h-4 w-4" /> Datum
+                  </h3>
+                  <p className="mt-1">Aangemaakt: {formatDateTime(new Date(ticket.createdAt))}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Laatste update: {formatDateTime(new Date(ticket.updatedAt))}
+                  </p>
                 </div>
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Tickets</span>
-                  <span>{tickets.filter(t => t.customerId === ticket.customerId).length}</span>
+                
+                <div>
+                  <h3 className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                    <MessageCircle className="h-4 w-4" /> Categorie
+                  </h3>
+                  <p className="mt-1 capitalize">{ticket.category.replace('-', ' ')}</p>
                 </div>
+                
+                {ticket.assignedTo && (
+                  <div>
+                    <h3 className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                      Toegewezen aan
+                    </h3>
+                    <div className="mt-1 flex items-center gap-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={ticket.assignedTo.avatar} />
+                        <AvatarFallback>{ticket.assignedTo.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <span>{ticket.assignedTo.name}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {ticket.tags && ticket.tags.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium flex items-center gap-2 text-muted-foreground">
+                      <Tag className="h-4 w-4" /> Tags
+                    </h3>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {ticket.tags.map((tag, index) => (
+                        <Badge key={index} variant="secondary">{tag}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Ticket informatie</CardTitle>
+            <CardHeader>
+              <CardTitle className="text-lg">Acties</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-sm space-y-3">
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="text-muted-foreground">Status</span>
-                  <SupportTicketStatusBadge status={ticket.status} />
-                </div>
-                <div className="flex justify-between items-center py-1 border-b">
-                  <span className="text-muted-foreground">Prioriteit</span>
-                  <SupportTicketPriorityBadge priority={ticket.priority} />
-                </div>
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Categorie</span>
-                  <span>
-                    {ticket.category === 'technical' && 'Technisch'}
-                    {ticket.category === 'billing' && 'Facturatie'}
-                    {ticket.category === 'feature-request' && 'Feature verzoek'}
-                    {ticket.category === 'account' && 'Account'}
-                    {ticket.category === 'general' && 'Algemeen'}
-                  </span>
-                </div>
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Aangemaakt op</span>
-                  <span>{formatDate(new Date(ticket.createdAt))}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Laatste update</span>
-                  <span>{formatDate(new Date(ticket.updatedAt))}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b">
-                  <span className="text-muted-foreground">Toegewezen aan</span>
-                  <span>{ticket.assignedTo ? ticket.assignedTo.name : 'Niet toegewezen'}</span>
-                </div>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start">
+                  Markeren als opgelost
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  Toewijzen aan medewerker
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  Prioriteit wijzigen
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  Sluiten
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -298,59 +300,4 @@ export function SupportTicketDetail() {
       </div>
     </div>
   );
-}
-
-interface MessageItemProps {
-  message: SupportTicketMessage;
-}
-
-function MessageItem({ message }: MessageItemProps) {
-  const isCustomer = message.createdBy.role === 'customer';
-  const isInternal = message.isInternal;
-  
-  return (
-    <div className={`p-4 rounded-lg ${isInternal ? 'bg-amber-50 border border-amber-200' : isCustomer ? 'bg-gray-50 border border-gray-200' : 'bg-blue-50 border border-blue-200'}`}>
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex items-center">
-          <Avatar className="h-8 w-8 mr-2">
-            <AvatarFallback>{message.createdBy.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="font-medium text-sm flex items-center">
-              {message.createdBy.name}
-              {isCustomer ? (
-                <Badge variant="outline" className="ml-2 text-xs">Klant</Badge>
-              ) : (
-                <Badge variant="outline" className="ml-2 text-xs bg-primary/10">Medewerker</Badge>
-              )}
-              {isInternal && (
-                <Badge variant="outline" className="ml-2 text-xs bg-amber-100 text-amber-800">Intern</Badge>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(message.createdAt), 'dd MMM yyyy HH:mm', { locale: nl })}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="prose prose-sm max-w-none">
-        {message.content.split('\n').map((paragraph, index) => (
-          <p key={index} className="mb-2">{paragraph}</p>
-        ))}
-      </div>
-      {message.attachments && message.attachments.length > 0 && (
-        <div className="mt-3 pt-3 border-t">
-          <div className="text-xs font-medium mb-2">Bijlagen:</div>
-          <div className="flex flex-wrap gap-2">
-            {message.attachments.map((attachment, index) => (
-              <div key={index} className="text-xs flex items-center p-1.5 bg-gray-100 rounded">
-                <PaperclipIcon className="h-3 w-3 mr-1" />
-                <span className="truncate max-w-[140px]">{attachment}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+};
