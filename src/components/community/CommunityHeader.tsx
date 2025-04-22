@@ -72,14 +72,14 @@ export function CommunityHeader({ onCreatePost }: CommunityHeaderProps) {
           
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <Select 
-              defaultValue={searchParams.get("type") || ""} 
+              defaultValue={searchParams.get("type") || "all"} 
               onValueChange={handleFilterChange}
             >
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Filter op type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle berichten</SelectItem>
+                <SelectItem value="all">Alle berichten</SelectItem>
                 <SelectItem value={PostType.GENERAL}>Algemeen</SelectItem>
                 <SelectItem value={PostType.JOB_LISTING}>Personeel gezocht</SelectItem>
                 <SelectItem value={PostType.PROJECT_SHOWCASE}>Project showcase</SelectItem>
