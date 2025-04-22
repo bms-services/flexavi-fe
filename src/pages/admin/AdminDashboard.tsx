@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -15,7 +16,7 @@ import { MembersManagement } from '@/components/admin/MembersManagement';
 import { SupportManagement } from '@/components/admin/SupportManagement';
 import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 import { CommunityManagement } from '@/components/admin/CommunityManagement';
-import { KnowledgeBaseManagement } from '@/components/admin/KnowledgeBaseManagement';
+import { RevenueChart } from '@/components/dashboard/RevenueChart';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -105,7 +106,7 @@ export default function AdminDashboard() {
               </TabsContent>
               
               <TabsContent value="knowledge-base" className="mt-0">
-                <KnowledgeBaseManagement />
+                <KnowledgeBaseManagementComponent />
               </TabsContent>
               
               <TabsContent value="partners" className="mt-0">
@@ -124,5 +125,24 @@ export default function AdminDashboard() {
         </div>
       </div>
     </Layout>
+  );
+}
+
+// Create a placeholder component for KnowledgeBaseManagement
+function KnowledgeBaseManagementComponent() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Book className="h-5 w-5" />
+          Kennisbank Beheer
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Kennisbank beheer functie is nu beschikbaar via /admin/knowledge-base</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
