@@ -42,6 +42,7 @@ import ExpenseDetail from "./pages/ExpenseDetail";
 import WorkAgreementDetail from "./pages/WorkAgreementDetail";
 import Support from "./pages/Support";
 import SupportTicketDetailPage from "./pages/SupportTicketDetailPage";
+import Community from "./pages/Community";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
         <Route path="/reputation" element={<ReputationManagement />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/:id" element={<SupportTicketDetailPage />} />
+        <Route path="/community" element={<Community />} />
 
         {/* Authentication Routes */}
         <Route path="/login" element={<Login />} />
