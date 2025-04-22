@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-
-import { PipelineItemModalHeader } from "./item-modal/PipelineItemModalHeader";
-import { PipelineItemModalFooterActions } from "./item-modal/PipelineItemModalFooterActions";
-import { PipelineItemModalContent } from "./item-modal/PipelineItemModalContent";
-
-import { mockAppointments } from "@/data/mockAppointments";
-import { mockQuotes } from "@/data/mockQuotes";
-import { mockInvoices } from "@/data/mockInvoices";
-import { mockWorkAgreements } from "@/data/mockWorkAgreements";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { NewAppointmentForm } from "@/components/appointments/components/form/NewAppointmentForm";
+import { PipelineItemMainDialog } from "./item-modal/PipelineItemMainDialog";
+import { PipelineItemNoteDialog } from "./item-modal/PipelineItemNoteDialog";
+import { PipelineItemAppointmentDialog } from "./item-modal/PipelineItemAppointmentDialog";
 import { usePipeline } from "@/hooks/usePipeline";
 
 const demoLeads = [
@@ -84,21 +73,26 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   if (!item) return null;
 
-  // Responsive modal size control + scroll logic
+  // Responsive modal size control
   const modalClass =
     "w-full max-w-[98vw] md:max-w-[1200px] sm:max-w-full max-h-[98vh] flex flex-col rounded-lg p-0 overflow-hidden";
 
   const leadNAW = demoLeads.find((l) => l.objectId === item.objectId) || demoLeads[0];
 
+  // We keep filtering logic local, could be optimized by moving or memoizing outside
+  const { mockAppointments } = require("@/data/mockAppointments");
+  const { mockQuotes } = require("@/data/mockQuotes");
+  const { mockInvoices } = require("@/data/mockInvoices");
+  const { mockWorkAgreements } = require("@/data/mockWorkAgreements");
+
   const appointments = mockAppointments
-    .filter((a) => a.leadId === item.objectId)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .filter((a: any) => a.leadId === item.objectId)
+    .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 
-  const quotes = mockQuotes.filter((q) => q.leadId === item.objectId);
-  const invoices = mockInvoices.filter((i) => i.leadId === item.objectId);
-  const workAgreements = mockWorkAgreements.filter((w) => w.leadId === item.objectId);
-
+  const quotes = mockQuotes.filter((q: any) => q.leadId === item.objectId);
+  const invoices = mockInvoices.filter((i: any) => i.leadId === item.objectId);
+  const workAgreements = mockWorkAgreements.filter((w: any) => w.leadId === item.objectId);
   const guarantees = demoGuarantees.filter((g) => g.objectId === item.objectId);
 
   const getStatusColor = (status: string) => {
@@ -116,7 +110,7 @@ export const PipelineItemModal: React.FC<Props> = ({
     return colorMap[status.toLowerCase()] || "bg-gray-100 text-gray-800";
   };
 
-  // Footer menu handlers
+  // Footer menu handlers (could be made into a single grouped object)
   const handleCreateQuote = () => {
     toast.success("Offerte aanmaken gestart");
   };
@@ -136,7 +130,6 @@ export const PipelineItemModal: React.FC<Props> = ({
       toast.error("Notitie mag niet leeg zijn");
       return;
     }
-    // Hier kun je uiteraard later een save functie koppelen
     toast.success("Notitie toegevoegd!");
     setNoteValue("");
     setShowNoteDialog(false);
@@ -144,15 +137,11 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   // Afspraak toevoegen modal submit
   const handleNewAppointmentSubmit = (data: any) => {
-    // Later kun je hier de data uploaden of verwerken
     toast.success("Afspraak is toegevoegd!");
     setShowAppointmentDialog(false);
   };
 
-  const {
-    selectedPipeline,
-    handleItemMove,
-  } = usePipeline();
+  const { selectedPipeline, handleItemMove } = usePipeline();
 
   const handleStageChange = (newStageId: string) => {
     handleItemMove(item.id, newStageId);
@@ -161,77 +150,45 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className={modalClass}>
-          <div className="bg-slate-50 p-6 border-b shrink-0">
-            <PipelineItemModalHeader
-              objectId={item.objectId}
-              name={leadNAW.name}
-              updatedAt={item.updatedAt}
-            />
-          </div>
-          <PipelineItemModalContent
-            leadNAW={leadNAW}
-            guarantees={guarantees}
-            appointments={appointments}
-            quotes={quotes}
-            invoices={invoices}
-            workAgreements={workAgreements}
-            activeDocTab={activeDocTab}
-            setActiveDocTab={setActiveDocTab}
-            getStatusColor={getStatusColor}
-            pipeline={selectedPipeline}
-            currentStageId={item.stageId}
-            onStageChange={handleStageChange}
-          />
-          <Separator className="my-0" />
+      <PipelineItemMainDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        modalClass={modalClass}
+        item={item}
+        leadNAW={leadNAW}
+        guarantees={guarantees}
+        appointments={appointments}
+        quotes={quotes}
+        invoices={invoices}
+        workAgreements={workAgreements}
+        activeDocTab={activeDocTab}
+        setActiveDocTab={setActiveDocTab}
+        getStatusColor={getStatusColor}
+        pipeline={selectedPipeline}
+        currentStageId={item.stageId}
+        onStageChange={handleStageChange}
+        onGoToDetail={onGoToDetail}
+        onAddNote={() => setShowNoteDialog(true)}
+        onSchedule={() => setShowAppointmentDialog(true)}
+        onCreateQuote={handleCreateQuote}
+        onCreateInvoice={handleCreateInvoice}
+        onCreateWorkOrder={handleCreateWorkOrder}
+        onUploadPhotos={handleUploadPhotos}
+      />
 
-          <PipelineItemModalFooterActions
-            onAddNote={() => setShowNoteDialog(true)}
-            onSchedule={() => setShowAppointmentDialog(true)}
-            onGoToDetail={onGoToDetail}
-            onCreateQuote={handleCreateQuote}
-            onCreateInvoice={handleCreateInvoice}
-            onCreateWorkOrder={handleCreateWorkOrder}
-            onUploadPhotos={handleUploadPhotos}
-          />
-        </DialogContent>
-      </Dialog>
+      <PipelineItemNoteDialog
+        open={showNoteDialog}
+        onOpenChange={setShowNoteDialog}
+        noteValue={noteValue}
+        setNoteValue={setNoteValue}
+        onSave={handleSaveNote}
+      />
 
-      {/* Notitie toevoegen modal */}
-      <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
-        <DialogContent className="max-w-md w-full">
-          <DialogHeader>
-            <DialogTitle>Nieuwe Notitie toevoegen</DialogTitle>
-          </DialogHeader>
-          <Textarea
-            value={noteValue}
-            onChange={(e) => setNoteValue(e.target.value)}
-            placeholder="Schrijf je notitie..."
-            className="min-h-[120px] mt-3"
-          />
-          <div className="flex justify-end gap-3 mt-4">
-            <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
-              Annuleren
-            </Button>
-            <Button onClick={handleSaveNote} disabled={!noteValue.trim()}>
-              Notitie toevoegen
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Afspraak toevoegen modal */}
-      <Dialog open={showAppointmentDialog} onOpenChange={setShowAppointmentDialog}>
-        <DialogContent className="w-full max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Nieuwe Afspraak maken</DialogTitle>
-          </DialogHeader>
-          <div className="pt-3">
-            <NewAppointmentForm onSubmit={handleNewAppointmentSubmit} />
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PipelineItemAppointmentDialog
+        open={showAppointmentDialog}
+        onOpenChange={setShowAppointmentDialog}
+        onSubmit={handleNewAppointmentSubmit}
+      />
     </>
   );
 };
