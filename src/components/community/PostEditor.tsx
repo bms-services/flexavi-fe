@@ -1,8 +1,9 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
 import { Button } from "@/components/ui/button";
-import { Bold, Italic, Underline, List, ListOrdered } from "lucide-react";
+import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered } from "lucide-react";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -16,7 +17,10 @@ interface PostEditorProps {
 
 export function PostEditor({ value, onChange, placeholder }: PostEditorProps) {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Underline
+    ],
     content: value,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
@@ -64,7 +68,7 @@ export function PostEditor({ value, onChange, placeholder }: PostEditorProps) {
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={cn(editor.isActive('underline') && 'bg-muted')}
         >
-          <Underline className="h-4 w-4" />
+          <UnderlineIcon className="h-4 w-4" />
         </Button>
         <Button
           type="button"
