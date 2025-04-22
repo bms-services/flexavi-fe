@@ -5,11 +5,12 @@ import { SupportTicketsTable } from "@/components/support/SupportTicketsTable";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { Layout } from "@/components/layout/Layout";
 import { SupportTicket } from "@/types";
+import { CreateTicketDialog } from "@/components/support/CreateTicketDialog";
 
 const Support = () => {
   const { tickets, loading, deleteTicket } = useSupportTickets();
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false);
 
-  // Create a handler that adapts the function to match the expected signature
   const handleDeleteTicket = (ticket: SupportTicket) => {
     deleteTicket(ticket.id);
   };
@@ -17,7 +18,7 @@ const Support = () => {
   return (
     <Layout>
       <div className="container mx-auto">
-        <SupportHeader />
+        <SupportHeader onNewTicket={() => setShowCreateDialog(true)} />
         <div className="p-4 md:p-6">
           {loading ? (
             <div className="text-center py-8">
@@ -27,6 +28,10 @@ const Support = () => {
             <SupportTicketsTable tickets={tickets} onDelete={handleDeleteTicket} />
           )}
         </div>
+        <CreateTicketDialog 
+          open={showCreateDialog} 
+          onOpenChange={setShowCreateDialog} 
+        />
       </div>
     </Layout>
   );

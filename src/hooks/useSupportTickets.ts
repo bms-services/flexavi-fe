@@ -9,11 +9,9 @@ export const useSupportTickets = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Simulate loading from an API
     const fetchTickets = async () => {
       setLoading(true);
       try {
-        // Simulate network delay
         await new Promise(r => setTimeout(r, 800));
         setTickets(mockSupportTickets);
       } catch (error) {
@@ -38,38 +36,8 @@ export const useSupportTickets = () => {
     return ticket;
   };
 
-  // Alias for createTicket to match naming convention in CreateTicketDialog
+  // Alias for addTicket to match naming convention in CreateTicketDialog
   const createTicket = addTicket;
-
-  const updateTicket = (id: string, updates: Partial<SupportTicket>) => {
-    setTickets(prev => 
-      prev.map(ticket => 
-        ticket.id === id 
-          ? { ...ticket, ...updates, updatedAt: new Date().toISOString() } 
-          : ticket
-      )
-    );
-    toast.success("Support ticket bijgewerkt");
-  };
-
-  // Helper functions for specific updates
-  const updateTicketStatus = (id: string, status: SupportTicket['status']) => {
-    updateTicket(id, { status });
-  };
-
-  const updateTicketPriority = (id: string, priority: SupportTicket['priority']) => {
-    updateTicket(id, { priority });
-  };
-
-  const assignTicket = (id: string, staffId: string, staffName: string) => {
-    updateTicket(id, { 
-      assignedTo: {
-        id: staffId,
-        name: staffName
-      }
-    });
-    toast.success(`Ticket toegewezen aan ${staffName}`);
-  };
 
   const deleteTicket = (id: string) => {
     setTickets(prev => prev.filter(ticket => ticket.id !== id));
@@ -92,7 +60,6 @@ export const useSupportTickets = () => {
             lastReplyAt: message.createdAt,
             lastReplyBy: message.createdBy.id,
             updatedAt: new Date().toISOString(),
-            // Update status based on who is replying
             status: message.createdBy.role === "customer" 
               ? "waiting-for-staff" 
               : "waiting-for-customer"
@@ -111,10 +78,6 @@ export const useSupportTickets = () => {
     getTicket,
     addTicket,
     createTicket,
-    updateTicket,
-    updateTicketStatus,
-    updateTicketPriority,
-    assignTicket,
     deleteTicket,
     addMessage
   };
