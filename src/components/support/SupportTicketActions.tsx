@@ -23,7 +23,7 @@ import {
 import { SupportTicket } from "@/types/support";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { useNavigate } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface SupportTicketActionsProps {
   ticket: SupportTicket;
@@ -66,10 +66,10 @@ export function SupportTicketActions({ ticket }: SupportTicketActionsProps) {
       <Button 
         variant="outline" 
         size="sm"
-        onClick={() => navigate(`/support/edit/${ticket.id}`)}
+        onClick={() => navigate(`/support/${ticket.id}`)}
       >
         <Edit className="h-4 w-4 mr-2" />
-        Bewerken
+        Details
       </Button>
       
       <DropdownMenu>
@@ -83,9 +83,9 @@ export function SupportTicketActions({ ticket }: SupportTicketActionsProps) {
           <DropdownMenuSeparator />
           
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => navigate(`/support/edit/${ticket.id}`)}>
+            <DropdownMenuItem onClick={() => navigate(`/support/${ticket.id}`)}>
               <Edit className="h-4 w-4 mr-2" />
-              Bewerken
+              Details
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleAssign}>
               <UserPlus className="h-4 w-4 mr-2" />
