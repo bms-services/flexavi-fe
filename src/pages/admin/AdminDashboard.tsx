@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -16,6 +17,7 @@ import { SupportManagement } from '@/components/admin/SupportManagement';
 import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 import { CommunityManagement } from '@/components/admin/CommunityManagement';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
+import { KnowledgeBaseManagement } from '@/components/admin/KnowledgeBaseManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -105,7 +107,7 @@ export default function AdminDashboard() {
               </TabsContent>
               
               <TabsContent value="knowledge-base" className="mt-0">
-                <KnowledgeBaseManagementComponent />
+                <KnowledgeBaseManagement />
               </TabsContent>
               
               <TabsContent value="partners" className="mt-0">
@@ -125,8 +127,4 @@ export default function AdminDashboard() {
       </div>
     </Layout>
   );
-}
-
-function KnowledgeBaseManagementComponent() {
-  return <KnowledgeBaseManagement />;
 }
