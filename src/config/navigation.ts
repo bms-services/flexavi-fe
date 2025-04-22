@@ -9,16 +9,14 @@ import {
   Shield,
   Receipt,
   Calculator,
-  UserCog,
-  MessageSquare,
   Star,
-  FileText,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
 export const navigationItems: NavItem[] = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Leads", href: "/leads", icon: Users },
+  { name: "Pijplijn", href: "/pipeline", icon: Package },
   {
     name: "Planning",
     href: "#",
@@ -38,7 +36,7 @@ export const navigationItems: NavItem[] = [
       { name: "Werkovereenkomsten", href: "/workagreements" },
       { name: "Facturen", href: "/invoices" },
       { name: "Kosten", href: "/expenses" },
-      { name: "Calculator", href: "/calculator" },
+      { name: "Producten", href: "/products" },
     ],
   },
   {
@@ -47,9 +45,7 @@ export const navigationItems: NavItem[] = [
     icon: Briefcase,
     children: [
       { name: "Projecten", href: "/projects" },
-      { name: "Pijplijn", href: "/pipeline" },
-      { name: "Partners", href: "/partners" },
-      { name: "Producten", href: "/products" },
+      { name: "Calculator", href: "/calculator" },
     ],
   },
   {
@@ -59,8 +55,10 @@ export const navigationItems: NavItem[] = [
     children: [
       { name: "Reputatiebeheer", href: "/reputation" },
       { name: "Aanvragen", href: "/requests" },
+      { name: "Partners", href: "/partners" },
     ],
   },
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
+
