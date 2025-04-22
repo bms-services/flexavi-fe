@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
 import { Button } from "@/components/ui/button";
 import { 
   Bold, 
@@ -38,6 +39,11 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
     extensions: [
       StarterKit,
       Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        alignments: ['left', 'center', 'right'],
+        defaultAlignment: 'left',
+      }),
       Placeholder.configure({
         placeholder: 'Begin hier met typen...',
       }),
