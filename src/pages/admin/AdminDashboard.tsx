@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -128,21 +127,6 @@ export default function AdminDashboard() {
   );
 }
 
-// Create a placeholder component for KnowledgeBaseManagement
 function KnowledgeBaseManagementComponent() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Book className="h-5 w-5" />
-          Kennisbank Beheer
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Kennisbank beheer functie is nu beschikbaar via /admin/knowledge-base</p>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  return <KnowledgeBaseManagement />;
 }
