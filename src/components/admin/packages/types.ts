@@ -18,4 +18,6 @@ export interface PackageFeature {
   starter: boolean;
   professional: boolean;
   enterprise: boolean;
+  category: string;
+  description?: string;
 }

@@ -12,6 +12,7 @@ import {
   Star,
   Lamp,
   HeadphonesIcon,
+  MessageSquare,
 } from "lucide-react";
 import { NavItem } from "@/types/navigation";
 
@@ -50,6 +51,7 @@ export const navigationItems: NavItem[] = [
       { name: "Calculator", href: "/calculator" },
     ],
   },
+  { name: "Community", href: "/community", icon: MessageSquare },
   { name: "Support", href: "/support", icon: HeadphonesIcon },
   { name: "Reputatiebeheer", href: "/reputation", icon: Star },
   { name: "Request Idee", href: "/requests", icon: Lamp },

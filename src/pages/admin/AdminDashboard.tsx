@@ -7,12 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Users, CreditCard, Package, Handshake, Shield, HeadphonesIcon } from 'lucide-react';
+import { BarChart3, Users, CreditCard, Package, Handshake, Shield, HeadphonesIcon, MessageSquare } from 'lucide-react';
 import { PackageManagement } from '@/components/admin/PackageManagement';
 import { PartnersManagement } from '@/components/admin/PartnersManagement';
 import { MembersManagement } from '@/components/admin/MembersManagement';
 import { SupportManagement } from '@/components/admin/SupportManagement';
 import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
+import { CommunityManagement } from '@/components/admin/CommunityManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -45,6 +46,10 @@ export default function AdminDashboard() {
                 <TabsTrigger value="partners" className="w-full justify-start">
                   <Handshake className="h-4 w-4 mr-2" />
                   Partners
+                </TabsTrigger>
+                <TabsTrigger value="community" className="w-full justify-start">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Community
                 </TabsTrigger>
                 <TabsTrigger value="support" className="w-full justify-start">
                   <HeadphonesIcon className="h-4 w-4 mr-2" />
@@ -94,6 +99,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="partners" className="mt-0">
                 <PartnersManagement />
+              </TabsContent>
+              
+              <TabsContent value="community" className="mt-0">
+                <CommunityManagement />
               </TabsContent>
               
               <TabsContent value="support" className="mt-0">
