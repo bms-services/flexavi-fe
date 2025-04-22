@@ -14,9 +14,8 @@ export const Sidebar: React.FC = () => {
       <SidebarHeader />
       <nav className="flex-1 p-4 space-y-1">
         {navigationItems.map((item) => {
-          // Check if this item is active based on exact match or if any child is active
-          const isChildActive = item.children?.some(child => location.pathname === child.href);
-          const isActive = location.pathname === item.href || isChildActive;
+          // Only mark the item as active if it's an exact match (not for parent items)
+          const isActive = location.pathname === item.href;
           
           return (
             <NavLink
