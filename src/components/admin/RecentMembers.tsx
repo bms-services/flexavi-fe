@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -9,8 +8,13 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Shield } from 'lucide-react';
 
-export function RecentMembers() {
+interface RecentMembersProps {
+  onMakeAdmin?: (memberId: number) => void;
+}
+
+export function RecentMembers({ onMakeAdmin }: RecentMembersProps) {
   const [members, setMembers] = useState([
     { id: 1, name: 'Jan Jansen', email: 'jan@dakbedrijf.nl', plan: 'Professional', status: 'active', joined: '2024-04-15' },
     { id: 2, name: 'Piet Peters', email: 'piet@dakwerk.nl', plan: 'Starter', status: 'active', joined: '2024-04-14' },
@@ -106,6 +110,17 @@ export function RecentMembers() {
                 </TableCell>
                 <TableCell>{member.joined}</TableCell>
                 <TableCell className="space-x-2">
+                  {onMakeAdmin && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => onMakeAdmin(member.id)}
+                      className="mr-2"
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Maak admin
+                    </Button>
+                  )}
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm">Gratis periode</Button>

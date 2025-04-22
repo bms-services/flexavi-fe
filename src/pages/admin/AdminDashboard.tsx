@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { AdminStats } from '@/components/admin/AdminStats';
-import { RecentMembers } from '@/components/admin/RecentMembers';
-import { SubscriptionOverview } from '@/components/admin/SubscriptionOverview';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Users, CreditCard, Package, Handshake } from 'lucide-react';
+import { BarChart3, Users, CreditCard, Package, Handshake, Shield, HeadphonesIcon } from 'lucide-react';
 import { PackageManagement } from '@/components/admin/PackageManagement';
 import { PartnersManagement } from '@/components/admin/PartnersManagement';
+import { MembersManagement } from '@/components/admin/MembersManagement';
+import { SupportManagement } from '@/components/admin/SupportManagement';
 
 export default function AdminDashboard() {
   const [timeRange, setTimeRange] = useState("year");
@@ -44,6 +44,10 @@ export default function AdminDashboard() {
                   <Handshake className="h-4 w-4 mr-2" />
                   Partners
                 </TabsTrigger>
+                <TabsTrigger value="support" className="w-full justify-start">
+                  <HeadphonesIcon className="h-4 w-4 mr-2" />
+                  Support
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -75,7 +79,7 @@ export default function AdminDashboard() {
               </TabsContent>
               
               <TabsContent value="members" className="mt-0">
-                <RecentMembers />
+                <MembersManagement />
               </TabsContent>
               
               <TabsContent value="subscriptions" className="mt-0">
@@ -88,6 +92,10 @@ export default function AdminDashboard() {
               
               <TabsContent value="partners" className="mt-0">
                 <PartnersManagement />
+              </TabsContent>
+              
+              <TabsContent value="support" className="mt-0">
+                <SupportManagement />
               </TabsContent>
             </div>
           </Tabs>
