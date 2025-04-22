@@ -4,9 +4,15 @@ import { SupportHeader } from "@/components/support/SupportHeader";
 import { SupportTicketsTable } from "@/components/support/SupportTicketsTable";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { Layout } from "@/components/layout/Layout";
+import { SupportTicket } from "@/types";
 
 const Support = () => {
   const { tickets, loading, deleteTicket } = useSupportTickets();
+
+  // Create a handler that adapts the function to match the expected signature
+  const handleDeleteTicket = (ticket: SupportTicket) => {
+    deleteTicket(ticket.id);
+  };
 
   return (
     <Layout>
@@ -18,7 +24,7 @@ const Support = () => {
               <p className="text-muted-foreground">Tickets laden...</p>
             </div>
           ) : (
-            <SupportTicketsTable tickets={tickets} onDelete={deleteTicket} />
+            <SupportTicketsTable tickets={tickets} onDelete={handleDeleteTicket} />
           )}
         </div>
       </div>

@@ -78,7 +78,7 @@ export const SupportTicketEdit = () => {
                 id: "customer-new",
                 name: formState.customerName || "Klant",
                 email: formState.customerEmail || "klant@example.com",
-                role: "customer"
+                role: "customer" // Now using the literal "customer" which matches the type
               }
             }]
           : [];

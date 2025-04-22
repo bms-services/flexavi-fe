@@ -38,6 +38,9 @@ export const useSupportTickets = () => {
     return ticket;
   };
 
+  // Alias for createTicket to match naming convention in CreateTicketDialog
+  const createTicket = addTicket;
+
   const updateTicket = (id: string, updates: Partial<SupportTicket>) => {
     setTickets(prev => 
       prev.map(ticket => 
@@ -47,6 +50,25 @@ export const useSupportTickets = () => {
       )
     );
     toast.success("Support ticket bijgewerkt");
+  };
+
+  // Helper functions for specific updates
+  const updateTicketStatus = (id: string, status: SupportTicket['status']) => {
+    updateTicket(id, { status });
+  };
+
+  const updateTicketPriority = (id: string, priority: SupportTicket['priority']) => {
+    updateTicket(id, { priority });
+  };
+
+  const assignTicket = (id: string, staffId: string, staffName: string) => {
+    updateTicket(id, { 
+      assignedTo: {
+        id: staffId,
+        name: staffName
+      }
+    });
+    toast.success(`Ticket toegewezen aan ${staffName}`);
   };
 
   const deleteTicket = (id: string) => {
@@ -88,7 +110,11 @@ export const useSupportTickets = () => {
     loading,
     getTicket,
     addTicket,
+    createTicket,
     updateTicket,
+    updateTicketStatus,
+    updateTicketPriority,
+    assignTicket,
     deleteTicket,
     addMessage
   };
