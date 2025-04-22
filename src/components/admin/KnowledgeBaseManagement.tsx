@@ -3,13 +3,13 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Book } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function KnowledgeBaseManagement() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const navigateToKnowledgeBase = () => {
-    router.push('/admin/knowledge-base');
+    navigate('/admin/knowledge-base');
   };
 
   return (
