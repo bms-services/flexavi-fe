@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useCommunityPosts } from "@/hooks/use-community";
+import { useCommunityPosts, useCommunityReactions } from "@/hooks/use-community";
 import { CommunityPost } from "./CommunityPost";
 import { PostCard } from "./PostCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +15,7 @@ interface CommunityFeedProps {
 export function CommunityFeed({ groupFilter }: CommunityFeedProps) {
   const [searchParams] = useSearchParams();
   const [openPost, setOpenPost] = useState<Post | null>(null);
+  const { handleLike, handleDislike } = useCommunityReactions();
   
   const filters: PostFilters = {
     groupId: groupFilter,
@@ -81,6 +82,8 @@ export function CommunityFeed({ groupFilter }: CommunityFeedProps) {
           key={post.id}
           post={post}
           onClick={() => setOpenPost(post)}
+          onLike={(postId) => handleLike(postId)}
+          onDislike={(postId) => handleDislike(postId)}
         />
       ))}
     </div>
