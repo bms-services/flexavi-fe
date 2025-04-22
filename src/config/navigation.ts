@@ -64,4 +64,3 @@ export const navigationItems: NavItem[] = [
   { name: "Instellingen", href: "/settings", icon: Settings },
   { name: "Admin Dashboard", href: "/admin", icon: Shield },
 ];
-
