@@ -1,0 +1,32 @@
+{
+  "language": "Nederlands",
+  "login": {
+    "text": {
+      "title": "Inloggen",
+      "description": "Voer uw inloggegevens in om in te loggen.",
+      "notHaveAccount": "Heeft u geen account?"
+    },
+    "link": {
+      "register": "Registreer hier"
+    },
+    "placeholder": {
+      "email": "Voer uw e-mailadres in",
+      "password": "Voer uw wachtwoord in"
+    },
+    "label": {
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "rememberMe": "Onthoud mij"
+    },
+    "button": {
+      "login": "Inloggen",
+      "forgotPassword": "Wachtwoord vergeten?",
+      "register": "Registreren"
+    },
+    "error": {
+      "invalidCredentials": "Ongeldig e-mailadres of wachtwoord.",
+      "userNotFound": "Gebruiker niet gevonden.",
+      "accountLocked": "Uw account is vergrendeld. Neem contact op met de ondersteuning."
+    }
+  }
+}

@@ -1,28 +1,35 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
+import { useAppDispatch } from "@/hooks/use-redux";
+import { FieldValue, useForm } from "react-hook-form";
+import { User } from "@/types/auth";
+import { pushLogin } from "@/actions/authActions";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation('auth');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock login for now - will be replaced with actual auth later
-    toast({
-      title: "Inloggen...",
-      description: "Deze functie wordt binnenkort geïmplementeerd.",
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValue<User>>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: User) => {
+    dispatch(pushLogin(data));
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -33,44 +40,44 @@ const Login = () => {
           </div>
           <div className="flex items-center gap-2">
             <LogIn className="h-5 w-5 text-primary" />
-            <CardTitle>Inloggen</CardTitle>
+            <CardTitle>
+              {t('lang')}
+            </CardTitle>
           </div>
           <CardDescription>
             Log in op je account om verder te gaan
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mailadres</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="naam@bedrijf.nl"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Wachtwoord</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            <Link 
+            <Input
+              label='Email'
+              id={'email'}
+              icon={<Mail className="h-5 w-5 " />}
+              rules={{
+                register,
+                name: "email",
+                options: {
+                  required: 'Dit veld is verplicht'
+                },
+                errors,
+              }}
+            />
+            <Input
+              label='Wachtwoord'
+              id={'password'}
+              type="password"
+              icon={<Lock className="h-5 w-5 " />}
+              rules={{
+                register,
+                name: "password",
+                options: {
+                  required: 'Dit veld is verplicht'
+                },
+                errors,
+              }}
+            />
+            <Link
               to="/auth/forgot-password"
               className="inline-block text-sm text-primary hover:text-primary/90 hover:underline"
             >
@@ -83,9 +90,9 @@ const Login = () => {
               Inloggen
             </Button>
             <p className="text-sm text-muted-foreground text-center">
-              Nog geen account?{" "}
-              <Link 
-                to="/auth/register" 
+              Nog geen account?
+              <Link
+                to="/register"
                 className="text-primary hover:text-primary/90 hover:underline"
               >
                 Registreer hier

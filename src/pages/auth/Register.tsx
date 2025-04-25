@@ -1,28 +1,29 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPlus, Mail, Lock, User } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
+import { useAppDispatch } from "@/hooks/use-redux";
+import { FieldValue, useForm } from "react-hook-form";
+import { User } from "@/types/auth";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValue<User>>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock registration for now - will be replaced with actual auth later
-    toast({
-      title: "Registreren...",
-      description: "Deze functie wordt binnenkort geïmplementeerd.",
-    });
+  const onSubmit = (data: User) => {
+    // dispatch(pushLogin(data));
   };
 
   return (
@@ -40,52 +41,46 @@ const Register = () => {
             Maak een account aan om te beginnen
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Naam</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Volledige naam"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mailadres</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="naam@bedrijf.nl"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Wachtwoord</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Volledige naam"
+              rules={{
+                register,
+                name: "name",
+                options: {
+                  required: 'Dit veld is verplicht'
+                },
+                errors,
+              }}
+            />
+            <Input
+              id="email"
+              type="email"
+              placeholder="naam@bedrijf.nl"
+              rules={{
+                register,
+                name: "email",
+                options: {
+                  required: 'Dit veld is verplicht'
+                },
+                errors,
+              }}
+            />
+            <Input
+              id="password"
+              type="password"
+              rules={{
+                register,
+                name: "password",
+                options: {
+                  required: 'Dit veld is verplicht'
+                },
+                errors,
+              }}
+            />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full">
@@ -94,8 +89,8 @@ const Register = () => {
             </Button>
             <p className="text-sm text-muted-foreground text-center">
               Al een account?{" "}
-              <Link 
-                to="/auth/login" 
+              <Link
+                to="/auth/login"
                 className="text-primary hover:text-primary/90 hover:underline"
               >
                 Log hier in
