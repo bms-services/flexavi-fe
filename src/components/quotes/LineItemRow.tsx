@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Trash } from "lucide-react";
@@ -32,6 +31,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   onProductSearch,
   disabled = false,
 }) => {
+  // State to manage suggestion visibility
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
   // Handler
   const handleChange = (field: keyof QuoteLineItem, value: any) => {
     const updatedItem = { ...item, [field]: value };
@@ -48,6 +50,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   const handleProductChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChange("description", e.target.value);
     onProductSearch(e.target.value);
+    setShowSuggestions(true); // Show suggestions when typing
   };
 
   const handleProductSelect = (product: Product) => {
@@ -67,6 +70,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
 
     // Update the entire item with one call
     onChange(updatedItem);
+    
+    // Hide suggestions after selection
+    setShowSuggestions(false);
   };
 
   // Kolom classes & stylings
@@ -116,8 +122,10 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
               className={`${inlineInputStyle} text-left`}
               disabled={disabled}
               autoComplete="off"
+              onFocus={() => productSuggestions && productSuggestions.length > 0 && setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // Small delay to allow click on suggestion
             />
-            {productSuggestions && productSuggestions.length > 0 && !disabled && (
+            {productSuggestions && productSuggestions.length > 0 && showSuggestions && !disabled && (
               <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto left-0 right-0">
                 {productSuggestions.map((product, i) => (
                   <div
