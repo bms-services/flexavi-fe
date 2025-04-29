@@ -39,7 +39,7 @@ const LeadDetails = () => {
           </Button>
           <Button 
             variant="outline"
-            onClick={() => navigate(`/portal/dashboard/${leadDetail.id}`)}
+            onClick={() => navigate(`/portal/dashboard`)}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             Bekijk klant portaal
