@@ -39,11 +39,11 @@ const CustomerDashboard = () => {
   };
 
   const handleNavigateToQuote = (id: string) => {
-    navigate(`/portal/quote/${id}`);
+    navigate(`/portal/quotes/${id}`);
   };
 
   const handleNavigateToInvoice = (id: string) => {
-    navigate(`/portal/invoice/${id}`);
+    navigate(`/portal/invoices/${id}`);
   };
 
   return (
@@ -137,7 +137,7 @@ const CustomerDashboard = () => {
               >
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg">
-                    Factuur #{invoice.id.replace("invoice-", "")}
+                    Factuur #{invoice.id.replace("inv-", "")}
                   </CardTitle>
                   <CardDescription>{invoice.description}</CardDescription>
                 </CardHeader>
