@@ -1,10 +1,9 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { QuoteLineItem } from "@/types";
-import LineItemRow from "@/components/quotes/LineItemRow";
 import { Product } from "@/types/product";
+import { LineItemsTable } from "./line-items/LineItemsTable";
+import { AddLineItemButton } from "./line-items/AddLineItemButton";
 
 interface LineItemsListProps {
   lineItems: QuoteLineItem[];
@@ -27,45 +26,15 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-lg border border-gray-400 bg-white shadow-sm">
-        <table className="w-full min-w-[1000px] text-sm">
-          <thead>
-            <tr className="bg-muted">
-              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[60px]">Aantal</th>
-              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[90px]">Eenheid</th>
-              <th className="text-left py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[220px]">Product/Dienst</th>
-              <th className="text-right py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[110px]">Eenheidsprijs</th>
-              <th className="text-center py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[70px]">BTW %</th>
-              <th className="text-right py-1 px-2 font-medium border-b border-r border-[#E1E3E6] w-[120px]">Regel totaal</th>
-              <th className="text-center py-1 px-2 font-medium border-b border-[#E1E3E6] w-[40px]"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {lineItems.map((item, index) => (
-              <LineItemRow
-                key={item.id}
-                item={item}
-                index={index}
-                onChange={(updatedItem) => onLineItemChange(index, updatedItem)}
-                onRemove={() => onRemoveLineItem(index)}
-                productSuggestions={productSuggestions[item.id]}
-                onProductSearch={(term) => onProductSearch(term, item.id)}
-                disabled={disabled}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={onAddLineItem}
-        className="w-full"
+      <LineItemsTable
+        lineItems={lineItems}
+        onLineItemChange={onLineItemChange}
+        onRemoveLineItem={onRemoveLineItem}
+        productSuggestions={productSuggestions}
+        onProductSearch={onProductSearch}
         disabled={disabled}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Regel toevoegen
-      </Button>
+      />
+      <AddLineItemButton onClick={onAddLineItem} disabled={disabled} />
     </div>
   );
 };
