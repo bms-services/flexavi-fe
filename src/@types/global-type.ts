@@ -46,7 +46,7 @@ export interface CrudState<T> {
   delete: SubState<T>;
 }
 
-interface SubState<T> {
+export interface SubState<T> {
   response: Partial<T> | null;
   status: StatusReducerType;
   error: ErrorReducerType;

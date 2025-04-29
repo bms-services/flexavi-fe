@@ -19,40 +19,40 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
 
   return (
-    <Layout>
-      <div className="container py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-6">
-        <DashboardHeader 
-          timeRange={timeRange}
-          setTimeRange={setTimeRange}
-          lastUpdated={lastUpdated}
-        />
+    // <Layout>
+    <div className="container py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-6">
+      <DashboardHeader
+        timeRange={timeRange}
+        setTimeRange={setTimeRange}
+        lastUpdated={lastUpdated}
+      />
 
-        <ShopifyStyleDashboard timeRange={timeRange} />
-        
-        <DashboardCharts timeRange={timeRange} />
-        
-        <Tabs defaultValue="appointments" className="w-full">
-          <TabsList className={`grid ${isMobile ? 'w-full' : 'md:w-auto'} grid-cols-2`}>
-            <TabsTrigger value="appointments" className="flex items-center gap-1 md:gap-2">
-              <Calendar className="h-3 md:h-4 w-3 md:w-4" />
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis text-xs md:text-sm">
-                {isMobile ? "Afspraken" : "Aankomende afspraken"}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="leads" className="flex items-center gap-1 md:gap-2">
-              <PlusCircle className="h-3 md:h-4 w-3 md:w-4" /> 
-              <span className="text-xs md:text-sm">Recente leads</span>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="appointments" className="mt-4">
-            <UpcomingAppointments appointments={upcomingAppointments} />
-          </TabsContent>
-          <TabsContent value="leads" className="mt-4">
-            <RecentLeads leads={recentLeads} />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </Layout>
+      <ShopifyStyleDashboard timeRange={timeRange} />
+
+      <DashboardCharts timeRange={timeRange} />
+
+      <Tabs defaultValue="appointments" className="w-full">
+        <TabsList className={`grid ${isMobile ? 'w-full' : 'md:w-auto'} grid-cols-2`}>
+          <TabsTrigger value="appointments" className="flex items-center gap-1 md:gap-2">
+            <Calendar className="h-3 md:h-4 w-3 md:w-4" />
+            <span className="whitespace-nowrap overflow-hidden text-ellipsis text-xs md:text-sm">
+              {isMobile ? "Afspraken" : "Aankomende afspraken"}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="leads" className="flex items-center gap-1 md:gap-2">
+            <PlusCircle className="h-3 md:h-4 w-3 md:w-4" />
+            <span className="text-xs md:text-sm">Recente leads</span>
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="appointments" className="mt-4">
+          <UpcomingAppointments appointments={upcomingAppointments} />
+        </TabsContent>
+        <TabsContent value="leads" className="mt-4">
+          <RecentLeads leads={recentLeads} />
+        </TabsContent>
+      </Tabs>
+    </div>
+    // </Layout>
   );
 };
 

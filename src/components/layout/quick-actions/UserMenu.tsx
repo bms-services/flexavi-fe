@@ -10,13 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAppDispatch } from '@/hooks/use-redux';
-import { pushLogout } from '@/actions/authActions';
+import { logout } from '@/actions/authActions';
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    dispatch(pushLogout());
+    dispatch(logout());
   }
 
   return (

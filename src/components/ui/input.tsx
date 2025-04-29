@@ -4,18 +4,18 @@ import { cn } from "@/lib/utils"
 import { Label } from "./label"
 import { FieldErrors, FieldValues, RegisterOptions, UseFormRegister } from "react-hook-form";
 
-interface InputC extends React.ComponentProps<"input"> {
+interface InputC<T extends FieldValues> extends React.ComponentProps<"input"> {
   label?: string
   icon?: React.ReactNode
   rules?: {
-    register: UseFormRegister<FieldValues>,
+    register: UseFormRegister<T>,
     name: string,
-    options: RegisterOptions<FieldValues>,
-    errors: FieldErrors<FieldValues>
+    options: RegisterOptions<T>,
+    errors: FieldErrors<T>
   }
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputC>(
+const Input = React.forwardRef<HTMLInputElement, InputC<FieldValues>>(
   ({ className, type, label, icon, rules, ...props }, ref) => {
     return (
       <div className="relative space-y-1">

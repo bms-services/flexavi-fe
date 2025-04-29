@@ -8,38 +8,38 @@ import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
 import { User } from "@/types/auth";
 import { useTranslation } from "react-i18next";
-import { pushRegister, pushRegisterReset } from "@/actions/authActions";
 import i18n from "@/lib/i18n";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useEffect } from "react";
+import { registerReset } from "@/store/authSlice";
+// import { registerReset } from "@/store/authSlice";
 
 const RegisterSuccessfully = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const { response, status } = useSelector((state: RootState) => state.auth);
+  const { response } = useSelector((state: RootState) => state.auth.register);
   const navigate = useNavigate();
 
   const handleRedirectLogin = () => {
-    dispatch(pushRegisterReset());
-
+    dispatch(registerReset());
     navigate("/login");
   }
 
+  // Redirect to login page if registration already cleared
   useEffect(() => {
-    if (response?.status === StatusReducerEnum.IDLE) {
+    if (!response.success) {
       navigate("/login");
     }
-  }, [response, status, navigate]);
-
+  }, [navigate, response]);
 
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
         <p className="">{t("auth:registerSuccessfully.text.welcome")}
           <span className="font-bold text-primary">
-            &nbsp;{response?.result?.name}
+            &nbsp; {response?.result?.email}
           </span>
         </p>
         <p className="">{t("auth:registerSuccessfully.text.activate")}</p>

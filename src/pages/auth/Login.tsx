@@ -7,7 +7,7 @@ import { LogIn, Mail, Lock } from "lucide-react";
 import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
 import { User } from "@/types/auth";
-import { pushLogin } from "@/actions/authActions";
+import { login } from "@/actions/authActions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -27,7 +27,7 @@ const Login = () => {
     },
   });
 
-  const { response, status } = useSelector((state: RootState) => state.auth);
+  const { response, loading } = useSelector((state: RootState) => state.auth.login);
 
 
   /**
@@ -38,7 +38,7 @@ const Login = () => {
    * @returns void
    */
   const onSubmit = (data: User): void => {
-    dispatch(pushLogin(data));
+    dispatch(login(data));
   };
 
   return (
@@ -83,7 +83,7 @@ const Login = () => {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <Button type="submit" className="w-full"
-          loading={status === StatusReducerEnum.LOADING}
+          loading={loading}
         >
           <LogIn className="mr-2 h-4 w-4" />
           {t('auth:login.button.submit')}

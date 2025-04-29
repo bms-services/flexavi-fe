@@ -1,65 +1,53 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatch } from "@/store";
-import {
-  loginFailed,
-  loginStart,
-  loginSuccess,
-  registerStart,
-  registerSuccess,
-  registerFailed,
-  logoutFailed,
-  logoutStart,
-  logoutSuccess,
-  registerReset,
-} from "@/store/authSlice";
-import { toast } from "sonner";
-import Cookies from "js-cookie";
-import { tokenName } from "@/hooks/use-cookies";
 import { User } from "@/types/auth";
 import { mainApi } from "@/utils/axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+import { tokenName } from "@/hooks/use-cookies";
 
-export const pushLogin = (formData: User) => async (dispatch: AppDispatch) => {
-  dispatch(loginStart());
-
-  try {
-    const { data } = await mainApi.post("login", formData);
-    dispatch(loginSuccess(data));
-    Cookies.set(tokenName, JSON.stringify(data.result), { expires: 7 });
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
-  } catch (error) {
-    dispatch(loginFailed(error));
-  }
-};
-
-export const pushLogout = () => async (dispatch: AppDispatch) => {
-  dispatch(logoutStart());
-  try {
-    const { data } = await mainApi.delete("logout");
-    dispatch(logoutSuccess(data));
-    Cookies.remove(tokenName);
-
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
-  } catch (error) {
-    dispatch(logoutFailed(error));
-  }
-};
-
-export const pushRegister =
-  (formData: User) => async (dispatch: AppDispatch) => {
-    dispatch(loginStart());
-
+export const login = createAsyncThunk(
+  "auth/login",
+  async (formData: Partial<User>, { rejectWithValue }) => {
     try {
-      const { data } = await mainApi.post("register", formData);
-      dispatch(loginSuccess(data));
-    } catch (error) {
-      dispatch(loginFailed(error));
-    }
-  };
+      const { data } = await mainApi.post("/login", formData);
 
-export const pushRegisterReset = () => async (dispatch: AppDispatch) => {
-  dispatch(registerReset());
-};
+      Cookies.set(tokenName, JSON.stringify(data.result), { expires: 7 });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const register = createAsyncThunk(
+  "auth/register",
+  async (formData: Partial<User>, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.post("/register", formData);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.delete("/logout");
+
+      setTimeout(() => {
+        Cookies.remove(tokenName);
+        window.location.href = "/login";
+      }, 1000);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);

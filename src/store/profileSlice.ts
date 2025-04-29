@@ -1,4 +1,4 @@
-import { login, logout, register } from "@/actions/authActions";
+import { getProfile } from "@/actions/profileAction";
 import {
   createModuleState,
   handleModule,
@@ -13,44 +13,34 @@ import {
 } from "@reduxjs/toolkit";
 
 interface AuthState {
-  login: ModuleState<User>;
-  register: ModuleState<User>;
-  logout: ModuleState<User>;
+  profile: ModuleState<User>;
 }
 
 const initialAuthState: AuthState = {
-  login: createModuleState<User>(),
-  register: createModuleState<User>(),
-  logout: createModuleState<User>(),
+  profile: createModuleState<User>(),
 };
 
-const authSlice = createSlice({
+const profileSlice = createSlice({
   name: "auth",
   initialState: initialAuthState,
-  reducers: {
-    registerReset: (state) => {
-      state.register = createModuleState<User>();
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addMatcher(isPending(login, register, logout), (state, action) => {
+      .addMatcher(isPending(getProfile), (state, action) => {
         const moduleName = action.type.split("/")[1];
         state[moduleName].loading = true;
         state[moduleName].response = createModuleState().response;
       })
-      .addMatcher(isRejected(login, register, logout), (state, action) => {
+      .addMatcher(isRejected(getProfile), (state, action) => {
         const moduleName = action.type.split("/")[1];
         state[moduleName].loading = false;
         state[moduleName].response = action.payload;
       })
-      .addMatcher(isFulfilled(login, register, logout), (state, action) => {
+      .addMatcher(isFulfilled(getProfile), (state, action) => {
         const moduleName = action.type.split("/")[1];
         handleModule(state, action, moduleName);
       });
   },
 });
 
-export default authSlice.reducer;
-
-export const { registerReset } = authSlice.actions;
+export default profileSlice.reducer;

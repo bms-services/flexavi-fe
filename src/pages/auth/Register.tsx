@@ -8,7 +8,7 @@ import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
 import { User } from "@/types/auth";
 import { useTranslation } from "react-i18next";
-import { pushRegister } from "@/actions/authActions";
+import { register as registerPost } from "@/actions/authActions";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useEffect } from "react";
@@ -21,7 +21,7 @@ const Register = () => {
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
 
-  const { response, status } = useSelector((state: RootState) => state.auth);
+  const { loading, response } = useSelector((state: RootState) => state.auth.register);
 
   const {
     control,
@@ -42,14 +42,14 @@ const Register = () => {
       language: currentLocal,
     };
 
-    dispatch(pushRegister(newData));
+    dispatch(registerPost(newData));
   };
 
   useEffect(() => {
-    if (status === StatusReducerEnum.SUCCEEDED) {
+    if (response?.success) {
       navigate("/register-successfully");
     }
-  }, [status, response, navigate]);
+  }, [response, navigate]);
 
 
   return (
@@ -133,7 +133,9 @@ const Register = () => {
         />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
-        <Button type="submit" className="w-full" loading={status === StatusReducerEnum.LOADING}>
+        <Button type="submit" className="w-full"
+          loading={loading}
+        >
           <UserPlus className="mr-2 h-4 w-4" />
           {t('auth:register.button.submit')}
         </Button>

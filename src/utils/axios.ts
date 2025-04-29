@@ -1,5 +1,10 @@
 import { tokenName } from "@/hooks/use-cookies";
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 
@@ -34,32 +39,37 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     },
   });
 
-  // ✅ Attach token automatically if exists
-  instance.interceptors.request.use((config) => {
-    const token = getAuthToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  instance.interceptors.request.use(
+    function (config) {
+      const token = getAuthToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      const lang = getLangCookie();
+      if (lang) {
+        config.headers["Accept-Language"] = lang;
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
     }
-    config.headers["Accept-Language"] = getLangCookie();
+  );
 
-    return config;
-  });
-
-  // ✅ Error handler
   instance.interceptors.response.use(
-    (response: AxiosResponse) => response,
-    (error) => {
+    (response: AxiosResponse) => {
+      return response;
+    },
+    (error: AxiosError) => {
       formatApiError(error);
-      const err = error.response.data;
-      return Promise.reject(err);
+      return Promise.reject(error.response.data);
     }
   );
 
   return instance;
 };
 
-// ✅ Export ready-to-use API instances
-// export const authApi = createAxiosInstance(baseApiUrl);
 export const mainApi = createAxiosInstance(baseApiUrl);
 
 const errorSnackbar = (message: string) => {
