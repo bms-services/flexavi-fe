@@ -12,7 +12,7 @@ interface PipelineBoardProps {
   items: PipelineItem[];
   onItemMove: (itemId: string, newStageId: string) => void;
   onAddItem: (stageId: string) => void;
-  onItemReorder: (stageId: string, fromIndex: number, toIndex: number) => void; // NIEUW
+  onItemReorder: (stageId: string, fromIndex: number, toIndex: number) => void;
 }
 
 export const PipelineBoard: React.FC<PipelineBoardProps> = ({
@@ -46,9 +46,9 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
   return (
     <div className="h-[calc(100vh-12rem)] w-full bg-card rounded-lg border shadow-sm overflow-hidden">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="h-full overflow-x-auto">
-          <div className="min-w-max p-4 inline-flex">
-            <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} gap-4`}>
+        <ScrollArea className="h-full" orientation={isMobile ? "horizontal" : "vertical"}>
+          <div className="p-4 min-w-fit">
+            <div className={`flex ${isMobile ? 'flex-row' : 'flex-row'} gap-4`}>
               {sortedStages.map((stage, idx) => (
                 <PipelineStageComponent
                   key={stage.id}
@@ -60,7 +60,7 @@ export const PipelineBoard: React.FC<PipelineBoardProps> = ({
               ))}
             </div>
           </div>
-        </div>
+        </ScrollArea>
       </DragDropContext>
     </div>
   );

@@ -1,6 +1,6 @@
 
 import { Control } from "react-hook-form";
-import { useCommunityGroups } from "@/hooks/use-community";
+import { useCommunityGroups } from "@/hooks/community";
 import {
   FormField,
   FormItem,
