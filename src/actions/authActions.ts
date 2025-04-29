@@ -4,9 +4,13 @@ import {
   loginFailed,
   loginStart,
   loginSuccess,
+  registerStart,
+  registerSuccess,
+  registerFailed,
   logoutFailed,
   logoutStart,
   logoutSuccess,
+  registerReset,
 } from "@/store/authSlice";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
@@ -42,4 +46,20 @@ export const pushLogout = () => async (dispatch: AppDispatch) => {
   } catch (error) {
     dispatch(logoutFailed(error));
   }
+};
+
+export const pushRegister =
+  (formData: User) => async (dispatch: AppDispatch) => {
+    dispatch(loginStart());
+
+    try {
+      const { data } = await mainApi.post("register", formData);
+      dispatch(loginSuccess(data));
+    } catch (error) {
+      dispatch(loginFailed(error));
+    }
+  };
+
+export const pushRegisterReset = () => async (dispatch: AppDispatch) => {
+  dispatch(registerReset());
 };

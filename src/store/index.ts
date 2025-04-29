@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 // import companyReducer from "@/store/companySlice";
 // import metaReducer from "@/store/metaSlice";
 import authReducer from "@/store/authSlice";
+import userReducer from "@/store/userSlice";
 
 // import analyticReducer from "@/store/analyticSlice";
 // import workdayReducer from "@/store/workdaySlice";
@@ -23,6 +24,7 @@ export const store = configureStore({
     // quotation: quotationReducer,
     // meta: metaReducer,
     auth: authReducer,
+    user: userReducer,
   },
 });
 

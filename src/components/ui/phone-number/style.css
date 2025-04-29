@@ -1,0 +1,12 @@
+.PhoneInputInput {
+  outline: none !important;
+  border: none;
+  border-radius: 6px;
+}
+
+.ContainerPhoneInputInput:has(.PhoneInputInput:focus) {
+  border: 1px solid #007bff;
+  border-radius: 6px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

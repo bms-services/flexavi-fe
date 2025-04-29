@@ -1,7 +1,7 @@
 
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-import './i18n/i18n.ts'
+import './lib/i18n.ts'
 import App from './App.tsx'
 import './index.css'
 import './components/landing/animations.css'

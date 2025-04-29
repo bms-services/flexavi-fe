@@ -7,7 +7,8 @@
       "notHaveAccount": "Don't have an account?"
     },
     "link": {
-      "register": "Register here"
+      "register": "Register here",
+      "forgotPassword": "Forgot your password?"
     },
     "placeholder": {
       "email": "Enter your email",

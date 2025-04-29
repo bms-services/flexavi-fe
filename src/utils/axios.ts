@@ -8,15 +8,21 @@ const baseApiUrl = import.meta.env.VITE_API_URL;
 const authUrl = import.meta.env.VITE_AUTH_URL;
 const mainUrl = import.meta.env.VITE_MAIN_URL;
 
-const getAuthToken = (): string | undefined => {
+const getAuthToken = (): string | null => {
   const token = Cookies.get(tokenName);
 
   if (token && token !== "null") {
     return JSON.parse(token).token;
   } else {
     Cookies.set(tokenName, JSON.stringify(null));
-    return undefined;
+    return null;
   }
+};
+
+const getLangCookie = (): string | undefined => {
+  const lang =
+    Cookies.get("local") || import.meta.env.VITE_I18N_DEFAULT_LOCALE || "nl";
+  return lang;
 };
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
@@ -24,6 +30,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     baseURL,
     headers: {
       "Content-Type": "application/json",
+      "Accept-Language": getLangCookie(),
     },
   });
 
@@ -33,6 +40,8 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    config.headers["Accept-Language"] = getLangCookie();
+
     return config;
   });
 
