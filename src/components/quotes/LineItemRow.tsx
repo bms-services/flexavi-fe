@@ -51,10 +51,22 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({
   };
 
   const handleProductSelect = (product: Product) => {
-    handleChange("description", product.title);
-    handleChange("unit", product.unit);
-    handleChange("pricePerUnit", product.pricePerUnit);
-    handleChange("vatRate", product.vat);
+    // Update all fields with product data
+    const updatedItem = {
+      ...item,
+      description: product.title,
+      unit: product.unit,
+      pricePerUnit: product.pricePerUnit,
+      vatRate: product.vat,
+      detailedDescription: product.description || item.detailedDescription,
+    };
+
+    // Recalculate the total
+    const totalExVat = updatedItem.pricePerUnit * updatedItem.quantity;
+    updatedItem.total = Math.round((totalExVat + (totalExVat * (updatedItem.vatRate/100))) * 100) / 100;
+
+    // Update the entire item with one call
+    onChange(updatedItem);
   };
 
   // Kolom classes & stylings

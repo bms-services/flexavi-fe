@@ -23,6 +23,7 @@ export const PipelineItemAppointmentDialog: React.FC<PipelineItemAppointmentDial
       title: "Afspraak gepland",
       description: "De afspraak is succesvol ingepland",
     });
+    onOpenChange(false); // Close the dialog after submission
   };
 
   return (
