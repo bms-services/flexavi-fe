@@ -44,11 +44,14 @@ import SupportTicketDetailPage from '@/pages/SupportTicketDetailPage';
 import WorkAgreementDetail from '@/pages/WorkAgreementDetail';
 import WorkAgreementEdit from '@/pages/WorkAgreementEdit';
 import WorkAgreements from '@/pages/WorkAgreements';
-import { Calculator, Settings } from 'lucide-react';
 import { createBrowserRouter } from 'react-router-dom';
-import AuthLayout from './AuthLayout';
-import DashboardLayout from './DashboardLayout';
 import RegisterSuccessfully from '@/pages/auth/RegisterSuccessfully';
+import Calculator from '@/pages/Calculator';
+import Settings from '@/pages/Settings';
+
+import AuthLayout from '../layouts/AuthLayout';
+import DashboardLayout from '../layouts/DashboardLayout';
+import CompanyCreateFullPage from '@/components/company/CompanyCreateFullPage';
 
 const baseRouter = createBrowserRouter([
     {
@@ -89,6 +92,10 @@ const baseRouter = createBrowserRouter([
                 },
             },
         ],
+    },
+    {
+        path: "/create-company",
+        element: <CompanyCreateFullPage />,
     },
     {
         path: "/",

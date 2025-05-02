@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
-import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
+import { useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
-import { User } from "@/types/auth";
+import { User } from "@/types/user";
 import { login } from "@/actions/authActions";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -27,7 +27,7 @@ const Login = () => {
     },
   });
 
-  const { response, loading } = useSelector((state: RootState) => state.auth.login);
+  const { loading } = useSelector((state: RootState) => state.auth.login);
 
 
   /**

@@ -1,13 +1,35 @@
-import "./App.css";
+import './index.css'
+import './components/landing/animations.css'
+import './lib/i18n.ts'
+
+import { StrictMode, Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
-import { AuthProvider } from "./lib/auth-provider";
-import baseRouter from "./layouts/BaseRouter";
+import { AuthProvider } from "./providers/auth-provider";
+import baseRouter from "./routers/BaseRouter";
+import { Provider } from 'react-redux'
+import { store } from './store/index.ts'
+import { SnackbarProvider } from 'notistack'
+
 
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={baseRouter} />
-    </AuthProvider>
+    <StrictMode>
+      <SnackbarProvider
+        maxSnack={3}
+        transitionDuration={500}
+        autoHideDuration={1000}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }} />
+      <Suspense fallback="Loading...">
+        <Provider store={store}>
+          <AuthProvider>
+            <RouterProvider router={baseRouter} />
+          </AuthProvider>
+        </Provider>
+      </Suspense>
+    </StrictMode>
   );
 }
 

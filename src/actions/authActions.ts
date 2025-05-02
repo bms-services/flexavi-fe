@@ -1,4 +1,4 @@
-import { User } from "@/types/auth";
+import { User } from "@/types/user";
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";

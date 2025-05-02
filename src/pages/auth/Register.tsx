@@ -1,4 +1,5 @@
 
+
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { CardContent, CardFooter } from "@/components/ui/card";
 import { LockIcon, Mail, UserIcon, UserPlus } from "lucide-react";
 import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
-import { User } from "@/types/auth";
+import { User } from "@/types/user";
 import { useTranslation } from "react-i18next";
 import { register as registerPost } from "@/actions/authActions";
 import { useSelector } from "react-redux";
@@ -14,6 +15,8 @@ import { RootState } from "@/store";
 import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
 import PhoneNumber from "@/components/ui/phone-number";
+import { handleErrorForm } from "@/utils/errorHandler";
+import { ErrorType } from "@/lib/redux-thunk";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -28,21 +31,31 @@ const Register = () => {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm<User>({
     defaultValues: {
+      name: "",
       email: "",
+      phone: "",
       password: "",
+      password_confirmation: "",
     },
   });
 
-  const onSubmit = (data: User) => {
+  const onSubmit = async (data: User) => {
     const newData = {
       ...data,
       language: currentLocal,
     };
 
-    dispatch(registerPost(newData));
+    const action = await dispatch(registerPost(newData));
+
+    // Mapping Error to Form
+    if (registerPost.rejected.match(action)) {
+      const { errors } = action.payload as { errors: ErrorType };
+      handleErrorForm(errors, setError);
+    }
   };
 
   useEffect(() => {
@@ -89,7 +102,7 @@ const Register = () => {
           label={t('auth:register.label.phone')}
           rules={{
             control,
-            name: "phone_number",
+            name: "phone",
             options: {
               required: t('auth:register.error.required.phone')
             },

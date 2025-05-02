@@ -10,23 +10,21 @@ const Leads = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   return (
-    <Layout>
-      <div className="container py-6 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Leads</h1>
-          <p className="text-muted-foreground">
-            Beheer al je leads op één plek.
-          </p>
-        </div>
-
-        <LeadList 
-          leads={mockLeads} 
-          currentPage={currentPage}
-          itemsPerPage={ITEMS_PER_PAGE}
-          onPageChange={setCurrentPage}
-        />
+    <div className="container py-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Leads</h1>
+        <p className="text-muted-foreground">
+          Beheer al je leads op één plek.
+        </p>
       </div>
-    </Layout>
+
+      <LeadList
+        leads={mockLeads}
+        currentPage={currentPage}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
+    </div>
   );
 };
 

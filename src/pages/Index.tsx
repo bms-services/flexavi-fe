@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
 import { ShopifyStyleDashboard } from "@/components/dashboard/ShopifyStyleDashboard";
@@ -10,16 +10,20 @@ import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointment
 import { RecentLeads } from "@/components/dashboard/RecentLeads";
 import { DashboardCharts } from "@/components/dashboard/charts/DashboardCharts";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getProfile } from "@/actions/profileAction";
+import { useAppDispatch } from "@/hooks/use-redux";
+import CompanyCreateFullPage from "@/components/company/CompanyCreateFullPage";
 
 const Dashboard = () => {
+  const dispatch = useAppDispatch();
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
   const isMobile = useIsMobile();
 
+
   return (
-    // <Layout>
     <div className="container py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-6">
       <DashboardHeader
         timeRange={timeRange}
@@ -52,7 +56,6 @@ const Dashboard = () => {
         </TabsContent>
       </Tabs>
     </div>
-    // </Layout>
   );
 };
 

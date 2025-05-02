@@ -1,33 +1,19 @@
 {
   "language": "English",
-  "login": {
-    "text": {
-      "title": "Login",
-      "description": "Please enter your credentials to login.",
-      "notHaveAccount": "Don't have an account?"
-    },
-    "link": {
-      "register": "Register here",
-      "forgotPassword": "Forgot your password?"
-    },
-    "placeholder": {
-      "email": "Enter your email",
-      "password": "Enter your password"
-    },
-    "label": {
-      "email": "Email",
-      "password": "Password",
-      "rememberMe": "Remember Me"
-    },
-    "button": {
-      "login": "Login",
-      "forgotPassword": "Forgot Password?",
-      "register": "Register"
-    },
-    "error": {
-      "invalidCredentials": "Invalid email or password.",
-      "userNotFound": "User not found.",
-      "accountLocked": "Your account is locked. Please contact support."
+  "user": {
+    "home": {
+      "banner": {
+        "emailNotVerified": {
+          "title": "Email not Verified",
+          "description": "You're almost there! We've sent a verification code to your email. Please check your inbox and verify your account to get trial access to all features.",
+          "cta": "Verify Now"
+        },
+        "paymentMethod": {
+          "title": "Payment Method",
+          "description": "Get your trial access to all features by adding a payment method.",
+          "cta": "Add Payment Method"
+        }
+      }
     }
   }
 }

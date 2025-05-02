@@ -1,17 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import employeeReducer from "@/store/employeeSlice";
-// import customerReducer from "@/store/customerSlice";
-// import companyReducer from "@/store/companySlice";
-// import metaReducer from "@/store/metaSlice";
 import authReducer from "@/store/authSlice";
 import userReducer from "@/store/userSlice";
 import profileReducer from "@/store/profileSlice";
-
-// import analyticReducer from "@/store/analyticSlice";
-// import workdayReducer from "@/store/workdaySlice";
-// import purchaseInvoiceReducer from "@/store/purchaseInvoiceSlice";
-// import salesInvoiceReducer from "@/store/salesInvoiceSlice";
-// import quotationReducer from "@/store/quotationSlice";
 
 export const store = configureStore({
   reducer: {

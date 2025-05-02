@@ -1,10 +1,12 @@
-import { getProfile } from "@/actions/profileAction";
+import { getProfile, updateProfile } from "@/actions/profileAction";
+import { StatusReducerEnum } from "@/hooks/use-redux";
 import {
   createModuleState,
   handleModule,
+  handleModuleState,
   ModuleState,
-} from "@/lib/redux-helper";
-import { User } from "@/types/auth";
+} from "@/lib/redux-thunk";
+import { User } from "@/types/user";
 import {
   createSlice,
   isFulfilled,
@@ -12,33 +14,30 @@ import {
   isRejected,
 } from "@reduxjs/toolkit";
 
-interface AuthState {
-  profile: ModuleState<User>;
+interface initialStateI {
+  show: ModuleState<User>;
+  update: ModuleState<User>;
 }
 
-const initialAuthState: AuthState = {
-  profile: createModuleState<User>(),
+const initialState: initialStateI = {
+  show: createModuleState<User>(),
+  update: createModuleState<User>(),
 };
 
 const profileSlice = createSlice({
-  name: "auth",
-  initialState: initialAuthState,
+  name: "profile",
+  initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addMatcher(isPending(getProfile), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        state[moduleName].loading = true;
-        state[moduleName].response = createModuleState().response;
+        handleModuleState(state, action, StatusReducerEnum.PENDING);
       })
       .addMatcher(isRejected(getProfile), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        state[moduleName].loading = false;
-        state[moduleName].response = action.payload;
+        handleModuleState(state, action, StatusReducerEnum.FULFILLED);
       })
       .addMatcher(isFulfilled(getProfile), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        handleModule(state, action, moduleName);
+        handleModuleState(state, action, StatusReducerEnum.REJECTED);
       });
   },
 });

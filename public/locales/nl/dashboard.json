@@ -1,32 +1,19 @@
 {
   "language": "Nederlands",
-  "login": {
-    "text": {
-      "title": "Inloggen",
-      "description": "Voer uw inloggegevens in om in te loggen.",
-      "notHaveAccount": "Heeft u geen account?"
-    },
-    "link": {
-      "register": "Registreer hier"
-    },
-    "placeholder": {
-      "email": "Voer uw e-mailadres in",
-      "password": "Voer uw wachtwoord in"
-    },
-    "label": {
-      "email": "E-mail",
-      "password": "Wachtwoord",
-      "rememberMe": "Onthoud mij"
-    },
-    "button": {
-      "login": "Inloggen",
-      "forgotPassword": "Wachtwoord vergeten?",
-      "register": "Registreren"
-    },
-    "error": {
-      "invalidCredentials": "Ongeldig e-mailadres of wachtwoord.",
-      "userNotFound": "Gebruiker niet gevonden.",
-      "accountLocked": "Uw account is vergrendeld. Neem contact op met de ondersteuning."
+  "user": {
+    "home": {
+      "banner": {
+        "emailNotVerified": {
+          "title": "E-mail niet geverifieerd",
+          "description": "Je bent er bijna! We hebben een verificatiecode naar je e-mail gestuurd. Controleer je inbox en verifieer je account om proeftoegang te krijgen tot alle functies.",
+          "cta": "Nu verifiëren"
+        },
+        "paymentMethod": {
+          "title": "Betaalmethode",
+          "description": "Krijg je proeftoegang tot alle functies door een betaalmethode toe te voegen.",
+          "cta": "Betaalmethode toevoegen"
+        }
+      }
     }
   }
 }

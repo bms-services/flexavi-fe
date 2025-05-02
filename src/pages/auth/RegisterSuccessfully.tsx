@@ -6,7 +6,7 @@ import { CardContent, CardFooter } from "@/components/ui/card";
 import { UserPlus } from "lucide-react";
 import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
-import { User } from "@/types/auth";
+import { User } from "@/types/user";
 import { useTranslation } from "react-i18next";
 import i18n from "@/lib/i18n";
 import { useSelector } from "react-redux";

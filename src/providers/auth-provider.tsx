@@ -1,10 +1,10 @@
 // src/hooks/useAuth.jsx
 
+import { AuthContext } from "@/hooks/use-auth";
 import { tokenName, useCookies } from "@/hooks/use-cookies";
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export type AuthProviderProps = {
   children: ReactNode;
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       token: token as string | null,
       setToken,
     }),
-    [token]
+    [token, setToken]
   );
 
 

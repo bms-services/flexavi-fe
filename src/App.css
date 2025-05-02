@@ -1,4 +1,3 @@
-
 /* Reset the constraining styles */
 #root {
   max-width: 100%;
@@ -41,4 +40,9 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Disable Watermark of Full Page */
+.fp-watermark {
+  display: none;
 }

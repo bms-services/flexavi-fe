@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { useIsMobile } from '@/hooks/use-mobile';
 import QuickActions from '@/components/layout/QuickActions';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { CreditCardIcon, MailOpenIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/layout/Sidebar';
+import { useAppDispatch } from "@/hooks/use-redux";
+import { getProfile } from '@/actions/profileAction';
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
 
 const DashboardLayout: React.FC = () => {
+    const dispatch = useAppDispatch()
     const { token } = useAuth();
-    const { t } = useTranslation();
+    const { t } = useTranslation('dashboard');
     const isMobile = useIsMobile();
+
+    const { loading, response } = useSelector((state: RootState) => state.profile.show);
+
+    useEffect(() => {
+        dispatch(getProfile());
+    }, [dispatch]);
 
     if (!token) {
         return <Navigate to="/login" replace />;
     }
-
     return (
         <div className="flex min-h-screen max-w-full overflow-x-hidden">
             {isMobile ? (
@@ -42,8 +52,48 @@ const DashboardLayout: React.FC = () => {
                 </div>
             )}
             <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
+                {response?.result?.has_verified_email === false && (
+                    <div className="flex items-center gap-[14px] bg-orange-400 px-4 md:px-6 py-2">
+                        <MailOpenIcon className="h-6 w-6 text-white" />
+                        <div className='flex flex-col'>
+                            <h6 className="text-[14px] font-medium text-white">
+                                {t('dashboard:user.home.banner.emailNotVerified.title')}
+                            </h6>
+                            <div className='flex items-center gap-1'>
+                                <span className="text-[12px] font-normal text-white">
+                                    {t("dashboard:user.home.banner.emailNotVerified.description")}&nbsp;
+                                </span>
+                                <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
+                                    {t("dashboard:user.home.banner.emailNotVerified.cta")}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {response?.result?.has_payment_method === false && (
+                    <div className="flex items-center gap-[14px] bg-indigo-400 px-4 md:px-6 py-2">
+                        <CreditCardIcon className="h-6 w-6 text-white" />
+                        <div className='flex flex-col'>
+                            <h6 className="text-[14px] font-medium text-white">
+                                {t('dashboard:user.home.banner.paymentMethod.title')}
+                            </h6>
+                            <div className='flex items-center gap-1'>
+                                <span className="text-[12px] font-normal text-white">
+                                    {t("dashboard:user.home.banner.paymentMethod.description")}&nbsp;
+                                </span>
+                                <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
+                                    {t("dashboard:user.home.banner.paymentMethod.cta")}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <QuickActions />
                 <main className="flex-1 overflow-y-auto overflow-x-hidden">
+                    <div>
+                    </div>
                     <Outlet />
                 </main>
             </div>

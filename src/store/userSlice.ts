@@ -5,7 +5,7 @@ import {
   createCrudInitialState,
   PaginationResponse,
 } from "@/@types/global-type";
-import { User } from "@/types/auth";
+import { User } from "@/types/user";
 
 const initialState = createCrudInitialState<User>();
 

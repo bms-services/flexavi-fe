@@ -1,10 +1,11 @@
 import { login, logout, register } from "@/actions/authActions";
+import { StatusReducerEnum } from "@/hooks/use-redux";
 import {
   createModuleState,
-  handleModule,
+  handleModuleState,
   ModuleState,
-} from "@/lib/redux-helper";
-import { User } from "@/types/auth";
+} from "@/lib/redux-thunk";
+import { User } from "@/types/user";
 import {
   createSlice,
   isFulfilled,
@@ -12,13 +13,13 @@ import {
   isRejected,
 } from "@reduxjs/toolkit";
 
-interface AuthState {
+interface initialStateI {
   login: ModuleState<User>;
   register: ModuleState<User>;
   logout: ModuleState<User>;
 }
 
-const initialAuthState: AuthState = {
+const initialState: initialStateI = {
   login: createModuleState<User>(),
   register: createModuleState<User>(),
   logout: createModuleState<User>(),
@@ -26,7 +27,7 @@ const initialAuthState: AuthState = {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: initialAuthState,
+  initialState: initialState,
   reducers: {
     registerReset: (state) => {
       state.register = createModuleState<User>();
@@ -35,18 +36,13 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addMatcher(isPending(login, register, logout), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        state[moduleName].loading = true;
-        state[moduleName].response = createModuleState().response;
-      })
-      .addMatcher(isRejected(login, register, logout), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        state[moduleName].loading = false;
-        state[moduleName].response = action.payload;
+        handleModuleState(state, action, StatusReducerEnum.PENDING);
       })
       .addMatcher(isFulfilled(login, register, logout), (state, action) => {
-        const moduleName = action.type.split("/")[1];
-        handleModule(state, action, moduleName);
+        handleModuleState(state, action, StatusReducerEnum.FULFILLED);
+      })
+      .addMatcher(isRejected(login, register, logout), (state, action) => {
+        handleModuleState(state, action, StatusReducerEnum.REJECTED);
       });
   },
 });

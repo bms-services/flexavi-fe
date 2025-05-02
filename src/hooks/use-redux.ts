@@ -11,4 +11,7 @@ export enum StatusReducerEnum {
   LOADING = "loading",
   SUCCEEDED = "succeeded",
   FAILED = "failed",
+  PENDING = "pending",
+  FULFILLED = "fulfilled",
+  REJECTED = "rejected",
 }
