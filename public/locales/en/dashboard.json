@@ -1,19 +1,68 @@
 {
   "language": "English",
-  "user": {
-    "home": {
-      "banner": {
-        "emailNotVerified": {
-          "title": "Email not Verified",
-          "description": "You're almost there! We've sent a verification code to your email. Please check your inbox and verify your account to get trial access to all features.",
-          "cta": "Verify Now"
-        },
-        "paymentMethod": {
-          "title": "Payment Method",
-          "description": "Get your trial access to all features by adding a payment method.",
-          "cta": "Add Payment Method"
-        }
+  "company_create": {
+    "text": {
+      "welcome": "Welcome to Flexavi 🎉",
+      "excited": "We're excited to have you on board. Let's get you set up and ready to go!",
+      "title": "Create a Company",
+      "titleAddress": "Address",
+      "titleContact": "Contact",
+      "description": "Enter your company details to create a new company.",
+      "descriptionAddress": "Enter your company address to create a new company.",
+      "descriptionContact": "Enter your company contact details to create a new company."
+    },
+    "placeholder": {
+      "name": "Bijv. Mijn Dakbedrijf B.V.",
+      "email": "dakbedrijf@company.nl",
+      "phone": "+31 6 12345678",
+      "address": "Enter your company address",
+      "tax": "NL123456789B01",
+      "kvk": "Bijv. 12345678",
+      "website": "https://jouwbedrijf.nl",
+      "logo": "Upload your company logo",
+      "description": "Enter a short description of your company"
+    },
+    "label": {
+      "name": "Company Name",
+      "email": "Company Email",
+      "phone": "Company Phone",
+      "address": "Company Address",
+      "tax": "Company Tax Number",
+      "kvk": "Company KVK Number",
+      "website": "Company Website",
+      "logo": "Company Logo",
+      "description": "Company Description"
+    },
+    "button": {
+      "submit": "Create Company",
+      "start": "Get Started",
+      "next": "Next",
+      "back": "Back"
+    },
+    "error": {
+      "required": {
+        "name": "Company name is required",
+        "email": "Company email is required",
+        "phone": "Company phone number is required",
+        "address": "Company address is required",
+        "tax": "Company tax number is required",
+        "kvk": "Company KVK number is required",
+        "website": "Company website is required",
+        "logo": "Company logo is required",
+        "description": "Company description is required"
       }
+    }
+  },
+  "banner": {
+    "emailNotVerified": {
+      "title": "Email not Verified",
+      "description": "You're almost there! We've sent a verification code to your email. Please check your inbox and verify your account to get trial access to all features.",
+      "cta": "Verify Now"
+    },
+    "paymentMethod": {
+      "title": "Payment Method",
+      "description": "Get your trial access to all features by adding a payment method.",
+      "cta": "Add Payment Method"
     }
   }
 }

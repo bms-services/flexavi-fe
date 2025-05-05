@@ -1,53 +1,123 @@
 import ReactFullpage from '@fullpage/react-fullpage';
 import WelcomeUser from './Section/WelcomeUser';
 import CompanyInformation from './Section/CompanyInformation';
+import { useForm } from 'react-hook-form';
+import { Company } from '@/types/company';
+import { useTranslation } from 'react-i18next';
+import CompanyAddress from './Section/CompanyAddress';
+import { useState } from 'react';
 
 export default function CompanyCreateFullPage() {
-     const { control, handleSubmit, formState: { errors, isValid } } = useForm({
-        mode: 'onChange', 
+    const { t } = useTranslation('dashboard');
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        watch,
+        control,
+        setValue,
+        trigger
+      } = useForm<Company>({
+        mode: 'onChange',
         defaultValues: {
-            companyName: '',
-            taxId: '',
+            name: '',
+            email: '',
+            phone: '',
+            city: '',
             kvk: '',
             website: '',
-        },
-    });
+            logo: '',
+            postal_code: {
+                value: '',
+            },
+            house_number: '',
+            house_number_addition: '',
+            street: '',
+            province: '',
+            created_at: '',
+            updated_at: '',
+        }
+      });
 
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [isSuccess, setIsSuccess] = useState(false);
+      const [activeSection, setActiveSection] = useState(0);
     
-    return (
-        <div>
-            <ReactFullpage
-                licenseKey={'asd'}
-                scrollingSpeed={1000}
-                credits={{
-                    enabled: false,
-                    label: 'Made with fullPage.js',
-                    position: 'right',
-                }}
-                render={({ state, fullpageApi }) => {
-                    const handleNext = () => {
-                        if (isValid) {
-                            fullpageApi.moveSectionDown();
-                        } else {
-                            alert('Harap lengkapi form sebelum melanjutkan.');
-                        }
-                    };
-                    
-                    return (
-                        <ReactFullpage.Wrapper>
-                            <WelcomeUser
-                                state={state}
-                                fullpageApi={fullpageApi}
-                            />
+      const onSubmit = (data) => {
+        setIsSubmitting(true);
+        
+        setTimeout(() => {
+          console.log('Form data:', data);
+          setIsSubmitting(false);
+          setIsSuccess(true);
+          reset();
+        }, 1500);
+      };
+    
+    const validateSection = async (origin, destination) => {
+        if (origin.index === 0 && destination.index === 1) {
+            const isValid = await trigger(['name', 'kvk', 'website']);
+            return isValid;
+        }
+        
+        if (origin.index === 1 && destination.index === 2) {
+            const isValid = await trigger(['email', 'phone', 'postal_code', 'house_number', 'street', 'city']);
+            return isValid;
+        }
+        
+        return true;
+    };
 
-                            <CompanyInformation
-                                state={state}
-                                fullpageApi={fullpageApi}
-                            />
-                        </ReactFullpage.Wrapper>
-                    );
-                }}
-            />
-        </div>
+    return (
+        <ReactFullpage
+            licenseKey={'asd'}
+            scrollingSpeed={1000}
+            credits={{
+                enabled: false,
+                label: 'Made with fullPage.js',
+                position: 'right',
+            }}
+            navigation={true}
+            onLeave={(origin, destination, direction) => {
+                return validateSection(origin, destination);
+              }}
+            afterLoad={(origin, destination) => {
+                setActiveSection(destination.index);
+            }}
+            render={({ state, fullpageApi }) => {
+                return (
+                    <ReactFullpage.Wrapper>
+                        <WelcomeUser
+                            state={state}
+                            fullpageApi={fullpageApi}
+                            t={t}
+                        />
+
+                        <CompanyInformation
+                            state={state}
+                            fullpageApi={fullpageApi}
+                            register={register}
+                            control={control}
+                            errors={errors}
+                            handleSubmit={handleSubmit}
+                            t={t}
+                        />
+                        <CompanyAddress
+                            state={state}
+                            fullpageApi={fullpageApi}
+                            register={register}
+                            control={control}
+                            errors={errors}
+                            watch={watch}
+                            setValue={setValue}
+                            handleSubmit={handleSubmit}
+                            t={t}
+                        />
+                    </ReactFullpage.Wrapper >
+                );
+            }}
+        />
     )
 }

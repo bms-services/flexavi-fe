@@ -57,14 +57,14 @@ const DashboardLayout: React.FC = () => {
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
                             <h6 className="text-[14px] font-medium text-white">
-                                {t('dashboard:user.home.banner.emailNotVerified.title')}
+                                {t('dashboard:banner.emailNotVerified.title')}
                             </h6>
                             <div className='flex items-center gap-1'>
                                 <span className="text-[12px] font-normal text-white">
-                                    {t("dashboard:user.home.banner.emailNotVerified.description")}&nbsp;
+                                    {t("dashboard:banner.emailNotVerified.description")}&nbsp;
                                 </span>
                                 <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
-                                    {t("dashboard:user.home.banner.emailNotVerified.cta")}
+                                    {t("dashboard:banner.emailNotVerified.cta")}
                                 </span>
                             </div>
                         </div>
@@ -76,14 +76,14 @@ const DashboardLayout: React.FC = () => {
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
                             <h6 className="text-[14px] font-medium text-white">
-                                {t('dashboard:user.home.banner.paymentMethod.title')}
+                                {t('dashboard:banner.paymentMethod.title')}
                             </h6>
                             <div className='flex items-center gap-1'>
                                 <span className="text-[12px] font-normal text-white">
-                                    {t("dashboard:user.home.banner.paymentMethod.description")}&nbsp;
+                                    {t("dashboard:banner.paymentMethod.description")}&nbsp;
                                 </span>
                                 <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
-                                    {t("dashboard:user.home.banner.paymentMethod.cta")}
+                                    {t("dashboard:banner.paymentMethod.cta")}
                                 </span>
                             </div>
                         </div>

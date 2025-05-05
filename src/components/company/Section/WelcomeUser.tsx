@@ -1,18 +1,22 @@
 import { fullpageApi } from "@fullpage/react-fullpage";
+import { TFunction } from "i18next";
 
 export default function WelcomeUser({
-    state, fullpageApi
+    state,
+    fullpageApi,
+    t
 }: {
     state: unknown;
     fullpageApi: fullpageApi;
+    t: TFunction<"dashboard", undefined>
 }) {
     return (
         <div className="section">
             <div className="sm:h-screen w-full bg-gradient-to-br from-blue-600 to-blue-800 flex flex-col items-center justify-center text-white px-6">
                 <div className="max-w-md text-center">
-                    <h1 className="text-4xl font-extrabold mb-4">Welcome to Flexavi 🎉</h1>
+                    <h1 className="text-4xl font-extrabold mb-4">{t('dashboard:company_create.text.welcome')}</h1>
                     <p className="text-lg mb-8 text-blue-100">
-                        We're excited to have you on board. Let's get you set up and ready to go!
+                        {t('dashboard:company_create.text.excited')}
                     </p>
 
                     <button
@@ -20,8 +24,9 @@ export default function WelcomeUser({
                         onClick={() => {
                             fullpageApi.moveSectionDown();
                         }}
+                        type="button"
                     >
-                        Get Started
+                        {t('dashboard:company_create.button.start')}
                     </button>
                 </div>
             </div>

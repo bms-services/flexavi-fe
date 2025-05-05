@@ -69,7 +69,7 @@ export default function Dropzone({
     const currentValue = localValue
 
     return (
-        <div className="relative space-y-1 w-full">
+        <div className="relative space-y-1">
             {label && <Label htmlFor={id}>{label}</Label>}
 
             <div

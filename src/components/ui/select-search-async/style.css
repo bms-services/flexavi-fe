@@ -1,0 +1,10 @@
+.PhoneInputInput {
+  outline: none !important;
+  border: none;
+}
+
+.ContainerPhoneInputInput:has(.PhoneInputInput:focus) {
+  outline: 2px solid #007bff; /* Ganti warna sesuai kebutuhan */
+  outline-offset: 2px;
+  border-radius: 6px; /* Sesuaikan dengan desain */
+}
