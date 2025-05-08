@@ -2,21 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/store/authSlice";
 import userReducer from "@/store/userSlice";
 import profileReducer from "@/store/profileSlice";
+import packageReducer from "@/store/packageSlice";
 
 export const store = configureStore({
   reducer: {
-    // analytic: analyticReducer,
-    // employee: employeeReducer,
-    // customer: customerReducer,
-    // company: companyReducer,
-    // workday: workdayReducer,
-    // purchaseInvoice: purchaseInvoiceReducer,
-    // salesInvoice: salesInvoiceReducer,
-    // quotation: quotationReducer,
-    // meta: metaReducer,
     auth: authReducer,
     user: userReducer,
     profile: profileReducer,
+    package: packageReducer,
   },
 });
 

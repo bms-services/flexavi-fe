@@ -64,5 +64,20 @@
       "description": "Get your trial access to all features by adding a payment method.",
       "cta": "Add Payment Method"
     }
+  },
+  "settings": {
+    "payment": {
+      "title": "Payment Method",
+      "description": "Add a payment method to get your trial access to all features.",
+      "cta": "Add Payment Method",
+      "error": {
+        "required": {
+          "name": "Name on Card is required",
+          "number": "Card Number is required",
+          "expiry": "Expiry Date is required",
+          "cvc": "CVC is required"
+        }
+      }
+    }
   }
 }

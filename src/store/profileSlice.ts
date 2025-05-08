@@ -1,12 +1,13 @@
-import { getProfile, updateProfile } from "@/actions/profileAction";
-import { StatusReducerEnum } from "@/hooks/use-redux";
 import {
-  createModuleState,
-  handleModule,
-  handleModuleState,
-  ModuleState,
-} from "@/lib/redux-thunk";
-import { User } from "@/types/user";
+  getProfile,
+  updateProfile,
+  createProfileIntent,
+  createProfileTrial,
+  updateProfilePackage,
+  updateProfilePayment,
+} from "@/actions/profileAction";
+import { StatusReducerEnum } from "@/hooks/use-redux";
+import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
 import {
   createSlice,
   isFulfilled,
@@ -14,14 +15,13 @@ import {
   isRejected,
 } from "@reduxjs/toolkit";
 
-interface initialStateI {
-  show: ModuleState<User>;
-  update: ModuleState<User>;
-}
-
-const initialState: initialStateI = {
-  show: createModuleState<User>(),
-  update: createModuleState<User>(),
+const initialState = {
+  show: createModuleState(),
+  update: createModuleState(),
+  createIntent: createModuleState(),
+  createTrial: createModuleState(),
+  updatePackage: createModuleState(),
+  updatePayment: createModuleState(),
 };
 
 const profileSlice = createSlice({
@@ -30,15 +30,45 @@ const profileSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addMatcher(isPending(getProfile), (state, action) => {
-        handleModuleState(state, action, StatusReducerEnum.PENDING);
-      })
-      .addMatcher(isRejected(getProfile), (state, action) => {
-        handleModuleState(state, action, StatusReducerEnum.FULFILLED);
-      })
-      .addMatcher(isFulfilled(getProfile), (state, action) => {
-        handleModuleState(state, action, StatusReducerEnum.REJECTED);
-      });
+      .addMatcher(
+        isPending(
+          getProfile,
+          updateProfile,
+          createProfileIntent,
+          createProfileTrial,
+          updateProfilePackage,
+          updateProfilePayment
+        ),
+        (state, action) => {
+          handleModuleState(state, action, StatusReducerEnum.PENDING);
+        }
+      )
+      .addMatcher(
+        isRejected(
+          getProfile,
+          updateProfile,
+          createProfileIntent,
+          createProfileTrial,
+          updateProfilePackage,
+          updateProfilePayment
+        ),
+        (state, action) => {
+          handleModuleState(state, action, StatusReducerEnum.FULFILLED);
+        }
+      )
+      .addMatcher(
+        isFulfilled(
+          getProfile,
+          updateProfile,
+          createProfileIntent,
+          createProfileTrial,
+          updateProfilePackage,
+          updateProfilePayment
+        ),
+        (state, action) => {
+          handleModuleState(state, action, StatusReducerEnum.REJECTED);
+        }
+      );
   },
 });
 

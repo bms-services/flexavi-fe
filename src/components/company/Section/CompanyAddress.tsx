@@ -35,76 +35,74 @@ export default function CompanyAddress({
     t: TFunction<"dashboard", undefined>
 }) {
     return (
-        <div className="section">
-            <div className="sm:h-screen w-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
-                <div className="w-full max-w-4xl">
-                    <Card className="rounded-2xl shadow-xl overflow-hidden">
-                        <CardContent className="bg-white p-6 space-y-12">
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col">
-                                    <CardTitle className="text-xl">{t('dashboard:company_create.text.titleAddress')}</CardTitle>
-                                    <CardDescription className="">
-                                        {t('dashboard:company_create.text.descriptionAddress')}
-                                    </CardDescription>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <Input
-                                        label={t('dashboard:company_create.label.email')}
-                                        placeholder={t('dashboard:company_create.placeholder.email')}
-                                        id={'companyEmail'}
-                                        type="text"
-                                        icon={<MailIcon className="h-5 w-5 " />}
-                                        rules={{
-                                            register,
-                                            name: "email",
-                                            options: {
-                                                required: t('dashboard:company_create.error.required.name'),
-                                            },
-                                            errors,
-                                        }}
-                                    />
-                                    <PhoneNumber
-                                        label={t('dashboard:company_create.label.phone')}
-                                        rules={{
-                                            control,
-                                            name: "phone",
-                                            options: {
-                                                required: t('dashboard:company_create.error.required.phone')
-                                            },
-                                            errors,
-                                        }}
-                                    />
-                                </div>
+        <div className="sm:min-h-screen w-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl">
+                <Card className="shadow-xl overflow-hidden">
+                    <CardContent className="bg-white p-6 space-y-12">
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col">
+                                <CardTitle className="text-xl">{t('dashboard:company_create.text.titleAddress')}</CardTitle>
+                                <CardDescription className="">
+                                    {t('dashboard:company_create.text.descriptionAddress')}
+                                </CardDescription>
                             </div>
-
-                            <div className="flex flex-col gap-4">
-                                <div className="flex flex-col">
-                                    <CardTitle className="text-xl">{t('dashboard:company_create.text.titleContact')}</CardTitle>
-                                    <CardDescription className="">
-                                        {t('dashboard:company_create.text.descriptionContact')}
-                                    </CardDescription>
-                                </div>
-
-                                <PostalCode
-                                    register={register}
-                                    errors={errors}
-                                    control={control}
-                                    watch={watch}
-                                    setValue={setValue}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <Input
+                                    label={t('dashboard:company_create.label.email')}
+                                    placeholder={t('dashboard:company_create.placeholder.email')}
+                                    id={'companyEmail'}
+                                    type="text"
+                                    icon={<MailIcon className="h-5 w-5 " />}
+                                    rules={{
+                                        register,
+                                        name: "email",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.name'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                                <PhoneNumber
+                                    label={t('dashboard:company_create.label.phone')}
+                                    rules={{
+                                        control,
+                                        name: "phone",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.phone')
+                                        },
+                                        errors,
+                                    }}
                                 />
                             </div>
+                        </div>
 
-                            <div className="flex justify-end">
-                                <button
-                                    className="mt-6 px-6 py-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition"
-                                >
-                                    {t('dashboard:company_create.button.next')}
-                                </button>
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col">
+                                <CardTitle className="text-xl">{t('dashboard:company_create.text.titleContact')}</CardTitle>
+                                <CardDescription className="">
+                                    {t('dashboard:company_create.text.descriptionContact')}
+                                </CardDescription>
                             </div>
-                        </CardContent>
-                    </Card>
-                </div>
-                </div>
+
+                            <PostalCode
+                                register={register}
+                                errors={errors}
+                                control={control}
+                                watch={watch}
+                                setValue={setValue}
+                            />
+                        </div>
+
+                        {/* <div className="flex justify-end">
+                            <button
+                                className="mt-6 px-6 py-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition"
+                            >
+                                {t('dashboard:company_create.button.next')}
+                            </button>
+                        </div> */}
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

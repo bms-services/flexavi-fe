@@ -52,6 +52,7 @@ import Settings from '@/pages/Settings';
 import AuthLayout from '../layouts/AuthLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
 import CompanyCreateFullPage from '@/components/company/CompanyCreateFullPage';
+import PaymentConfirm from '@/pages/payment/PaymentConfirm';
 
 const baseRouter = createBrowserRouter([
     {
@@ -137,6 +138,7 @@ const baseRouter = createBrowserRouter([
             { path: "community", element: <Community /> },
             { path: "faq", element: <FAQ /> },
             { path: "knowledge-base", element: <KnowledgeBase /> },
+            { path: 'payment/confirm', element: <PaymentConfirm /> },
         ],
     },
     {

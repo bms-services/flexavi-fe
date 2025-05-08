@@ -47,6 +47,10 @@ export const logout = createAsyncThunk(
 
       return data;
     } catch (error) {
+      setTimeout(() => {
+        Cookies.remove(tokenName);
+        window.location.href = "/login";
+      }, 1000);
       return rejectWithValue(error);
     }
   }

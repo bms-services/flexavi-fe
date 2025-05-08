@@ -15,45 +15,41 @@ const LeadDetails = () => {
 
   if (!leadDetail) {
     return (
-      <Layout>
-        <div className="container py-6 space-y-6">
-          <Button variant="ghost" onClick={() => navigate("/leads")}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Terug naar leads
-          </Button>
-          <div className="flex items-center justify-center h-96">
-            <p className="text-muted-foreground">Lead niet gevonden.</p>
-          </div>
+      <div className="container py-6 space-y-6">
+        <Button variant="ghost" onClick={() => navigate("/leads")}>
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Terug naar leads
+        </Button>
+        <div className="flex items-center justify-center h-96">
+          <p className="text-muted-foreground">Lead niet gevonden.</p>
         </div>
-      </Layout>
+      </div>
     );
   }
 
   return (
-    <Layout>
-      <div className="container py-6 space-y-6">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => navigate("/leads")}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Terug naar leads
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => navigate(`/portal/dashboard`)}
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Bekijk klant portaal
-          </Button>
-        </div>
-
-        <LeadDetailActions />
-
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">{leadDetail.name}</h1>
-          <LeadDetail lead={leadDetail} />
-        </div>
+    <div className="container py-6 space-y-6">
+      <div className="flex items-center space-x-4">
+        <Button variant="ghost" onClick={() => navigate("/leads")}>
+          <ChevronLeft className="mr-2 h-4 w-4" />
+          Terug naar leads
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/portal/dashboard`)}
+        >
+          <ExternalLink className="mr-2 h-4 w-4" />
+          Bekijk klant portaal
+        </Button>
       </div>
-    </Layout>
+
+      <LeadDetailActions />
+
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold tracking-tight">{leadDetail.name}</h1>
+        <LeadDetail lead={leadDetail} />
+      </div>
+    </div>
   );
 };
 

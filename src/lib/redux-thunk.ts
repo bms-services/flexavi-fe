@@ -7,11 +7,32 @@ import {
 
 export type ErrorType = Record<string, string[]> | null;
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    per_page: number;
+    to: number;
+    total: number;
+    [key: string]: unknown;
+  };
+  links: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+}
+
+export type ResultType<T> = T | PaginatedResponse<T>;
+
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   code: number;
-  result?: T;
+  result?: ResultType<T>;
   errors?: ErrorType;
 }
 
@@ -21,7 +42,7 @@ export interface ModuleState<T> {
 }
 
 // Helper function to generate the initial state for any module
-export const createModuleState = <T>(): ModuleState<T> => ({
+export const createModuleState = <T = unknown>(): ModuleState<T> => ({
   loading: false,
   response: {
     success: false,
@@ -32,44 +53,31 @@ export const createModuleState = <T>(): ModuleState<T> => ({
   },
 });
 
-// Generalized handleModule function
-export const handleModule = <T>(
-  state: Record<string, ModuleState<T>>,
-  action: UnknownAction,
-  moduleName: string
-): void => {
-  state[moduleName].loading = false;
-  state[moduleName].response = action.payload as ApiResponse<T>;
-};
-
-export const handleModuleState = <T>(
-  state: Record<string, ModuleState<T>>,
+export const handleModuleState = <
+  State extends Record<string, ModuleState<unknown>>,
+  K extends keyof State
+>(
+  state: State,
   action: UnknownAction,
   status: StatusReducerEnum
 ) => {
-  const moduleName = action.type.split("/")[1];
+  const moduleName = action.type.split("/")[1] as K;
 
   if (!state[moduleName]) {
-    state[moduleName] = createModuleState();
+    state[moduleName] = createModuleState() as State[K];
   }
 
   switch (status) {
     case StatusReducerEnum.PENDING:
       state[moduleName].loading = true;
       state[moduleName].response = createModuleState()
-        .response as ApiResponse<T>;
+        .response as State[K]["response"];
       break;
 
-    case StatusReducerEnum.FULFILLED: {
+    case StatusReducerEnum.FULFILLED:
+    case StatusReducerEnum.REJECTED:
       state[moduleName].loading = false;
-      state[moduleName].response = action.payload as ApiResponse<T>;
+      state[moduleName].response = action.payload as State[K]["response"];
       break;
-    }
-
-    case StatusReducerEnum.REJECTED: {
-      state[moduleName].loading = false;
-      state[moduleName].response = action.payload as ApiResponse<T>;
-      break;
-    }
   }
 };

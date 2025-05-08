@@ -5,70 +5,24 @@ import { useForm } from 'react-hook-form';
 import { Company } from '@/types/company';
 import { useTranslation } from 'react-i18next';
 import CompanyAddress from './Section/CompanyAddress';
-import { useState } from 'react';
 
 export default function CompanyCreateFullPage() {
     const { t } = useTranslation('dashboard');
 
     const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-        watch,
         control,
+        handleSubmit,
+        register,
+        watch,
         setValue,
-        trigger
-      } = useForm<Company>({
-        mode: 'onChange',
+        formState: { errors, isValid }
+    } = useForm<Company>({
         defaultValues: {
             name: '',
-            email: '',
-            phone: '',
-            city: '',
             kvk: '',
             website: '',
-            logo: '',
-            postal_code: {
-                value: '',
-            },
-            house_number: '',
-            house_number_addition: '',
-            street: '',
-            province: '',
-            created_at: '',
-            updated_at: '',
-        }
-      });
-
-      const [isSubmitting, setIsSubmitting] = useState(false);
-      const [isSuccess, setIsSuccess] = useState(false);
-      const [activeSection, setActiveSection] = useState(0);
-    
-      const onSubmit = (data) => {
-        setIsSubmitting(true);
-        
-        setTimeout(() => {
-          console.log('Form data:', data);
-          setIsSubmitting(false);
-          setIsSuccess(true);
-          reset();
-        }, 1500);
-      };
-    
-    const validateSection = async (origin, destination) => {
-        if (origin.index === 0 && destination.index === 1) {
-            const isValid = await trigger(['name', 'kvk', 'website']);
-            return isValid;
-        }
-        
-        if (origin.index === 1 && destination.index === 2) {
-            const isValid = await trigger(['email', 'phone', 'postal_code', 'house_number', 'street', 'city']);
-            return isValid;
-        }
-        
-        return true;
-    };
+        },
+    })
 
     return (
         <ReactFullpage
@@ -79,13 +33,37 @@ export default function CompanyCreateFullPage() {
                 label: 'Made with fullPage.js',
                 position: 'right',
             }}
-            navigation={true}
-            onLeave={(origin, destination, direction) => {
-                return validateSection(origin, destination);
-              }}
-            afterLoad={(origin, destination) => {
-                setActiveSection(destination.index);
-            }}
+            easingcss3='cubic-bezier(0.175, 0.885, 0.320, 1.275)'
+            slidesNavPosition='bottom'
+            scrollHorizontally={true}
+            slidesNavigation={true}
+            scrollHorizontallyKey='horizontal'
+            controlArrows={true}
+            controlArrowColor='#fff'
+            controlArrowsHTML={[
+                `<div class="fp-prev transition-all duration-300 transform hover:scale-110 hover:-translate-x-1">
+                    <div class="w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </div>
+                 </div>`,
+                `<div class="fp-next transition-all duration-300 transform hover:scale-110 hover:translate-x-1">
+                    <div class="w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                 </div>`
+            ]}
+
+            // beforeLeave={(origin, destination, direction) => {
+            //     if (origin.index === 1 && direction === 'down') {
+            //         if (!isValid) {
+            //             return false;
+            //         }
+            //     }
+            // }}
             render={({ state, fullpageApi }) => {
                 return (
                     <ReactFullpage.Wrapper>
@@ -95,26 +73,32 @@ export default function CompanyCreateFullPage() {
                             t={t}
                         />
 
-                        <CompanyInformation
-                            state={state}
-                            fullpageApi={fullpageApi}
-                            register={register}
-                            control={control}
-                            errors={errors}
-                            handleSubmit={handleSubmit}
-                            t={t}
-                        />
-                        <CompanyAddress
-                            state={state}
-                            fullpageApi={fullpageApi}
-                            register={register}
-                            control={control}
-                            errors={errors}
-                            watch={watch}
-                            setValue={setValue}
-                            handleSubmit={handleSubmit}
-                            t={t}
-                        />
+                        <div className='section'>
+                            <div className="slide">
+                                <CompanyInformation
+                                    state={state}
+                                    fullpageApi={fullpageApi}
+                                    register={register}
+                                    control={control}
+                                    errors={errors}
+                                    handleSubmit={handleSubmit}
+                                    t={t}
+                                />
+                            </div>
+                            <div className="slide">
+                                <CompanyAddress
+                                    state={state}
+                                    fullpageApi={fullpageApi}
+                                    register={register}
+                                    control={control}
+                                    errors={errors}
+                                    watch={watch}
+                                    setValue={setValue}
+                                    handleSubmit={handleSubmit}
+                                    t={t}
+                                />
+                            </div>
+                        </div>
                     </ReactFullpage.Wrapper >
                 );
             }}

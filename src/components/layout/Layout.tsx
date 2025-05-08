@@ -44,6 +44,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     //   </div>
     // </div>
 
-    <div></div>
+    <div>
+      {children}
+    </div>
   );
 };

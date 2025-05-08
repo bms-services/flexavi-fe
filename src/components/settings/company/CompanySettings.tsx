@@ -7,8 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Building2, Mail, Phone, MapPin, Ban, FileText, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import PaymentStripe from "@/components/ui/payment-stripe";
+import StripeProvider from "@/providers/stripe-provider";
+import { useTranslation } from "react-i18next";
+import StripeWrapper from "@/components/ui/payment-stripe/wrapper";
 
 export const CompanySettings: React.FC = () => {
+  const { t } = useTranslation('dashboard');
   const { toast } = useToast();
   const [logo, setLogo] = useState<string | null>(null);
 
@@ -168,15 +173,15 @@ export const CompanySettings: React.FC = () => {
           <div className="flex items-center gap-2">
             <Ban className="h-5 w-5 text-muted-foreground" />
             <div>
-              <CardTitle>Financiële gegevens</CardTitle>
+              <CardTitle>{t("dashboard:settings.payment.title")}</CardTitle>
               <CardDescription>
-                Bankgegevens voor op je facturen
+                {t("dashboard:settings.payment.description")}
               </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="bank-name">Bank</Label>
               <Input id="bank-name" defaultValue="ING Bank" />
@@ -185,13 +190,14 @@ export const CompanySettings: React.FC = () => {
               <Label htmlFor="iban">IBAN</Label>
               <Input id="iban" defaultValue="NL00 INGB 0000 0000 00" />
             </div>
-          </div>
+          </div> */}
+
+          {/* <StripeProvider>
+            <PaymentStripe />
+          </StripeProvider> */}
+
+          <StripeWrapper />
         </CardContent>
-        <CardFooter>
-          <Button className="ml-auto">
-            Wijzigingen opslaan
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

@@ -13,7 +13,8 @@ import { SnackbarProvider } from 'notistack'
 
 function App() {
   return (
-    <StrictMode>
+    // <StrictMode>
+    <div>
       <SnackbarProvider
         maxSnack={3}
         transitionDuration={500}
@@ -29,7 +30,8 @@ function App() {
           </AuthProvider>
         </Provider>
       </Suspense>
-    </StrictMode>
+    </div>
+    // </StrictMode>
   );
 }
 

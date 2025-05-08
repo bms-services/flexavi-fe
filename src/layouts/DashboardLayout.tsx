@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,10 @@ import { useAppDispatch } from "@/hooks/use-redux";
 import { getProfile } from '@/actions/profileAction';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
+import { User } from '@/types/user';
+import VerifyEmailDialog from '@/components/settings/email/VerifyEmailDialog';
+import SubscriptionTrialActivateDialog from '@/components/settings/subscriptions/dialogs/SubscriptionTrialActivateDialog';
+import PaymentMethodCardDialog from '@/components/settings/payments/dialogs/PaymentMethodCardDialog';
 
 
 const DashboardLayout: React.FC = () => {
@@ -19,8 +23,14 @@ const DashboardLayout: React.FC = () => {
     const { token } = useAuth();
     const { t } = useTranslation('dashboard');
     const isMobile = useIsMobile();
+    const [modal, setModal] = useState({
+        subscription: false,
+        paymentMethod: false,
+        verifyEmail: false,
+    });
 
     const { loading, response } = useSelector((state: RootState) => state.profile.show);
+    const result = response?.result as User;
 
     useEffect(() => {
         dispatch(getProfile());
@@ -29,6 +39,31 @@ const DashboardLayout: React.FC = () => {
     if (!token) {
         return <Navigate to="/login" replace />;
     }
+
+    const handleOpenVerifyEmail = () => {
+        setModal((modal) => ({
+            ...modal,
+            verifyEmail: true,
+        }));
+    }
+
+    const handleOpenSubscription = () => {
+        setModal((modal) => ({
+            ...modal,
+            paymentMethod: false,
+            subscription: true,
+        }));
+    }
+
+    const handleOpenPaymentMethod = () => {
+        setModal((modal) => ({
+            ...modal,
+            subscription: false,
+            paymentMethod: true,
+        }));
+    }
+
+
     return (
         <div className="flex min-h-screen max-w-full overflow-x-hidden">
             {isMobile ? (
@@ -52,7 +87,7 @@ const DashboardLayout: React.FC = () => {
                 </div>
             )}
             <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
-                {response?.result?.has_verified_email === false && (
+                {result?.has_verified_email === false && (
                     <div className="flex items-center gap-[14px] bg-orange-400 px-4 md:px-6 py-2">
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -63,15 +98,16 @@ const DashboardLayout: React.FC = () => {
                                 <span className="text-[12px] font-normal text-white">
                                     {t("dashboard:banner.emailNotVerified.description")}&nbsp;
                                 </span>
-                                <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
+                                <span onClick={handleOpenVerifyEmail} className="text-[12px] font-normal text-white cursor-pointer hover:underline">
                                     {t("dashboard:banner.emailNotVerified.cta")}
                                 </span>
                             </div>
                         </div>
+                        <VerifyEmailDialog open={modal.verifyEmail} onOpenChange={() => setModal((modal) => ({ ...modal, subscription: false }))} />
                     </div>
                 )}
 
-                {response?.result?.has_payment_method === false && (
+                {result?.has_payment_method === false && (
                     <div className="flex items-center gap-[14px] bg-indigo-400 px-4 md:px-6 py-2">
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -82,11 +118,13 @@ const DashboardLayout: React.FC = () => {
                                 <span className="text-[12px] font-normal text-white">
                                     {t("dashboard:banner.paymentMethod.description")}&nbsp;
                                 </span>
-                                <span className="text-[12px] font-normal text-white cursor-pointer hover:underline">
+                                <span onClick={handleOpenSubscription} className="text-[12px] font-normal text-white cursor-pointer hover:underline">
                                     {t("dashboard:banner.paymentMethod.cta")}
                                 </span>
                             </div>
                         </div>
+                        <SubscriptionTrialActivateDialog open={modal.subscription} onOpenChange={() => setModal((modal) => ({ ...modal, subscription: false }))} onNext={handleOpenPaymentMethod} />
+                        <PaymentMethodCardDialog open={modal.paymentMethod} onOpenChange={() => setModal((modal) => ({ ...modal, paymentMethod: false }))} onBack={handleOpenSubscription} />
                     </div>
                 )}
 
