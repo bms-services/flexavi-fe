@@ -33,19 +33,19 @@ export const createLeadSchema = z.object({
     .string()
     .regex(/^(?:0|(?:\+|00)31)[1-9][0-9]{8}$/, {
       message: "Vul een geldig Nederlands telefoonnummer in",
-    })
-    .transform((val) => {
-      // Format phone number consistently
-      return val.startsWith("+31")
-        ? val
-        : val.startsWith("0031")
-        ? "+31" + val.slice(4)
-        : val.startsWith("0")
-        ? "+31" + val.slice(1)
-        : val;
     }),
-  postcode: postcodeSchema,
-  huisnummer: huisnummerSchema,
+    // .transform((val) => {
+    //   // Format phone number consistently
+    //   return val.startsWith("+31")
+    //     ? val
+    //     : val.startsWith("0031")
+    //     ? "+31" + val.slice(4)
+    //     : val.startsWith("0")
+    //     ? "+31" + val.slice(1)
+    //     : val;
+    // }),
+  // postcode: postcodeSchema,
+  // huisnummer: huisnummerSchema,
 });
 
 export type CreateLeadFormData = z.infer<typeof createLeadSchema>;

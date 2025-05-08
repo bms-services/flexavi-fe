@@ -27,7 +27,6 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-// create intent
 export const createProfileIntent = createAsyncThunk(
   "profile/createIntent",
   async (_, { rejectWithValue }) => {

@@ -1,7 +1,10 @@
 import {
-  getDetailSubscription,
-  getSubscription,
-} from "@/actions/subscriptionAction";
+  getDetailLead,
+  getLead,
+  storeLead,
+  updateLead,
+  destroyLead,
+} from "@/actions/leadAction";
 import { StatusReducerEnum } from "@/hooks/use-redux";
 import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
 import {
@@ -14,29 +17,31 @@ import {
 const initialState = {
   index: createModuleState(),
   show: createModuleState(),
+  store: createModuleState(),
   update: createModuleState(),
+  destroy: createModuleState(),
 };
 
-const subscriptionSlice = createSlice({
-  name: "subscription",
+const leadSlice = createSlice({
+  name: "lead",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addMatcher(
-        isPending(getSubscription, getDetailSubscription),
+        isPending(getLead, getDetailLead, storeLead, updateLead, destroyLead),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.PENDING);
         }
       )
       .addMatcher(
-        isRejected(getSubscription, getDetailSubscription),
+        isRejected(getLead, getDetailLead, storeLead, updateLead, destroyLead),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.FULFILLED);
         }
       )
       .addMatcher(
-        isFulfilled(getSubscription, getDetailSubscription),
+        isFulfilled(getLead, getDetailLead, storeLead, updateLead, destroyLead),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.REJECTED);
         }
@@ -44,4 +49,4 @@ const subscriptionSlice = createSlice({
   },
 });
 
-export default subscriptionSlice.reducer;
+export default leadSlice.reducer;

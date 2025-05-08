@@ -5,15 +5,17 @@ import { Invoice } from './invoices';
 import { WorkAgreement } from './work-agreements';
 
 export type Lead = {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  address: string;
-  status: LeadStatus;
-  source: string;
-  createdAt: string;
-  updatedAt: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  postal_code?: string;
+  house_number?: string;
+  house_number_addition?: string;
+  street?: string;
+  city?: string;
+  province?: string;
+  status?: LeadStatus;
 };
 
 export type LeadDetail = Lead & {

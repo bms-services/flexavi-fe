@@ -25,9 +25,8 @@ export interface ApiResponse<T> {
   result: T;
 }
 
-export interface PaginationResponse<T> {
+export interface MetaResponse {
   current_page: number;
-  data: T[];
   from: number | null;
   last_page: number;
   per_page: number;
@@ -35,6 +34,11 @@ export interface PaginationResponse<T> {
   total: number;
   next_page_url: string | null;
   prev_page_url: string | null;
+}
+
+export interface PaginationResponse<T> {
+  data: T[];
+  meta: MetaResponse;
 }
 
 export interface CrudState<T> {

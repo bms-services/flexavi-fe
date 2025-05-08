@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { Input } from "../input";
 import { useDebouncedCallback } from "use-debounce";
-import { UseFormRegister, FieldErrors, Control, UseFormWatch, UseFormSetValue } from "react-hook-form";
+import { UseFormRegister, FieldErrors, Control, UseFormWatch, UseFormSetValue, FieldValue, FieldValues } from "react-hook-form";
 import SelectSearchAsync, { Option } from "../select-search-async";
 import { OptionsOrGroups, GroupBase } from "react-select";
 import axios from "axios";
-import { Company } from "@/types/company";
 
 interface PostalCodeProps {
-    register: UseFormRegister<Company>;
-    errors: FieldErrors<Company>;
-    control: Control<Company>;
-    watch: UseFormWatch<Company>;
-    setValue: UseFormSetValue<Company>;
+    register: UseFormRegister<FieldValues>;
+    errors: FieldErrors<FieldValues>;
+    control: Control<FieldValues>;
+    watch: UseFormWatch<FieldValues>;
+    setValue: UseFormSetValue<FieldValues>;
 }
 
 const postalCodeUrl = import.meta.env.VITE_POSTAL_CODE_API_URL;

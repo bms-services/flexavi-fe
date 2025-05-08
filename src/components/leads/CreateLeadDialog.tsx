@@ -8,12 +8,13 @@ import {
 } from "@/components/ui/dialog";
 import { CreateLeadForm } from "./CreateLeadForm";
 import { CreateLeadFormData } from "@/utils/validations";
+import { Lead } from "@/types";
 
 interface CreateLeadDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: CreateLeadFormData) => void;
-  leadId?: string; // Add the leadId prop as optional
+  onSubmit: (data: Lead) => Promise<void>;
+  leadId?: string;
 }
 
 export const CreateLeadDialog: React.FC<CreateLeadDialogProps> = ({
@@ -24,7 +25,7 @@ export const CreateLeadDialog: React.FC<CreateLeadDialogProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {leadId ? "Lead Bewerken" : "Nieuwe Lead Toevoegen"}
