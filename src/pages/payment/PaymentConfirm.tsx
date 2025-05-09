@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom'; // atau useRouter di Next.js
-import { enqueueSnackbar } from 'notistack';
 import { Progress } from '@/components/ui/progress';
 import { createProfileTrial, getProfile, updateProfilePayment } from '@/actions/profileAction';
 import { useAppDispatch } from '@/hooks/use-redux';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { toast } from 'react-toastify';
 
 export default function PaymentConfirm() {
     const dispatch = useAppDispatch();
@@ -29,14 +29,11 @@ export default function PaymentConfirm() {
 
                 if (payload.result.error) {
                     setStatus('error');
-                    enqueueSnackbar(payload.result.error.message, {
-                        variant: 'error',
-                    });
+                    toast.error(payload.result.error.message);
+
                 } else {
-                    setStatus('success');
-                    enqueueSnackbar("Success save payment method", {
-                        variant: 'success',
-                    });
+                    setStatus('success');       
+                    toast.success("Success save payment method");
                 }
             }
             setLoading(false);
@@ -50,9 +47,8 @@ export default function PaymentConfirm() {
 
         if (payload.success) {
             await dispatch(getProfile());
-            enqueueSnackbar("Success activate trial", {
-                variant: 'success',
-            });
+
+            toast.success("Success activate trial");
 
             setTimeout(() => {
                 navigate('/');

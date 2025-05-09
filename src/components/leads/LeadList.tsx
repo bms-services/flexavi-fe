@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Lead } from "@/types";
-import { useToast } from "@/hooks/use-toast";
+
 import { LeadTable } from "./LeadTable";
 import { LeadActions } from "./LeadActions";
 import { CreateLeadDialog } from "./CreateLeadDialog";
@@ -14,7 +14,7 @@ import { getLeadDetail } from "@/data/getLeadDetail";
 import { set } from "date-fns";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { showConfirmSnackbar } from "@/utils/showConfirmSnackbar";
+import { toastShow } from "../ui/toast/toast-helper";
 
 interface LeadListProps {
   leads: Lead[];
@@ -90,19 +90,42 @@ export const LeadList: React.FC<LeadListProps> = ({
     await dispatch(destroyLead(ids));
   }
 
-  const handleDestroyWarning = (leads: Lead[]) => {
-    if (leads.length === 0) return;
+  const handleOnArchive = (data: Lead[]) => {
+    const ids = data.map((lead) => lead.id);
+    // await dispatch(destroyLead(ids));
+  }
 
-    showConfirmSnackbar(
-      `Are you sure you want to delete ${leads.length} lead(s)?`,
-      () => handleDestory(leads),
-      {
-        confirmLabel: "Delete",
-        cancelLabel: "Cancel",
-        variant: "warning",
-      }
-    );
-  };
+  // const handleDestroyWarning = (data: Lead[]) => {
+  //   if (data.length === 0) return;
+
+  //   toastShow(
+  //     {
+  //       title: `Are you sure you want to delete ${data.length} lead(s)?`,
+  //       type: "info",
+  //       autoClose: false,
+  //       onConfirm: () => {
+  //         handleDestory(data);
+  //       },
+  //     },
+  //   );
+  // };
+
+
+
+  // const handleOnArchiveWarning = (data: Lead[]) => {
+  //   if (data.length === 0) return;
+
+  //   toastShow(
+  //     {
+  //       title: `Are you sure you want to archive ${data.length} lead(s)?`,
+  //       type: "info",
+  //       autoClose: false,
+  //       onConfirm: () => {
+  //         handleOnArchive(data);
+  //       },
+  //     },
+  //   );
+  // }
 
   // Fetch index
   useEffect(() => {
@@ -124,8 +147,9 @@ export const LeadList: React.FC<LeadListProps> = ({
       <LeadTable
         params={params}
         setParams={setParams}
-        onDelete={handleDestroyWarning}
+        onDelete={handleDestory}
         onEdit={handleShow}
+        onArchive={handleOnArchive}
       />
 
       <FormProvider {...methods}>

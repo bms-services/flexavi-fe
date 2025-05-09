@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { SupportTicket, SupportTicketMessage } from "@/types";
 import { mockSupportTickets, createMockTicket } from "@/data/mockSupportTickets";
-import { toast } from "sonner";
+
 
 export const useSupportTickets = () => {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
@@ -16,7 +16,7 @@ export const useSupportTickets = () => {
         setTickets(mockSupportTickets);
       } catch (error) {
         console.error("Error fetching support tickets:", error);
-        toast.error("Fout bij ophalen van support tickets");
+        
       } finally {
         setLoading(false);
       }
@@ -32,7 +32,7 @@ export const useSupportTickets = () => {
   const addTicket = (newTicket: Partial<SupportTicket>): SupportTicket => {
     const ticket = createMockTicket(newTicket);
     setTickets(prev => [...prev, ticket]);
-    toast.success("Support ticket aangemaakt");
+    
     return ticket;
   };
 
@@ -47,7 +47,7 @@ export const useSupportTickets = () => {
           : ticket
       )
     );
-    toast.success("Support ticket bijgewerkt");
+    
   };
 
   // Helper functions for specific updates
@@ -66,12 +66,12 @@ export const useSupportTickets = () => {
         name: staffName
       }
     });
-    toast.success(`Ticket toegewezen aan ${staffName}`);
+    
   };
 
   const deleteTicket = (id: string) => {
     setTickets(prev => prev.filter(ticket => ticket.id !== id));
-    toast.success("Support ticket verwijderd");
+    
   };
 
   const addMessage = (ticketId: string, message: Omit<SupportTicketMessage, "id" | "ticketId">) => {

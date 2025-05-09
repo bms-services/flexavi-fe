@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { PackageData, PackageFeature } from './types';
-import { useToast } from '@/hooks/use-toast';
 
 export function usePackageManagement() {
-  const { toast } = useToast();
   const [packages, setPackages] = useState<Record<string, PackageData>>({
     starter: { 
       name: "Starter",
@@ -100,17 +98,11 @@ export function usePackageManagement() {
     const newId = String(features.length + 1);
     setFeatures(prev => [...prev, { id: newId, ...newFeature }]);
     
-    toast({
-      title: "Feature toegevoegd",
-      description: `De feature "${newFeature.name}" is succesvol toegevoegd.`,
-    });
+    
   };
 
   const handleSave = () => {
-    toast({
-      title: "Wijzigingen opgeslagen",
-      description: "De pakket instellingen zijn succesvol bijgewerkt.",
-    });
+   
   };
 
   return {

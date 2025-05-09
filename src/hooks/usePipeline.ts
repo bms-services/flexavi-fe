@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { Pipeline, PipelineItem } from "@/types/pipeline";
 import { fixedPipelines, sampleItems } from "./usePipelineData";
 import { getSelectedPipeline, movePipelineItem, addPipelineItem, reorderPipelineItem } from "./usePipelineActions";
-import { toast } from "sonner";
+
 
 export function usePipeline() {
   const [pipelines] = useState<Pipeline[]>(fixedPipelines);
@@ -23,7 +23,6 @@ export function usePipeline() {
   // NIEUW: reorder support voor sorteren binnen stages
   const handleItemReorder = (stageId: string, fromIndex: number, toIndex: number) => {
     reorderPipelineItem(items, setItems, stageId, fromIndex, toIndex);
-    toast.success("Item volgorde bijgewerkt");
   };
 
   return {
@@ -38,8 +37,8 @@ export function usePipeline() {
     handleItemMove,
     handleAddItem,
     handleItemReorder,
-    handlePipelineUpdate: () => toast.error("Aanpassen van vaste pijplijnen niet mogelijk"),
-    handlePipelineCreate: () => toast.error("Aanmaken van nieuwe pijplijnen niet mogelijk"),
-    handlePipelineDelete: () => toast.error("Verwijderen van vaste pijplijnen niet mogelijk"),
+    // handlePipelineUpdate: () => toast.error("Aanpassen van vaste pijplijnen niet mogelijk"),
+    // handlePipelineCreate: () => toast.error("Aanmaken van nieuwe pijplijnen niet mogelijk"),
+    // handlePipelineDelete: () => toast.error("Verwijderen van vaste pijplijnen niet mogelijk"),
   };
 }

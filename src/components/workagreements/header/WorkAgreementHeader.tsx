@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { FileSignature, ArrowLeft, Save, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+
 
 interface WorkAgreementHeaderProps {
   isEditing: boolean;
@@ -23,7 +23,6 @@ export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
   const handleDelete = () => {
     if (window.confirm("Weet je zeker dat je deze werkovereenkomst wilt verwijderen?")) {
       // In a real app, you would call an API here
-      toast.success("Werkovereenkomst verwijderd");
       navigate("/workagreements");
     }
   };

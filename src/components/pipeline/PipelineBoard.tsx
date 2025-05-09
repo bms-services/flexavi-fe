@@ -4,7 +4,7 @@ import type { Pipeline, PipelineItem, PipelineStage } from "@/types/pipeline";
 import { PipelineStage as PipelineStageComponent } from "./PipelineStage";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { toast } from "sonner";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PipelineBoardProps {

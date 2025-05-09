@@ -16,7 +16,7 @@ import {
   Plus, Trash, RotateCcw, FileText 
 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,7 +54,6 @@ const CalculatorDetail = () => {
     if (calculator) {
       // In a real app, this would save to the backend
       calculator.updatedAt = new Date().toISOString();
-      toast.success("Berekening opgeslagen");
     }
   };
 
@@ -252,9 +251,7 @@ const CalculatorDetail = () => {
         materials: [...calculator.materials, ...newMaterials]
       });
       
-      toast.success("Materialen zijn geschat op basis van dakparameters");
     } else {
-      toast.error("Vul eerst het dakoppervlak in");
     }
   };
 
@@ -288,9 +285,8 @@ const CalculatorDetail = () => {
         labor: [...calculator.labor, ...newLabor]
       });
       
-      toast.success("Arbeidsuren zijn geschat op basis van dakparameters");
     } else {
-      toast.error("Vul eerst het dakoppervlak in");
+      console.error("Invalid roof area or parameters");
     }
   };
 

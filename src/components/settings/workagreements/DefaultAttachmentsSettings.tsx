@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Paperclip, FileText, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface DefaultAttachment {
   id: string;
@@ -13,7 +13,7 @@ interface DefaultAttachment {
 }
 
 export const DefaultAttachmentsSettings = () => {
-  const { toast } = useToast();
+  
   const [attachments, setAttachments] = useState<DefaultAttachment[]>([
     { id: '1', name: 'Algemene voorwaarden.pdf', url: '/attachments/terms.pdf' },
   ]);
@@ -28,18 +28,12 @@ export const DefaultAttachmentsSettings = () => {
     }));
     
     setAttachments(prev => [...prev, ...newAttachments]);
-    toast({
-      title: "Bestanden toegevoegd",
-      description: "De bestanden zijn succesvol toegevoegd als standaard bijlages.",
-    });
+   
   };
 
   const removeAttachment = (id: string) => {
     setAttachments(prev => prev.filter(att => att.id !== id));
-    toast({
-      title: "Bestand verwijderd",
-      description: "Het bestand is verwijderd uit de standaard bijlages.",
-    });
+  
   };
 
   return (

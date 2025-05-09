@@ -5,16 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 
 export const DomainSettings = () => {
-  const { toast } = useToast();
+  
   
   const handleSaveDomain = () => {
-    toast({
-      title: "Domein opgeslagen",
-      description: "De domein instellingen zijn succesvol bijgewerkt.",
-    });
+    
   };
 
   return (

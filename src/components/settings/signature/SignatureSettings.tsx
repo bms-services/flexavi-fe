@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Signature from "@/components/customer/Signature";
-import { useToast } from "@/hooks/use-toast";
+
 import { Upload, Mail } from "lucide-react";
 
 export const SignatureSettings = () => {
-  const { toast } = useToast();
+  
   const [documentSignature, setDocumentSignature] = useState<string | null>(null);
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
 
@@ -49,18 +49,12 @@ export const SignatureSettings = () => {
   const handleDocumentSignatureChange = (signatureData: string | null) => {
     setDocumentSignature(signatureData);
     if (signatureData) {
-      toast({
-        title: "Handtekening opgeslagen",
-        description: "Je handtekening is succesvol opgeslagen.",
-      });
+     
     }
   };
 
   const saveEmailSignature = () => {
-    toast({
-      title: "E-mail handtekening opgeslagen",
-      description: "Je e-mail handtekening is succesvol opgeslagen.",
-    });
+ 
   };
 
   return (

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Save, XCircle } from "lucide-react";
 import { ExpenseType, ExpenseStatus, Expense } from "@/types/expenses";
-import { toast } from "sonner";
+
 import { BasicInfoSection } from "./form-sections/BasicInfoSection";
 import { FinancialSection } from "./form-sections/FinancialSection";
 import { MetadataSection } from "./form-sections/MetadataSection";
@@ -100,9 +100,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     e.preventDefault();
     
     if (!formData.company || !formData.description || !formData.amount) {
-      toast.error("Vul alle verplichte velden in", {
-        description: "Bedrijf, omschrijving en bedrag zijn verplicht."
-      });
+      
       return;
     }
     

@@ -1,6 +1,6 @@
 
 import type { Pipeline, PipelineItem } from "@/types/pipeline";
-import { toast } from "sonner";
+
 
 export function getSelectedPipeline(pipelines: Pipeline[], selectedPipelineId: string): Pipeline {
   return pipelines.find(p => p.id === selectedPipelineId) || pipelines[0];
@@ -15,7 +15,6 @@ export function movePipelineItem(
   setItems(items.map(item => 
     item.id === itemId ? { ...item, stageId: newStageId, updatedAt: new Date().toISOString() } : item
   ));
-  toast.success("Item verplaatst naar een nieuwe fase");
 }
 
 // NIEUW: reorderPipelineItem voor sorteren binnen stadium
@@ -87,5 +86,4 @@ export function addPipelineItem(
   };
 
   setItems([...items, newItem]);
-  toast.success("Nieuw item toegevoegd");
 }

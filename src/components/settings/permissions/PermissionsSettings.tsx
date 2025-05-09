@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 import { v4 as uuidv4 } from "uuid";
 import { RoleList } from "./components/RoleList";
 import { PermissionsTable } from "./components/PermissionsTable";
@@ -57,7 +57,7 @@ export const PermissionsSettings: React.FC = () => {
     },
   ]);
 
-  const { toast } = useToast();
+  
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -109,10 +109,7 @@ export const PermissionsSettings: React.FC = () => {
           : role
       ));
       
-      toast({
-        title: "Rol bijgewerkt",
-        description: `De rol "${values.name}" is succesvol bijgewerkt.`,
-      });
+     
     } else {
       // Create new role
       const newRole: Role = {
@@ -132,11 +129,7 @@ export const PermissionsSettings: React.FC = () => {
       };
       
       setRoles([...roles, newRole]);
-      
-      toast({
-        title: "Rol toegevoegd",
-        description: `De rol "${values.name}" is succesvol toegevoegd.`,
-      });
+    
     }
     
     setDialogOpen(false);

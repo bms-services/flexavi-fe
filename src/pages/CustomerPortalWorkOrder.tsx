@@ -13,7 +13,7 @@ import { ProvisionsCard } from "@/components/workagreements/customer-portal/comp
 import { ExclusionsCard } from "@/components/workagreements/customer-portal/components/ExclusionsCard";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
-import { toast } from "sonner";
+
 
 const mockWorkOrder = {
   id: "WO-001",
@@ -68,14 +68,11 @@ const CustomerPortalWorkOrder = () => {
 
   const handleSign = () => {
     if (!signature) {
-      toast.error("Plaats eerst uw handtekening");
       return;
     }
-    toast.success("Werkopdracht succesvol ondertekend");
   };
 
   const handleRevisionRequest = () => {
-    toast.success("Revisie verzoek verzonden");
   };
 
   if (loading) {

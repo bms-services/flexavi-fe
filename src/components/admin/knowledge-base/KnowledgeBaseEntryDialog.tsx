@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { KnowledgeBaseEntry, KnowledgeBaseCategory, KnowledgeBaseEntryType } from "@/types/knowledge-base";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
 
 interface KnowledgeBaseEntryDialogProps {
   open: boolean;
@@ -59,7 +58,6 @@ export function KnowledgeBaseEntryDialog({
 
   const handleSave = () => {
     if (!question || !answer) {
-      toast.error("Vraag en antwoord zijn verplicht");
       return;
     }
 

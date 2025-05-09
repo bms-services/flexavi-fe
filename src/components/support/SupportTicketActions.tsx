@@ -22,7 +22,7 @@ import {
 import { SupportTicket } from "@/types/support";
 import { useSupportTickets } from "@/hooks/useSupportTickets";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+
 
 interface SupportTicketActionsProps {
   ticket: SupportTicket;
@@ -54,9 +54,7 @@ export function SupportTicketActions({ ticket }: SupportTicketActionsProps) {
   
   const handleCopyId = () => {
     navigator.clipboard.writeText(ticket.id);
-    toast("Ticket ID gekopieerd", {
-      description: `Ticket ID ${ticket.id} is gekopieerd naar het klembord.`
-    });
+    
   };
 
   return (

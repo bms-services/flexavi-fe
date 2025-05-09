@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Appointment, TeamDetails } from "@/types";
-import { useToast } from "@/hooks/use-toast";
 import { AppointmentHeader } from "./components/AppointmentHeader";
 import { TeamAppointmentCard } from "./components/TeamAppointmentCard";
 import { UnassignedAppointments } from "./UnassignedAppointments";
@@ -21,7 +20,6 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
   onBackToOverview,
   onAppointmentAssign
 }) => {
-  const { toast } = useToast();
   const [optimizingRoute, setOptimizingRoute] = useState(false);
   const [generatingPdf, setGeneratingPdf] = useState<string | null>(null);
   const [localAppointments, setLocalAppointments] = useState<Appointment[]>(appointments);
@@ -43,25 +41,13 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
           : appointment
       ));
       
-      toast({
-        title: teamId ? "Afspraak toegewezen" : "Afspraak teruggezet",
-        description: teamId 
-          ? "De afspraak is succesvol toegewezen aan het team."
-          : "De afspraak is teruggezet naar niet toegewezen afspraken.",
-      });
+      
     }
   };
   
   const handleOptimizeRoutes = (type: "all" | "assigned" | "unassigned") => {
     setOptimizingRoute(true);
-    
-    // Show optimization started toast
-    toast({
-      title: "Routes optimaliseren",
-      description: `Bezig met het optimaliseren van routes op basis van ${
-        type === "all" ? "alle" : type === "assigned" ? "ingedeelde" : "niet ingedeelde"
-      } afspraken.`,
-    });
+      
     
     // Simulate processing time
     setTimeout(() => {
@@ -81,13 +67,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
       
       setOptimizingRoute(false);
       
-      // Show success toast
-      toast({
-        title: "Routes geoptimaliseerd",
-        description: `De routes zijn geoptimaliseerd op basis van ${
-          type === "all" ? "alle" : type === "assigned" ? "ingedeelde" : "niet ingedeelde"
-        } afspraken.`,
-      });
+      
     }, 2000);
   };
   
@@ -95,18 +75,12 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
     setGeneratingPdf(teamId);
     setTimeout(() => {
       setGeneratingPdf(null);
-      toast({
-        title: "Werklijst gegenereerd",
-        description: `De werklijst voor ${teamName} is gegenereerd en kan worden gedownload.`,
-      });
+    
     }, 1500);
   };
   
   const autoAssignAppointments = () => {
-    toast({
-      title: "Auto-toewijzing gestart",
-      description: "AI verdeelt de afspraken over de beschikbare teams...",
-    });
+   
     
     setTimeout(() => {
       // Use the optimizeUnassigned function to auto-assign
@@ -123,10 +97,7 @@ export const DailyTeamAppointments: React.FC<DailyTeamAppointmentsProps> = ({
         }
       });
       
-      toast({
-        title: "Afspraken toegewezen",
-        description: "AI heeft de afspraken over de teams verdeeld op basis van locatie en werklast.",
-      });
+     
     }, 2000);
   };
 

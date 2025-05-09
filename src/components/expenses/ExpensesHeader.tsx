@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, Plus, FileText, FileImage, Download } from "lucide-react";
 import { ReceiptUploadDialog } from "@/components/layout/quick-actions/ReceiptUploadDialog";
-import { toast } from "@/components/ui/sonner";
+
 import { useNavigate } from "react-router-dom";
 import { ExpenseFilters } from "@/types/expenses";
 
@@ -16,9 +16,7 @@ export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({ onFiltersChange 
   const navigate = useNavigate();
 
   const handleUploadResult = (data: any) => {
-    toast.success("Bon succesvol verwerkt", {
-      description: "De bon is toegevoegd aan de kostenadministratie."
-    });
+   
     
     // Refresh the expenses list after a successful upload
     // In a real app, you'd add the new expense to the state
@@ -32,9 +30,7 @@ export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({ onFiltersChange 
   };
 
   const handleExportExpenses = () => {
-    toast.success("Export gestart", {
-      description: "De kosten worden geëxporteerd naar Excel."
-    });
+   
     // In a real app, this would trigger an API call to export expenses to Excel
   };
 

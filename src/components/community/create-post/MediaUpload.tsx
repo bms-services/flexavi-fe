@@ -1,7 +1,7 @@
 
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+
 import { PostMedia } from "@/types/community";
 import { Image, Video, X, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,7 +16,7 @@ export function MediaUpload() {
     if (!files || files.length === 0) return;
     
     if (mediaFiles.length + files.length > 10) {
-      toast.error("Je kunt maximaal 10 bestanden uploaden");
+      
       return;
     }
     
@@ -26,7 +26,7 @@ export function MediaUpload() {
       const isVideo = file.type.startsWith("video/");
       
       if (!isImage && !isVideo) {
-        toast.error("Alleen afbeeldingen en video's zijn toegestaan");
+        
         continue;
       }
       
@@ -49,7 +49,7 @@ export function MediaUpload() {
   
   const handleGifSelected = (gif: PostMedia) => {
     if (mediaFiles.length >= 10) {
-      toast.error("Je kunt maximaal 10 bestanden uploaden");
+      
       return;
     }
     

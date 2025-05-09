@@ -32,7 +32,7 @@ import { formatDateTime } from "@/utils/format";
 import { SupportTicket } from "@/types";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+
 
 export const SupportTicketDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -99,7 +99,7 @@ export const SupportTicketDetail = () => {
   
   const handleMarkAsResolved = () => {
     updateTicketStatus(ticket.id, "resolved");
-    toast.success("Ticket gemarkeerd als opgelost");
+    
   };
   
   const handleAssignTicket = () => {
@@ -126,13 +126,13 @@ export const SupportTicketDetail = () => {
     
     updateTicketPriority(ticket.id, selectedPriority as any);
     setShowPriorityDialog(false);
-    toast.success(`Prioriteit gewijzigd naar ${selectedPriority}`);
+    
   };
   
   const handleCloseTicket = () => {
     if (confirm("Weet u zeker dat u deze ticket wilt sluiten?")) {
       updateTicketStatus(ticket.id, "closed");
-      toast.success("Ticket gesloten");
+      
     }
   };
   

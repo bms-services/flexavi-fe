@@ -10,7 +10,8 @@ interface LeadTableProps {
   params?: ParamsAction;
   setParams: Dispatch<React.SetStateAction<ParamsAction>>
   onEdit?: (id: Lead) => void;
-  onDelete?: (id: Lead[]) => void;
+  onDelete?: (ids: Lead[]) => void;
+  onArchive?: (ids: Lead[]) => void;
 }
 
 export const LeadTable: React.FC<LeadTableProps> = ({
@@ -18,8 +19,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({
   setParams,
   onEdit,
   onDelete,
+  onArchive,
 }) => {
-
   const columns: CustomColumnDef<Lead>[] = [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
     { accessorKey: "email", header: "Email", cell: info => info.getValue() },
@@ -46,8 +47,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({
         isLoading={loadingLeadsIndex}
         params={params}
         onParamsChange={changed => setParams(prev => ({ ...prev, ...changed }))}
-        onDelete={onDelete}
         onEdit={onEdit}
+        onDelete={onDelete}
+        onArchive={onArchive}
       />
 
     </div>

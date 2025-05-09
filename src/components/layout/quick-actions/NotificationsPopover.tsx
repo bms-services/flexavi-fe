@@ -12,7 +12,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useToast } from '@/hooks/use-toast';
+
 
 interface Notification {
   id: number;
@@ -23,7 +23,7 @@ interface Notification {
 }
 
 export const NotificationsPopover = () => {
-  const { toast } = useToast();
+  
   const [notifications, setNotifications] = React.useState<Notification[]>([
     { 
       id: 1, 
@@ -63,10 +63,7 @@ export const NotificationsPopover = () => {
       ...notification,
       isRead: true
     })));
-    toast({
-      title: "Notificaties",
-      description: "Alle notificaties zijn gemarkeerd als gelezen",
-    });
+  
   };
 
   return (

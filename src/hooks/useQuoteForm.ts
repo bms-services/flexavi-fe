@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Quote, QuoteLineItem, Lead } from "@/types";
 import { mockQuotes, mockLeads } from "@/data/mockData";
-import { toast } from "sonner";
+
 import { useNavigate } from "react-router-dom";
 import { useProducts } from "@/hooks/useProducts";
 import { Product } from "@/types/product";
@@ -68,7 +68,7 @@ export const useQuoteForm = (quoteId?: string) => {
           setSelectedCustomer(customer);
         }
       } else {
-        toast.error("Offerte niet gevonden");
+        
         navigate("/quotes");
       }
     }
@@ -147,12 +147,12 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const handleSaveQuote = () => {
     if (!selectedCustomer) {
-      toast.error("Selecteer een klant");
+      
       return;
     }
 
     if (lineItems.some(item => !item.description || item.quantity <= 0)) {
-      toast.error("Vul alle velden van de offerteregels in");
+      
       return;
     }
 
@@ -164,9 +164,9 @@ export const useQuoteForm = (quoteId?: string) => {
     };
 
     if (isEditing) {
-      toast.success("Offerte bijgewerkt");
+      
     } else {
-      toast.success("Nieuwe offerte aangemaakt");
+      
     }
     
     console.log("Saving quote:", finalQuote);

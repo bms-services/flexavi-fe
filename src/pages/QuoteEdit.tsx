@@ -15,14 +15,14 @@ import { QuoteHeader } from "@/components/quotes/header/QuoteHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
-import { useToast } from "@/hooks/use-toast";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 
 const QuoteEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  
   
   const {
     quote,
@@ -47,14 +47,10 @@ const QuoteEdit = () => {
   // Check if the quote is accepted, and redirect if trying to edit an accepted quote
   useEffect(() => {
     if (isEditing && quote.status === "accepted") {
-      toast({
-        title: "Bewerkingen niet toegestaan",
-        description: "Geaccepteerde offertes kunnen niet bewerkt worden.",
-        variant: "destructive",
-      });
+     
       navigate("/quotes");
     }
-  }, [isEditing, quote.status, navigate, toast]);
+  }, [isEditing, quote.status, navigate]);
 
   return (
     <Layout>

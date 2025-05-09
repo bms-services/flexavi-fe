@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Project } from "@/types/project";
 import { Upload, Image as ImageIcon, X } from "lucide-react";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
-import { toast } from "sonner";
+
 
 interface ProjectPhotosTabProps {
   project: Project;
@@ -21,7 +21,6 @@ export const ProjectPhotosTab: React.FC<ProjectPhotosTabProps> = ({ project }) =
       url: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
     };
     setPhotos([...photos, newPhoto]);
-    toast.success("Foto toegevoegd aan project");
   };
 
   return (

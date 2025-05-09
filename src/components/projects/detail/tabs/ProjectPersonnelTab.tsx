@@ -19,7 +19,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+
 
 interface ProjectPersonnelTabProps {
   project: Project;
@@ -41,7 +41,7 @@ export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ projec
 
   const addPersonnel = () => {
     if (!newPersonnel.name || !newPersonnel.role || newPersonnel.dailyRate <= 0 || newPersonnel.days <= 0) {
-      toast.error("Vul alle verplichte velden in");
+      
       return;
     }
 
@@ -65,7 +65,7 @@ export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ projec
       dailyRate: 0,
       days: 0,
     });
-    toast.success("Personeel toegevoegd");
+    
   };
 
   const totalPersonnelCost = personnel.reduce((sum, person) => sum + person.totalCost, 0);

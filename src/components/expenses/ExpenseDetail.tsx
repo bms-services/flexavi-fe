@@ -12,7 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { mockProjects } from "@/data/mockData";
 import { useNavigate } from "react-router-dom";
 import { ExpenseForm } from "./ExpenseForm";
-import { toast } from "@/components/ui/sonner";
+
 import { Badge } from "@/components/ui/badge";
 
 interface ExpenseDetailProps {
@@ -42,17 +42,13 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
     const updated = { ...currentExpense, ...updatedExpense };
     setCurrentExpense(updated);
     setIsEditing(false);
-    toast.success("Uitgave bijgewerkt", {
-      description: "De wijzigingen zijn succesvol opgeslagen."
-    });
+   
   };
 
   const handleStatus = (newStatus: Expense["status"]) => {
     const updated = { ...currentExpense, status: newStatus };
     setCurrentExpense(updated);
-    toast.success("Status bijgewerkt", {
-      description: `De status is gewijzigd naar ${newStatus}.`
-    });
+    
   };
 
   if (isEditing) {
@@ -250,9 +246,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                 
                 <Button
                   variant="outline"
-                  onClick={() => toast.success("Document geëxporteerd", {
-                    description: "Het document is geëxporteerd als PDF."
-                  })}
+               
                 >
                   <FileText className="h-4 w-4 mr-2" />
                   Exporteren als PDF

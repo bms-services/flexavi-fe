@@ -14,7 +14,7 @@ import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { toast } from "sonner";
+
 
 interface ProjectAppointmentsTabProps {
   project: Project;
@@ -55,7 +55,7 @@ export const ProjectAppointmentsTab: React.FC<ProjectAppointmentsTabProps> = ({ 
 
   const handleAddAppointment = () => {
     if (!newAppointment.title || !newAppointment.date || !newAppointment.startTime || !newAppointment.endTime) {
-      toast.error("Vul alle verplichte velden in");
+      
       return;
     }
     const appointment: ProjectAppointment = {
@@ -78,7 +78,7 @@ export const ProjectAppointmentsTab: React.FC<ProjectAppointmentsTabProps> = ({ 
       endTime: "",
       createdBy: "",
     });
-    toast.success("Afspraak toegevoegd");
+    
   };
 
   return (

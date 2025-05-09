@@ -2,7 +2,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { NewAppointmentForm } from "@/components/appointments/components/form/NewAppointmentForm";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface PipelineItemAppointmentDialogProps {
   open: boolean;
@@ -15,14 +15,11 @@ export const PipelineItemAppointmentDialog: React.FC<PipelineItemAppointmentDial
   onOpenChange,
   onSubmit,
 }) => {
-  const { toast } = useToast();
+  
   
   const handleFormSubmit = (data: any) => {
     onSubmit(data);
-    toast({
-      title: "Afspraak gepland",
-      description: "De afspraak is succesvol ingepland",
-    });
+    
     onOpenChange(false); // Close the dialog after submission
   };
 

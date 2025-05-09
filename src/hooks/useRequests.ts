@@ -1,7 +1,7 @@
 
 import { useState, useMemo } from "react";
 import { Request, RequestStatus, RequestComment } from "@/types/requests";
-import { toast } from "sonner";
+
 
 // Mock initial data
 const initialRequests: Request[] = [
@@ -87,7 +87,7 @@ export const useRequests = () => {
     };
 
     setRequests(prev => [...prev, newRequest]);
-    toast.success("Verzoek succesvol toegevoegd");
+    
     return newRequest;
   };
 
@@ -103,7 +103,7 @@ export const useRequests = () => {
           : request
       )
     );
-    toast.success(`Verzoek status bijgewerkt naar ${status}`);
+    
   };
 
   const addComment = (requestId: string, content: string) => {
@@ -126,7 +126,7 @@ export const useRequests = () => {
           : request
       )
     );
-    toast.success("Reactie toegevoegd");
+    
     return newComment;
   };
 
@@ -144,7 +144,7 @@ export const useRequests = () => {
         return request;
       })
     );
-    toast.success(`${isUpvote ? 'Upvote' : 'Downvote'} toegevoegd`);
+    
   };
 
   const getRequestById = (requestId: string) => {

@@ -26,7 +26,6 @@ import { mockLeads } from "@/data/mockLeads";
 import { cn } from "@/lib/utils";
 import { Lead } from "@/types";
 import { CreateCustomerForm } from "./CreateCustomerForm";
-import { useToast } from "@/hooks/use-toast";
 
 interface CustomerSearchProps {
   selectedCustomer: Lead | null;
@@ -39,7 +38,6 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [showNewCustomerDialog, setShowNewCustomerDialog] = React.useState(false);
-  const { toast } = useToast();
 
   const handleCreateNewCustomer = (customerData: Partial<Lead>) => {
     // In a real app, this would make an API call
@@ -61,10 +59,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
     setShowNewCustomerDialog(false);
     setOpen(false);
     
-    toast({
-      title: "Klant toegevoegd",
-      description: `${newCustomer.name} is succesvol toegevoegd.`,
-    });
+   
   };
 
   const handleOpenNewCustomerDialog = () => {

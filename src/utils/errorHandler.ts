@@ -1,17 +1,20 @@
 import { ErrorType } from "@/lib/redux-thunk";
 import { AxiosError } from "axios";
-import { enqueueSnackbar } from "notistack";
 import { Path, UseFormSetError } from "react-hook-form";
+import { toastShow } from "../components/ui/toast/toast-helper";
 
-export default function handleErrorAxios(error: ErrorType): string {
-  const errorSnackbar = (message: string) => {
-    enqueueSnackbar(message, {
-      variant: "error",
+export default function errorHandler(error: ErrorType): string {
+  const handleToast = (message: string) => {
+    toastShow({
+      type: "error",
+      title: "Foutmelding",
+      description: message,
+      autoClose: 5000,
     });
   };
 
   if (typeof error === "string") {
-    errorSnackbar(error);
+    handleToast(error);
     return error;
   }
 
@@ -21,7 +24,7 @@ export default function handleErrorAxios(error: ErrorType): string {
     const errs = (e.response as { data?: { errors?: unknown } })?.data?.errors;
 
     if (errs && typeof errs === "string") {
-      errorSnackbar(errs);
+      handleToast(errs);
       return errs;
     }
 
@@ -33,12 +36,12 @@ export default function handleErrorAxios(error: ErrorType): string {
         if (Array.isArray(messages)) {
           messages.forEach((msg) => {
             allMessages.push(msg);
-            setTimeout(() => errorSnackbar(msg), delay);
+            setTimeout(() => handleToast(msg), delay);
             delay += 300;
           });
         } else {
           allMessages.push(messages as string);
-          setTimeout(() => errorSnackbar(messages as string), delay);
+          setTimeout(() => handleToast(messages as string), delay);
           delay += 300;
         }
       });
@@ -49,16 +52,16 @@ export default function handleErrorAxios(error: ErrorType): string {
     if (e.response && typeof e.response === "object" && "data" in e.response) {
       const responseData = (e.response as { data?: { message?: string } }).data;
       if (responseData?.message) {
-        errorSnackbar(responseData.message);
+        handleToast(responseData.message);
         return responseData.message;
       }
     }
 
-    errorSnackbar("Er is een onverwachte fout opgetreden.");
+    handleToast("Er is een onverwachte fout opgetreden.");
     return "Er is een onverwachte fout opgetreden.";
   }
 
-  errorSnackbar("Onbekende fout.");
+  handleToast("Onbekende fout.");
   return "Onbekende fout.";
 }
 

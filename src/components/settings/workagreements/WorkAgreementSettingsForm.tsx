@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { Settings } from "lucide-react";
-import { toast } from "sonner";
+
 import { PaymentMethod, PaymentInstallment } from "@/types";
 
 export const WorkAgreementSettingsForm = () => {
@@ -30,7 +30,6 @@ export const WorkAgreementSettingsForm = () => {
 
   const handleSave = () => {
     // Hier zou je de standaardinstellingen versturen naar een backend endpoint
-    toast.success("Standaard werkovereenkomst-instellingen opgeslagen");
   };
 
   return (

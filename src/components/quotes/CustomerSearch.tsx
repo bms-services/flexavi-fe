@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateCustomerForm } from "@/components/appointments/components/CreateCustomerForm";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface CustomerSearchProps {
   selectedCustomer: Lead | null;
@@ -39,7 +39,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [showNewCustomerDialog, setShowNewCustomerDialog] = React.useState(false);
-  const { toast } = useToast();
+  
   
   // Ensure mockLeads is always an array
   const customers = Array.isArray(mockLeads) ? mockLeads : [];
@@ -63,11 +63,7 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
     onSelectCustomer(newCustomer);
     setShowNewCustomerDialog(false);
     setOpen(false);
-    
-    toast({
-      title: "Klant toegevoegd",
-      description: `${newCustomer.name} is succesvol toegevoegd.`,
-    });
+
   };
 
   const handleOpenNewCustomerDialog = () => {

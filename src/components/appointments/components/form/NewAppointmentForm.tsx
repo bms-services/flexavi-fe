@@ -7,7 +7,6 @@ import { DateRangeField, type DateRange } from "./DateRangeField";
 import { AppointmentTypeField, type AppointmentType } from "./AppointmentTypeField";
 import { RelatedDocumentsField } from "./RelatedDocumentsField";
 import { Lead } from "@/types";
-import { useToast } from "@/hooks/use-toast";
 
 interface NewAppointmentFormProps {
   onSubmit: (data: any) => void;
@@ -16,7 +15,6 @@ interface NewAppointmentFormProps {
 export const NewAppointmentForm: React.FC<NewAppointmentFormProps> = ({
   onSubmit,
 }) => {
-  const { toast } = useToast();
   const [selectedCustomer, setSelectedCustomer] = React.useState<Lead | null>(null);
   const [dateRanges, setDateRanges] = React.useState<DateRange[]>([
     { startDate: undefined, timeBlock: undefined },
@@ -29,21 +27,13 @@ export const NewAppointmentForm: React.FC<NewAppointmentFormProps> = ({
     
     // Basic validation
     if (!selectedCustomer) {
-      toast({
-        title: "Selecteer een klant",
-        description: "Selecteer een bestaande klant of maak een nieuwe aan",
-        variant: "destructive",
-      });
+      
       return;
     }
     
     const invalidDates = dateRanges.some(range => !range.startDate || !range.timeBlock);
     if (invalidDates) {
-      toast({
-        title: "Ongeldige datum of tijdvak",
-        description: "Selecteer een datum en tijdvak voor elke afspraak",
-        variant: "destructive",
-      });
+     
       return;
     }
     

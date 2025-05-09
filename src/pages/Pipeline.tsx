@@ -7,7 +7,7 @@ import { PipelineDialogs } from "@/components/pipeline/PipelineDialogs";
 import { usePipeline } from "@/hooks/usePipeline";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info } from "lucide-react";
-import { toast } from "sonner";
+
 
 const Pipeline = () => {
   const {
@@ -32,13 +32,13 @@ const Pipeline = () => {
     <Layout>
       <div className="container py-6 space-y-6">
         <div className="flex flex-col gap-4">
-          <PipelineHeader 
+          {/* <PipelineHeader 
             pipelines={pipelines}
             selectedPipelineId={selectedPipelineId}
             onSelectPipeline={setSelectedPipelineId}
-            onCreatePipeline={() => toast.info("Aanmaken van nieuwe pijplijnen niet mogelijk")}
-            onManagePipelines={() => toast.info("Aanpassen van vaste pijplijnen niet mogelijk")}
-          />
+            // onCreatePipeline={() => toast.info("Aanmaken van nieuwe pijplijnen niet mogelijk")}
+            // onManagePipelines={() => toast.info("Aanpassen van vaste pijplijnen niet mogelijk")}
+          /> */}
           
           <Alert className="mb-4">
             <Info className="h-4 w-4" />

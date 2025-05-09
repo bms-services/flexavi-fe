@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ProjectNote } from "@/types/project";
-import { toast } from "sonner";
+
 
 interface TaskDialogProps {
   open: boolean;
@@ -39,7 +39,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 
   const handleSubmit = () => {
     if (!newTask.note || !newTask.createdBy || !newTask.createdFor || !newTask.dueDate) {
-      toast.error("Vul alle verplichte velden in");
       return;
     }
 
@@ -65,7 +64,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
     });
     
     onOpenChange(false);
-    toast.success("Taak toegevoegd");
   };
 
   return (

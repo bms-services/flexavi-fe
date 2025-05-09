@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+
 import { Team, TeamType } from "@/types";
 import { Employee } from "@/types/employee";
 import { v4 as uuidv4 } from "uuid";
@@ -13,7 +13,7 @@ export const TeamSettings: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [teamType, setTeamType] = useState<TeamType>("sales");
-  const { toast } = useToast();
+  
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [addMemberDialogOpen, setAddMemberDialogOpen] = useState(false);
@@ -30,10 +30,7 @@ export const TeamSettings: React.FC = () => {
     setTeams([...teams, newTeam]);
     setDialogOpen(false);
     
-    toast({
-      title: "Team toegevoegd",
-      description: `Het ${teamType === "sales" ? "verkoop" : "uitvoerend"} team "${values.name}" is succesvol toegevoegd.`,
-    });
+  
   };
 
   const handleOpenDialog = (type: TeamType) => {
@@ -58,10 +55,6 @@ export const TeamSettings: React.FC = () => {
     
     setTeams(updatedTeams);
     
-    toast({
-      title: "Medewerker toegevoegd",
-      description: `${employee.firstName} ${employee.lastName} is toegevoegd aan ${selectedTeam.name}.`,
-    });
   };
 
   const openAddMemberDialog = (team: Team) => {

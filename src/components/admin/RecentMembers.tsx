@@ -85,7 +85,7 @@ export function RecentMembers({ onMakeAdmin }: RecentMembersProps) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [planFilter, setPlanFilter] = useState('all');
   const [freeMonths, setFreeMonths] = useState(1);
-  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [selectedMember, setSelectedMember] = useState(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
 
   const handleBlockUser = (memberId: number) => {
@@ -96,33 +96,24 @@ export function RecentMembers({ onMakeAdmin }: RecentMembersProps) {
     ));
     
     const member = members.find(m => m.id === memberId);
-    if (member) {
-      toast({
-        title: `Lid ${member.status === 'active' ? 'geblokkeerd' : 'gedeblokkeerd'}`,
-        description: `${member.name} is succesvol ${member.status === 'active' ? 'geblokkeerd' : 'gedeblokkeerd'}.`,
-      });
-    }
+    // if (member) {
+      
+    // }
   };
 
   const handleGiveFreeMonths = (memberId: number, months: number) => {
     const member = members.find(m => m.id === memberId);
-    toast({
-      title: `Gratis maanden toegekend`,
-      description: `${months} gratis maanden toegevoegd voor ${member?.name}.`,
-    });
+    
   };
   
-  const handleViewDetails = (member: any) => {
+  const handleViewDetails = (member) => {
     setSelectedMember(member);
     setShowDetailDialog(true);
   };
 
   const handleSendEmail = (memberId: number) => {
     const member = members.find(m => m.id === memberId);
-    toast({
-      title: "Email verzonden",
-      description: `Er is een email verzonden naar ${member?.name} (${member?.email}).`,
-    });
+   
   };
 
   const filteredMembers = members.filter(member => {

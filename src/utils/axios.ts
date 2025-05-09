@@ -1,7 +1,7 @@
 import { tokenName } from "@/hooks/use-cookies";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
-import handleErrorAxios from "./errorHandler";
+import errorHandler from "./errorHandler";
 
 // Base URLs dari .env
 const baseApiUrl = import.meta.env.VITE_API_URL;
@@ -56,7 +56,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     },
     (error: AxiosError<Record<string, string[]>>) => {
       const err = error.response?.data;
-      handleErrorAxios(err);
+      errorHandler(err);
       return Promise.reject(err);
     }
   );

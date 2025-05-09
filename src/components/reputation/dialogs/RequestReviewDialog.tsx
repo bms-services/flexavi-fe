@@ -19,7 +19,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Lead } from "@/types/leads";
 import { mockReviewTemplates } from "@/data/mockReviews";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface RequestReviewDialogProps {
   open: boolean;
@@ -33,14 +33,11 @@ export const RequestReviewDialog = ({
   lead,
 }: RequestReviewDialogProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState(mockReviewTemplates[0]?.id || "");
-  const { toast } = useToast();
+  
 
   const handleSubmit = () => {
     // In a real app, this would call an API to send the review request
-    toast({
-      title: "Review verzoek verstuurd",
-      description: `Een review verzoek is verstuurd naar ${lead.email}`,
-    });
+    
     onOpenChange(false);
   };
 

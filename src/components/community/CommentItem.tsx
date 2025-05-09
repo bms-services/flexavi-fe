@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { ReportDialog } from "./ReportDialog";
-import { toast } from "sonner";
 import { Comment, Author } from "@/types/community";
 
 interface CommentItemProps {
@@ -45,7 +44,6 @@ export function CommentItem({
   
   const handleReport = (reason: string, details: string) => {
     console.log("Reporting comment:", comment.id, reason, details);
-    toast.success("Bedankt voor je melding. We zullen deze reactie beoordelen.");
     setShowReportDialog(false);
   };
   

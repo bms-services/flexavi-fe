@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WarrantySection } from "@/components/customer-portal/quote/WarrantySection";
 import { Attachments } from "@/components/workagreements/customer-portal/components/Attachments";
-import { toast } from "sonner";
+
 import { CompanyDetails } from "@/components/workagreements/customer-portal/components/CompanyDetails";
 
 const CustomerPortalInvoice = () => {
@@ -62,16 +62,12 @@ const CustomerPortalInvoice = () => {
   const statusBadge = useInvoiceStatusBadge(invoice?.status as InvoiceStatus);
 
   const handleDownloadInvoice = () => {
-    toast.success("Factuur wordt gedownload...", {
-      description: "Het bestand wordt automatisch gedownload naar uw apparaat."
-    });
+    
     console.log("Downloading invoice:", invoice?.id);
   };
 
   const handleStartPayment = () => {
-    toast.info("Betaling wordt gestart...", {
-      description: "U wordt doorgestuurd naar onze beveiligde betaalomgeving."
-    });
+    
     setTimeout(() => {
       setPaymentStarted(true);
     }, 1500);

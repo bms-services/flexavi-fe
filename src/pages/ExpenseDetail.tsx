@@ -6,7 +6,7 @@ import { mockExpenses, getExpenseById } from "@/data/mockData";
 import { ExpenseDetail } from "@/components/expenses/ExpenseDetail";
 import NotFound from "./NotFound";
 import { ExpenseForm } from "@/components/expenses/ExpenseForm";
-import { toast } from "@/components/ui/sonner";
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -47,11 +47,6 @@ const ExpenseDetailPage = () => {
 
   const handleSave = (expenseData: Partial<Expense>) => {
     // In a real app, we would make an API call to create/update the expense
-    toast.success(isNewExpense ? "Uitgave aangemaakt" : "Uitgave bijgewerkt", {
-      description: isNewExpense 
-        ? "De nieuwe uitgave is succesvol aangemaakt." 
-        : "De wijzigingen zijn succesvol opgeslagen."
-    });
     
     navigate("/expenses");
   };

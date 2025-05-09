@@ -4,23 +4,18 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Key, Mail } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Mock password reset for now - will be replaced with actual auth later
-    toast({
-      title: "Link verzonden",
-      description: "Als dit e-mailadres bij ons bekend is, ontvang je een link om je wachtwoord te resetten.",
-    });
+    
   };
 
   return (

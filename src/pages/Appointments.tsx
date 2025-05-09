@@ -5,7 +5,6 @@ import { mockAppointments } from "@/data/mockData";
 import { format } from "date-fns";
 import { WorkEnvironment, TeamDetails, TeamType, Appointment } from "@/types";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useToast } from "@/hooks/use-toast";
 import { AppointmentsHeader } from "@/components/appointments/components/AppointmentsHeader";
 import { AppointmentsTabs } from "@/components/appointments/components/AppointmentsTabs";
 
@@ -16,7 +15,6 @@ const mockEnvironments: WorkEnvironment[] = [
 ];
 
 const Appointments = () => {
-  const { toast } = useToast();
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today);
   const [appointments, setAppointments] = useState<Appointment[]>(mockAppointments);
@@ -50,10 +48,7 @@ const Appointments = () => {
   };
 
   const handleNewAppointment = () => {
-    toast({
-      title: "Nieuwe afspraak",
-      description: "Functionaliteit voor het toevoegen van een nieuwe afspraak komt binnenkort beschikbaar.",
-    });
+  
   };
 
   const handleTeamUpdate = (updatedTeam: TeamDetails) => {
@@ -83,10 +78,7 @@ const Appointments = () => {
     delete updatedUnavailableDates[teamId];
     setUnavailableDates(updatedUnavailableDates);
     
-    toast({
-      title: "Team verwijderd",
-      description: "Het team is succesvol verwijderd.",
-    });
+   
   };
 
   const handleTeamNameEdit = (team: TeamDetails) => {
@@ -94,10 +86,7 @@ const Appointments = () => {
     if (newName && newName.trim() && newName !== team.name) {
       const updatedTeam = { ...team, name: newName.trim() };
       handleTeamUpdate(updatedTeam);
-      toast({
-        title: "Team naam bijgewerkt",
-        description: `Team naam is bijgewerkt naar "${newName}".`,
-      });
+     
     }
   };
 
@@ -108,10 +97,7 @@ const Appointments = () => {
   };
 
   const handleSettingsOpen = () => {
-    toast({
-      title: "Instellingen",
-      description: "Functionaliteit voor instellingen wordt binnenkort beschikbaar.",
-    });
+   
   };
 
   return (

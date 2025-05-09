@@ -1,6 +1,6 @@
 
 import { useCommunityPosts } from "@/hooks/community";
-import { toast } from "sonner";
+
 import { Group } from "@/types/community";
 import { CreatePostForm } from "./create-post/CreatePostForm";
 
@@ -16,9 +16,9 @@ export function CommunityCreatePost({ onPostCreated, preselectedGroup }: Communi
     try {
       await createPost(values);
       onPostCreated();
-      toast.success("Bericht geplaatst");
     } catch (error) {
-      toast.error("Er is iets misgegaan bij het plaatsen van je bericht");
+      console.error("Error creating post:", error);
+    
     }
   };
 

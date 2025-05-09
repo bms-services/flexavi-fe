@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { CheckCircle, Clock } from "lucide-react";
@@ -24,7 +24,6 @@ export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({ notes,
 
   const handleAdd = () => {
     if (!newNote.note || !newNote.createdBy || !newNote.createdFor) {
-      toast.error("Vul alle velden in");
       return;
     }
     onAddNote({
@@ -36,7 +35,6 @@ export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({ notes,
       type: "note"
     });
     setNewNote({ note: "", createdBy: "", createdFor: "" });
-    toast.success("Notitie toegevoegd");
   };
 
   // Filter voor alleen notities (geen taken)

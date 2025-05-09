@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { WorkAgreement, Lead, Quote, WorkAgreementStatus } from "@/types";
 import { mockWorkAgreements } from "@/data/mockWorkAgreements";
 import { mockLeads, mockQuotes } from "@/data/mockData";
-import { toast } from "sonner";
+
 import { useNavigate } from "react-router-dom";
 
 export const useWorkAgreementState = (workAgreementId?: string) => {
@@ -75,7 +75,6 @@ export const useWorkAgreementState = (workAgreementId?: string) => {
           setSelectedQuote(quote);
         }
       } else {
-        toast.error("Werkovereenkomst niet gevonden");
         navigate("/workagreements");
       }
     }

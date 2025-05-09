@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+
 import { ReceiptUploadArea } from "@/components/layout/quick-actions/receipt-upload/ReceiptUploadArea";
 import { ReceiptFilePreview } from "@/components/layout/quick-actions/receipt-upload/ReceiptFilePreview";
 import { ReceiptFormFields } from "@/components/layout/quick-actions/receipt-upload/ReceiptFormFields";
@@ -129,7 +129,7 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
 
   const addExpense = () => {
     if (!newExpense.description || !newExpense.amount || newExpense.amount <= 0) {
-      toast.error("Vul alle verplichte velden in");
+      
       return;
     }
 
@@ -165,7 +165,7 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
       project: project.id,
     });
     
-    toast.success("Kosten toegevoegd");
+    
   };
 
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);

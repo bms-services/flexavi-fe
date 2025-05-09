@@ -6,7 +6,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { WizardData } from '../useProjectWizard';
 import { ProjectExpense } from '@/types/project';
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface WizardTransportStepProps {
   wizardData: WizardData;
@@ -27,7 +26,7 @@ export const WizardTransportStep: React.FC<WizardTransportStepProps> = ({
 
   const handleAddTransport = () => {
     if (!newTransport.description || newTransport.amount <= 0) {
-      toast("Vul alle verplichte velden in");
+      
       return;
     }
 
@@ -56,7 +55,7 @@ export const WizardTransportStep: React.FC<WizardTransportStepProps> = ({
       amount: 0
     });
     
-    toast("Transport toegevoegd");
+    
   };
 
   return (

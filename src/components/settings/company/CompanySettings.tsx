@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Building2, Mail, Phone, MapPin, Ban, FileText, Upload } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 import PaymentStripe from "@/components/ui/payment-stripe";
 import StripeProvider from "@/providers/stripe-provider";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ import StripeWrapper from "@/components/ui/payment-stripe/wrapper";
 
 export const CompanySettings: React.FC = () => {
   const { t } = useTranslation('dashboard');
-  const { toast } = useToast();
+  
   const [logo, setLogo] = useState<string | null>(null);
 
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +23,7 @@ export const CompanySettings: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogo(reader.result as string);
-        toast({
-          title: "Logo geüpload",
-          description: "Het bedrijfslogo is succesvol geüpload.",
-        });
+    
       };
       reader.readAsDataURL(file);
     }

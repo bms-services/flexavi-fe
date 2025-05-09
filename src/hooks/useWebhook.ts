@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { toast } from "sonner";
+
 
 export const useWebhook = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ export const useWebhook = () => {
 
   const testWebhook = async (webhookUrl: string): Promise<boolean> => {
     if (!validateWebhookUrl(webhookUrl)) {
-      toast.error("Webhook URL moet beginnen met https://");
+    
       return false;
     }
 
@@ -35,10 +35,10 @@ export const useWebhook = () => {
         throw new Error("Webhook test mislukt");
       }
 
-      toast.success("Webhook test succesvol");
+    
       return true;
     } catch (error) {
-      toast.error("Webhook test mislukt. Controleer de URL en probeer opnieuw.");
+    
       return false;
     } finally {
       setIsLoading(false);

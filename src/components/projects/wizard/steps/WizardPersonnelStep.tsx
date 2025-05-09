@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { WizardData } from '../useProjectWizard';
 import { ProjectPersonnel } from '@/types/project';
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
+
 
 interface WizardPersonnelStepProps {
   wizardData: WizardData;
@@ -26,7 +26,6 @@ export const WizardPersonnelStep: React.FC<WizardPersonnelStepProps> = ({
 
   const handleAddPerson = () => {
     if (!newPerson.name || !newPerson.role || newPerson.dailyRate <= 0 || newPerson.days <= 0) {
-      toast("Vul alle verplichte velden in");
       return;
     }
 
@@ -54,7 +53,6 @@ export const WizardPersonnelStep: React.FC<WizardPersonnelStepProps> = ({
       days: 0
     });
     
-    toast("Personeelslid toegevoegd");
   };
 
   return (

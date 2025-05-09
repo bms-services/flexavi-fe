@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Paperclip, FileText, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface DefaultAttachment {
   id: string;
@@ -25,7 +25,7 @@ export const DefaultAttachmentsPanel = ({
   attachments,
   onAttachmentsChange,
 }: DefaultAttachmentsPanelProps) => {
-  const { toast } = useToast();
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -37,18 +37,12 @@ export const DefaultAttachmentsPanel = ({
     }));
     
     onAttachmentsChange([...attachments, ...newAttachments]);
-    toast({
-      title: "Bestanden toegevoegd",
-      description: "De bestanden zijn succesvol toegevoegd als standaard bijlages.",
-    });
+   
   };
 
   const removeAttachment = (id: string) => {
     onAttachmentsChange(attachments.filter(att => att.id !== id));
-    toast({
-      title: "Bestand verwijderd",
-      description: "Het bestand is verwijderd uit de standaard bijlages.",
-    });
+    
   };
 
   return (

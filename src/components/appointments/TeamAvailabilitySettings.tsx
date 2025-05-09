@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { TeamDetails, WorkEnvironment } from "@/types";
 import { format, parseISO, addDays } from "date-fns";
 import { nl } from "date-fns/locale";
@@ -73,7 +72,6 @@ export const TeamAvailabilitySettings: React.FC<TeamAvailabilitySettingsProps> =
   onSlotUpdate,
   slotsConfiguration,
 }) => {
-  const { toast } = useToast();
   const [editingTeamId, setEditingTeamId] = useState<string | null>(null);
   const [editedTeamName, setEditedTeamName] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
@@ -89,10 +87,7 @@ export const TeamAvailabilitySettings: React.FC<TeamAvailabilitySettingsProps> =
       const teamToUpdate = teams.find(t => t.id === editingTeamId);
       if (teamToUpdate) {
         onTeamUpdate({ ...teamToUpdate, name: editedTeamName });
-        toast({
-          title: "Team bijgewerkt",
-          description: `Teamnaam is succesvol bijgewerkt naar ${editedTeamName}.`,
-        });
+        
       }
       setEditingTeamId(null);
     }
@@ -108,20 +103,12 @@ export const TeamAvailabilitySettings: React.FC<TeamAvailabilitySettingsProps> =
       const dateString = format(selectedDate, 'yyyy-MM-dd');
       
       if (unavailableDates[selectedTeamId]?.includes(dateString)) {
-        toast({
-          title: "Datum al gemarkeerd",
-          description: "Deze datum is al gemarkeerd als niet beschikbaar.",
-          variant: "destructive",
-        });
+      
         return;
       }
       
       onUnavailableDateAdd(selectedTeamId, dateString);
       
-      toast({
-        title: "Datum gemarkeerd",
-        description: `Het team is gemarkeerd als niet beschikbaar op ${format(selectedDate, 'd MMMM yyyy', { locale: nl })}.`,
-      });
       
       setSelectedDate(undefined);
     }
@@ -131,10 +118,7 @@ export const TeamAvailabilitySettings: React.FC<TeamAvailabilitySettingsProps> =
     if (selectedTeamId) {
       onUnavailableDateRemove(selectedTeamId, date);
       
-      toast({
-        title: "Beschikbaarheid hersteld",
-        description: `De niet-beschikbaarheid op ${date} is verwijderd.`,
-      });
+    
     }
   };
 

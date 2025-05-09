@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, Mail } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 
 export const ReputationSettingsPanel = () => {
   const [autoRequestEnabled, setAutoRequestEnabled] = useState(true);
@@ -16,13 +16,10 @@ export const ReputationSettingsPanel = () => {
   const [replyTemplate, setReplyTemplate] = useState(
     "Beste [Naam],\n\nHartelijk dank voor uw feedback. We waarderen uw mening en nemen uw opmerkingen ter harte.\n\nMet vriendelijke groet,\n[Bedrijfsnaam]"
   );
-  const { toast } = useToast();
+  
 
   const handleSave = () => {
-    toast({
-      title: "Instellingen opgeslagen",
-      description: "Uw reputatiebeheer instellingen zijn bijgewerkt."
-    });
+   
   };
 
   return (

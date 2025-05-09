@@ -9,7 +9,7 @@ import {
   IntegrationCredentials
 } from "@/types/reputation";
 import { mockReviews, mockReviewTemplates, mockReputationSettings } from "@/data/mockReviews";
-import { useToast } from "@/hooks/use-toast";
+
 import { v4 as uuidv4 } from "uuid";
 
 export const useReputationManagement = () => {
@@ -22,7 +22,7 @@ export const useReputationManagement = () => {
   const [platformFilter, setPlatformFilter] = useState<ReviewPlatform | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
   
-  const { toast } = useToast();
+  
 
   // Filter reviews based on status, platform, and search term
   useEffect(() => {
@@ -75,11 +75,7 @@ export const useReputationManagement = () => {
       
       setReviews(updatedReviews);
       setIsLoading(false);
-      
-      toast({
-        title: "Review status updated",
-        description: `Review is now ${newStatus.replace('_', ' ')}`,
-      });
+   
     }, 600);
   };
 
@@ -104,10 +100,7 @@ export const useReputationManagement = () => {
       setReviews(updatedReviews);
       setIsLoading(false);
       
-      toast({
-        title: "Response added",
-        description: "Your response has been saved"
-      });
+     
     }, 600);
   };
 
@@ -127,12 +120,7 @@ export const useReputationManagement = () => {
     setReviews(updatedReviews);
     
     const review = updatedReviews.find(r => r.id === reviewId);
-    toast({
-      title: review?.publicDisplay ? "Review set to public" : "Review set to private",
-      description: review?.publicDisplay 
-        ? "This review will now be displayed on your website" 
-        : "This review will no longer be displayed on your website"
-    });
+   
   };
 
   // Function to save template
@@ -160,11 +148,7 @@ export const useReputationManagement = () => {
       
       setTemplates(updatedTemplates);
       setIsLoading(false);
-      
-      toast({
-        title: "Template saved",
-        description: "Your email template has been saved successfully"
-      });
+     
     }, 600);
   };
 
@@ -178,20 +162,14 @@ export const useReputationManagement = () => {
       updateSettings({ ...settings, activeTemplateId: null });
     }
     
-    toast({
-      title: "Template deleted",
-      description: "The email template has been removed"
-    });
+   
   };
 
   // Function to set a template as active
   const setActiveTemplate = (templateId: string) => {
     updateSettings({ ...settings, activeTemplateId: templateId });
     
-    toast({
-      title: "Active template updated",
-      description: "Your default template has been updated"
-    });
+   
   };
 
   // Function to update reputation settings
@@ -202,10 +180,7 @@ export const useReputationManagement = () => {
       setSettings(newSettings);
       setIsLoading(false);
       
-      toast({
-        title: "Settings updated",
-        description: "Your reputation management settings have been saved"
-      });
+      
     }, 600);
   };
 
@@ -224,10 +199,6 @@ export const useReputationManagement = () => {
       setSettings(updatedSettings);
       setIsLoading(false);
       
-      toast({
-        title: platformData.connected ? "Platform connected" : "Platform disconnected",
-        description: `${platformData.platform.charAt(0).toUpperCase() + platformData.platform.slice(1)} integration has been updated`
-      });
     }, 800);
   };
 
@@ -239,11 +210,7 @@ export const useReputationManagement = () => {
     const activeTemplate = templates.find(t => t.id === settings.activeTemplateId);
     
     if (!activeTemplate) {
-      toast({
-        title: "Error",
-        description: "No active template found. Please set an active template in settings.",
-        variant: "destructive"
-      });
+      
       setIsLoading(false);
       return;
     }
@@ -268,10 +235,7 @@ export const useReputationManagement = () => {
       setReviews([...reviews, newReview]);
       setIsLoading(false);
       
-      toast({
-        title: "Review request sent",
-        description: `A review request has been sent to ${customerEmail}`
-      });
+     
     }, 1000);
   };
 

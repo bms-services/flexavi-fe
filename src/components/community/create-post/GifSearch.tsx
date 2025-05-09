@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+
 import { PostMedia } from "@/types/community";
 import { Image as ImageIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
@@ -26,7 +26,6 @@ export function GifSearch({ onGifSelected }: GifSearchProps) {
     
     onGifSelected(newGif);
     setOpen(false);
-    toast.success("GIF toegevoegd aan bericht");
   };
 
   return (

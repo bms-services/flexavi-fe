@@ -4,14 +4,14 @@ import { Layout } from "@/components/layout/Layout";
 import { EmployeeList } from "@/components/employees/EmployeeList";
 import { EmployeeHeader } from "@/components/employees/EmployeeHeader";
 import { Employee, WorkDay } from "@/types/employee-management";
-import { useToast } from "@/hooks/use-toast";
+
 import { mockEmployees } from "@/data/mockEmployees";
 import { mockWorkDays } from "@/data/mockWorkDays";
 
 export default function EmployeeManagement() {
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const [workDays, setWorkDays] = useState<WorkDay[]>(mockWorkDays);
-  const { toast } = useToast();
+  
 
   const handleAddDayOff = (employeeId: string, date: Date) => {
     const newWorkDay: WorkDay = {
@@ -23,10 +23,7 @@ export default function EmployeeManagement() {
     };
 
     setWorkDays([...workDays, newWorkDay]);
-    toast({
-      title: "Vrije dag toegevoegd",
-      description: "De medewerker is succesvol vrij gegeven op de geselecteerde datum."
-    });
+  
   };
 
   return (

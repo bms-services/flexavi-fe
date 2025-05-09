@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { ReportDialog } from "./ReportDialog";
 import { Post } from "@/types/community";
-import { toast } from "sonner";
+
 import { PostHeader } from "./post/PostHeader";
 import { PostContent } from "./post/PostContent";
 import { PostActions } from "./post/PostActions";
@@ -25,14 +25,12 @@ export function CommunityPost({ post, onBack }: CommunityPostProps) {
   
   const handleReport = (reason: string, details: string) => {
     console.log("Reporting post:", post.id, reason, details);
-    toast.success("Bedankt voor je melding. We zullen dit bericht beoordelen.");
     setShowReportDialog(false);
   };
   
   const handleSubmitComment = (content: string, parentId?: string) => {
     addComment({ content, postId: post.id, parentId });
     setReplyingTo(null);
-    toast.success("Reactie geplaatst");
   };
   
   return (

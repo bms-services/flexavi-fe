@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { mockQuotes } from "@/data/mockData";
 import { mockLeads } from "@/data/mockData";
-import { useToast } from "@/hooks/use-toast";
+
 import { QuotePortalLoading } from "@/components/customer-portal/quote/QuotePortalLoading";
 import { QuotePortalNotFound } from "@/components/customer-portal/quote/QuotePortalNotFound";
 import { QuotePortalContent } from "@/components/customer-portal/quote/QuotePortalContent";
@@ -14,7 +14,7 @@ import { RejectQuoteDialog } from "@/components/customer-portal/quote/RejectQuot
 
 const CustomerPortalQuote = () => {
   const { id } = useParams<{ id: string }>();
-  const { toast } = useToast();
+  
   const [quote, setQuote] = useState<any | null>(null);
   const [customer, setCustomer] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,10 +60,7 @@ const CustomerPortalQuote = () => {
   const handleAcceptWithSignature = (signatureData: string) => {
     console.log("Quote accepted with signature:", signatureData);
     
-    toast({
-      title: "Offerte geaccepteerd",
-      description: "Bedankt voor uw acceptatie. We nemen zo spoedig mogelijk contact met u op.",
-    });
+
     
     // In a real app, we would update the quote status in the database here
   };
@@ -77,10 +74,6 @@ const CustomerPortalQuote = () => {
     console.log("Revision requested with comment:", revisionComment);
     setRevisionComment("");
     
-    toast({
-      title: "Revisie verzoek verzonden",
-      description: "We nemen zo spoedig mogelijk contact met u op.",
-    });
     
     // In a real app, we would update the quote status in the database here
   };
@@ -92,10 +85,7 @@ const CustomerPortalQuote = () => {
   const handleRejectWithReason = (reason: string) => {
     console.log("Quote rejected with reason:", reason);
     
-    toast({
-      title: "Offerte geweigerd",
-      description: "Bedankt voor uw feedback. We nemen zo spoedig mogelijk contact met u op.",
-    });
+  
     
     // In a real app, we would update the quote status in the database here
   };

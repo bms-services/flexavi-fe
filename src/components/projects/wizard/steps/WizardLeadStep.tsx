@@ -6,7 +6,7 @@ import { WizardData } from '../useProjectWizard';
 import { mockLeads } from '@/data/mockData';
 import { CreateLeadDialog } from '@/components/leads/CreateLeadDialog';
 import { CreateLeadFormData } from '@/utils/validations';
-import { toast } from 'sonner';
+
 
 interface WizardLeadStepProps {
   wizardData: WizardData;
@@ -56,7 +56,6 @@ export const WizardLeadStep: React.FC<WizardLeadStepProps> = ({
     setLeads([newLead, ...leads]);
     handleLeadSelect(newLead);
     setIsCreateLeadOpen(false);
-    toast("De lead is succesvol toegevoegd aan het project");
   };
 
   const filteredLeads = leads.filter(lead => 

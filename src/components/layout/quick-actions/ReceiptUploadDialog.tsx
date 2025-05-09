@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { toast } from "@/components/ui/sonner";
+
 import { ReceiptData } from './types/quickActions';
 import { ReceiptUploadArea } from './receipt-upload/ReceiptUploadArea';
 import { ReceiptFilePreview } from './receipt-upload/ReceiptFilePreview';
@@ -92,9 +92,7 @@ export const ReceiptUploadDialog: React.FC<ReceiptUploadDialogProps> = ({
     });
     setUploadedImage(null);
 
-    toast("Bon verwerkt", {
-      description: "De bon is succesvol verwerkt en opgeslagen",
-    });
+  
   };
 
   const handleClearFile = () => {

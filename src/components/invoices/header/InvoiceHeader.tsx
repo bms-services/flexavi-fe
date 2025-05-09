@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,7 +35,6 @@ interface InvoiceHeaderProps {
 
 export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, onSave, status, invoiceNumber }) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [emailData, setEmailData] = useState({
@@ -46,21 +45,13 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, onSave,
 
   const handleCreditInvoice = () => {
     // In a real implementation, this would create a credit invoice in the database
-    // For now, we'll just show a toast notification
-    toast({
-      title: "Creditfactuur aangemaakt",
-      description: `Creditfactuur voor ${invoiceNumber?.replace("inv-", "FACT-")} is aangemaakt.`,
-    });
+  
     setCreditDialogOpen(false);
   };
 
   const handleSendInvoice = () => {
     // In a real implementation, this would send the invoice
-    // For now, we'll just show a toast notification
-    toast({
-      title: "Factuur verzonden",
-      description: `Factuur ${invoiceNumber?.replace("inv-", "FACT-")} is verzonden naar ${emailData.to}.`,
-    });
+   
     setSendDialogOpen(false);
   };
 

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+
 import { mockInvoices } from "@/data/mockInvoices";
 import { PlanCard } from "./components/PlanCard";
 import { InvoiceHistory } from "./components/InvoiceHistory";
@@ -19,7 +19,7 @@ import { User } from "@/types/user";
 
 
 export const SubscriptionSettings = () => {
-  const { toast } = useToast();
+  
   const dispatch = useAppDispatch();
 
   // const [currentPlan, setCurrentPlan] = useState("basic");
@@ -84,29 +84,7 @@ export const SubscriptionSettings = () => {
   //   }
   // ];
 
-  // const handleUpgrade = (planId: string) => {
-  //   if (planId === currentPlan) {
-  //     toast({
-  //       title: "Dit is je huidige abonnement",
-  //       description: "Je gebruikt dit abonnement al.",
-  //     });
-  //     return;
-  //   }
-
-  //   toast({
-  //     title: "Abonnement gewijzigd",
-  //     description: `Je abonnement is gewijzigd naar ${plans.find(p => p.id === planId)?.name}.`,
-  //   });
-  //   setCurrentPlan(planId);
-  // };
-
-  // const handleCancelSubscription = () => {
-  //   toast({
-  //     title: "Abonnement opgezegd",
-  //     description: "Je abonnement is opgezegd en loopt af aan het einde van de huidige periode.",
-  //     variant: "destructive",
-  //   });
-  // };
+ 
 
   const [packageType, setPackageType] = useState<PackageTypeT>(PackageTypeEnum.MONTHLY);
   const [activePackage, setActivePackage] = useState<string | null>(null);

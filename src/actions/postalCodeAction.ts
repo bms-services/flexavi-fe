@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "sonner";
 
 const postCodeUrl = import.meta.env.VITE_POST_CODE_API_URL;
 const postCodeKey = import.meta.env.VITE_POST_CODE_API_KEY;
@@ -25,7 +24,7 @@ export const getAddressDetailByPostalCode =
 
       return response.data;
     } catch (error) {
-      toast.error("Er is iets misgegaan, probeer het opnieuw");
+      console.error("Error fetching address details:", error);
     }
   };
 
@@ -43,6 +42,6 @@ export const getPostalCodeAutoComplete = (postalCode: string) => async () => {
 
     return response.data;
   } catch (error) {
-    toast.error("Er is iets misgegaan, probeer het opnieuw");
+    console.error("Error fetching postal code autocomplete:", error);
   }
 };

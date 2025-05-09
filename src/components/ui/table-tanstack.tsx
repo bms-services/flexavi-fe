@@ -9,10 +9,12 @@ import {
 } from "@tanstack/react-table";
 import { MetaResponse, ParamsAction } from "@/@types/global-type";
 import { useEffect, useRef, useState } from "react";
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { BanIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
-import { toast } from "sonner"
+import { toastShow } from "./toast/toast-helper";
+import { toastCreate } from "./toast/toast-create";
+import { set } from "date-fns";
 
 
 type DataTableProps<TData> = {
@@ -24,6 +26,7 @@ type DataTableProps<TData> = {
   params: ParamsAction;
   onEdit?: (row: TData) => void;
   onDelete?: (rows: TData[]) => void;
+  onArchive?: (rows: TData[]) => void;
 };
 
 type CustomColumnMeta = {
@@ -51,47 +54,55 @@ export function DataTable<TData>({
   params,
   onEdit,
   onDelete,
+  onArchive,
 }: DataTableProps<TData>) {
+  const toastActionRef = useRef(toastCreate());
   const [rowSelection, setRowSelection] = useState({});
-  const toastIdRef = useRef<string | number | null>(null);
 
   const processedColumns: CustomColumnDef<TData>[] = [
     {
       id: "_select",
+      meta: {
+        className: "text-center align-middle",
+      },
       header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllRowsSelected()}
-          onCheckedChange={(checked) => table.toggleAllRowsSelected(!!checked)}
-        />
+        <div className="flex justify-center items-center">
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            onCheckedChange={(checked) => table.toggleAllRowsSelected(!!checked)}
+          />
+        </div>
       ),
       cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(checked) => row.toggleSelected(!!checked)}
-        />
+        <div className="flex justify-center items-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(checked) => row.toggleSelected(!!checked)}
+          />
+        </div>
       ),
     },
     ...columns,
-    ...(onEdit || onDelete
-      ? [
-        {
-          id: "_actions",
-          header: "",
-          cell: ({ row }) => (
-            <div className="flex gap-2">
-              {onEdit && (
-                <Button
-                  onClick={() => onEdit(row.original)}
-                  className="py-0 px-1 text-black hover:text-blue-500"
-                  variant="link"
-                >
-                  <PencilIcon className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          ),
+    ...(onEdit ? [
+      {
+        id: "_actions",
+        header: "",
+        meta: {
+          className: "text-center align-middle",
         },
-      ]
+        cell: ({ row }) => (
+          <div className="flex justify-center items-center gap-2">
+            <Button
+              onClick={() => onEdit(row.original)}
+              className="py-0 px-1 text-black hover:text-blue-500"
+              variant="link"
+            >
+              <PencilIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        ),
+      },
+    ]
       : []),
   ];
 
@@ -120,51 +131,50 @@ export function DataTable<TData>({
     onParamsChange({ sort_by: columnId, sort_dir: isAsc ? "desc" : "asc" });
   };
 
-  useEffect(() => {
-    toast.success('Test toast!')
-  }, [])
+
+  const handleResetActions = () => {
+    setRowSelection({});
+    toastActionRef.current?.dismiss();
+  };
 
   useEffect(() => {
     const selectedRows = table
       .getSelectedRowModel()
       .rows.map((row) => row.original);
 
-    if (selectedRows.length > 0 && onDelete) {
-      const toastId = toastIdRef.current;
-
-      if (toastId) {
-        toast.dismiss(toastId);
-      }
-      toast("Event has been created.")
-
-
-      toastIdRef.current = toast(
-        <div className="flex items-center justify-between gap-4 w-full">
-          <span>{`Selected ${selectedRows.length} row(s)`}</span>
-          <Button
-            variant="link"
-            className="text-red-500"
-            onClick={() => {
-              onDelete(selectedRows);
-              toast.dismiss(toastIdRef.current!);
-              setRowSelection({});
-              toastIdRef.current = null;
-            }}
-          >
-            <Trash2Icon className="h-4 w-4" />
-          </Button>
-        </div>,
-        {
-          duration: 3000,
-        }
-      );
+    if (selectedRows.length > 0) {
+      toastActionRef.current.show({
+        title: `Selected ${selectedRows.length} row(s)`,
+        type: "info",
+        onDelete: () => {
+          onDelete(selectedRows);
+        },
+        onArchive: () => {
+          onArchive(selectedRows);
+        },
+        onDismiss: () => {
+          setRowSelection({});
+        },
+      });
     } else {
-      if (toastIdRef.current) {
-        toast.dismiss(toastIdRef.current);
-        toastIdRef.current = null;
-      }
+      toastActionRef.current.dismiss();
+      // setRowSelection({});
     }
-  }, [rowSelection, onDelete, table]);
+  }, [rowSelection, onDelete, table, toastActionRef, onArchive]);
+
+
+  // Cleanup function to reset row selection and dismiss toast when component unmounts
+  useEffect(() => {
+    return () => {
+      handleResetActions();
+    };
+  }, []);
+
+  // when params change, reset row selection
+  useEffect(() => {
+    handleResetActions();
+  }, [params]);
+
 
   return (
     <div className="rounded-md border bg-white p-4">
@@ -201,11 +211,17 @@ export function DataTable<TData>({
           </thead>
           <tbody>
             {isLoading ? (
-              <tr>
-                <td colSpan={columns.length} className="text-center py-6">
-                  Loading...
-                </td>
-              </tr>
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <tr key={index} className="animate-pulse border-t">
+                    {Array.from({ length: columns.length }).map((_, colIndex) => (
+                      <td key={colIndex} className="px-4 py-2">
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </>
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="text-center py-6">
@@ -244,7 +260,7 @@ export function DataTable<TData>({
             }
             className="border rounded px-2 py-1"
           >
-            {[10, 25, 50, 100].map(size => (
+            {[5, 10, 20, 50].map(size => (
               <option key={size} value={size}>
                 {size} / page
               </option>

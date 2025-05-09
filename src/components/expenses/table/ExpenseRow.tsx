@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Expense } from "@/types/expenses";
 import { Edit, Eye, Trash, Receipt, Link } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -126,9 +126,7 @@ export const ExpenseRow: React.FC<ExpenseRowProps> = ({
             ) : (
               <DropdownMenuItem onClick={(e) => {
                 e.stopPropagation();
-                toast.success("Project koppelen", {
-                  description: "Projectkoppeling functie geopend."
-                });
+              
               }}>
                 <Link className="h-4 w-4 mr-2" />
                 Koppel aan project

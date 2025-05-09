@@ -69,3 +69,9 @@
   padding: 30px !important;
   border-radius: 4px !important;
 }
+
+/*  */
+.Toastify__toast {
+  min-height: 0px !important;
+  width: auto !important;
+}

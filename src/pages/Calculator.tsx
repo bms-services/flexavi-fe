@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { toast } from "sonner";
+
 import { CalculatorCardView } from "@/components/calculator/CalculatorCardView";
 import { CalculatorFilterBar, CalculatorFilterValues } from "@/components/calculator/CalculatorFilterBar";
 
@@ -55,12 +55,10 @@ const CalculatorPage = () => {
     const newCalculator = createNewCalculator();
     setCalculators([...calculators, newCalculator]);
     navigate(`/calculator/${newCalculator.id}`);
-    toast.success("Nieuwe berekening aangemaakt");
   };
 
   const handleDelete = (id: string) => {
     setCalculators(calculators.filter(calc => calc.id !== id));
-    toast.success("Berekening verwijderd");
   };
 
   const handleFilterChange = (key: keyof CalculatorFilterValues, value: string) => {

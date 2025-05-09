@@ -1,7 +1,7 @@
 
 import { WorkAgreement, QuoteLineItem } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+
 
 export const useWorkAgreementValidation = (isEditing: boolean) => {
   const navigate = useNavigate();
@@ -14,17 +14,17 @@ export const useWorkAgreementValidation = (isEditing: boolean) => {
     totalAmount: number
   ) => {
     if (!selectedCustomer) {
-      toast.error("Selecteer een klant");
+      
       return false;
     }
 
     if (!selectedQuote) {
-      toast.error("Selecteer een offerte");
+      
       return false;
     }
 
     if (lineItems.some(item => !item.description || item.quantity <= 0)) {
-      toast.error("Vul alle velden van de werkzaamheden in");
+      
       return false;
     }
 
@@ -35,7 +35,7 @@ export const useWorkAgreementValidation = (isEditing: boolean) => {
       );
 
       if (totalPercentage !== 100) {
-        toast.error("Betaaltermijnen moeten in totaal 100% zijn");
+        
         return false;
       }
     }
@@ -52,9 +52,9 @@ export const useWorkAgreementValidation = (isEditing: boolean) => {
     console.log("Saving work agreement:", finalWorkAgreement);
 
     if (isEditing) {
-      toast.success("Werkovereenkomst bijgewerkt");
+      
     } else {
-      toast.success("Nieuwe werkovereenkomst aangemaakt");
+      
     }
 
     navigate("/workagreements");

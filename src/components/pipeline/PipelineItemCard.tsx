@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { PipelineItem } from "@/types/pipeline";
 import { Button } from "@/components/ui/button";
 import { PipelineItemModal } from "./PipelineItemModal";
-import { toast } from "sonner";
+
 import { useNavigate } from "react-router-dom";
 import { User, Calendar, FileText, FileMinus, FilePlus, Shield, Phone, Mail, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -83,11 +83,11 @@ export const PipelineItemCard: React.FC<PipelineItemCardProps> = ({
   };
 
   const handleAddNote = () => {
-    toast.success("Notitie toevoegen functionaliteit zal hier komen");
+    
   };
 
   const handleScheduleAppointment = () => {
-    toast.success("Afspraak maken functionaliteit zal hier komen");
+    
   };
 
   const formatDate = (dateString: string) => {

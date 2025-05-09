@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText as FileTextIcon, Edit, Pen } from "lucide-react";
 import Signature from "@/components/customer/Signature";
-import { toast } from "sonner";
+
 
 interface SignatureSectionProps {
   customerSignature?: string;

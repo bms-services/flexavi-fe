@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { WizardData } from '../useProjectWizard';
 import { ProjectExpense } from '@/types/project';
 import { Plus } from 'lucide-react';
-import { toast } from 'sonner';
+
 
 interface WizardMaterialStepProps {
   wizardData: WizardData;
@@ -27,7 +27,6 @@ export const WizardMaterialStep: React.FC<WizardMaterialStepProps> = ({
 
   const handleAddMaterial = () => {
     if (!newMaterial.description || newMaterial.amount <= 0) {
-      toast("Vul alle verplichte velden in");
       return;
     }
 
@@ -56,7 +55,6 @@ export const WizardMaterialStep: React.FC<WizardMaterialStepProps> = ({
       amount: 0
     });
     
-    toast("Materiaal toegevoegd");
   };
 
   return (

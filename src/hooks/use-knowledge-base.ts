@@ -3,7 +3,7 @@ import { useState } from "react";
 import { KnowledgeBaseEntry, KnowledgeBaseCategory } from "@/types/knowledge-base";
 import { mockKnowledgeBaseEntries, mockKnowledgeBaseCategories } from "@/data/mockKnowledgeBase";
 import { v4 as uuidv4 } from "uuid";
-import { toast } from "sonner";
+
 
 export function useKnowledgeBase() {
   const [entries, setEntries] = useState<KnowledgeBaseEntry[]>(mockKnowledgeBaseEntries);
@@ -24,10 +24,10 @@ export function useKnowledgeBase() {
       };
       
       setEntries([...entries, newEntry]);
-      toast.success("Kennisbank item succesvol aangemaakt");
+      
       return newEntry;
     } catch (error) {
-      toast.error("Fout bij het aanmaken van kennisbank item");
+      
       console.error(error);
       return null;
     } finally {
@@ -52,10 +52,10 @@ export function useKnowledgeBase() {
       });
       
       setEntries(updatedEntries);
-      toast.success("Kennisbank item succesvol bijgewerkt");
+      
       return true;
     } catch (error) {
-      toast.error("Fout bij het bijwerken van kennisbank item");
+      
       console.error(error);
       return false;
     } finally {
@@ -75,10 +75,10 @@ export function useKnowledgeBase() {
         setSelectedEntry(null);
       }
       
-      toast.success("Kennisbank item succesvol verwijderd");
+      
       return true;
     } catch (error) {
-      toast.error("Fout bij het verwijderen van kennisbank item");
+      
       console.error(error);
       return false;
     } finally {
@@ -109,7 +109,7 @@ export function useKnowledgeBase() {
     };
     
     setCategories([...categories, newCategory]);
-    toast.success("Categorie succesvol aangemaakt");
+    
     return newCategory;
   };
 
@@ -125,7 +125,7 @@ export function useKnowledgeBase() {
     });
     
     setCategories(updatedCategories);
-    toast.success("Categorie succesvol bijgewerkt");
+    
     return true;
   };
 
@@ -134,13 +134,13 @@ export function useKnowledgeBase() {
     const hasEntries = entries.some(entry => entry.categoryId === id);
     
     if (hasEntries) {
-      toast.error("Deze categorie bevat nog items en kan niet worden verwijderd");
+      
       return false;
     }
     
     const filteredCategories = categories.filter(category => category.id !== id);
     setCategories(filteredCategories);
-    toast.success("Categorie succesvol verwijderd");
+    
     return true;
   };
 

@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { ReportDialog } from "./ReportDialog";
-import { toast } from "sonner";
+
 
 export interface PostCardProps {
   post: Post;
@@ -38,7 +38,6 @@ export function PostCard({ post, onClick, onLike, onDislike }: PostCardProps) {
   
   const handleReport = (reason: string, details: string) => {
     console.log("Reporting post:", post.id, reason, details);
-    toast.success("Bedankt voor je melding. We zullen dit bericht beoordelen.");
     setShowReportDialog(false);
   };
   

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Integration } from "@/types";
 import { IntegrationDialog } from "./IntegrationDialog";
-import { toast } from "sonner";
+
 import { Plus, Webhook } from "lucide-react";
 import {
   Table,
@@ -51,7 +51,6 @@ export const IntegrationsSettings = () => {
     
     setWebhookLogs([logEntry, ...webhookLogs]);
     setIntegrations([...integrations, integration]);
-    toast.success("Integratie succesvol toegevoegd");
     setIsDialogOpen(false);
   };
 
@@ -59,14 +58,12 @@ export const IntegrationsSettings = () => {
     setIntegrations(
       integrations.map((i) => (i.id === updatedIntegration.id ? updatedIntegration : i))
     );
-    toast.success("Integratie succesvol bijgewerkt");
     setIsDialogOpen(false);
     setSelectedIntegration(null);
   };
 
   const handleDeleteIntegration = (id: string) => {
     setIntegrations(integrations.filter((i) => i.id !== id));
-    toast.success("Integratie succesvol verwijderd");
   };
 
   const openEditDialog = (integration: Integration) => {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "sonner";
+
 import { PipelineItemMainDialog } from "./item-modal/PipelineItemMainDialog";
 import { PipelineItemNoteDialog } from "./item-modal/PipelineItemNoteDialog";
 import { PipelineItemAppointmentDialog } from "./item-modal/PipelineItemAppointmentDialog";
@@ -111,32 +111,32 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   // Footer menu handlers (could be made into a single grouped object)
   const handleCreateQuote = () => {
-    toast.success("Offerte aanmaken gestart");
+    
   };
   const handleCreateInvoice = () => {
-    toast.success("Factuur aanmaken gestart");
+    
   };
   const handleCreateWorkOrder = () => {
-    toast.success("Werkopdracht aanmaken gestart");
+    
   };
   const handleUploadPhotos = () => {
-    toast.success("Upload foto's gestart");
+    
   };
 
   // Notitie toevoegen modal
   const handleSaveNote = () => {
     if (!noteValue.trim()) {
-      toast.error("Notitie mag niet leeg zijn");
+      
       return;
     }
-    toast.success("Notitie toegevoegd!");
+    
     setNoteValue("");
     setShowNoteDialog(false);
   };
 
   // Afspraak toevoegen modal submit
   const handleNewAppointmentSubmit = (data: any) => {
-    toast.success("Afspraak is toegevoegd!");
+    
     setShowAppointmentDialog(false);
   };
 
@@ -144,7 +144,7 @@ export const PipelineItemModal: React.FC<Props> = ({
 
   const handleStageChange = (newStageId: string) => {
     handleItemMove(item.id, newStageId);
-    toast.success("Fase succesvol gewijzigd");
+    
   };
 
   return (

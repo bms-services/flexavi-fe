@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, FilePlus, PlusCircle, Edit2, Calendar, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
+
 import { CreateLeadDialog } from "../CreateLeadDialog";
 
 interface CreateWorkOrderDialogProps {
@@ -19,15 +19,10 @@ const CreateWorkOrderDialog: React.FC<CreateWorkOrderDialogProps> = ({
   open, 
   onOpenChange 
 }) => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   
   const handleCreateWorkOrder = () => {
     // In a real app, this would create the work order
-    toast({
-      title: "Werkopdracht aangemaakt",
-      description: "De nieuwe werkopdracht is succesvol aangemaakt.",
-    });
     
     onOpenChange(false);
     // Navigate to the projects page after creating a work order
@@ -62,7 +57,6 @@ const CreateWorkOrderDialog: React.FC<CreateWorkOrderDialogProps> = ({
 
 export const LeadDetailActions = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isNoteDialogOpen, setIsNoteDialogOpen] = useState(false);
   const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false);
   const [isQuoteDialogOpen, setIsQuoteDialogOpen] = useState(false);
@@ -157,10 +151,7 @@ export const LeadDetailActions = () => {
           isOpen={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
           onSubmit={(data) => {
-            toast({
-              title: "Lead bijgewerkt",
-              description: "De lead is succesvol bijgewerkt.",
-            });
+            
             setIsEditDialogOpen(false);
           }}
           leadId={leadId}

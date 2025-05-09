@@ -16,7 +16,7 @@ import { nl } from "date-fns/locale";
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import { useToast } from "@/hooks/use-toast";
+
 
 interface NotesTabProps {
   notes: Note[];
@@ -66,7 +66,7 @@ const EditorMenu = ({ editor }: { editor: any }) => {
 };
 
 export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
-  const { toast } = useToast();
+ 
   const [allNotes, setAllNotes] = useState<Note[]>(notes);
 
   const editor = useEditor({
@@ -103,12 +103,7 @@ export const NotesTab: React.FC<NotesTabProps> = ({ notes, leadId }) => {
     
     // Reset the editor
     editor.commands.clearContent();
-    
-    // Show success toast
-    toast({
-      title: "Notitie toegevoegd",
-      description: "De notitie is succesvol toegevoegd.",
-    });
+       
   };
 
   return (

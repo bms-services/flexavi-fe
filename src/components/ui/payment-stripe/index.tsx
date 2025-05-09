@@ -2,9 +2,9 @@ import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import { useState } from 'react';
 import { Button } from '../button';
 import { useTranslation } from 'react-i18next';
-import { enqueueSnackbar } from 'notistack';
 import { createProfileIntent } from '@/actions/profileAction';
 import { useAppDispatch } from '@/hooks/use-redux';
+import { toast } from 'react-toastify';
 
 const PaymentStripe = ({ onBack }: {
     onBack?: () => void;
@@ -47,9 +47,7 @@ const PaymentStripe = ({ onBack }: {
             setErrorMessage(error.message);
         } else {
             setErrorMessage(null);
-            enqueueSnackbar("Success save payment method", {
-                variant: 'success',
-            });
+            toast.success(t('dashboard:settings.payment.success'));
         }
     };
 

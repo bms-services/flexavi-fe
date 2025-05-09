@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Expense, ExpenseFilters } from "@/types/expenses";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/components/ui/sonner";
+
 import { TableActions } from "./table/TableActions";
 import { DeleteDialog } from "./table/DeleteDialog";
 import { ExpenseRow } from "./table/ExpenseRow";
@@ -88,9 +88,7 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
 
   const handleDelete = () => {
     if (expenseToDelete) {
-      toast.success("Uitgave verwijderd", {
-        description: `${expenseToDelete.description} is verwijderd.`
-      });
+      
       setExpenseToDelete(null);
     }
   };
@@ -98,9 +96,7 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
   const handleBulkAction = (action: string) => {
     if (selectedExpenses.length === 0) return;
     
-    toast.success(`${action} uitgevoerd`, {
-      description: `Actie uitgevoerd op ${selectedExpenses.length} uitgaven.`
-    });
+  
     
     setSelectedExpenses([]);
   };

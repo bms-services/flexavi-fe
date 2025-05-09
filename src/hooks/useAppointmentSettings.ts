@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+
 
 interface TimeBlock {
   id: number;
@@ -24,7 +24,7 @@ interface ColorSettings {
 }
 
 export const useAppointmentSettings = () => {
-  const { toast } = useToast();
+  
   const [timeBlocks, setTimeBlocks] = useState<TimeBlock[]>([
     { id: 1, start: "09:00", end: "12:00", label: "Ochtend" },
     { id: 2, start: "13:00", end: "17:00", label: "Middag" },
@@ -53,17 +53,11 @@ export const useAppointmentSettings = () => {
   };
 
   const handleSaveSlots = () => {
-    toast({
-      title: "Instellingen opgeslagen",
-      description: "De slot instellingen zijn succesvol bijgewerkt.",
-    });
+  
   };
 
   const handleSaveColors = () => {
-    toast({
-      title: "Kleuren opgeslagen",
-      description: "De kleurinstellingen zijn succesvol bijgewerkt.",
-    });
+    
   };
 
   return {
