@@ -7,8 +7,8 @@ export const getLead = createAsyncThunk(
   "lead/index",
   async (params: ParamsAction, { rejectWithValue }) => {
     try {
-      const { data } = await mainApi.get(`/lead`,{
-        params
+      const { data } = await mainApi.get(`/lead`, {
+        params,
       });
 
       return data;
@@ -46,7 +46,7 @@ export const storeLead = createAsyncThunk(
 
 export const updateLead = createAsyncThunk(
   "lead/update",
-  async (update:{id:string, formData: Lead}, { rejectWithValue }) => {
+  async (update: { id: string; formData: Lead }, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.put(`/lead/${update.id}`, update.formData);
 
@@ -59,9 +59,11 @@ export const updateLead = createAsyncThunk(
 
 export const destroyLead = createAsyncThunk(
   "lead/destroy",
-  async (id: string[], { rejectWithValue }) => {
+  async (ids: string[], { rejectWithValue }) => {
     try {
-      const { data } = await mainApi.delete(`/lead/${id}`);
+      const { data } = await mainApi.delete("/lead", {
+        data: { ids },
+      });
 
       return data;
     } catch (error) {

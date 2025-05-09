@@ -10,14 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Shield, FileEdit, Info, Mail, Search, Calendar, Users } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 interface RecentMembersProps {
   onMakeAdmin?: (memberId: number) => void;
 }
 
 export function RecentMembers({ onMakeAdmin }: RecentMembersProps) {
-  const { toast } = useToast();
   
   const [members, setMembers] = useState([
     { 

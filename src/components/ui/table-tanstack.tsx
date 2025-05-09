@@ -3,97 +3,98 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnMeta,
+  Updater,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import { MetaResponse, ParamsAction } from "@/@types/global-type";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
+import { Button } from "./button";
+import { Checkbox } from "./checkbox";
+import { toast } from "sonner"
+
 
 type DataTableProps<TData> = {
-  columns: ColumnDef<TData, unknown>[];
+  columns: CustomColumnDef<TData>[];
   data: TData[];
   meta: MetaResponse;
   isLoading: boolean;
   onParamsChange: (params: Partial<ParamsAction>) => void;
   params: ParamsAction;
   onEdit?: (row: TData) => void;
-onDelete?: (rows: TData[]) => void;
-isMultipleDelete?: boolean;
+  onDelete?: (rows: TData[]) => void;
+};
+
+type CustomColumnMeta = {
+  className?: string;
+};
+export type CustomColumnDef<TData> = ColumnDef<TData, unknown> & {
+  meta?: CustomColumnMeta;
 };
 
 export function DataTable<TData>({
   columns,
   data,
   meta = {
-      current_page: 1,
-      last_page: 1,
-      total: 0,
-      per_page: 10,
-      from: 0,
-      to: 0,
-      next_page_url: "",
-      prev_page_url: ""
+    current_page: 1,
+    last_page: 1,
+    total: 0,
+    per_page: 10,
+    from: 0,
+    to: 0,
+    next_page_url: "",
+    prev_page_url: ""
   },
   isLoading,
   onParamsChange,
   params,
-    onEdit,
-    onDelete,
-    isMultipleDelete = false,
+  onEdit,
+  onDelete,
 }: DataTableProps<TData>) {
-    const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const toastIdRef = useRef<string | number | null>(null);
 
-    const processedColumns: ColumnDef<TData, unknown>[] = [
-        ...(isMultipleDelete
-          ? [
-              {
-                id: "_select",
-                header: ({ table }) => (
-                  <input
-                    type="checkbox"
-                    checked={table.getIsAllRowsSelected()}
-                    onChange={table.getToggleAllRowsSelectedHandler()}
-                  />
-                ),
-                cell: ({ row }) => (
-                  <input
-                    type="checkbox"
-                    checked={row.getIsSelected()}
-                    onChange={row.getToggleSelectedHandler()}
-                  />
-                ),
-              },
-            ]
-          : []),
-        ...columns,
-        ...(onEdit || onDelete
-          ? [
-              {
-                id: "_actions",
-                header: "Actions",
-                cell: ({ row }) => (
-                  <div className="flex gap-2">
-                    {onEdit && (
-                      <button
-                        onClick={() => onEdit(row.original)}
-                        className="text-blue-600 hover:underline"
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {onDelete && (
-                      <button
-                        onClick={() => onDelete([row.original])}
-                        className="text-red-600 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                ),
-              },
-            ]
-          : []),
-      ];
-      
+  const processedColumns: CustomColumnDef<TData>[] = [
+    {
+      id: "_select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllRowsSelected()}
+          onCheckedChange={(checked) => table.toggleAllRowsSelected(!!checked)}
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(checked) => row.toggleSelected(!!checked)}
+        />
+      ),
+    },
+    ...columns,
+    ...(onEdit || onDelete
+      ? [
+        {
+          id: "_actions",
+          header: "",
+          cell: ({ row }) => (
+            <div className="flex gap-2">
+              {onEdit && (
+                <Button
+                  onClick={() => onEdit(row.original)}
+                  className="py-0 px-1 text-black hover:text-blue-500"
+                  variant="link"
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          ),
+        },
+      ]
+      : []),
+  ];
+
   const table = useReactTable({
     data,
     columns: processedColumns,
@@ -107,36 +108,67 @@ export function DataTable<TData>({
       },
       rowSelection,
     },
-    onRowSelectionChange: setRowSelection,
-    enableRowSelection: !!isMultipleDelete,
-});
-
+    onRowSelectionChange: (updaterOrValue: Updater<RowSelectionState> | RowSelectionState) => {
+      console.log("updaterOrValue", updaterOrValue);
+      setRowSelection(updaterOrValue);
+    },
+    enableRowSelection: true,
+  });
 
   const handleSort = (columnId: string) => {
     const isAsc = params.sort_by === columnId && params.sort_dir === "asc";
     onParamsChange({ sort_by: columnId, sort_dir: isAsc ? "desc" : "asc" });
   };
 
-  return (
-   <div className="rounded-md border bg-white p-4">
-      <div className="overflow-x-auto">
-      {isMultipleDelete && onDelete && Object.keys(rowSelection).length > 0 && (
-        <div className="mb-3">
-            <button
-            className="bg-red-500 text-white px-4 py-1 rounded"
+  useEffect(() => {
+    toast.success('Test toast!')
+  }, [])
+
+  useEffect(() => {
+    const selectedRows = table
+      .getSelectedRowModel()
+      .rows.map((row) => row.original);
+
+    if (selectedRows.length > 0 && onDelete) {
+      const toastId = toastIdRef.current;
+
+      if (toastId) {
+        toast.dismiss(toastId);
+      }
+      toast("Event has been created.")
+
+
+      toastIdRef.current = toast(
+        <div className="flex items-center justify-between gap-4 w-full">
+          <span>{`Selected ${selectedRows.length} row(s)`}</span>
+          <Button
+            variant="link"
+            className="text-red-500"
             onClick={() => {
-                const selected = table
-                .getSelectedRowModel()
-                .rows.map(row => row.original);
-                onDelete(selected);
+              onDelete(selectedRows);
+              toast.dismiss(toastIdRef.current!);
+              setRowSelection({});
+              toastIdRef.current = null;
             }}
-            >
-            Delete Selected ({Object.keys(rowSelection).length})
-            </button>
-        </div>
-        )}
+          >
+            <Trash2Icon className="h-4 w-4" />
+          </Button>
+        </div>,
+        {
+          duration: 3000,
+        }
+      );
+    } else {
+      if (toastIdRef.current) {
+        toast.dismiss(toastIdRef.current);
+        toastIdRef.current = null;
+      }
+    }
+  }, [rowSelection, onDelete, table]);
 
-
+  return (
+    <div className="rounded-md border bg-white p-4">
+      <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left text-gray-600">
           <thead className="bg-gray-100 text-xs uppercase text-gray-700">
             {table.getHeaderGroups().map(headerGroup => (
@@ -144,7 +176,9 @@ export function DataTable<TData>({
                 {headerGroup.headers.map(header => (
                   <th
                     key={header.id}
-                    className="px-4 py-2 cursor-pointer select-none"
+                    className={`px-4 py-2 cursor-pointer select-none ${(header.column.columnDef.meta as CustomColumnMeta)?.className || ""}`}
+                    // className={`px-4 py-2 cursor-pointer select-none ${header.column.columnDef.meta?.className || ""}`}
+
                     onClick={() =>
                       header.column.getCanSort()
                         ? handleSort(header.column.id)
@@ -182,7 +216,8 @@ export function DataTable<TData>({
               table.getRowModel().rows.map(row => (
                 <tr key={row.id} className="border-t">
                   {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className="px-4 py-2">
+                    <td key={cell.id} className={`px-4 py-2 ${(cell.column.columnDef.meta as CustomColumnMeta)?.className || ""}`}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

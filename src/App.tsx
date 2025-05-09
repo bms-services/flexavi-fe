@@ -2,35 +2,38 @@ import './index.css'
 import './components/landing/animations.css'
 import './lib/i18n.ts'
 
-import { StrictMode, Suspense } from "react";
+import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./providers/auth-provider";
 import baseRouter from "./routers/BaseRouter";
 import { Provider } from 'react-redux'
 import { store } from './store/index.ts'
-import { SnackbarProvider } from 'notistack'
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
+  const notify = () => toast("Wow so easy!");
+
   return (
     // <StrictMode>
-    <div>
-      <SnackbarProvider
-        maxSnack={3}
-        transitionDuration={500}
-        autoHideDuration={1000}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }} />
-      <Suspense fallback="Loading...">
-        <Provider store={store}>
-          <AuthProvider>
-            <RouterProvider router={baseRouter} />
-          </AuthProvider>
-        </Provider>
-      </Suspense>
-    </div>
+    <Suspense fallback="Loading...">
+      <button onClick={notify}>Notify!</button>
+      <ToastContainer />
+      <Provider store={store}>
+        <AuthProvider>
+          {/* <SnackbarProvider
+            maxSnack={1}
+            transitionDuration={500}
+            autoHideDuration={1000}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }} /> */}
+
+          <RouterProvider router={baseRouter} />
+        </AuthProvider>
+      </Provider>
+    </Suspense>
     // </StrictMode>
   );
 }

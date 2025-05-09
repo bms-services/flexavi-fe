@@ -14,6 +14,7 @@ import { getLeadDetail } from "@/data/getLeadDetail";
 import { set } from "date-fns";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { showConfirmSnackbar } from "@/utils/showConfirmSnackbar";
 
 interface LeadListProps {
   leads: Lead[];
@@ -22,11 +23,11 @@ interface LeadListProps {
   onPageChange?: (page: number) => void;
 }
 
-export const LeadList: React.FC<LeadListProps> = ({ 
+export const LeadList: React.FC<LeadListProps> = ({
   leads,
   currentPage = 1,
   itemsPerPage = 10,
-  onPageChange = () => {}
+  onPageChange = () => { }
 }) => {
   const dispatch = useAppDispatch();
   const methods = useForm<Lead>({
@@ -55,20 +56,22 @@ export const LeadList: React.FC<LeadListProps> = ({
   const [leadId, setLeadId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { loading:loadingLeadsStore, response:reponseLeadStore } = useSelector((state: RootState) => state.lead.store);
+  const { loading: loadingLeadsStore, response: reponseLeadStore } = useSelector((state: RootState) => state.lead.store);
   const resultLeadStore = reponseLeadStore.result as Lead;
-  
-  const { loading:loadingLeadShow, response:responseLeadShow} = useSelector((state: RootState) => state.lead.show);
+
+  const { loading: loadingLeadShow, response: responseLeadShow } = useSelector((state: RootState) => state.lead.show);
   const resultLeadShow = responseLeadShow.result as Lead;
-  
-  const { loading:loadingLeadUpdate, response:responseLeadUpdate} = useSelector((state: RootState) => state.lead.update);
+
+  const { loading: loadingLeadUpdate, response: responseLeadUpdate } = useSelector((state: RootState) => state.lead.update);
   const resultLeadUpdate = responseLeadUpdate.result as Lead;
+
+  const { loading: loadingLeadDestroy, response: responseLeadDestroy } = useSelector((state: RootState) => state.lead.destroy);
+  const resultLeadDestroy = responseLeadDestroy.result as Lead;
 
   const handleStore = async (data: Lead) => {
     await dispatch(storeLead(data));
   };
 
-  
   const handleShow = async (data: Lead) => {
     const leadId = data.id;
     if (leadId) {
@@ -78,15 +81,28 @@ export const LeadList: React.FC<LeadListProps> = ({
     }
   }
 
-  const handleUpdate =  async (data: Lead) => {
-    await dispatch(updateLead({id:leadId, formData:data}));
+  const handleUpdate = async (data: Lead) => {
+    await dispatch(updateLead({ id: leadId, formData: data }));
   }
 
-
-  const handleDestory =  async (data: Lead[]) => {
+  const handleDestory = async (data: Lead[]) => {
     const ids = data.map((lead) => lead.id);
     await dispatch(destroyLead(ids));
   }
+
+  const handleDestroyWarning = (leads: Lead[]) => {
+    if (leads.length === 0) return;
+
+    showConfirmSnackbar(
+      `Are you sure you want to delete ${leads.length} lead(s)?`,
+      () => handleDestory(leads),
+      {
+        confirmLabel: "Delete",
+        cancelLabel: "Cancel",
+        variant: "warning",
+      }
+    );
+  };
 
   // Fetch index
   useEffect(() => {
@@ -94,10 +110,10 @@ export const LeadList: React.FC<LeadListProps> = ({
   }, [dispatch, params]);
 
   useEffect(() => {
-  if (reponseLeadStore.success) {
-    setIsDialogOpen(false);
-  }
-}, [reponseLeadStore]);
+    if (reponseLeadStore.success) {
+      setIsDialogOpen(false);
+    }
+  }, [reponseLeadStore]);
 
   return (
     <div className="space-y-2">
@@ -108,7 +124,7 @@ export const LeadList: React.FC<LeadListProps> = ({
       <LeadTable
         params={params}
         setParams={setParams}
-        onDelete={handleDestory}
+        onDelete={handleDestroyWarning}
         onEdit={handleShow}
       />
 
@@ -119,7 +135,7 @@ export const LeadList: React.FC<LeadListProps> = ({
           onSubmit={leadId ? handleUpdate : handleStore}
           leadId={leadId}
         />
-    </FormProvider>
+      </FormProvider>
     </div>
   );
 };
