@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Building2, Building2Icon, MailIcon, Upload } from "lucide-react";
-import Dropzone from "@/components/ui/drop-zone";
-import DropZone from "@/components/ui/drop-zone";
 import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { Company } from "@/types/company";
 import { TFunction } from "i18next";

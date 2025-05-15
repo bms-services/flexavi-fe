@@ -1,46 +1,36 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Lead } from "@/types";
-
 import { LeadTable } from "./LeadTable";
 import { LeadActions } from "./LeadActions";
 import { CreateLeadDialog } from "./CreateLeadDialog";
-import { CreateLeadFormData } from "@/utils/validations";
 import { useAppDispatch } from "@/hooks/use-redux";
-import { destroyLead, getDetailLead, getLead, storeLead, updateLead } from "@/actions/leadAction";
+import {
+  destroyLead,
+  getDetailLead,
+  getLead,
+  storeLead,
+  updateLead,
+} from "@/actions/leadAction";
 import { FormProvider, useForm } from "react-hook-form";
 import { ParamsAction } from "@/@types/global-type";
-import { getLeadDetail } from "@/data/getLeadDetail";
-import { set } from "date-fns";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { toastShow } from "../ui/toast/toast-helper";
 
-interface LeadListProps {
-  leads: Lead[];
-  currentPage?: number;
-  itemsPerPage?: number;
-  onPageChange?: (page: number) => void;
-}
-
-export const LeadList: React.FC<LeadListProps> = ({
-  leads,
-  currentPage = 1,
-  itemsPerPage = 10,
-  onPageChange = () => { }
-}) => {
+export const LeadList: React.FC = () => {
   const dispatch = useAppDispatch();
   const methods = useForm<Lead>({
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      postal_code: "",
-      house_number: "",
-      house_number_addition: "",
-      street: "",
-      city: "",
-      province: "",
+      address: {
+        street: "",
+        postal_code: { label: "", value: "" },
+        house_number: "",
+        house_number_addition: "",
+        city: "",
+        province: "",
+      },
     },
   });
 
@@ -48,95 +38,128 @@ export const LeadList: React.FC<LeadListProps> = ({
     page: 1,
     per_page: 10,
     search: "",
-    sort_by: "created_at",
-    sort_dir: "desc",
+    filters: {},
+    sorts: {},
   });
-
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const { loading: loadingLeadsStore, response: reponseLeadStore } = useSelector((state: RootState) => state.lead.store);
-  const resultLeadStore = reponseLeadStore.result as Lead;
+  // grab all your slice‐level statuses via useSelector:
+  const idxLoading = useSelector((s: RootState) => s.lead.index.loading);
+  const showState = useSelector((s: RootState) => s.lead.show);
+  const storeState = useSelector((s: RootState) => s.lead.store);
+  const updateState = useSelector((s: RootState) => s.lead.update);
+  const destroyState = useSelector((s: RootState) => s.lead.destroy);
 
-  const { loading: loadingLeadShow, response: responseLeadShow } = useSelector((state: RootState) => state.lead.show);
-  const resultLeadShow = responseLeadShow.result as Lead;
-
-  const { loading: loadingLeadUpdate, response: responseLeadUpdate } = useSelector((state: RootState) => state.lead.update);
-  const resultLeadUpdate = responseLeadUpdate.result as Lead;
-
-  const { loading: loadingLeadDestroy, response: responseLeadDestroy } = useSelector((state: RootState) => state.lead.destroy);
-  const resultLeadDestroy = responseLeadDestroy.result as Lead;
-
-  const handleStore = async (data: Lead) => {
-    await dispatch(storeLead(data));
-  };
-
-  const handleShow = async (data: Lead) => {
-    const leadId = data.id;
-    if (leadId) {
-      await dispatch(getDetailLead(leadId));
-      setLeadId(leadId);
-      setIsDialogOpen(true);
-    }
-  }
-
-  const handleUpdate = async (data: Lead) => {
-    await dispatch(updateLead({ id: leadId, formData: data }));
-  }
-
-  const handleDestory = async (data: Lead[]) => {
-    const ids = data.map((lead) => lead.id);
-    await dispatch(destroyLead(ids));
-  }
-
-  const handleOnArchive = (data: Lead[]) => {
-    const ids = data.map((lead) => lead.id);
-    // await dispatch(destroyLead(ids));
-  }
-
-  // const handleDestroyWarning = (data: Lead[]) => {
-  //   if (data.length === 0) return;
-
-  //   toastShow(
-  //     {
-  //       title: `Are you sure you want to delete ${data.length} lead(s)?`,
-  //       type: "info",
-  //       autoClose: false,
-  //       onConfirm: () => {
-  //         handleDestory(data);
-  //       },
-  //     },
-  //   );
-  // };
-
-
-
-  // const handleOnArchiveWarning = (data: Lead[]) => {
-  //   if (data.length === 0) return;
-
-  //   toastShow(
-  //     {
-  //       title: `Are you sure you want to archive ${data.length} lead(s)?`,
-  //       type: "info",
-  //       autoClose: false,
-  //       onConfirm: () => {
-  //         handleOnArchive(data);
-  //       },
-  //     },
-  //   );
-  // }
-
-  // Fetch index
+  // whenever params change, fetch the page
   useEffect(() => {
     dispatch(getLead(params));
   }, [dispatch, params]);
 
+  // Handlers
+  const handleStore = useCallback(
+    async (data: Lead) => {
+      await dispatch(
+        storeLead({
+          ...data,
+          address: {
+            ...data.address,
+            postal_code:
+              typeof data.address.postal_code === "object"
+                ? data.address.postal_code.value
+                : data.address.postal_code,
+          },
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  // Show detail in dialog
+  const handleShow = useCallback(
+    async (row: Lead) => {
+      await dispatch(getDetailLead(row.id));
+      setLeadId(row.id);
+      setIsDialogOpen(true);
+    },
+    [dispatch]
+  );
+
+
+  // Update lead
+  const handleUpdate = useCallback(
+    async (data: Lead) => {
+      if (!leadId) return;
+      await dispatch(
+        updateLead({
+          id: leadId,
+          formData: {
+            ...data,
+            address: {
+              ...data.address,
+              postal_code:
+                typeof data.address.postal_code === "object"
+                  ? data.address.postal_code.value
+                  : data.address.postal_code,
+            },
+          },
+        })
+      );
+    },
+    [dispatch, leadId]
+  );
+
+  // Delete lead
+  const handleDestroy = useCallback(
+    async (rows: Lead[]) => {
+      const ids = rows.map((r) => r.id);
+      await dispatch(destroyLead(ids));
+    },
+    [dispatch]
+  );
+
+  // Reset & load detail into form
   useEffect(() => {
-    if (reponseLeadStore.success) {
-      setIsDialogOpen(false);
+    if (!isDialogOpen) {
+      setLeadId(null);
+      methods.reset();
     }
-  }, [reponseLeadStore]);
+  }, [isDialogOpen, methods]);
+
+  // When detail fetch succeeds, populate the form
+  useEffect(() => {
+    if (showState.response.success) {
+      const lead = showState.response.result as Lead;
+      methods.reset({
+        ...lead,
+        address: {
+          ...lead.address,
+          postal_code:
+            typeof lead.address.postal_code === "string"
+              ? { label: lead.address.postal_code, value: lead.address.postal_code }
+              : lead.address.postal_code,
+        },
+      });
+    }
+  }, [showState.response, methods]);
+
+  // **After** store/update/destroy all succeed, close dialog and re-fetch
+  useEffect(() => {
+    if (
+      storeState.response.success ||
+      updateState.response.success ||
+      destroyState.response.success
+    ) {
+      setIsDialogOpen(false);
+      dispatch(getLead(params));
+    }
+  }, [
+    storeState.response.success,
+    updateState.response.success,
+    destroyState.response.success,
+    dispatch,
+    params,
+  ]);
 
   return (
     <div className="space-y-2">
@@ -147,9 +170,9 @@ export const LeadList: React.FC<LeadListProps> = ({
       <LeadTable
         params={params}
         setParams={setParams}
-        onDelete={handleDestory}
         onEdit={handleShow}
-        onArchive={handleOnArchive}
+        onDelete={handleDestroy}
+        onArchive={() => { }}
       />
 
       <FormProvider {...methods}>

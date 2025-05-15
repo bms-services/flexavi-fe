@@ -3,17 +3,17 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { mockCalculators } from "@/data/mockCalculators";
-import { 
-  Calculator, CalculationMaterial, CalculationLabor, 
-  CalculationEquipment, CalculationMisc, RoofParams 
+import {
+  Calculator, CalculationMaterial, CalculationLabor,
+  CalculationEquipment, CalculationMisc, RoofParams
 } from "@/types/calculator";
-import { 
-  calculateSummary, formatCurrency, formatNumber, 
-  estimateMaterialNeeds, estimateLaborHours, createNewCalculator 
+import {
+  calculateSummary, formatCurrency, formatNumber,
+  estimateMaterialNeeds, estimateLaborHours, createNewCalculator
 } from "@/utils/calculatorUtils";
-import { 
+import {
   Calculator as CalculatorIcon, Save, ArrowLeft,
-  Plus, Trash, RotateCcw, FileText 
+  Plus, Trash, RotateCcw, FileText
 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -232,7 +232,7 @@ const CalculatorDetail = () => {
     if (calculator && calculator.roofParams.roofArea > 0) {
       const { roofType, roofArea, complexity } = calculator.roofParams;
       const estimates = estimateMaterialNeeds(roofArea, roofType, complexity);
-      
+
       // Create new materials based on estimates
       const newMaterials: CalculationMaterial[] = [
         {
@@ -244,13 +244,13 @@ const CalculatorDetail = () => {
           ...material
         }))
       ];
-      
+
       // Add to existing materials
       setCalculator({
         ...calculator,
         materials: [...calculator.materials, ...newMaterials]
       });
-      
+
     } else {
     }
   };
@@ -259,11 +259,11 @@ const CalculatorDetail = () => {
     if (calculator && calculator.roofParams.roofArea > 0) {
       const { roofType, roofArea, complexity } = calculator.roofParams;
       const totalHours = estimateLaborHours(roofArea, roofType, complexity);
-      
+
       // Create labor entries
       const dakdekkerHours = Math.ceil(totalHours * 0.6);
       const assistentHours = Math.ceil(totalHours * 0.4);
-      
+
       const newLabor: CalculationLabor[] = [
         {
           id: uuidv4(),
@@ -278,13 +278,13 @@ const CalculatorDetail = () => {
           hours: assistentHours
         }
       ];
-      
+
       // Add to existing labor
       setCalculator({
         ...calculator,
         labor: [...calculator.labor, ...newLabor]
       });
-      
+
     } else {
       console.error("Invalid roof area or parameters");
     }
@@ -360,7 +360,7 @@ const CalculatorDetail = () => {
                 </div>
               </div>
             </div>
-            
+
             <Tabs defaultValue="details">
               <TabsList className="w-full mb-4">
                 <TabsTrigger value="details" className="flex-1">Dak details</TabsTrigger>
@@ -369,9 +369,9 @@ const CalculatorDetail = () => {
                 <TabsTrigger value="equipment" className="flex-1">Materieel</TabsTrigger>
                 <TabsTrigger value="misc" className="flex-1">Overig</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="details" className="mt-0">
-                <CalculatorDetails 
+                <CalculatorDetails
                   roofParams={calculator.roofParams}
                   onRoofParamsChange={handleRoofParamsChange}
                   marginPercentage={calculator.marginPercentage}
@@ -380,7 +380,7 @@ const CalculatorDetail = () => {
                   onTaxRateChange={handleTaxRateChange}
                 />
               </TabsContent>
-              
+
               <TabsContent value="materials" className="mt-0">
                 <CalculatorMaterials
                   materials={calculator.materials}
@@ -390,7 +390,7 @@ const CalculatorDetail = () => {
                   onEstimateMaterials={handleEstimateMaterials}
                 />
               </TabsContent>
-              
+
               <TabsContent value="labor" className="mt-0">
                 <CalculatorLabor
                   labor={calculator.labor}
@@ -400,7 +400,7 @@ const CalculatorDetail = () => {
                   onEstimateLabor={handleEstimateLabor}
                 />
               </TabsContent>
-              
+
               <TabsContent value="equipment" className="mt-0">
                 <CalculatorEquipment
                   equipment={calculator.equipment}
@@ -409,7 +409,7 @@ const CalculatorDetail = () => {
                   onDeleteEquipment={handleDeleteEquipment}
                 />
               </TabsContent>
-              
+
               <TabsContent value="misc" className="mt-0">
                 <CalculatorMiscellaneous
                   miscellaneous={calculator.miscellaneous}
@@ -420,7 +420,7 @@ const CalculatorDetail = () => {
               </TabsContent>
             </Tabs>
           </div>
-          
+
           <div>
             <CalculatorSummary summary={summary} roofArea={calculator.roofParams.roofArea} />
           </div>

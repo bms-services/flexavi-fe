@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateLeadForm } from "./CreateLeadForm";
-import { CreateLeadFormData } from "@/utils/validations";
 import { Lead } from "@/types";
 
 interface CreateLeadDialogProps {

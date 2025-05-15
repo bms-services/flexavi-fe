@@ -4,7 +4,6 @@ import { Button } from '../button';
 import { useTranslation } from 'react-i18next';
 import { createProfileIntent } from '@/actions/profileAction';
 import { useAppDispatch } from '@/hooks/use-redux';
-import { toast } from 'react-toastify';
 
 const PaymentStripe = ({ onBack }: {
     onBack?: () => void;
@@ -47,7 +46,6 @@ const PaymentStripe = ({ onBack }: {
             setErrorMessage(error.message);
         } else {
             setErrorMessage(null);
-            toast.success(t('dashboard:settings.payment.success'));
         }
     };
 

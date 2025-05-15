@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Building2, Building2Icon } from "lucide-react";
-import DropZone from "@/components/ui/drop-zone";
 import { Control, FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 import { Company } from "@/types/company";
 import { TFunction } from "i18next";
 import logo from "@/assets/images/logo/logo-full.png"
+import { Dropzone } from "@/components/ui/drop-zone/Dropzone";
 export default function CompanyInformation({
     register,
     state,
@@ -59,7 +59,7 @@ export default function CompanyInformation({
 
                         <CardContent className="bg-white p-8 space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <DropZone label="Bedrijfslogo" />
+                                {/* <Dropzone label="Bedrijfslogo" /> */}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

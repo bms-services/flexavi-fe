@@ -1,16 +1,20 @@
-// import { DateRangeType } from "react-tailwindcss-datepicker";
+
+
+export type Filters = Record<string, string | number>;
+export type Sorts = Record<string, "asc" | "desc">;
 
 export interface ParamsAction {
   page?: number;
   per_page?: number;
-  sort_by?: string;
-  sort_dir?: "asc" | "desc";
   search?: string;
+  filters?: Filters;
+  sorts?: Sorts;
   //   date?: {
   //     start_date?: DateRangeType["startDate"];
   //     end_date?: DateRangeType["endDate"];
   //   };
 }
+
 
 export interface ParamsActionAnalytic extends ParamsAction {
   start_date?: string;

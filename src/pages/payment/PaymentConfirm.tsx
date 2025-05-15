@@ -6,7 +6,6 @@ import { useAppDispatch } from '@/hooks/use-redux';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { toast } from 'react-toastify';
 
 export default function PaymentConfirm() {
     const dispatch = useAppDispatch();
@@ -29,11 +28,8 @@ export default function PaymentConfirm() {
 
                 if (payload.result.error) {
                     setStatus('error');
-                    toast.error(payload.result.error.message);
-
                 } else {
-                    setStatus('success');       
-                    toast.success("Success save payment method");
+                    setStatus('success');
                 }
             }
             setLoading(false);
@@ -47,8 +43,6 @@ export default function PaymentConfirm() {
 
         if (payload.success) {
             await dispatch(getProfile());
-
-            toast.success("Success activate trial");
 
             setTimeout(() => {
                 navigate('/');

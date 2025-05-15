@@ -5,25 +5,24 @@ import {
     Control,
     Controller,
     FieldErrors,
-    FieldValues,
     RegisterOptions,
-    UseFormRegister,
 } from "react-hook-form";
 import { Label } from '../label';
 import { cn } from '@/lib/utils';
-interface PhoneNumberProps {
+
+interface PhoneNumberProps<T> extends React.ComponentProps<"input"> {
     id?: string
     label?: string
     rules?: {
         name: string;
-        control: Control<FieldValues>;
+        control: Control<T>;
         options?: RegisterOptions;
-        errors: FieldErrors<FieldValues>;
+        errors: FieldErrors<T>;
     };
     className?: string;
 }
 
-export default function PhoneNumber({ id, label, rules, className }: PhoneNumberProps) {
+export default function PhoneNumber({ id, label, rules, className }: PhoneNumberProps<T>) {
     return (
         <div className='relative space-y-1'>
             {label && (

@@ -4,13 +4,11 @@ import { cn } from "@/lib/utils"
 import { Label } from "./label"
 import {
   FieldErrors,
-  FieldValues,
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form"
 
-interface TextareaC<T extends FieldValues>
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextareaC<T> extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
   icon?: React.ReactNode
   rules?: {
@@ -21,7 +19,7 @@ interface TextareaC<T extends FieldValues>
   }
 }
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaC<FieldValues>>(
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaC<T>>(
   ({ className, label, icon, rules, ...props }, ref) => {
     return (
       <div className="relative space-y-1">

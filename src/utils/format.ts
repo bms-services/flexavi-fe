@@ -24,29 +24,33 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+export function formatIsoToDate(date: string): string {
+  return format(new Date(date), "dd MMMM yyyy", { locale: nl });
+}
+
 export function formatDate(date: Date): string {
-  return format(date, "d MMMM yyyy", { locale: nl });
+  return format(date, "dd MMMM yyyy", { locale: nl });
 }
 
 export function formatDateTime(date: Date): string {
-  return format(date, "d MMM yyyy HH:mm", { locale: nl });
+  return format(date, "dd MMM yyyy HH:mm", { locale: nl });
 }
 
 export function formatRelativeDate(date: Date): string {
   if (isToday(date)) {
     return `Vandaag ${format(date, "HH:mm")}`;
   }
-  
+
   if (isYesterday(date)) {
     return `Gisteren ${format(date, "HH:mm")}`;
   }
-  
+
   const daysAgo = differenceInDays(new Date(), date);
-  
+
   if (daysAgo < 7) {
     return formatDistanceToNow(date, { addSuffix: true, locale: nl });
   }
-  
+
   return format(date, "d MMM yyyy", { locale: nl });
 }
 

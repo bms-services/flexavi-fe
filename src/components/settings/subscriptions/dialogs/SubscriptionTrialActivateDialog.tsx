@@ -21,7 +21,8 @@ export default function SubscriptionTrialActivateDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-4xl overflow-y-auto">
                 <SubscriptionSettings />
-                <DialogFooter className="space-y-12">
+
+                <DialogFooter className="space-y-12 mt-3">
                     <p className="text-sm text-muted-foreground">
                         To start your trial, choose a plan and add your payment method. You will not be charged until the trial period ends.
                     </p>

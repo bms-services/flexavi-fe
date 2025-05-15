@@ -63,6 +63,7 @@ export default function SelectSearchAsync({ id, label, rules, isLoading, isDisab
                                 border: state.isFocused ? "1px solid hsl(var(--primary))" : "1px solid hsl(var(--input))",
                                 borderRadius: "6px",
                                 outline: "none",
+                                backgroundColor: "hsl(210 50% 98%)",
                                 boxShadow: "none",
                                 "&:hover": {
                                     border: "1px solid hsl(var(--input))",

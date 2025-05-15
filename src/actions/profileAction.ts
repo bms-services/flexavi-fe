@@ -1,3 +1,4 @@
+import { Company } from "@/types/company";
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -75,6 +76,32 @@ export const updateProfilePayment = createAsyncThunk(
       const { data } = await mainApi.put(`/profile/payment`, {
         setup_intent_id: id,
       });
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const getProfileCompany = createAsyncThunk(
+  "profile/showCompany",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.get(`/profile/company`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const updateProfileCompany = createAsyncThunk(
+  "profile/updateCompany",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.post(`/profile/company`, formData);
 
       return data;
     } catch (error) {

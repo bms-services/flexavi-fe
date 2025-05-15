@@ -30,7 +30,7 @@ const mockWorkOrders = [
 
 const CustomerDashboard = () => {
   const navigate = useNavigate();
-  
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("nl-NL", {
       style: "currency",
@@ -91,7 +91,7 @@ const CustomerDashboard = () => {
           </div>
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {mockQuotes.slice(0, 3).map((quote) => (
-              <Card 
+              <Card
                 key={quote.id}
                 className="border shadow-sm hover:shadow-md transition-all cursor-pointer"
                 onClick={() => handleNavigateToQuote(quote.id)}
@@ -130,7 +130,7 @@ const CustomerDashboard = () => {
           </div>
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {mockInvoices.slice(0, 3).map((invoice) => (
-              <Card 
+              <Card
                 key={invoice.id}
                 className="border shadow-sm hover:shadow-md transition-all cursor-pointer"
                 onClick={() => handleNavigateToInvoice(invoice.id)}

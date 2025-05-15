@@ -5,6 +5,8 @@ import {
   createProfileTrial,
   updateProfilePackage,
   updateProfilePayment,
+  getProfileCompany,
+  updateProfileCompany,
 } from "@/actions/profileAction";
 import { StatusReducerEnum } from "@/hooks/use-redux";
 import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
@@ -22,6 +24,9 @@ const initialState = {
   createTrial: createModuleState(),
   updatePackage: createModuleState(),
   updatePayment: createModuleState(),
+  showCompany: createModuleState(),
+  updateCompany: createModuleState(),
+
 };
 
 const profileSlice = createSlice({
@@ -37,7 +42,9 @@ const profileSlice = createSlice({
           createProfileIntent,
           createProfileTrial,
           updateProfilePackage,
-          updateProfilePayment
+          updateProfilePayment,
+          getProfileCompany,
+          updateProfileCompany
         ),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.PENDING);
@@ -50,7 +57,9 @@ const profileSlice = createSlice({
           createProfileIntent,
           createProfileTrial,
           updateProfilePackage,
-          updateProfilePayment
+          updateProfilePayment,
+          getProfileCompany,
+          updateProfileCompany
         ),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.FULFILLED);
@@ -63,7 +72,9 @@ const profileSlice = createSlice({
           createProfileIntent,
           createProfileTrial,
           updateProfilePackage,
-          updateProfilePayment
+          updateProfilePayment,
+          getProfileCompany,
+          updateProfileCompany
         ),
         (state, action) => {
           handleModuleState(state, action, StatusReducerEnum.REJECTED);

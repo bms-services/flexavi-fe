@@ -2,6 +2,7 @@ import { tokenName } from "@/hooks/use-cookies";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import errorHandler from "./errorHandler";
+import successHandler from "./successHandler";
 
 // Base URLs dari .env
 const baseApiUrl = import.meta.env.VITE_API_URL;
@@ -27,7 +28,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
     baseURL,
     headers: {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       "Accept-Language": getLangCookie(),
     },
   });
@@ -43,6 +44,12 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       if (lang) {
         config.headers["Accept-Language"] = lang;
       }
+
+      // const isFormData = config.data instanceof FormData;
+      // if (!isFormData) {
+      // config.headers["Content-Type"] = "Fo";
+      // }
+
       return config;
     },
     function (error) {
@@ -52,6 +59,12 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
+      const exclude = ['GET'];
+
+      if (!exclude.includes(response.config.method?.toUpperCase() || '')) {
+        successHandler(response.data.message);
+      }
+
       return response;
     },
     (error: AxiosError<Record<string, string[]>>) => {
