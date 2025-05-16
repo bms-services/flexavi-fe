@@ -28,7 +28,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
     baseURL,
     headers: {
-      // "Content-Type": "application/json",
+      "Content-Type": "application/json",
       "Accept-Language": getLangCookie(),
     },
   });
@@ -47,7 +47,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       // const isFormData = config.data instanceof FormData;
       // if (!isFormData) {
-      // config.headers["Content-Type"] = "Fo";
+      // config.headers["Content-Type"] = "application/json";
       // }
 
       return config;

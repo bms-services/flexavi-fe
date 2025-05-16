@@ -51,8 +51,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading} // Disable button when loading is true
         {...props}
       >
-        {loading ? (
-          <span className="inline-flex items-center justify-center">
+
+        <span className="flex items-center">
+          {loading && (
             <svg
               className="animate-spin h-5 w-5 mr-3 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -67,11 +68,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 1116 0A8 8 0 014 12z"
               ></path>
             </svg>
-            Loading...
+          )}
+          <span>
+            {children}
           </span>
-        ) : (
-          children
-        )}
+        </span>
       </Comp>
     )
   }

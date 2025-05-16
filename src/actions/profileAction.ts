@@ -41,7 +41,7 @@ export const createProfileIntent = createAsyncThunk(
   }
 );
 
-export const createProfileTrial = createAsyncThunk(
+export const storeProfileTrial = createAsyncThunk(
   "profile/createTrial",
   async (_, { rejectWithValue }) => {
     try {
@@ -109,3 +109,59 @@ export const updateProfileCompany = createAsyncThunk(
     }
   }
 );
+
+
+export const getProfileTeam = createAsyncThunk(
+  "profile/showTeam",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.get(`/profile/team`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const updateProfileTeam = createAsyncThunk(
+  "profile/updateTeam",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.post(`/profile/team`, formData);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const getDetailProfileTeam = createAsyncThunk(
+  "profile/showDetailTeam",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.get(`/profile/team/${id}`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+
+
+export const destroyProfileTeam = createAsyncThunk(
+  "profile/destroyTeam",
+  async (ids: string[], { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.delete("/profile/team", {
+        data: { ids },
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom'; // atau useRouter di Next.js
 import { Progress } from '@/components/ui/progress';
-import { createProfileTrial, getProfile, updateProfilePayment } from '@/actions/profileAction';
+import { storeProfileTrial, getProfile, updateProfilePayment } from '@/actions/profileAction';
 import { useAppDispatch } from '@/hooks/use-redux';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ export default function PaymentConfirm() {
     }, [dispatch, setupIntentId, redirectStatus]);
 
     const handleTrial = async () => {
-        const { payload } = await dispatch(createProfileTrial());
+        const { payload } = await dispatch(storeProfileTrial());
 
         if (payload.success) {
             await dispatch(getProfile());

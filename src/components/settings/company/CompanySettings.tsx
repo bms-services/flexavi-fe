@@ -271,7 +271,9 @@ export const CompanySettings: React.FC = () => {
               setValue={setValue}
             />
 
-            <Button type="submit">
+            <Button type="submit"
+              loading={loadingProfileUpdateCompany}
+            >
               {t("dashboard:company_create.button.save")}
             </Button>
           </CardContent>
