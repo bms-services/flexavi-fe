@@ -10,7 +10,7 @@ export interface Package {
 
 export interface PackageItem {
   id?: string;
-  package_
+  package_item_id?: string;
   stripe_price_id?: string;
   stripe_product_id?: string;
   unit_amount?: number;

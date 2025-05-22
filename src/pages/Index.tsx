@@ -10,7 +10,6 @@ import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointment
 import { RecentLeads } from "@/components/dashboard/RecentLeads";
 import { DashboardCharts } from "@/components/dashboard/charts/DashboardCharts";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getProfile } from "@/actions/profileAction";
 import { useAppDispatch } from "@/hooks/use-redux";
 import CompanyCreateFullPage from "@/components/company/CompanyCreateFullPage";
 

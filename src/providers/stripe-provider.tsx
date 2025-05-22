@@ -1,8 +1,4 @@
 // components/Stripe/StripeProvider.tsx
-import { createProfileIntent } from '@/actions/profileAction';
-import { useAppDispatch } from '@/hooks/use-redux';
-import { RootState } from '@/store';
-import { User } from '@/types/user';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe, SetupIntent, StripeElementsOptionsClientSecret } from '@stripe/stripe-js';
 import { ReactNode, useEffect, useState } from 'react';

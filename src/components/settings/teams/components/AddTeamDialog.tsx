@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormDescription, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { TeamType } from "@/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { CompanyTeam } from "@/types/company";
 
 const teamSchema = z.object({
   name: z.string().min(1, "Team naam is verplicht"),
@@ -34,6 +37,17 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
       color: "#3b82f6",
     },
   });
+
+  const settingTeamStoreRedux = useSelector((state: RootState) => state.setting.team.store);
+
+
+  // useEffect(() => {
+  //   if (responseProfileStoreTeam.success) {
+  //     onOpenChange(false);
+  //     form.reset();
+  //   }
+  // }, [responseProfileStoreTeam, onOpenChange, form]);
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

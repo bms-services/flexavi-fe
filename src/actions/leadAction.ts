@@ -1,11 +1,9 @@
 import { ParamsAction } from "@/@types/global-type";
-import { toastShow } from "@/components/ui/toast/toast-helper";
 import { Lead } from "@/types";
 import { mainApi } from "@/utils/axios";
-import successHandler from "@/utils/successHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getLead = createAsyncThunk(
+export const getLeadIndex = createAsyncThunk(
   "lead/index",
   async (params: ParamsAction, { rejectWithValue }) => {
     try {
@@ -19,7 +17,7 @@ export const getLead = createAsyncThunk(
   }
 );
 
-export const getDetailLead = createAsyncThunk(
+export const getLeadShow = createAsyncThunk(
   "lead/show",
   async (id: string, { rejectWithValue }) => {
     try {
@@ -31,7 +29,7 @@ export const getDetailLead = createAsyncThunk(
   }
 );
 
-export const storeLead = createAsyncThunk(
+export const postLeadStore = createAsyncThunk(
   "lead/store",
   async (formData: Lead, { rejectWithValue }) => {
     try {
@@ -43,7 +41,7 @@ export const storeLead = createAsyncThunk(
   }
 );
 
-export const updateLead = createAsyncThunk(
+export const putLeadUpdate = createAsyncThunk(
   "lead/update",
   async (update: { id: string; formData: Lead }, { rejectWithValue }) => {
     try {
@@ -55,7 +53,7 @@ export const updateLead = createAsyncThunk(
   }
 );
 
-export const destroyLead = createAsyncThunk(
+export const deleteLeadDestroy = createAsyncThunk(
   "lead/destroy",
   async (ids: string[], { rejectWithValue }) => {
     try {

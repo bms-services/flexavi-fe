@@ -1,51 +1,63 @@
 import {
-  getDetailLead,
-  getLead,
-  storeLead,
-  updateLead,
-  destroyLead,
+  getLeadIndex,
+  getLeadShow,
+  putLeadUpdate,
+  postLeadStore,
+  deleteLeadDestroy
 } from "@/actions/leadAction";
-import { StatusReducerEnum } from "@/hooks/use-redux";
-import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
-import {
-  createSlice,
-  isFulfilled,
-  isPending,
-  isRejected,
-} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncState } from "./settingSlice";
+import { Lead } from "@/types";
+import { PaginatedResponse } from "@/lib/redux-thunk";
 
+// --- Initial State ---
 const initialState = {
-  index: createModuleState(),
-  show: createModuleState(),
-  store: createModuleState(),
-  update: createModuleState(),
-  destroy: createModuleState(),
+  index: createAsyncState<PaginatedResponse<Lead>>(),
+  show: createAsyncState<Lead>(),
+  store: createAsyncState<Lead>(),
+  update: createAsyncState<Lead>(),
+  destroy: createAsyncState<Lead>(),
 };
 
 const leadSlice = createSlice({
   name: "lead",
-  initialState: initialState,
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addMatcher(
-        isPending(getLead, getDetailLead, storeLead, updateLead, destroyLead),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.PENDING);
-        }
-      )
-      .addMatcher(
-        isRejected(getLead, getDetailLead, storeLead, updateLead, destroyLead),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.FULFILLED);
-        }
-      )
-      .addMatcher(
-        isFulfilled(getLead, getDetailLead, storeLead, updateLead, destroyLead),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.REJECTED);
-        }
-      );
+    const attachAsyncHandler = <
+      TKey extends keyof typeof initialState
+    >(
+      thunk: any,
+      key: TKey
+    ) => {
+      builder
+        .addCase(thunk.pending, (state) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: true,
+          };
+        })
+        .addCase(thunk.fulfilled, (state, action) => {
+          state[key] = {
+            ...state[key],
+            ...action.payload,
+            loading: false,
+          };
+        })
+        .addCase(thunk.rejected, (state, action) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: false,
+            errors: action.payload?.errors || [action.error.message],
+          };
+        });
+    };
+
+    attachAsyncHandler(getLeadIndex, "index");
+    attachAsyncHandler(getLeadShow, "show");
+    attachAsyncHandler(postLeadStore, "store");
+    attachAsyncHandler(putLeadUpdate, "update");
+    attachAsyncHandler(deleteLeadDestroy, "destroy");
   },
 });
 

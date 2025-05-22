@@ -1,59 +1,58 @@
 import {
-  getDetailPackage,
-  getPackage,
-  updatePackage,
+  getPackageIndex,
+  getPackageShow,
+  putPackageUpdate
 } from "@/actions/packageAction";
-import { StatusReducerEnum } from "@/hooks/use-redux";
-import {
-  createModuleState,
-  handleModuleState,
-  ModuleState,
-  PaginatedResponse,
-} from "@/lib/redux-thunk";
+import { createSlice } from "@reduxjs/toolkit";
 import { Package } from "@/types/package";
-import {
-  createSlice,
-  isFulfilled,
-  isPending,
-  isRejected,
-} from "@reduxjs/toolkit";
+import { PaginatedResponse } from "@/lib/redux-thunk";
+import { createAsyncState } from "./settingSlice";
 
-// interface initialStateI {
-//   index: ModuleState<PaginatedResponse<Package>>;
-//   show: ModuleState<Package>;
-//   update: ModuleState<Package>;
-// }
 
+// --- Initial State ---
 const initialState = {
-  index: createModuleState(),
-  show: createModuleState(),
-  update: createModuleState(),
+  index: createAsyncState<PaginatedResponse<Package>>(),
+  show: createAsyncState<Package>(),
+  update: createAsyncState<Package>(),
 };
 
 const packageSlice = createSlice({
   name: "package",
-  initialState: initialState,
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addMatcher(
-        isPending(getPackage, getDetailPackage, updatePackage),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.PENDING);
-        }
-      )
-      .addMatcher(
-        isRejected(getPackage, getDetailPackage, updatePackage),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.FULFILLED);
-        }
-      )
-      .addMatcher(
-        isFulfilled(getPackage, getDetailPackage, updatePackage),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.REJECTED);
-        }
-      );
+    const attachAsyncHandler = <
+      TKey extends keyof typeof initialState
+    >(
+      thunk: any,
+      key: TKey
+    ) => {
+      builder
+        .addCase(thunk.pending, (state) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: true,
+          };
+        })
+        .addCase(thunk.fulfilled, (state, action) => {
+          state[key] = {
+            ...state[key],
+            ...action.payload,
+            loading: false,
+          };
+        })
+        .addCase(thunk.rejected, (state, action) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: false,
+            errors: action.payload?.errors || [action.error.message],
+          };
+        });
+    };
+
+    attachAsyncHandler(getPackageIndex, "index");
+    attachAsyncHandler(getPackageShow, "show");
+    attachAsyncHandler(putPackageUpdate, "update");
   },
 });
 

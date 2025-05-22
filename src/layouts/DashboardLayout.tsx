@@ -9,7 +9,7 @@ import { CreditCardIcon, MailOpenIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getProfile } from '@/actions/profileAction';
+import { getProfileShow } from '@/actions/profileAction';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { User } from '@/types/user';
@@ -29,11 +29,10 @@ const DashboardLayout: React.FC = () => {
         verifyEmail: false,
     });
 
-    const { loading, response } = useSelector((state: RootState) => state.profile.show);
-    const result = response?.result as User;
+    const profileShowRedux = useSelector((state: RootState) => state.profile.show);
 
     useEffect(() => {
-        dispatch(getProfile());
+        dispatch(getProfileShow());
     }, [dispatch]);
 
     if (!token) {
@@ -87,7 +86,7 @@ const DashboardLayout: React.FC = () => {
                 </div>
             )}
             <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
-                {result?.has_verified_email === false && (
+                {profileShowRedux.result?.has_verified_email === false && (
                     <div className="flex items-center gap-[14px] bg-orange-400 px-4 md:px-6 py-2">
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -107,7 +106,7 @@ const DashboardLayout: React.FC = () => {
                     </div>
                 )}
 
-                {result?.has_payment_method === false && (
+                {profileShowRedux.result?.has_payment_method === false && (
                     <div className="flex items-center gap-[14px] bg-indigo-400 px-4 md:px-6 py-2">
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>

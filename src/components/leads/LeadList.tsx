@@ -5,11 +5,11 @@ import { LeadActions } from "./LeadActions";
 import { CreateLeadDialog } from "./CreateLeadDialog";
 import { useAppDispatch } from "@/hooks/use-redux";
 import {
-  destroyLead,
-  getDetailLead,
-  getLead,
-  storeLead,
-  updateLead,
+  deleteLeadDestroy,
+  getLeadIndex,
+  getLeadShow,
+  putLeadUpdate,
+  postLeadStore,
 } from "@/actions/leadAction";
 import { FormProvider, useForm } from "react-hook-form";
 import { ParamsAction } from "@/@types/global-type";
@@ -45,22 +45,32 @@ export const LeadList: React.FC = () => {
   const [leadId, setLeadId] = useState<string | null>(null);
 
   // grab all your slice‐level statuses via useSelector:
-  const idxLoading = useSelector((s: RootState) => s.lead.index.loading);
-  const showState = useSelector((s: RootState) => s.lead.show);
-  const storeState = useSelector((s: RootState) => s.lead.store);
-  const updateState = useSelector((s: RootState) => s.lead.update);
-  const destroyState = useSelector((s: RootState) => s.lead.destroy);
+  // const idxLoading = useSelector((s: RootState) => s.lead.index.loading);
+  // const showState = useSelector((s: RootState) => s.lead.show);
+  // const storeState = useSelector((s: RootState) => s.lead.store);
+  // const updateState = useSelector((s: RootState) => s.lead.update);
+  // const destroyState = useSelector((s: RootState) => s.lead.destroy);
+
+
+  const leadIndexState = useSelector((state: RootState) => state.lead.index);
+  const leadShowState = useSelector((state: RootState) => state.lead.show);
+  const leadStoreState = useSelector((state: RootState) => state.lead.store);
+  const leadUpdateState = useSelector((state: RootState) => state.lead.update);
+  const leadDestroyState = useSelector((state: RootState) => state.lead.destroy);
+
+
+
 
   // whenever params change, fetch the page
   useEffect(() => {
-    dispatch(getLead(params));
+    dispatch(getLeadIndex(params));
   }, [dispatch, params]);
 
   // Handlers
   const handleStore = useCallback(
     async (data: Lead) => {
       await dispatch(
-        storeLead({
+        postLeadStore({
           ...data,
           address: {
             ...data.address,
@@ -78,7 +88,7 @@ export const LeadList: React.FC = () => {
   // Show detail in dialog
   const handleShow = useCallback(
     async (row: Lead) => {
-      await dispatch(getDetailLead(row.id));
+      await dispatch(getLeadShow(row.id));
       setLeadId(row.id);
       setIsDialogOpen(true);
     },
@@ -91,7 +101,7 @@ export const LeadList: React.FC = () => {
     async (data: Lead) => {
       if (!leadId) return;
       await dispatch(
-        updateLead({
+        putLeadUpdate({
           id: leadId,
           formData: {
             ...data,
@@ -113,7 +123,7 @@ export const LeadList: React.FC = () => {
   const handleDestroy = useCallback(
     async (rows: Lead[]) => {
       const ids = rows.map((r) => r.id);
-      await dispatch(destroyLead(ids));
+      await dispatch(deleteLeadDestroy(ids));
     },
     [dispatch]
   );
@@ -128,8 +138,8 @@ export const LeadList: React.FC = () => {
 
   // When detail fetch succeeds, populate the form
   useEffect(() => {
-    if (showState.response.success) {
-      const lead = showState.response.result as Lead;
+    if (leadShowState.success) {
+      const lead = leadShowState.result
       methods.reset({
         ...lead,
         address: {
@@ -141,22 +151,22 @@ export const LeadList: React.FC = () => {
         },
       });
     }
-  }, [showState.response, methods]);
+  }, [leadShowState, methods]);
 
   // **After** store/update/destroy all succeed, close dialog and re-fetch
   useEffect(() => {
     if (
-      storeState.response.success ||
-      updateState.response.success ||
-      destroyState.response.success
+      leadStoreState.success ||
+      leadUpdateState.success ||
+      leadDestroyState.success
     ) {
       setIsDialogOpen(false);
-      dispatch(getLead(params));
+      dispatch(getLeadIndex(params));
     }
   }, [
-    storeState.response.success,
-    updateState.response.success,
-    destroyState.response.success,
+    leadStoreState.success,
+    leadUpdateState.success,
+    leadDestroyState.success,
     dispatch,
     params,
   ]);

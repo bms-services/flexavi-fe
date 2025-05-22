@@ -32,3 +32,19 @@ export interface CompanyAddress {
   province?: string;
   country?: string;
 }
+
+
+export interface CompanyTeam {
+  id?: string;
+  name?: string;
+  description?: string;
+  color?: string;
+  type?: string;
+  members?: string[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CompanyTeamUser {
+  id?: string;
+}

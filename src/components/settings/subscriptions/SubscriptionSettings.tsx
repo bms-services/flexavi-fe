@@ -7,13 +7,13 @@ import { InvoiceHistory } from "./components/InvoiceHistory";
 import { CurrentPlan } from "./components/CurrentPlan";
 import { CancelSubscription } from "./components/CancelSubscription";
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getPackage } from "@/actions/packageAction";
+import { getPackageIndex } from "@/actions/packageAction";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { PaginatedResponse } from "@/lib/redux-thunk";
 import { CompanyPackageItem, Package, PackageItem, PackageTypeEnum, PackageTypeT } from "@/types/package";
-import { updateProfilePackage } from "@/actions/profileAction";
+import { putSettingPackageUpdate } from "@/actions/settingAction";
 import { User } from "@/types/user";
 
 
@@ -21,13 +21,18 @@ import { User } from "@/types/user";
 export const SubscriptionSettings = () => {
   const dispatch = useAppDispatch();
 
-  const { loading, response: responsePackageIndex } = useSelector((state: RootState) => state.package.index);
-  const { response: responseProfileUpdatePackage } = useSelector((state: RootState) => state.profile.updatePackage);
-  const { response: responseProfileShow } = useSelector((state: RootState) => state.profile.show);
+  // const { loading, response: responsePackageIndex } = useSelector((state: RootState) => state.package.index);
+  // const { response: responseProfileUpdatePackage } = useSelector((state: RootState) => state.setting.package.update);
+  // const { response: responseProfileShow } = useSelector((state: RootState) => state.profile.show);
 
-  const result = responsePackageIndex?.result as PaginatedResponse<Package>;
-  const resultProfileShow = responseProfileShow?.result as User;
-  const resultProfileUpdatePackage = responseProfileUpdatePackage?.result as CompanyPackageItem;
+
+  const packageIndexRedux = useSelector((state: RootState) => state.package.index);
+  const settingPackageUpdateRedux = useSelector((state: RootState) => state.setting.package.update);
+  const profileShowRedux = useSelector((state: RootState) => state.profile.show);
+
+  // const result = responsePackageIndex?.result as PaginatedResponse<Package>;
+  // const resultProfileShow = responseProfileShow?.result as User;
+  // const resultProfileUpdatePackage = responseProfileUpdatePackage?.result as CompanyPackageItem;
 
   const [packageType, setPackageType] = useState<PackageTypeT>(PackageTypeEnum.MONTHLY);
   const [activePackage, setActivePackage] = useState<string | null>(null);
@@ -37,13 +42,13 @@ export const SubscriptionSettings = () => {
   const filteredPackages = packageType === PackageTypeEnum.MONTHLY ? packageMonthly : packageYearly;
 
   useEffect(() => {
-    dispatch(getPackage())
+    dispatch(getPackageIndex())
   }, [dispatch]);
 
 
   useEffect(() => {
-    if (responsePackageIndex.success && result?.data) {
-      const allItems = result.data.flatMap(pkg => pkg.items.map(item => ({
+    if (packageIndexRedux.success) {
+      const allItems = packageIndexRedux.result.data.flatMap(pkg => pkg.items.map(item => ({
         ...item,
         package_id: pkg.id,
         package_name: pkg.name,
@@ -54,24 +59,24 @@ export const SubscriptionSettings = () => {
       setPackageMonthly(allItems.filter(item => item.interval === "month"));
       setPackageYearly(allItems.filter(item => item.interval === "year"));
     }
-  }, [responsePackageIndex, result?.data]);
+  }, [packageIndexRedux]);
 
 
-  useEffect(() => {
-    if (responseProfileShow.success && resultProfileShow?.subscription?.selected_package_item) {
-      const selectedPackageItem = resultProfileShow.subscription.selected_package_item;
-      setActivePackage(selectedPackageItem.package_item_id);
-    }
-  }, [responseProfileShow, resultProfileShow?.subscription?.selected_package_item]);
+  // useEffect(() => {
+  //   if (profileShowRedux.success) {
+  //     const selectedPackageItem = profileShowRedux.result.subscription.selected_package_item;
+  //     setActivePackage(selectedPackageItem.package_item_id);
+  //   }
+  // }, [profileShowRedux]);
 
-  useEffect(() => {
-    if (responseProfileUpdatePackage.success) {
-      setActivePackage(resultProfileUpdatePackage.package_item_id);
-    }
-  }, [responseProfileUpdatePackage]);
+  // useEffect(() => {
+  //   if (settingPackageUpdateRedux.success) {
+  //     setActivePackage(settingPackageUpdateRedux.result.package_item_id);
+  //   }
+  // }, [settingPackageUpdateRedux]);
 
   const handleUpgrade = (id: string) => {
-    dispatch(updateProfilePackage(id));
+    dispatch(putSettingPackageUpdate(id));
   }
 
   return (

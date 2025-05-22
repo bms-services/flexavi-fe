@@ -33,14 +33,19 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
     formState: { errors },
   } = useFormContext();
 
-  const { loading: loadingLeadsStore, response: responseLeadStore } = useSelector((state: RootState) => state.lead.store);
-  const resultLeadStore = responseLeadStore.result as Lead;
+  // const { loading: loadingLeadsStore, response: responseLeadStore } = useSelector((state: RootState) => state.lead.store);
+  // const resultLeadStore = responseLeadStore.result as Lead;
 
-  const { loading: loadingLeadShow, response: responseLeadShow } = useSelector((state: RootState) => state.lead.show);
-  const resultLeadShow = responseLeadShow.result as Lead;
+  // const { loading: loadingLeadShow, response: responseLeadShow } = useSelector((state: RootState) => state.lead.show);
+  // const resultLeadShow = responseLeadShow.result as Lead;
 
-  const { loading: loadingLeadUpdate, response: responseLeadUpdate } = useSelector((state: RootState) => state.lead.update);
-  const resultLeadUpdate = responseLeadUpdate.result as Lead;
+  // const { loading: loadingLeadUpdate, response: responseLeadUpdate } = useSelector((state: RootState) => state.lead.update);
+  // const resultLeadUpdate = responseLeadUpdate.result as Lead;
+
+  const leadUpdateRedux = useSelector((state: RootState) => state.lead.update);
+  const leadShowRedux = useSelector((state: RootState) => state.lead.show);
+  const leadStoreRedux = useSelector((state: RootState) => state.lead.store);
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
@@ -102,7 +107,7 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
           Annuleren
         </Button>
         <Button type="submit"
-          loading={loadingLeadsStore || loadingLeadShow || loadingLeadUpdate}>
+          loading={leadStoreRedux.loading || leadShowRedux.loading || leadUpdateRedux.loading}>
           {leadId ? "Lead Bijwerken" : "Lead Toevoegen"}
         </Button>
       </div>

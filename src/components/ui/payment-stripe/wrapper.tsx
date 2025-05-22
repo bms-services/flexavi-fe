@@ -1,4 +1,4 @@
-import { createProfileIntent } from "@/actions/profileAction";
+import { postSettingIntentStore } from "@/actions/settingAction";
 import { useAppDispatch } from "@/hooks/use-redux";
 import StripeProvider from "@/providers/stripe-provider";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ export default function StripeWrapper() {
 
     useEffect(() => {
         const fetchIntent = async () => {
-            const { payload } = await dispatch(createProfileIntent());
+            const { payload } = await dispatch(postSettingIntentStore());
             if (payload?.result?.client_secret) {
                 setClientSecret(payload.result.client_secret);
             }

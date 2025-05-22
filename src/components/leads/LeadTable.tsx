@@ -16,8 +16,7 @@ interface LeadTableProps {
 }
 
 export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit, onDelete, onArchive }) => {
-  const { loading, response } = useSelector((state: RootState) => state.lead.index);
-  const result = response.result as PaginationResponse<Lead>;
+  const leadIndexRedux = useSelector((state: RootState) => state.lead.index);
 
   const columns = useMemo<CustomColumnDef<Lead>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -52,9 +51,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
     <div className="space-y-4">
       <TableTanstack
         columns={columns}
-        data={result?.data || []}
-        meta={result?.meta}
-        isLoading={loading}
+        data={leadIndexRedux.result?.data ?? []}
+        meta={leadIndexRedux.result?.meta}
+        isLoading={leadIndexRedux.loading}
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}

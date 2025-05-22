@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom'; // atau useRouter di Next.js
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Progress } from '@/components/ui/progress';
-import { storeProfileTrial, getProfile, updateProfilePayment } from '@/actions/profileAction';
+import { postSettingTrialStore, putSettingPaymentUpdate } from '@/actions/settingAction';
 import { useAppDispatch } from '@/hooks/use-redux';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { getProfileShow } from '@/actions/profileAction';
 
 export default function PaymentConfirm() {
     const dispatch = useAppDispatch();
@@ -19,12 +20,12 @@ export default function PaymentConfirm() {
     const setupIntentId = searchParams.get('setup_intent');
     const redirectStatus = searchParams.get('redirect_status');
 
-    const { loading: loadingCreateTrial } = useSelector((state: RootState) => state.profile.createTrial);
+    const { loading: loadingCreateTrial } = useSelector((state: RootState) => state.setting.trial.store);
 
     useEffect(() => {
         async function fetchPaymentMethod() {
             if (setupIntentId && redirectStatus === 'succeeded') {
-                const { payload } = await dispatch(updateProfilePayment(setupIntentId));
+                const { payload } = await dispatch(putSettingPaymentUpdate(setupIntentId));
 
                 if (payload.result.error) {
                     setStatus('error');
@@ -39,10 +40,10 @@ export default function PaymentConfirm() {
     }, [dispatch, setupIntentId, redirectStatus]);
 
     const handleTrial = async () => {
-        const { payload } = await dispatch(storeProfileTrial());
+        const { payload } = await dispatch(postSettingTrialStore());
 
         if (payload.success) {
-            await dispatch(getProfile());
+            await dispatch(getProfileShow());
 
             setTimeout(() => {
                 navigate('/');

@@ -1,85 +1,53 @@
 import {
-  getProfile,
-  updateProfile,
-  createProfileIntent,
-  storeProfileTrial,
-  updateProfilePackage,
-  updateProfilePayment,
-  getProfileCompany,
-  updateProfileCompany,
+  getProfileShow,
+  putProfileUpdate,
 } from "@/actions/profileAction";
-import { StatusReducerEnum } from "@/hooks/use-redux";
-import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
-import {
-  createSlice,
-  isFulfilled,
-  isPending,
-  isRejected,
-} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncState } from "./settingSlice";
+import { User } from "@/types/user";
 
+// --- Initial State ---
 const initialState = {
-  show: createModuleState(),
-  update: createModuleState(),
-  createIntent: createModuleState(),
-  createTrial: createModuleState(),
-  updatePackage: createModuleState(),
-  updatePayment: createModuleState(),
-  showCompany: createModuleState(),
-  updateCompany: createModuleState(),
-
+  show: createAsyncState<User>(),
+  update: createAsyncState<User>(),
 };
 
 const profileSlice = createSlice({
   name: "profile",
-  initialState: initialState,
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addMatcher(
-        isPending(
-          getProfile,
-          updateProfile,
-          createProfileIntent,
-          storeProfileTrial,
-          updateProfilePackage,
-          updateProfilePayment,
-          getProfileCompany,
-          updateProfileCompany
-        ),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.PENDING);
-        }
-      )
-      .addMatcher(
-        isRejected(
-          getProfile,
-          updateProfile,
-          createProfileIntent,
-          storeProfileTrial,
-          updateProfilePackage,
-          updateProfilePayment,
-          getProfileCompany,
-          updateProfileCompany
-        ),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.FULFILLED);
-        }
-      )
-      .addMatcher(
-        isFulfilled(
-          getProfile,
-          updateProfile,
-          createProfileIntent,
-          storeProfileTrial,
-          updateProfilePackage,
-          updateProfilePayment,
-          getProfileCompany,
-          updateProfileCompany
-        ),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.REJECTED);
-        }
-      );
+    const attachAsyncHandler = <
+      TKey extends keyof typeof initialState
+    >(
+      thunk: any,
+      key: TKey
+    ) => {
+      builder
+        .addCase(thunk.pending, (state) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: true,
+          };
+        })
+        .addCase(thunk.fulfilled, (state, action) => {
+          state[key] = {
+            ...state[key],
+            ...action.payload,
+            loading: false,
+          };
+        })
+        .addCase(thunk.rejected, (state, action) => {
+          state[key] = {
+            ...createAsyncState(),
+            loading: false,
+            errors: action.payload?.errors || [action.error.message],
+          };
+        });
+    };
+
+    attachAsyncHandler(getProfileShow, "show");
+    attachAsyncHandler(putProfileUpdate, "update");
   },
 });
 

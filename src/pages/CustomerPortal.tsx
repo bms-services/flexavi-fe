@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { QuoteStatus } from "@/types";
 import { mockQuotes } from "@/data/mockQuotes";
@@ -88,7 +88,7 @@ const CustomerPortal = () => {
   if (submitted) {
     return (
       <CustomerPortalLayout>
-        <PortalSuccessMessage 
+        <PortalSuccessMessage
           title="Offerte Geaccepteerd"
           description="Hartelijk dank voor het accepteren van onze offerte."
         />
@@ -99,7 +99,7 @@ const CustomerPortal = () => {
   if (rejected) {
     return (
       <CustomerPortalLayout>
-        <PortalRejectedMessage 
+        <PortalRejectedMessage
           title="Revisie Aangevraagd"
           description="We hebben uw revisie verzoek ontvangen en nemen spoedig contact met u op."
         />
@@ -115,8 +115,8 @@ const CustomerPortal = () => {
   ];
 
   return (
-    <CustomerPortalLayout 
-      title="Offerte Details" 
+    <CustomerPortalLayout
+      title="Offerte Details"
       subtitle="Bekijk en beheer uw offerte"
     >
       <div className="max-w-4xl mx-auto">
@@ -128,43 +128,43 @@ const CustomerPortal = () => {
               status={quote.status as QuoteStatus}
             />
           </CardHeader>
-          
+
           <CardContent className="py-8 space-y-8">
-            <QuoteDetails 
+            <QuoteDetails
               customer={customer}
               quote={quote}
               formatCurrency={formatCurrency}
             />
-            
+
             <Separator className="my-8" />
-            
+
             <div>
               <h3 className="text-lg font-medium text-gray-800 mb-4">Specificatie</h3>
               <div className="bg-gray-50 rounded-lg p-6 overflow-x-auto">
-                <QuoteLineItems 
+                <QuoteLineItems
                   lineItems={quote.lineItems}
                   formatCurrency={formatCurrency}
                 />
               </div>
             </div>
-            
+
             <Separator className="my-8" />
-            
-            <WarrantySection 
+
+            <WarrantySection
               warranty="Op alle installatie werkzaamheden geven wij 5 jaar garantie. Op de gebruikte materialen is de fabrieksgarantie van toepassing."
             />
-            
-            <Attachments 
+
+            <Attachments
               defaultAttachments={demoAttachments}
             />
-            
+
             <GeneralTerms />
-            
+
             <Separator className="my-8" />
-            
+
             <QuoteSignatureSection onSignatureChange={setSignature} />
           </CardContent>
-          
+
           <CardFooter className="bg-gray-50 border-t py-6">
             <QuoteActions
               onRevisionRequest={() => setIsRevisionDialogOpen(true)}

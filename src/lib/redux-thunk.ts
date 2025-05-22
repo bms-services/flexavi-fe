@@ -1,3 +1,4 @@
+import { MetaResponse } from "@/@types/global-type";
 import { StatusReducerEnum } from "@/hooks/use-redux";
 import {
   PayloadAction,
@@ -9,15 +10,7 @@ export type ErrorType = Record<string, string[]> | null;
 
 export interface PaginatedResponse<T> {
   data: T[];
-  meta: {
-    current_page: number;
-    from: number;
-    last_page: number;
-    per_page: number;
-    to: number;
-    total: number;
-    [key: string]: unknown;
-  };
+  meta: MetaResponse;
   links: {
     first: string;
     last: string;

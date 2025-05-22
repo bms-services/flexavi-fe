@@ -1,7 +1,7 @@
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getSubscription = createAsyncThunk(
+export const getSubscriptionIndex = createAsyncThunk(
   "subscription/index",
   async (_, { rejectWithValue }) => {
     try {
@@ -14,7 +14,7 @@ export const getSubscription = createAsyncThunk(
   }
 );
 
-export const getDetailSubscription = createAsyncThunk(
+export const getSubscriptionShow = createAsyncThunk(
   "subscription/show",
   async (id: string, { rejectWithValue }) => {
     try {

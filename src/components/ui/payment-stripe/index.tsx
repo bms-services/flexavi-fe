@@ -2,13 +2,10 @@ import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import { useState } from 'react';
 import { Button } from '../button';
 import { useTranslation } from 'react-i18next';
-import { createProfileIntent } from '@/actions/profileAction';
-import { useAppDispatch } from '@/hooks/use-redux';
 
 const PaymentStripe = ({ onBack }: {
     onBack?: () => void;
 }) => {
-    const dispatch = useAppDispatch();
     const { t } = useTranslation('dashboard');
     const stripe = useStripe();
     const elements = useElements();

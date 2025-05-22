@@ -1,17 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/store/authSlice";
-import userReducer from "@/store/userSlice";
 import profileReducer from "@/store/profileSlice";
 import packageReducer from "@/store/packageSlice";
 import leadReducer from "@/store/leadSlice";
+import settingReducer from "@/store/settingSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    user: userReducer,
     profile: profileReducer,
     package: packageReducer,
     lead: leadReducer,
+    setting: settingReducer,
   },
 });
 

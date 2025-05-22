@@ -1,7 +1,7 @@
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getPackage = createAsyncThunk(
+export const getPackageIndex = createAsyncThunk(
   "package/index",
   async (params, { rejectWithValue }) => {
     try {
@@ -16,7 +16,7 @@ export const getPackage = createAsyncThunk(
   }
 );
 
-export const getDetailPackage = createAsyncThunk(
+export const getPackageShow = createAsyncThunk(
   "package/show",
   async (id: string, { rejectWithValue }) => {
     try {
@@ -29,7 +29,7 @@ export const getDetailPackage = createAsyncThunk(
   }
 );
 
-export const updatePackage = createAsyncThunk(
+export const putPackageUpdate = createAsyncThunk(
   "package/update",
   async (formData: FormData, { rejectWithValue }) => {
     try {

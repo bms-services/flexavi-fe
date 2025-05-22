@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import React, { useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Building2, Mail, Phone, MapPin, Ban, FileText, Upload, Building2Icon, MailIcon } from "lucide-react";
+import { Building2, MapPin, Ban, Building2Icon, MailIcon } from "lucide-react";
 
-import PaymentStripe from "@/components/ui/payment-stripe";
-import StripeProvider from "@/providers/stripe-provider";
 import { useTranslation } from "react-i18next";
 import StripeWrapper from "@/components/ui/payment-stripe/wrapper";
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getProfileCompany, updateProfileCompany } from "@/actions/profileAction";
+import { getSettingCompanyShow, postSettingCompanyUpdate } from "@/actions/settingAction";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Company } from "@/types/company";
@@ -32,7 +29,7 @@ export const CompanySettings: React.FC = () => {
     watch,
     setValue,
     reset,
-    formState: { errors, isValid }
+    formState: { errors }
   } = useForm<Company>({
     defaultValues: {
       name: '',
@@ -56,32 +53,29 @@ export const CompanySettings: React.FC = () => {
     },
   })
 
-  const { loading: loadingProfileShowCompany, response: responseProfileShowCompany } = useSelector((state: RootState) => state.profile.showCompany);
-  const resultProfileShowCompany = responseProfileShowCompany.result as Company;
-
-  const { loading: loadingProfileUpdateCompany, response: responseProfileUpdateCompany } = useSelector((state: RootState) => state.profile.updateCompany);
-  const resultProfileUpdateCompany = responseProfileUpdateCompany.result as Company;
+  const settingCompanyShowRedux = useSelector((state: RootState) => state.setting.company.show);
+  const settingCompanyUpdateRedux = useSelector((state: RootState) => state.setting.company.update);
 
   useEffect(() => {
-    dispatch(getProfileCompany())
+    dispatch(getSettingCompanyShow())
   }, [dispatch]);
 
 
   useEffect(() => {
-    if (responseProfileShowCompany.success) {
+    if (settingCompanyShowRedux.success && typeof settingCompanyShowRedux.result === "object" && settingCompanyShowRedux.result !== null && "address" in settingCompanyShowRedux.result) {
+      const result = settingCompanyShowRedux.result as Company;
       reset({
-        ...resultProfileShowCompany,
+        ...result,
         address: {
-          ...resultProfileShowCompany.address,
+          ...result.address,
           postal_code:
-            typeof resultProfileShowCompany.address.postal_code === "string"
-              ? { label: resultProfileShowCompany.address.postal_code, value: resultProfileShowCompany.address.postal_code }
-              : resultProfileShowCompany.address.postal_code,
-
+            typeof result.address.postal_code === "string"
+              ? { label: result.address.postal_code, value: result.address.postal_code }
+              : result.address.postal_code,
         },
       });
     }
-  }, [responseProfileShowCompany, reset, resultProfileShowCompany]);
+  }, [settingCompanyShowRedux, reset]);
 
   const handleUpdate = async (data: Company) => {
     const formData = new FormData();
@@ -109,7 +103,7 @@ export const CompanySettings: React.FC = () => {
       formData.append("image", data.image);
     }
 
-    dispatch(updateProfileCompany(formData));
+    dispatch(postSettingCompanyUpdate(formData));
   };
 
   return (
@@ -272,7 +266,7 @@ export const CompanySettings: React.FC = () => {
             />
 
             <Button type="submit"
-              loading={loadingProfileUpdateCompany}
+              loading={settingCompanyUpdateRedux.loading}
             >
               {t("dashboard:company_create.button.save")}
             </Button>
