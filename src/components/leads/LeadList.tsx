@@ -158,6 +158,25 @@ export const LeadList: React.FC = () => {
     }
   }, [leadShowState, methods, isDialogOpen, leadId]);
 
+  // Reset form when dialog opens without leadId
+  useEffect(() => {
+    if (isDialogOpen && !leadId) {
+      methods.reset({
+        name: "",
+        email: "",
+        phone: "",
+        address: {
+          street: "",
+          postal_code: { label: "", value: "" },
+          house_number: "",
+          house_number_addition: "",
+          city: "",
+          province: "",
+        },
+      });
+    }
+  }, [isDialogOpen, leadId, methods]);
+
   // **After** store/update/destroy all succeed, close dialog and re-fetch
   useEffect(() => {
     if (
