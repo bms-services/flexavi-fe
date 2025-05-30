@@ -17,6 +17,7 @@ export interface User {
   subscription?: {
     selected_package_item: UserPackageItem;
   };
+  has_main_company?: boolean;
 }
 
 export interface UserPackageItem {

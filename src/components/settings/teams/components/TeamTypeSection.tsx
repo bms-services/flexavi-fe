@@ -1,88 +1,90 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Users, UserPlus, Building2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Team } from "@/types";
-import { Employee } from "@/types/employee";
-import { TeamType } from "@/types";
+import { ChevronDown } from "lucide-react";
+import { CompanyTeam } from "@/types/company";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface TeamTypeSectionProps {
-  type: TeamType;
-  teams: Team[];
-  onOpenAddTeam: (type: TeamType) => void;
-  onOpenAddMember: (team: Team) => void;
-  getTeamMembers: (team: Team) => Employee[];
+  title: string;
+  description: string;
+  selectedTeam: string;
+  handleOpenDetailTeam: (teamId: string) => void;
+  openAddMemberDialog: (team: CompanyTeam) => void;
+  teams?: CompanyTeam[];
 }
 
 export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
-  type,
-  teams,
-  onOpenAddTeam,
-  onOpenAddMember,
-  getTeamMembers,
+  title,
+  description,
+  selectedTeam,
+  handleOpenDetailTeam,
+  openAddMemberDialog,
+  teams = [],
 }) => {
-  const filteredTeams = teams.filter(team => team.type === type);
-  const icon = type === "sales" ? <Users className="h-5 w-5" /> : <Building2 className="h-5 w-5" />;
-  const title = type === "sales" ? "Verkoop Teams" : "Uitvoerende Teams";
-  const buttonText = type === "sales" ? "Voeg verkoop team toe" : "Voeg uitvoerend team toe";
+
+  const settingTeamShowRedux = useSelector((state: RootState) => state.setting.team.show);
 
   return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        {icon} {title}
-      </h3>
-      {filteredTeams.length > 0 && (
-        <div className="space-y-2 mb-4">
-          {filteredTeams.map(team => (
-            <div key={team.id} className="p-4 border rounded-md space-y-3">
-              <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-2 bg-gray-50 rounded-lg shadow-sm">
+      <div className="flex items-center gap-2">
+        <h2 className="text-lg font-semibold">{title}</h2>
+        <p className="text-sm text-gray-500">({description})</p>
+      </div>
+      <Accordion type="single" collapsible className="w-full rounded-lg border bg-white shadow-sm"
+        value={selectedTeam}
+        onValueChange={(value) => handleOpenDetailTeam(value)}
+      >
+        {teams.map((team) => (
+          <AccordionItem
+            value={team.id}
+            key={team.id}
+            className="border-b last:border-b-0 transition hover:bg-gray-50"
+          >
+            <AccordionTrigger className="flex justify-between w-full gap-2 items-center px-4 py-3 font-semibold text-gray-800 hover:text-primary-600 transition-colors">
+              <div className="flex justify-between w-full items-center">
                 <div className="flex items-center gap-2">
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className="w-7 h-7 rounded-md"
                     style={{ backgroundColor: team.color }}
                   ></div>
-                  <span className="font-medium">{team.name}</span>
+                  <div className="flex flex-col">
+                    <p className="text-left">{team.name}</p>
+                    <p className="text-left text-[12px]">{team.description}</p>
+                  </div>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => onOpenAddMember(team)}
+                  onClick={() => openAddMemberDialog(team)}
                 >
-                  <UserPlus className="h-4 w-4 mr-2" />
                   Voeg lid toe
                 </Button>
               </div>
-
-              {getTeamMembers(team).length > 0 && (
-                <div className="border-t pt-3">
-                  <h4 className="text-sm font-medium mb-2">Teamleden:</h4>
-                  <div className="space-y-2">
-                    {getTeamMembers(team).map(member => (
-                      <div key={member.id} className="flex items-center gap-2 text-sm">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={member.avatar} />
-                          <AvatarFallback>
-                            {member.firstName[0]}
-                            {member.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span>
-                          {member.firstName} {member.lastName}
-                        </span>
+              <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            </AccordionTrigger>
+            <AccordionContent className="overflow-hidden px-6 py-4 bg-gray-50 text-sm text-gray-700 transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+              <div className="flex flex-col gap-2">
+                <span className="font-medium">Teamleden:</span>
+                {settingTeamShowRedux.success && settingTeamShowRedux.result.company_users?.map((member) => (
+                  <div className="space-y-2" key={member.id}>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6">
+                        <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">{member.user_id}</span>
+                      </span>
+                      <div className="">
+                        <span>{member.user_id}</span>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      <Button variant="outline" className="w-full" onClick={() => onOpenAddTeam(type)}>
-        <Plus className="h-4 w-4 mr-2" />
-        {buttonText}
-      </Button>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 };

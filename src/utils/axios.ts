@@ -1,19 +1,18 @@
-import { tokenName } from "@/hooks/use-cookies";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import errorHandler from "./errorHandler";
 import successHandler from "./successHandler";
 
-// Base URLs dari .env
 const baseApiUrl = import.meta.env.VITE_API_URL;
+const tokenName = import.meta.env.VITE_TOKEN_NAME;
 
 const getAuthToken = (): string | null => {
   const token = Cookies.get(tokenName);
 
   if (token && token !== "null") {
-    return JSON.parse(token).token;
+    return token;
   } else {
-    Cookies.set(tokenName, JSON.stringify(null));
+    Cookies.remove(tokenName);
     return null;
   }
 };

@@ -97,7 +97,7 @@ export default function SelectSearchAsync({ id, label, rules, isLoading, isDisab
                     />
                 )}
             />
-            {rules?.errors[rules.name] && (
+            {rules?.errors?.[rules.name] && (
                 <div className="text-red-500 text-sm mt-1">{rules.errors[rules.name].message as string}</div>
             )}
         </div>

@@ -43,8 +43,25 @@ export interface CompanyTeam {
   members?: string[];
   created_at?: string;
   updated_at?: string;
+  company_users?: CompanyTeamUser[];
 }
 
 export interface CompanyTeamUser {
   id?: string;
+  company_id?: string;
+  user_id?: string;
+  company_user_role_id?: string | null;
+  status?: "active" | "inactive";
+  is_owner?: boolean;
+  is_main?: boolean;
+  joined_at?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+
+export type CompanyTeamType = "sales" | "executive";
+export enum CompanyTeamTypeEnum {
+  SALES = "sales",
+  EXECUTIVE = "executive",
 }

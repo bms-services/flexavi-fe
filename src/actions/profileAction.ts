@@ -26,3 +26,30 @@ export const putProfileUpdate = createAsyncThunk(
     }
   }
 );
+
+
+export const verifyEmail = createAsyncThunk(
+  "profile/verifyEmail",
+  async (otp: string, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.put(`/profile/email`, { email_verification_code:otp });
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const resendEmailVerification = createAsyncThunk(
+  "profile/resendEmailVerification",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.post(`/profile/email`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);

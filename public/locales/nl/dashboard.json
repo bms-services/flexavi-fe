@@ -64,5 +64,60 @@
       "description": "Get your trial access to all features by adding a payment method.",
       "cta": "Add Payment Method"
     }
+  },
+  "settings": {
+    "payment": {
+      "title": "Payment Method",
+      "description": "Add a payment method to get your trial access to all features.",
+      "cta": "Add Payment Method",
+      "error": {
+        "required": {
+          "name": "Name on Card is required",
+          "number": "Card Number is required",
+          "expiry": "Expiry Date is required",
+          "cvc": "CVC is required"
+        }
+      }
+    },
+    "team": {
+      "title": "Team Management",
+      "description": "Manage your team members",
+      "placeholder": {
+        "name": "Enter team member's name",
+        "description": "Enter a short description of the team member",
+        "color": "Select a color for the team member",
+        "type": "Select a type for the team member"
+      },
+      "label": {
+        "name": "Name",
+        "description": "Description",
+        "color": "Color",
+        "type": "Type"
+      },
+      "error": {
+        "required": {
+          "name": "Name is required",
+          "description": "Description is required",
+          "color": "Color is required",
+          "type": "Type is required"
+        },
+        "maxLength": {
+          "name": "Name must be at most 255 characters long",
+          "description": "Description must be at most 255 characters long"
+        }
+      }, 
+      "button": {
+        "add": "Add Team Member",
+        "edit": "Edit Team Member",
+        "delete": "Delete Team Member",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "submit": "Submit"
+      },
+      "type":{
+       "sales": "Sales",
+       "executive": "Executive"
+      }
+    }
   }
 }

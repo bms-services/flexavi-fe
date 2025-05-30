@@ -1,6 +1,8 @@
 import {
   getProfileShow,
   putProfileUpdate,
+  verifyEmail,
+  resendEmailVerification,
 } from "@/actions/profileAction";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncState } from "./settingSlice";
@@ -10,6 +12,8 @@ import { User } from "@/types/user";
 const initialState = {
   show: createAsyncState<User>(),
   update: createAsyncState<User>(),
+  verifyEmail: createAsyncState(),
+  resendEmailVerification: createAsyncState(),
 };
 
 const profileSlice = createSlice({
@@ -48,6 +52,8 @@ const profileSlice = createSlice({
 
     attachAsyncHandler(getProfileShow, "show");
     attachAsyncHandler(putProfileUpdate, "update");
+    attachAsyncHandler(verifyEmail, "verifyEmail");
+    attachAsyncHandler(resendEmailVerification, "resendEmailVerification");
   },
 });
 

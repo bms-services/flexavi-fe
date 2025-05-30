@@ -9,7 +9,7 @@ import { CreditCardIcon, MailOpenIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getProfileShow } from '@/actions/profileAction';
+import { getProfileShow, verifyEmail, resendEmailVerification } from '@/actions/profileAction';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { User } from '@/types/user';
@@ -20,9 +20,11 @@ import PaymentMethodCardDialog from '@/components/settings/payments/dialogs/Paym
 
 const DashboardLayout: React.FC = () => {
     const dispatch = useAppDispatch()
-    const { token } = useAuth();
-    const { t } = useTranslation('dashboard');
     const isMobile = useIsMobile();
+
+    const { token } = useAuth();    
+    const { t } = useTranslation('dashboard');
+
     const [modal, setModal] = useState({
         subscription: false,
         paymentMethod: false,
@@ -30,14 +32,12 @@ const DashboardLayout: React.FC = () => {
     });
 
     const profileShowRedux = useSelector((state: RootState) => state.profile.show);
+    const { result } = profileShowRedux;
 
     useEffect(() => {
         dispatch(getProfileShow());
     }, [dispatch]);
 
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
 
     const handleOpenVerifyEmail = () => {
         setModal((modal) => ({
@@ -60,6 +60,35 @@ const DashboardLayout: React.FC = () => {
             subscription: false,
             paymentMethod: true,
         }));
+    }
+
+    const handleSubmitOtp = (otp: string) => {
+        dispatch(verifyEmail(otp))
+            .unwrap()
+            .then(() => {
+                dispatch(getProfileShow());
+
+                setTimeout(() => {
+                    setModal((modal) => ({ ...modal, verifyEmail: false }));
+                }, 1000);
+            })
+            .catch((error) => {
+                console.error('Failed to verify email:', error);
+            });
+    }
+
+    const handleResendOtp = () => {
+        dispatch(resendEmailVerification());
+    }
+
+    // Redirect to login if token is not available
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+
+    // Redirect to create company if user does not have a main company
+    if (!result?.has_main_company) {
+        return <Navigate to="/create-company" replace />;
     }
 
 
@@ -85,8 +114,9 @@ const DashboardLayout: React.FC = () => {
                     <Sidebar />
                 </div>
             )}
+
             <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
-                {profileShowRedux.result?.has_verified_email === false && (
+                {result?.has_verified_email === false && (
                     <div className="flex items-center gap-[14px] bg-orange-400 px-4 md:px-6 py-2">
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -102,11 +132,16 @@ const DashboardLayout: React.FC = () => {
                                 </span>
                             </div>
                         </div>
-                        <VerifyEmailDialog open={modal.verifyEmail} onOpenChange={() => setModal((modal) => ({ ...modal, subscription: false }))} />
+                        <VerifyEmailDialog 
+                        open={modal.verifyEmail} 
+                        onOpenChange={() => setModal((modal) => ({ ...modal, subscription: false }))} 
+                        handleResendOtp={handleResendOtp}
+                        handleSubmitOtp={handleSubmitOtp}
+                        />
                     </div>
                 )}
 
-                {profileShowRedux.result?.has_payment_method === false && (
+                {result?.has_payment_method === false && (
                     <div className="flex items-center gap-[14px] bg-indigo-400 px-4 md:px-6 py-2">
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>

@@ -2,15 +2,19 @@ import { User } from "@/types/user";
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import { tokenName } from "@/hooks/use-cookies";
+// import { tokenName } from "@/hooks/use-cookies";
+
+const tokenName = import.meta.env.VITE_TOKEN_NAME;
 
 export const login = createAsyncThunk(
   "auth/login",
   async (formData: Partial<User>, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post("/login", formData);
+      const result = data.result;
+      
+      Cookies.set(tokenName, result.token, { expires: new Date(result.expires_at) });
 
-      Cookies.set(tokenName, JSON.stringify(data.result), { expires: 7 });
       setTimeout(() => {
         window.location.href = "/";
       }, 1000);

@@ -16,9 +16,7 @@ import {
 
   putSettingPaymentUpdate,
 } from "@/actions/settingAction";
-
-import { Company } from "@/types/company";
-
+import { Company, CompanyTeam } from "@/types/company";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface AsyncState<T = unknown> {
@@ -48,11 +46,11 @@ const initialState = {
     update: createAsyncState(),
   },
   team: {
-    index: createAsyncState(),
-    store: createAsyncState(),
-    show: createAsyncState(),
-    update: createAsyncState(),
-    destroy: createAsyncState(),
+    index: createAsyncState<CompanyTeam>(),
+    store: createAsyncState<CompanyTeam>(),
+    show: createAsyncState<CompanyTeam>(),
+    update: createAsyncState<CompanyTeam>(),
+    destroy: createAsyncState<CompanyTeam>(),
   },
   intent: {
     store: createAsyncState(),

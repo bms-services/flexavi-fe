@@ -1,10 +1,6 @@
-// src/hooks/useAuth.jsx
-
 import { AuthContext } from "@/hooks/use-auth";
-import { tokenName, useCookies } from "@/hooks/use-cookies";
+import { useCookies } from "@/hooks/use-cookies";
 import { ReactNode, useMemo } from "react";
-
-
 
 export type AuthProviderProps = {
   children: ReactNode;
@@ -17,7 +13,7 @@ export type AuthContextType = {
 
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setToken] = useCookies(tokenName, null);
+  const [token, setToken] = useCookies(import.meta.env.VITE_TOKEN_NAME, null);
 
   const value = useMemo(
     () => ({

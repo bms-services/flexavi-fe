@@ -46,20 +46,20 @@ export const SubscriptionSettings = () => {
   }, [dispatch]);
 
 
-  useEffect(() => {
-    if (packageIndexRedux.success) {
-      const allItems = packageIndexRedux.result.data.flatMap(pkg => pkg.items.map(item => ({
-        ...item,
-        package_id: pkg.id,
-        package_name: pkg.name,
-        package_description: pkg.description,
-        package_features: JSON.parse(pkg.features || "[]"),
-      })));
+  // useEffect(() => {
+  //   if (packageIndexRedux.success) {
+  //     const allItems = packageIndexRedux.result.data.flatMap(pkg => pkg.items.map(item => ({
+  //       ...item,
+  //       package_id: pkg.id,
+  //       package_name: pkg.name,
+  //       package_description: pkg.description,
+  //       package_features: JSON.parse(pkg.features || "[]"),
+  //     })));
 
-      setPackageMonthly(allItems.filter(item => item.interval === "month"));
-      setPackageYearly(allItems.filter(item => item.interval === "year"));
-    }
-  }, [packageIndexRedux]);
+  //     setPackageMonthly(allItems.filter(item => item.interval === "month"));
+  //     setPackageYearly(allItems.filter(item => item.interval === "year"));
+  //   }
+  // }, [packageIndexRedux]);
 
 
   // useEffect(() => {

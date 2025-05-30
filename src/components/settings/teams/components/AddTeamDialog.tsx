@@ -7,54 +7,58 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { TeamType } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { CompanyTeam } from "@/types/company";
+import { CompanyTeamTypeEnum } from "@/types/company";
+import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "react-i18next";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const teamSchema = z.object({
   name: z.string().min(1, "Team naam is verplicht"),
+  description: z.string().optional(),
   color: z.string().default("#3b82f6"),
+  type: z.nativeEnum(CompanyTeamTypeEnum).default(CompanyTeamTypeEnum.SALES),
 });
 
 interface AddTeamDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: z.infer<typeof teamSchema>) => void;
-  teamType: TeamType;
 }
 
 export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
   open,
   onOpenChange,
   onSubmit,
-  teamType,
 }) => {
+  const { t } = useTranslation("dashboard");
+
   const form = useForm({
     resolver: zodResolver(teamSchema),
     defaultValues: {
       name: "",
+      description: "",
       color: "#3b82f6",
+      type: CompanyTeamTypeEnum.SALES, // Default to sales team
     },
   });
 
   const settingTeamStoreRedux = useSelector((state: RootState) => state.setting.team.store);
 
-
-  // useEffect(() => {
-  //   if (responseProfileStoreTeam.success) {
-  //     onOpenChange(false);
-  //     form.reset();
-  //   }
-  // }, [responseProfileStoreTeam, onOpenChange, form]);
-
+  useEffect(() => {
+    if (settingTeamStoreRedux.success) {
+      onOpenChange(false);
+      form.reset();
+    }
+  }, [settingTeamStoreRedux, onOpenChange, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {teamType === "sales" ? "Nieuw verkoop team" : "Nieuw uitvoerend team"}
+            Nieuw team
           </DialogTitle>
           <DialogDescription>
             Voeg een nieuw team toe en wijs gebruikers toe aan dit team.
@@ -63,18 +67,34 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Team naam</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Voer teamnaam in" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <Input
+              label={t('dashboard:settings.team.label.name')}
+              placeholder={t('dashboard:settings.team.placeholder.name')}
+              id="name"
+              type="text"
+              rules={{
+                register: form.register,
+                name: "name",
+                options: {
+                  required: t('dashboard:settings.team.error.required.name'),
+                },
+                errors: form.formState.errors,
+              }}
+            />
+
+            <Textarea
+              label={t('dashboard:settings.team.label.description')}
+              placeholder={t('dashboard:settings.team.placeholder.description')}
+              id="description"
+              maxLength={250}
+              rules={{
+                register: form.register,
+                name: "description",
+                options: {
+                  maxLength: 250,
+                },
+                errors: form.formState.errors,
+              }}
             />
 
             <FormField
@@ -82,7 +102,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Team kleur</FormLabel>
+                  <FormLabel>{t('dashboard:settings.team.label.color')}</FormLabel>
                   <FormControl>
                     <div className="flex gap-2 items-center">
                       <Input type="color" {...field} className="w-12 h-10 p-1" />
@@ -98,8 +118,38 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('dashboard:settings.team.label.type')}</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={CompanyTeamTypeEnum.SALES}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('dashboard:settings.team.placeholder.type')} />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {Object.values(CompanyTeamTypeEnum).map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {t(`dashboard:settings.team.type.${type.toLowerCase()}`)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <DialogFooter>
-              <Button type="submit">Team opslaan</Button>
+              <Button type="submit">
+                {t('dashboard:settings.team.button.submit')}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
