@@ -164,9 +164,9 @@ export const useQuoteForm = (quoteId?: string) => {
     };
 
     if (isEditing) {
-      
+      console.log('Updating existing quote');
     } else {
-      
+      console.log('Creating new quote');
     }
     
     console.log("Saving quote:", finalQuote);

@@ -17,7 +17,7 @@ import {
   putSettingPaymentUpdate,
 } from "@/actions/settingAction";
 import { Company, CompanyTeam } from "@/types/company";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, AsyncThunk } from "@reduxjs/toolkit";
 
 export interface AsyncState<T = unknown> {
   success?: boolean;
@@ -75,7 +75,7 @@ const settingSlice = createSlice({
       TPath extends keyof typeof initialState,
       TKey extends keyof typeof initialState[TPath]
     >(
-      thunk: any,
+      thunk: AsyncThunk<any, any, any>,
       path: TPath,
       key: TKey
     ) => {

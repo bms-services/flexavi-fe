@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Post, PostFilters } from "@/types/community";
+import { Post, PostFilters, NewPostData } from "@/types/community";
 import { getUserReactions, setUserReactions } from "./utils/reactions";
 import { currentUser } from "./utils/current-user";
 import { getBasePosts } from "./utils/mock-posts";
@@ -60,9 +60,9 @@ export function useCommunityPosts(filters?: PostFilters) {
       setPosts(filteredPosts);
       setIsLoading(false);
     }, 700);
-  }, [filters?.groupId, filters?.type, filters?.search, filters?.sortBy]);
+  }, [filters]);
 
-  const createPost = async (postData: any) => {
+  const createPost = async (postData: NewPostData) => {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         const newPost: Post = {

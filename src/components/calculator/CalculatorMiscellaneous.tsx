@@ -20,7 +20,7 @@ export const CalculatorMiscellaneous: React.FC<CalculatorMiscellaneousProps> = (
   onUpdateMisc,
   onDeleteMisc,
 }) => {
-  const handleChange = (id: string, field: keyof CalculationMisc, value: any) => {
+  const handleChange = (id: string, field: keyof CalculationMisc, value: string | number) => {
     const item = miscellaneous.find(m => m.id === id);
     if (item) {
       onUpdateMisc({ ...item, [field]: value });

@@ -56,6 +56,14 @@ export interface Post {
   comments?: Comment[];
 }
 
+export interface NewPostData {
+  title: string;
+  content: string;
+  groupId: string;
+  type: PostType;
+  media?: PostMedia[];
+}
+
 export type PostMedia = {
   id: string;
   type: 'image' | 'video' | 'gif';

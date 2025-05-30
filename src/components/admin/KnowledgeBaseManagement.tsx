@@ -17,7 +17,7 @@ import { CategoryDialog } from '@/components/admin/knowledge-base/CategoryDialog
 import { DeleteEntryDialog } from '@/components/admin/knowledge-base/DeleteEntryDialog';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
-import { KnowledgeBaseEntry } from '@/types/knowledge-base';
+import { KnowledgeBaseEntry, KnowledgeBaseCategory } from '@/types/knowledge-base';
 
 export function KnowledgeBaseManagement() {
   const {
@@ -71,7 +71,7 @@ export function KnowledgeBaseManagement() {
     setCategoryDialogOpen(true);
   };
 
-  const handleSaveCategory = (categoryData: any) => {
+  const handleSaveCategory = (categoryData: Omit<KnowledgeBaseCategory, 'id'>) => {
     createCategory(categoryData);
   };
 

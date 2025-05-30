@@ -41,16 +41,11 @@ export const useInvoiceActions = () => {
 
   const createCreditInvoice = (creditType: "full" | "partial") => {
     if (!selectedInvoice) return;
-    
-    if (creditType === "full") {
-      
-    } else if (creditType === "partial") {
-     
-      
-      setTimeout(() => {
-        navigate(`/invoices/create?creditFor=${selectedInvoice.id}`);
-      }, 500);
-    }
+
+    const typeQuery = creditType === "full" ? "full" : "partial";
+    setTimeout(() => {
+      navigate(`/invoices/create?creditFor=${selectedInvoice.id}&type=${typeQuery}`);
+    }, 500);
     
     setCreditDialogOpen(false);
     setSelectedInvoice(null);

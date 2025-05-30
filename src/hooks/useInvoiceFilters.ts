@@ -55,7 +55,7 @@ export const useInvoiceFilters = () => {
     });
   }, [filters]);
 
-  const handleChangeFilter = (field: string, value: any) => {
+  const handleChangeFilter = (field: string, value: unknown) => {
     setFilters((prev) => ({
       ...prev,
       [field]: value,

@@ -27,6 +27,18 @@ export interface CalculationMisc {
   cost: number;
 }
 
+export interface MaterialEstimateItem {
+  name: string;
+  unit: 'm²' | 'm' | 'stuk' | 'liter' | 'kg' | 'uur';
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface MaterialEstimate {
+  mainMaterial: MaterialEstimateItem;
+  additionalMaterials: MaterialEstimateItem[];
+}
+
 export interface RoofParams {
   roofType: 'plat' | 'schuin' | 'anders';
   roofArea: number; // in square meters

@@ -24,7 +24,7 @@ export const CalculatorEquipment: React.FC<CalculatorEquipmentProps> = ({
     return equipment.rentalRate * equipment.days;
   };
 
-  const handleChange = (id: string, field: keyof CalculationEquipment, value: any) => {
+  const handleChange = (id: string, field: keyof CalculationEquipment, value: string | number) => {
     const item = equipment.find(e => e.id === id);
     if (item) {
       onUpdateEquipment({ ...item, [field]: value });

@@ -1,5 +1,5 @@
 
-import { WorkAgreement, QuoteLineItem } from "@/types";
+import { WorkAgreement, QuoteLineItem, Lead, Quote } from "@/types";
 import { useNavigate } from "react-router-dom";
 
 
@@ -8,8 +8,8 @@ export const useWorkAgreementValidation = (isEditing: boolean) => {
 
   const validateAndSaveWorkAgreement = (
     workAgreement: WorkAgreement,
-    selectedCustomer: any,
-    selectedQuote: any,
+    selectedCustomer: Lead | null,
+    selectedQuote: Quote | null,
     lineItems: QuoteLineItem[],
     totalAmount: number
   ) => {
@@ -52,9 +52,9 @@ export const useWorkAgreementValidation = (isEditing: boolean) => {
     console.log("Saving work agreement:", finalWorkAgreement);
 
     if (isEditing) {
-      
+      console.log('Updating work agreement');
     } else {
-      
+      console.log('Creating work agreement');
     }
 
     navigate("/workagreements");
