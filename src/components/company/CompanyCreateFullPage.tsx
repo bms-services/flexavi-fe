@@ -127,36 +127,19 @@ export default function CompanyCreateFullPage() {
         // />
 
 
-        <div>
-            <div className='section'>
-                <CompanyInformation
-                    // state={state}
-                    // fullpageApi={fullpageApi}
-                    register={register}
-                    control={control}
-                    errors={errors}
-                    onSubmit={handleSubmit(onSubmit)}
-                    watch={watch}
-                    setValue={setValue}
-                    t={t} 
-                    state={undefined} 
-                    fullpageApi={undefined}                />
-                </div>
-
-                {/* <div className='section'>
-                    <CompanyAddress
-                        // state={state}
-                        // fullpageApi={fullpageApi}
-                        register={register}
-                        control={control}
-                        errors={errors}
-                        watch={watch}
-                        setValue={setValue}
-                        handleSubmit={handleSubmit}
-                        onSubmit={onSubmit}
-                        t={t}
-                    />
-                </div> */}
-        </div>
+       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+      <div className="w-full max-w-2xl p-6 bg-white rounded shadow-md">
+        <h1 className="text-2xl font-semibold mb-4 text-center">Setup Your Company</h1>
+        <CompanyInformation
+          register={register}
+          control={control}
+          watch={watch}
+          setValue={setValue}
+          errors={errors}
+          onSubmit={handleSubmit(onSubmit)}
+          t={t} 
+        />
+      </div>
+    </div>
     )
 }
