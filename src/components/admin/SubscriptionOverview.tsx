@@ -5,21 +5,22 @@ import { Button } from '@/components/ui/button';
 import { Plus, CreditCard } from 'lucide-react';
 import { SubscriptionTable } from './subscription/SubscriptionTable';
 import { SubscriptionDialog } from './subscription/SubscriptionDialog';
+import { Subscription } from '@/types/subscription';
 
 export function SubscriptionOverview() {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedSubscription, setSelectedSubscription] = useState<any>(null);
+  const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
 
   // Mock data - replace with real data later
-  const subscriptions = [
+  const subscriptions: Subscription[] = [
     {
       id: '1',
       customerName: 'John Doe',
       email: 'john@example.com',
       plan: 'Professional',
-      status: 'active' as const,
-      startDate: new Date('2024-01-01'),
-      nextBilling: new Date('2024-05-01'),
+      status: 'active',
+      startDate: '2024-01-01',
+      nextBilling: '2024-05-01',
       amount: 59.99,
     },
     {
@@ -27,15 +28,15 @@ export function SubscriptionOverview() {
       customerName: 'Jane Smith',
       email: 'jane@example.com',
       plan: 'Enterprise',
-      status: 'active' as const,
-      startDate: new Date('2024-02-15'),
-      nextBilling: new Date('2024-05-15'),
+      status: 'active',
+      startDate: '2024-02-15',
+      nextBilling: '2024-05-15',
       amount: 99.99,
     },
   ];
 
   const handleEdit = (id: string) => {
-    const subscription = subscriptions.find(s => s.id === id);
+    const subscription = subscriptions.find(s => s.id === id) || null;
     setSelectedSubscription(subscription);
     setDialogOpen(true);
   };
@@ -45,7 +46,7 @@ export function SubscriptionOverview() {
     console.log('Delete subscription:', id);
   };
 
-  const handleSave = (data: any) => {
+  const handleSave = (data: Subscription) => {
     // Implement save functionality
     console.log('Save subscription:', data);
     setDialogOpen(false);

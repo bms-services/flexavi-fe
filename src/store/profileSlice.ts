@@ -4,7 +4,7 @@ import {
   putVerifyEmail,
   postResendEmailVerification,
 } from "@/actions/profileAction";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, AsyncThunk } from "@reduxjs/toolkit";
 import { createAsyncState } from "./settingSlice";
 import { User } from "@/types/user";
 
@@ -21,10 +21,8 @@ const profileSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    const attachAsyncHandler = <
-      TKey extends keyof typeof initialState
-    >(
-      thunk: any,
+    const attachAsyncHandler = <TKey extends keyof typeof initialState>(
+      thunk: AsyncThunk<any, any, any>,
       key: TKey
     ) => {
       builder

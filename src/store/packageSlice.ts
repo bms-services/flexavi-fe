@@ -3,7 +3,7 @@ import {
   getPackageShow,
   putPackageUpdate
 } from "@/actions/packageAction";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, AsyncThunk } from "@reduxjs/toolkit";
 import { Package } from "@/types/package";
 import { PaginatedResponse } from "@/lib/redux-thunk";
 import { createAsyncState } from "./settingSlice";
@@ -21,10 +21,8 @@ const packageSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    const attachAsyncHandler = <
-      TKey extends keyof typeof initialState
-    >(
-      thunk: any,
+    const attachAsyncHandler = <TKey extends keyof typeof initialState>(
+      thunk: AsyncThunk<any, any, any>,
       key: TKey
     ) => {
       builder

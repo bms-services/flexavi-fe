@@ -26,7 +26,7 @@ export const CalculatorLabor: React.FC<CalculatorLaborProps> = ({
     return labor.hourlyRate * labor.hours;
   };
 
-  const handleChange = (id: string, field: keyof CalculationLabor, value: any) => {
+  const handleChange = (id: string, field: keyof CalculationLabor, value: string | number) => {
     const item = labor.find(l => l.id === id);
     if (item) {
       onUpdateLabor({ ...item, [field]: value });

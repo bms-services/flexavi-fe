@@ -1,5 +1,5 @@
 
-import { Calculator, CalculationSummary } from "@/types/calculator";
+import { Calculator, CalculationSummary, MaterialEstimate } from "@/types/calculator";
 import { v4 as uuidv4 } from "uuid";
 
 export const calculateSummary = (calculator: Calculator): CalculationSummary => {
@@ -96,7 +96,11 @@ export const formatNumber = (value: number, decimals: number = 2): string => {
   }).format(value);
 };
 
-export const estimateMaterialNeeds = (roofArea: number, roofType: 'plat' | 'schuin' | 'anders', complexity: 'eenvoudig' | 'gemiddeld' | 'complex'): any => {
+export const estimateMaterialNeeds = (
+  roofArea: number,
+  roofType: 'plat' | 'schuin' | 'anders',
+  complexity: 'eenvoudig' | 'gemiddeld' | 'complex'
+): MaterialEstimate => {
   // Wastage factor based on complexity
   const wastageFactor = 
     complexity === 'eenvoudig' ? 1.05 : 
@@ -171,8 +175,8 @@ export const estimateMaterialNeeds = (roofArea: number, roofType: 'plat' | 'schu
 
 export const estimateLaborHours = (roofArea: number, roofType: 'plat' | 'schuin' | 'anders', complexity: 'eenvoudig' | 'gemiddeld' | 'complex'): number => {
   // Base hours per square meter
-  let baseHoursPerSqm = 
-    roofType === 'plat' ? 0.25 : 
+  const baseHoursPerSqm =
+    roofType === 'plat' ? 0.25 :
     roofType === 'schuin' ? 0.35 : 0.3;
     
   // Complexity multiplier

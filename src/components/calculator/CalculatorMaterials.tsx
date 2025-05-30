@@ -33,7 +33,7 @@ export const CalculatorMaterials: React.FC<CalculatorMaterialsProps> = ({
     return material.unitPrice * material.quantity;
   };
 
-  const handleChange = (id: string, field: keyof CalculationMaterial, value: any) => {
+  const handleChange = (id: string, field: keyof CalculationMaterial, value: string | number) => {
     const material = materials.find(m => m.id === id);
     if (material) {
       onUpdateMaterial({ ...material, [field]: value });

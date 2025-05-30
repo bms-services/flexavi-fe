@@ -239,7 +239,7 @@ const CalculatorDetail = () => {
           id: uuidv4(),
           ...estimates.mainMaterial
         },
-        ...estimates.additionalMaterials.map((material: any) => ({
+        ...estimates.additionalMaterials.map((material) => ({
           id: uuidv4(),
           ...material
         }))
