@@ -49,7 +49,6 @@ export const CompanySettings: React.FC = () => {
         city: '',
         province: '',
       },
-
     },
   })
 

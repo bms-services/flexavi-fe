@@ -27,8 +27,7 @@ export const putProfileUpdate = createAsyncThunk(
   }
 );
 
-
-export const verifyEmail = createAsyncThunk(
+export const putVerifyEmail = createAsyncThunk(
   "profile/verifyEmail",
   async (otp: string, { rejectWithValue }) => {
     try {
@@ -41,7 +40,7 @@ export const verifyEmail = createAsyncThunk(
   }
 );
 
-export const resendEmailVerification = createAsyncThunk(
+export const postResendEmailVerification = createAsyncThunk(
   "profile/resendEmailVerification",
   async (_, { rejectWithValue }) => {
     try {

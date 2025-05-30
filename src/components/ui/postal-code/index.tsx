@@ -169,7 +169,7 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                         clearAddressFields();
                     }
                     if (newValue) {
-                        onSelectZipCode(newValue);
+                        onSelectZipCode(newValue.value);
                     }
                 }}
             />

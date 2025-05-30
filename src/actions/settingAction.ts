@@ -1,8 +1,21 @@
-import { CompanyTeam } from "@/types/company";
+import { Company, CompanyTeam } from "@/types/company";
 import { mainApi } from "@/utils/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // ------ Company ------ \\
+export const postSettingCompanyStore = createAsyncThunk(
+  "setting/company/store",
+  async (formData: Company, { rejectWithValue }) => {
+    try {
+      const { data } = await mainApi.post(`/setting/company`, formData);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const getSettingCompanyShow = createAsyncThunk(
   "setting/company/show",
   async (_, { rejectWithValue }) => {

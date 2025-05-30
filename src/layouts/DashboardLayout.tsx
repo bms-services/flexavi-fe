@@ -9,7 +9,7 @@ import { CreditCardIcon, MailOpenIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getProfileShow, verifyEmail, resendEmailVerification } from '@/actions/profileAction';
+import { getProfileShow, putVerifyEmail, postResendEmailVerification } from '@/actions/profileAction';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { User } from '@/types/user';
@@ -63,7 +63,7 @@ const DashboardLayout: React.FC = () => {
     }
 
     const handleSubmitOtp = (otp: string) => {
-        dispatch(verifyEmail(otp))
+        dispatch(putVerifyEmail(otp))
             .unwrap()
             .then(() => {
                 dispatch(getProfileShow());
@@ -78,7 +78,7 @@ const DashboardLayout: React.FC = () => {
     }
 
     const handleResendOtp = () => {
-        dispatch(resendEmailVerification());
+        dispatch(postResendEmailVerification());
     }
 
     // Redirect to login if token is not available
