@@ -52,12 +52,20 @@ export const LeadTableContent: React.FC<LeadTableContentProps> = ({
               <div className="mt-2 grid gap-1 sm:hidden text-sm">
                 <div className="text-muted-foreground">{lead.email}</div>
                 <div className="text-muted-foreground">{lead.phone}</div>
-                <div className="text-muted-foreground">{lead.address}</div>
+                <div className="text-muted-foreground">{
+                  lead.address
+                    ? `${lead.address.street} ${lead.address.house_number}${lead.address.house_number_addition ? ' ' + lead.address.house_number_addition : ''}, ${typeof lead.address.postal_code === 'object' ? lead.address.postal_code.value : lead.address.postal_code} ${lead.address.city}`
+                    : "-"
+                }</div>
               </div>
             </TableCell>
             <TableCell className="hidden sm:table-cell">{lead.email}</TableCell>
             <TableCell className="hidden sm:table-cell">{lead.phone}</TableCell>
-            <TableCell className="hidden sm:table-cell">{lead.address}</TableCell>
+            <TableCell className="hidden sm:table-cell">{
+              lead.address
+                ? `${lead.address.street} ${lead.address.house_number}${lead.address.house_number_addition ? ' ' + lead.address.house_number_addition : ''}, ${typeof lead.address.postal_code === 'object' ? lead.address.postal_code.value : lead.address.postal_code} ${lead.address.city}`
+                : "-"
+            }</TableCell>
             <TableCell className="py-2 sm:py-4 flex items-center justify-between sm:table-cell">
               <span className="text-sm text-muted-foreground sm:hidden">Status</span>
               <LeadStatusBadge status={lead.status} />

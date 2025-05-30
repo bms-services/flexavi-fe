@@ -1,46 +1,72 @@
+import { createSlice } from "@reduxjs/toolkit";
 import {
-  getDetailSubscription,
-  getSubscription,
+  getSubscriptionIndex,
+  getSubscriptionShow,
 } from "@/actions/subscriptionAction";
-import { StatusReducerEnum } from "@/hooks/use-redux";
-import { createModuleState, handleModuleState } from "@/lib/redux-thunk";
-import {
-  createSlice,
-  isFulfilled,
-  isPending,
-  isRejected,
-} from "@reduxjs/toolkit";
+import { createAsyncState, AsyncState } from "./settingSlice";
 
-const initialState = {
-  index: createModuleState(),
-  show: createModuleState(),
-  update: createModuleState(),
+interface SubscriptionSliceState {
+  index: AsyncState<unknown[]>;
+  show: AsyncState<unknown>;
+}
+
+const initialState: SubscriptionSliceState = {
+  index: createAsyncState<unknown[]>(),
+  show: createAsyncState<unknown>(),
 };
+
+function getErrors(payload: unknown, fallback: string): string[] {
+  if (
+    payload &&
+    typeof payload === "object" &&
+    "errors" in (payload as Record<string, unknown>) &&
+    Array.isArray((payload as { errors?: string[] }).errors)
+  ) {
+    return (payload as { errors: string[] }).errors;
+  }
+  return [fallback];
+}
 
 const subscriptionSlice = createSlice({
   name: "subscription",
-  initialState: initialState,
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addMatcher(
-        isPending(getSubscription, getDetailSubscription),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.PENDING);
-        }
-      )
-      .addMatcher(
-        isRejected(getSubscription, getDetailSubscription),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.FULFILLED);
-        }
-      )
-      .addMatcher(
-        isFulfilled(getSubscription, getDetailSubscription),
-        (state, action) => {
-          handleModuleState(state, action, StatusReducerEnum.REJECTED);
-        }
-      );
+      .addCase(getSubscriptionIndex.pending, (state) => {
+        state.index = { ...createAsyncState(), loading: true };
+      })
+      .addCase(getSubscriptionIndex.fulfilled, (state, action) => {
+        state.index = { ...state.index, ...action.payload, loading: false, success: true };
+      })
+      .addCase(getSubscriptionIndex.rejected, (state, action) => {
+        state.index = {
+          ...createAsyncState(),
+          loading: false,
+          success: false,
+          errors: getErrors(
+            action.payload,
+            action.error?.message || "Failed to fetch subscriptions"
+          ),
+        };
+      })
+      .addCase(getSubscriptionShow.pending, (state) => {
+        state.show = { ...createAsyncState(), loading: true };
+      })
+      .addCase(getSubscriptionShow.fulfilled, (state, action) => {
+        state.show = { ...state.show, ...action.payload, loading: false, success: true };
+      })
+      .addCase(getSubscriptionShow.rejected, (state, action) => {
+        state.show = {
+          ...createAsyncState(),
+          loading: false,
+          success: false,
+          errors: getErrors(
+            action.payload,
+            action.error?.message || "Failed to fetch subscription"
+          ),
+        };
+      });
   },
 });
 

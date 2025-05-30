@@ -1,95 +1,118 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Lead } from "@/types";
 import { getLeadIndex, getLeadShow, postLeadStore, putLeadUpdate, deleteLeadDestroy } from "@/actions/leadAction";
+import { createAsyncState, AsyncState } from "./settingSlice";
+import { Lead } from "@/types";
+import { PaginationResponse } from "@/@types/global-type";
 
-interface LeadState {
-  leads: Lead[];
-  lead: Lead | null;
-  loading: boolean;
-  error: string | null;
+interface LeadSliceState {
+  index: AsyncState<PaginationResponse<Lead>>;
+  show: AsyncState<Lead>;
+  store: AsyncState<Lead>;
+  update: AsyncState<Lead>;
+  destroy: AsyncState<Lead>;
 }
 
-const initialState: LeadState = {
-  leads: [],
-  lead: null,
-  loading: false,
-  error: null
+const initialState: LeadSliceState = {
+  index: createAsyncState<PaginationResponse<Lead>>(),
+  show: createAsyncState<Lead>(),
+  store: createAsyncState<Lead>(),
+  update: createAsyncState<Lead>(),
+  destroy: createAsyncState<Lead>(),
 };
+
+function getErrors(payload: unknown, fallback: string): string[] {
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'errors' in (payload as Record<string, unknown>) &&
+    Array.isArray((payload as { errors?: string[] }).errors)
+  ) {
+    return (payload as { errors: string[] }).errors;
+  }
+  return [fallback];
+}
 
 const leadSlice = createSlice({
   name: "lead",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Index
     builder
       .addCase(getLeadIndex.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.index = { ...createAsyncState(), loading: true };
       })
       .addCase(getLeadIndex.fulfilled, (state, action) => {
-        state.loading = false;
-        state.leads = action.payload.result || [];
+        state.index = { ...state.index, ...action.payload, loading: false, success: true };
       })
       .addCase(getLeadIndex.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch leads";
-      })
-
+        state.index = {
+          ...createAsyncState(),
+          loading: false,
+          errors: getErrors(action.payload, action.error?.message || "Failed to fetch leads"),
+        };
+      });
+    // Show
+    builder
       .addCase(getLeadShow.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.show = { ...createAsyncState(), loading: true };
       })
       .addCase(getLeadShow.fulfilled, (state, action) => {
-        state.loading = false;
-        state.lead = action.payload.result || null;
+        state.show = { ...state.show, ...action.payload, loading: false, success: true };
       })
       .addCase(getLeadShow.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch lead";
-      })
-
+        state.show = {
+          ...createAsyncState(),
+          loading: false,
+          errors: getErrors(action.payload, action.error?.message || "Failed to fetch lead"),
+        };
+      });
+    // Store
+    builder
       .addCase(postLeadStore.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.store = { ...createAsyncState(), loading: true };
       })
       .addCase(postLeadStore.fulfilled, (state, action) => {
-        state.loading = false;
-        state.leads.unshift(action.payload.result);
+        state.store = { ...state.store, ...action.payload, loading: false, success: true };
       })
       .addCase(postLeadStore.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to create lead";
-      })
-
+        state.store = {
+          ...createAsyncState(),
+          loading: false,
+          errors: getErrors(action.payload, action.error?.message || "Failed to create lead"),
+        };
+      });
+    // Update
+    builder
       .addCase(putLeadUpdate.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.update = { ...createAsyncState(), loading: true };
       })
       .addCase(putLeadUpdate.fulfilled, (state, action) => {
-        state.loading = false;
-        state.leads = state.leads.map((lead) =>
-          lead.id === action.payload.result.id ? action.payload.result : lead
-        );
+        state.update = { ...state.update, ...action.payload, loading: false, success: true };
       })
       .addCase(putLeadUpdate.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to update lead";
-      })
-
+        state.update = {
+          ...createAsyncState(),
+          loading: false,
+          errors: getErrors(action.payload, action.error?.message || "Failed to update lead"),
+        };
+      });
+    // Destroy
+    builder
       .addCase(deleteLeadDestroy.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.destroy = { ...createAsyncState(), loading: true };
       })
       .addCase(deleteLeadDestroy.fulfilled, (state, action) => {
-        state.loading = false;
-        const deletedIds = action.meta.arg;
-        state.leads = state.leads.filter((lead) => !deletedIds.includes(lead.id));
+        state.destroy = { ...state.destroy, ...action.payload, loading: false, success: true };
       })
       .addCase(deleteLeadDestroy.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to delete lead";
+        state.destroy = {
+          ...createAsyncState(),
+          loading: false,
+          errors: getErrors(action.payload, action.error?.message || "Failed to delete lead"),
+        };
       });
-  }
+  },
 });
 
 export default leadSlice.reducer;

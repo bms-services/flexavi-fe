@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +26,7 @@ const Login = () => {
     },
   });
 
-  const { loading } = useSelector((state: RootState) => state.auth.login);
+  const { loading, success, errors: authErrors, result } = useSelector((state: RootState) => state.auth.login);
 
 
   /**

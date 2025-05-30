@@ -5,13 +5,11 @@ export const getPackageIndex = createAsyncThunk(
   "package/index",
   async (params, { rejectWithValue }) => {
     try {
-      const { data } = await mainApi.get(`/package`, {
-        params,
-      });
+      const { data } = await mainApi.get(`/package`, { params });
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -22,9 +20,9 @@ export const getPackageShow = createAsyncThunk(
     try {
       const { data } = await mainApi.get(`/package/${id}`);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -35,9 +33,9 @@ export const putPackageUpdate = createAsyncThunk(
     try {
       const { data } = await mainApi.put(`/package`, formData);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );

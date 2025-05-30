@@ -9,9 +9,9 @@ export const postSettingCompanyStore = createAsyncThunk(
     try {
       const { data } = await mainApi.post(`/setting/company`, formData);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -22,9 +22,9 @@ export const getSettingCompanyShow = createAsyncThunk(
     try {
       const { data } = await mainApi.get(`/setting/company`);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -35,9 +35,9 @@ export const postSettingCompanyUpdate = createAsyncThunk(
     try {
       const { data } = await mainApi.post(`/setting/company`, formData);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -51,9 +51,9 @@ export const getSettingTeamIndex = createAsyncThunk(
     try {
       const { data } = await mainApi.get(`/setting/team`);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -65,9 +65,9 @@ export const getSettingTeamShow = createAsyncThunk(
     try {
       const { data } = await mainApi.get(`/setting/team/${id}`);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 )
@@ -78,9 +78,9 @@ export const postSettingTeamStore = createAsyncThunk(
     try {
       const { data } = await mainApi.post(`/setting/team`, formData);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -91,9 +91,9 @@ export const putSettingTeamUpdate = createAsyncThunk(
     try {
       const { data } = await mainApi.put(`/setting/team`, formData);
 
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -106,14 +106,12 @@ export const deleteSettingTeamDestroy = createAsyncThunk(
       const { data } = await mainApi.delete("/setting/team", {
         data: { ids },
       });
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
-
-
 
 // ------ Payment Method ------ \\
 export const postSettingIntentStore = createAsyncThunk(
@@ -121,10 +119,9 @@ export const postSettingIntentStore = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post(`/setting/intent`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -134,10 +131,9 @@ export const postSettingTrialStore = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post(`/setting/trial`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -149,10 +145,9 @@ export const putSettingPackageUpdate = createAsyncThunk(
       const { data } = await mainApi.put(`/setting/package`, {
         stripe_price_id: id,
       });
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -164,10 +159,9 @@ export const putSettingPaymentUpdate = createAsyncThunk(
       const { data } = await mainApi.put(`/setting/payment`, {
         setup_intent_id: id,
       });
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );

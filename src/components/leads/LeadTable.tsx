@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import { Lead, leadStatusMap } from "@/types";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { PaginationResponse, ParamsAction } from "@/@types/global-type";
+import { ParamsAction } from "@/@types/global-type";
 import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
@@ -30,7 +30,18 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
         />
       )
     },
-    // { accessorKey: "address", header: "Address", cell: info => info.getValue() },
+    {
+      accessorKey: "address",
+      header: "Address",
+      cell: info => {
+        const lead = info.row.original;
+        const addr = lead.address;
+        if (addr) {
+          return `${addr.street} ${addr.house_number}${addr.house_number_addition ? ' ' + addr.house_number_addition : ''}, ${typeof addr.postal_code === 'object' ? addr.postal_code.value : addr.postal_code} ${addr.city}`;
+        }
+        return "-";
+      }
+    },
     {
       accessorKey: "created_at",
       header: "Created At",
@@ -46,7 +57,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
   const statusFilterOptions = Object.entries(leadStatusMap).map(
     ([value, { label }]) => ({ value, label })
   );
-
+  
   return (
     <div className="space-y-4">
       <TableTanstack

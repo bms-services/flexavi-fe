@@ -6,6 +6,15 @@ import Cookies from "js-cookie";
 
 const tokenName = import.meta.env.VITE_TOKEN_NAME;
 
+function isAxiosError(error: unknown): error is { response?: { data?: { errors?: string[]; message?: string } }; message?: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as Record<string, unknown>).response === "object"
+  );
+}
+
 export const login = createAsyncThunk(
   "auth/login",
   async (formData: Partial<User>, { rejectWithValue }) => {
@@ -19,9 +28,22 @@ export const login = createAsyncThunk(
         window.location.href = "/";
       }, 1000);
 
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
+      return { ...data, result, success: true };
+    } catch (error: unknown) {
+      let errors = ["Unknown error"];
+      let message = "Unknown error";
+      if (isAxiosError(error)) {
+        errors = error.response?.data?.errors || [error.message || "Unknown error"];
+        message = error.response?.data?.message || error.message || "Unknown error";
+      } else if (error instanceof Error) {
+        errors = [error.message];
+        message = error.message;
+      }
+      return rejectWithValue({
+        errors,
+        message,
+        success: false,
+      });
     }
   }
 );
@@ -31,9 +53,22 @@ export const register = createAsyncThunk(
   async (formData: Partial<User>, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post("/register", formData);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error);
+      return { ...data, result: data.result, success: true };
+    } catch (error: unknown) {
+      let errors = ["Unknown error"];
+      let message = "Unknown error";
+      if (isAxiosError(error)) {
+        errors = error.response?.data?.errors || [error.message || "Unknown error"];
+        message = error.response?.data?.message || error.message || "Unknown error";
+      } else if (error instanceof Error) {
+        errors = [error.message];
+        message = error.message;
+      }
+      return rejectWithValue({
+        errors,
+        message,
+        success: false,
+      });
     }
   }
 );
@@ -49,13 +84,26 @@ export const logout = createAsyncThunk(
         window.location.href = "/login";
       }, 1000);
 
-      return data;
-    } catch (error) {
+      return { ...data, result: data.result, success: true };
+    } catch (error: unknown) {
       setTimeout(() => {
         Cookies.remove(tokenName);
         window.location.href = "/login";
       }, 1000);
-      return rejectWithValue(error);
+      let errors = ["Unknown error"];
+      let message = "Unknown error";
+      if (isAxiosError(error)) {
+        errors = error.response?.data?.errors || [error.message || "Unknown error"];
+        message = error.response?.data?.message || error.message || "Unknown error";
+      } else if (error instanceof Error) {
+        errors = [error.message];
+        message = error.message;
+      }
+      return rejectWithValue({
+        errors,
+        message,
+        success: false,
+      });
     }
   }
 );

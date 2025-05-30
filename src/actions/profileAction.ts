@@ -6,10 +6,9 @@ export const getProfileShow = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.get(`/profile`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -19,10 +18,9 @@ export const putProfileUpdate = createAsyncThunk(
   async (formData: FormData, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.put(`/profile`, formData);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -31,11 +29,10 @@ export const putVerifyEmail = createAsyncThunk(
   "profile/verifyEmail",
   async (otp: string, { rejectWithValue }) => {
     try {
-      const { data } = await mainApi.put(`/profile/email`, { email_verification_code:otp });
-
-      return data;
+      const { data } = await mainApi.put(`/profile/email`, { email_verification_code: otp });
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -45,10 +42,9 @@ export const postResendEmailVerification = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post(`/profile/email`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );

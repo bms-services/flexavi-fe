@@ -1,4 +1,3 @@
-
 import { Appointment } from './appointments';
 import { Quote } from './quotes';
 import { Invoice } from './invoices';
@@ -13,7 +12,9 @@ export type Lead = {
   phone?: string;
   status?: LeadStatus;
   created_at?: string;
+  updated_at?: string;
   address?: LeadAddress;
+  source?: string;
 };
 
 export type LeadAddress = {

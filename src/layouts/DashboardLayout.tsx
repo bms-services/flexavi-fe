@@ -87,9 +87,11 @@ const DashboardLayout: React.FC = () => {
     }
 
     // Redirect to create company if user does not have a main company
-    if (!result?.has_main_company) {
-        return <Navigate to="/create-company" replace />;
-    }
+    // console.log(profileShowRedux);
+    
+    // if (!result?.has_main_company) {
+    //     return <Navigate to="/create-company" replace />;
+    // }
 
 
     return (

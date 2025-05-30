@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +18,7 @@ const RegisterSuccessfully = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const { response } = useSelector((state: RootState) => state.auth.register);
+  const { success, result } = useSelector((state: RootState) => state.auth.register);
   const navigate = useNavigate();
 
   const handleRedirectLogin = () => {
@@ -29,17 +28,17 @@ const RegisterSuccessfully = () => {
 
   // Redirect to login page if registration already cleared
   useEffect(() => {
-    if (!response.success) {
+    if (!success) {
       navigate("/login");
     }
-  }, [navigate, response]);
+  }, [navigate, success]);
 
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
         <p className="">{t("auth:registerSuccessfully.text.welcome")}
           <span className="font-bold text-primary">
-            &nbsp; {response?.result?.email}
+            &nbsp; {result?.email}
           </span>
         </p>
         <p className="">{t("auth:registerSuccessfully.text.activate")}</p>

@@ -68,9 +68,19 @@ export const handleModuleState = <
       break;
 
     case StatusReducerEnum.FULFILLED:
+      state[moduleName].loading = false;
+      state[moduleName].response = {
+        ...(action.payload as State[K]["response"]),
+        success: true,
+      };
+      break;
+
     case StatusReducerEnum.REJECTED:
       state[moduleName].loading = false;
-      state[moduleName].response = action.payload as State[K]["response"];
+      state[moduleName].response = {
+        ...(action.payload as State[K]["response"]),
+        success: false,
+      };
       break;
   }
 };

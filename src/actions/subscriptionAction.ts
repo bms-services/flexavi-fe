@@ -6,10 +6,9 @@ export const getSubscriptionIndex = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.get(`/subscription`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -19,10 +18,9 @@ export const getSubscriptionShow = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.get(`/subscription/${id}`);
-
-      return data;
+      return { result: data.result };
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );

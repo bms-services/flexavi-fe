@@ -1,5 +1,3 @@
-
-
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +22,7 @@ const Register = () => {
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
 
-  const { loading, response } = useSelector((state: RootState) => state.auth.register);
+  const { loading, success, errors, result } = useSelector((state: RootState) => state.auth.register);
 
   const {
     control,
@@ -32,7 +30,7 @@ const Register = () => {
     handleSubmit,
     watch,
     setError,
-    formState: { errors },
+    formState: { errors: formErrors },
   } = useForm<User>({
     defaultValues: {
       name: "",
@@ -59,10 +57,10 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (response?.success) {
+    if (success) {
       navigate("/register-successfully");
     }
-  }, [response, navigate]);
+  }, [success, navigate]);
 
 
   return (
@@ -80,7 +78,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.name')
             },
-            errors,
+            errors: formErrors,
           }}
         />
         <Input
@@ -95,7 +93,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.email')
             },
-            errors,
+            errors: formErrors,
           }}
         />
         <PhoneNumber
@@ -106,7 +104,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.phone')
             },
-            errors,
+            errors: formErrors,
           }}
         />
         <Input
@@ -121,7 +119,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.password')
             },
-            errors,
+            errors: formErrors,
           }}
         />
         <Input
@@ -141,7 +139,7 @@ const Register = () => {
                 }
               },
             },
-            errors,
+            errors: formErrors,
           }}
         />
       </CardContent>

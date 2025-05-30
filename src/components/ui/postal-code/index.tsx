@@ -9,7 +9,7 @@ import { get } from "lodash";
 
 interface PostalCodeProps<T> {
     register: UseFormRegister<T>;
-    fieldPrefix?: string
+    fieldPrefix?: string;
     errors: FieldErrors<T>;
     control: Control<T>;
     watch: UseFormWatch<T>;
@@ -31,7 +31,6 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
             "city",
             "province",
         ];
-
         fields.forEach((field) => {
             const fullKey = prefix(field);
             const error = get(errors, fullKey);
@@ -39,30 +38,54 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                 result[fullKey] = error;
             }
         });
-
         return result;
     };
 
-
-    const [zipCodeResults, setZipCodeResults] = useState<{
+    const [zipCodeResults, setZipCodeResults] = useState<Array<{
         postalCode: string;
         street: string;
         municipality: string;
         province: string;
-    }[]>([]);
+    }>>([]);
 
-    const postalCode = watch(prefix("postal_code") as Path<T>);
+    // Always normalize postalCode to object {label, value} for SelectSearchAsync
+    const rawPostalCode = watch(prefix("postal_code") as Path<T>);
     const houseNumber = watch(prefix("house_number") as Path<T>);
     const houseNumberAddition = watch(prefix("house_number_addition") as Path<T>);
 
-    const set = (field: string, val: FieldValue<FieldValues>) => {
+    const normalizePostalCode = (val: unknown) => {
+        if (val && typeof val === 'object' && 'value' in val && 'label' in val) {
+            return val;
+        }
+        if (typeof val === 'string' && val) {
+            return { label: val, value: val };
+        }
+        return '';
+    };
+
+    const getPostalCodeString = (val: unknown) => {
+        if (val && typeof val === 'object' && 'value' in val) {
+            return (val as { value: string }).value;
+        }
+        if (typeof val === 'string') {
+            return val;
+        }
+        return '';
+    };
+
+    const set = (field: string, val: string) => {
         setValue(prefix(field) as Path<T>, val as PathValue<T, Path<T>>, { shouldValidate: true });
-    }
+    };
+
+    // Set postal_code as object for SelectSearchAsync, but type-safe
+    const setPostalCode = (val: Option | string) => {
+        setValue(prefix("postal_code") as Path<T>, val as PathValue<T, Path<T>>, { shouldValidate: true });
+    };
 
     const debouncedLookupAddress = useDebouncedCallback(
         (zipCode: string, houseNumber: string, suffix?: string) => {
             lookupAddress(zipCode, houseNumber, suffix);
-        }, 1000
+        }, 600
     );
 
     const searchZipAction = async (value: string) => {
@@ -75,18 +98,16 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                 },
             }
         );
-
         setZipCodeResults(results.data);
-
-        return results.data.map((item) => ({
+        return results.data.map((item: { postalCode: string }) => ({
             label: item.postalCode,
             value: item.postalCode,
         }));
-    }
+    };
 
     const loadOptions = async (
         inputValue: string
-    ): Promise<OptionsOrGroups<unknown, GroupBase<unknown>>> => {
+    ): Promise<OptionsOrGroups<Option, GroupBase<Option>>> => {
         return await searchZipAction(inputValue);
     };
 
@@ -101,11 +122,10 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
         streetNumber: string,
         premise?: string
     ) => {
-        if (!postalCode) {
+        if (!postalCode || typeof postalCode !== 'string') {
             clearAddressFields();
             return;
         }
-
         try {
             const { data } = await axios.get(`${postalCodeUrl}/v2/autocomplete/nl`, {
                 params: {
@@ -115,34 +135,36 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                     premise,
                 },
             });
-
-            set("province", data.province);
-            set("city", data.municipality);
-            set("street", data.street);
+            set("province", data.province || "");
+            set("city", data.municipality || "");
+            set("street", data.street || "");
         } catch (error) {
             clearAddressFields();
         }
     };
 
     const handleHouseNumberChange = (houseNumber: string) => {
-        setValue(prefix("house_number") as Path<T>, houseNumber as PathValue<T, Path<T>>, { shouldValidate: true });
-        if (postalCode) {
-            debouncedLookupAddress(String(postalCode), houseNumber, String(houseNumberAddition ?? ""));
+        set("house_number", houseNumber);
+        const postalCodeStr = getPostalCodeString(rawPostalCode);
+        if (postalCodeStr) {
+            debouncedLookupAddress(postalCodeStr, houseNumber, String(houseNumberAddition ?? ""));
         } else {
             clearAddressFields();
         }
     };
 
     const handleSuffixChange = (suffix: string) => {
-        setValue(prefix("house_number_addition") as Path<T>, suffix as PathValue<T, Path<T>>, { shouldValidate: true });
-        if (postalCode) {
-            debouncedLookupAddress(String(postalCode), houseNumber as string, String(suffix ?? ""));
+        set("house_number_addition", suffix);
+        const postalCodeStr = getPostalCodeString(rawPostalCode);
+        if (postalCodeStr) {
+            debouncedLookupAddress(postalCodeStr, houseNumber as string, String(suffix ?? ""));
         } else {
             clearAddressFields();
         }
     };
 
     const onSelectZipCode = (item: Option) => {
+        setPostalCode(item);
         lookupAddress(item.value, houseNumber as string, houseNumberAddition as string);
     };
 
@@ -166,12 +188,15 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                 }))}
                 onChange={(newValue: Option, actionMeta) => {
                     if (actionMeta.action === 'clear') {
+                        setPostalCode('');
                         clearAddressFields();
                     }
                     if (newValue) {
-                        onSelectZipCode(newValue.value);
+                        setPostalCode(newValue);
+                        onSelectZipCode(newValue);
                     }
                 }}
+                value={normalizePostalCode(rawPostalCode)}
             />
 
             <Input
@@ -185,12 +210,10 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                         required: 'Dit veld is verplicht',
                     },
                     errors: getPrefixedErrors(),
-
                 }}
                 onChange={(e) => {
                     handleHouseNumberChange(e.target.value);
                 }}
-
             />
             <Input
                 label='Toevoeging (optioneel)'
@@ -199,15 +222,13 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                 rules={{
                     register,
                     name: prefix("house_number_addition"),
-                    options: {
-                    },
+                    options: {},
                     errors: getPrefixedErrors(),
                 }}
                 onChange={(e) => {
                     handleSuffixChange(e.target.value);
                 }}
             />
-
             {/* Street */}
             <Input
                 label='Straat'
@@ -224,7 +245,6 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                     errors: getPrefixedErrors(),
                 }}
             />
-
             {/* City */}
             <Input
                 label='Plaats'
@@ -241,7 +261,6 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                     errors: getPrefixedErrors(),
                 }}
             />
-
             {/* Province */}
             <Input
                 label='Provincie'
@@ -259,5 +278,5 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
                 }}
             />
         </div>
-    )
+    );
 }
