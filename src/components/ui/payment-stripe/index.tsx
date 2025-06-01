@@ -33,8 +33,7 @@ const PaymentStripe = ({ onBack }: {
             elements,
             // clientSecret: payload.result.client_secret,
             confirmParams: {
-                // return_url: import.meta.env.VITE_APP_URL + 'payment/confirm',
-                return_url: "https://stripe.com/payment/confirm"
+                return_url: import.meta.env.VITE_APP_URL + '/payment/confirm',
             },
             redirect: 'always',
         });

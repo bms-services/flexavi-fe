@@ -21,13 +21,14 @@ export default function PaymentConfirm() {
     const redirectStatus = searchParams.get('redirect_status');
 
     const { loading: loadingCreateTrial } = useSelector((state: RootState) => state.setting.trial.store);
+    const trialErrors = useSelector((state: RootState) => state.setting.trial.store.errors);
 
     useEffect(() => {
         async function fetchPaymentMethod() {
             if (setupIntentId && redirectStatus === 'succeeded') {
-                const { payload } = await dispatch(putSettingPaymentUpdate(setupIntentId));
-
-                if (payload.result.error) {
+                const actionResult = await dispatch(putSettingPaymentUpdate(setupIntentId));
+                const payload = actionResult.payload as { result?: { error?: string } };
+                if (payload?.result?.error) {
                     setStatus('error');
                 } else {
                     setStatus('success');
@@ -40,9 +41,9 @@ export default function PaymentConfirm() {
     }, [dispatch, setupIntentId, redirectStatus]);
 
     const handleTrial = async () => {
-        const { payload } = await dispatch(postSettingTrialStore());
-
-        if (payload.success) {
+        const actionResult = await dispatch(postSettingTrialStore());
+        const payload = actionResult.payload as { success?: boolean };
+        if (payload?.success) {
             await dispatch(getProfileShow());
 
             setTimeout(() => {
@@ -75,6 +76,12 @@ export default function PaymentConfirm() {
                     >
                         Get Trial
                     </Button>
+                    {/* Show trial error if any */}
+                    {trialErrors && trialErrors.length > 0 && (
+                        <div className="text-red-500 text-sm mt-2">
+                            {trialErrors.map((err, idx) => <div key={idx}>{err}</div>)}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

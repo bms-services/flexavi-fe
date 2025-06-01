@@ -43,10 +43,8 @@ export default function CompanyCreateFullPage() {
     const onSubmit = (data: Company) => {
         dispatch(postSettingCompanyStore(data)).unwrap().then(
             (data) => {
-                // Handle success, e.g., navigate to another page or show a success message
-                console.log('Company created successfully');
-                console.log(data);
-                
+                // On successful company creation, redirect to dashboard
+                window.location.href = "/";
             }
         ).catch(
             (error) => {

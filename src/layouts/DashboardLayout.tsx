@@ -87,11 +87,10 @@ const DashboardLayout: React.FC = () => {
     }
 
     // Redirect to create company if user does not have a main company
-    // console.log(profileShowRedux);
-    
-    // if (!result?.has_main_company) {
-    //     return <Navigate to="/create-company" replace />;
-    // }
+    // This ensures onboarding is enforced for all dashboard routes
+    if (result && result.has_main_company === false) {
+        return <Navigate to="/create-company" replace />;
+    }
 
 
     return (
