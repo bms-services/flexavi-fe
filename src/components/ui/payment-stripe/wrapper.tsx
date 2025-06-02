@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import PaymentStripe from ".";
 
 
-export default function StripeWrapper() {
+export default function StripeWrapper({ isFirst = false }: { isFirst?: boolean }) {
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const dispatch = useAppDispatch();
 
@@ -24,7 +24,7 @@ export default function StripeWrapper() {
 
     return (
         <StripeProvider clientSecret={clientSecret}>
-            <PaymentStripe />
+            <PaymentStripe isFirst={isFirst} />
         </StripeProvider>
     );
 };

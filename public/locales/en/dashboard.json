@@ -69,7 +69,7 @@
     "payment": {
       "title": "Payment Method",
       "description": "Add a payment method to get your trial access to all features.",
-      "cta": "Add Payment Method",
+      "cta": "Update Payment Method",
       "error": {
         "required": {
           "name": "Name on Card is required",

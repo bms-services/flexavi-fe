@@ -4,8 +4,9 @@ import { Button } from '../button';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-const PaymentStripe = ({ onBack }: {
+const PaymentStripe = ({ onBack, isFirst }: {
     onBack?: () => void;
+    isFirst?: boolean;
 }) => {
     const { t } = useTranslation('dashboard');
     const navigate = useNavigate();
@@ -30,20 +31,22 @@ const PaymentStripe = ({ onBack }: {
             return;
         }
 
-        const { error, setupIntent } = await stripe.confirmSetup({
+        const { error } = await stripe.confirmSetup({
             elements,
             confirmParams: {
                 return_url: `${import.meta.env.VITE_APP_URL}/payment/confirm`,
             },
-            redirect: 'if_required',
+            // redirect: 'if_required',
         });
 
         if (error) {
             setErrorMessage(error.message);
             setSubmitted(false);
-        } else if (setupIntent && setupIntent.status === 'succeeded') {
-            navigate('/payment/confirm');
-        } else {
+        }
+        // else if (setupIntent && setupIntent.status === 'succeeded') {
+        //     navigate('/payment/confirm');
+        // } 
+        else {
             setErrorMessage(null);
             setSubmitted(false);
         }
@@ -68,7 +71,7 @@ const PaymentStripe = ({ onBack }: {
                     type="submit"
                     loading={!stripe || !elements}
                 >
-                    {t('dashboard:settings.payment.cta')}
+                    {isFirst ? t('dashboard:banner.paymentMethod.cta') : t('dashboard:settings.payment.cta')}
                 </Button>
             </div>
         </form>
