@@ -7,10 +7,17 @@ import { useTranslation } from 'react-i18next';
 import CompanyAddress from './Section/CompanyAddress';
 import { postSettingCompanyStore } from '@/actions/settingAction';
 import { useAppDispatch } from '@/hooks/use-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { use } from 'i18next';
+import { getProfileShow } from '@/actions/profileAction';
 
 export default function CompanyCreateFullPage() {
     const { t } = useTranslation('dashboard');
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const {
         control,
         handleSubmit,
@@ -40,19 +47,57 @@ export default function CompanyCreateFullPage() {
         },
     })
 
+    const settingCompanyStoreRedux = useSelector((state: RootState) => state.setting.company.store);
+    const profileShowRedux = useSelector((state: RootState) => state.profile.show);
+
     const onSubmit = (data: Company) => {
-        dispatch(postSettingCompanyStore(data)).unwrap().then(
-            (data) => {
-                // On successful company creation, redirect to dashboard
-                window.location.href = "/";
-            }
-        ).catch(
-            (error) => {
-                // Handle error, e.g., show an error message
-                console.error('Error creating company:', error);
+        const formData = new FormData();
+
+        formData.append("name", data.name);
+        formData.append("description", data.description || "");
+        formData.append("vat_number", data.vat_number || "");
+        formData.append("kvk_number", data.kvk_number || "");
+        formData.append("website", data.website || "");
+        formData.append("email", data.email || "");
+        formData.append("phone", data.phone || "");
+
+        if (data.address) {
+            formData.append("address[street]", data.address.street || "");
+            formData.append("address[postal_code]", typeof data.address.postal_code === "object"
+                ? data.address.postal_code.value
+                : data.address.postal_code || "");
+            formData.append("address[house_number]", data.address.house_number || "");
+            formData.append("address[house_number_addition]", data.address.house_number_addition || "");
+            formData.append("address[city]", data.address.city || "");
+            formData.append("address[province]", data.address.province || "");
         }
-        );
+
+        if (data.image && data.image instanceof File) {
+            formData.append("image", data.image);
+        }
+
+        dispatch(postSettingCompanyStore(formData));
     };
+
+    // Redirect to dashboard on success submission
+    useEffect(() => {
+        if (settingCompanyStoreRedux.success) {
+            navigate('/');
+        }
+    }, [settingCompanyStoreRedux.success, navigate]);
+
+    // Fetch profile on mount
+    useEffect(() => {
+        dispatch(getProfileShow());
+    }, []);
+
+
+    // Redirect to dashboard if company already exists
+    useEffect(() => {
+        if (profileShowRedux.result?.has_main_company) {
+            navigate('/');
+        }
+    }, [profileShowRedux.result, navigate]);
 
     return (
         // <ReactFullpage
@@ -123,21 +168,16 @@ export default function CompanyCreateFullPage() {
         //         );
         //     }}
         // />
-
-
-       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-2xl p-6 bg-white rounded shadow-md">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Setup Your Company</h1>
-        <CompanyInformation
-          register={register}
-          control={control}
-          watch={watch}
-          setValue={setValue}
-          errors={errors}
-          onSubmit={handleSubmit(onSubmit)}
-          t={t} 
-        />
-      </div>
-    </div>
+        <div className="flex flex-col p-[24px] items-center justify-center">
+            <CompanyInformation
+                register={register}
+                control={control}
+                watch={watch}
+                setValue={setValue}
+                errors={errors}
+                onSubmit={handleSubmit(onSubmit)}
+                t={t}
+            />
+        </div>
     )
 }

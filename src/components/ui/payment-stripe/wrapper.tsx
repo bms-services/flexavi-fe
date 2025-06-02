@@ -12,14 +12,15 @@ export default function StripeWrapper() {
     useEffect(() => {
         const fetchIntent = async () => {
             const { payload } = await dispatch(postSettingIntentStore());
-            if (payload?.result?.client_secret) {
-                setClientSecret(payload.result.client_secret);
+            const data = payload as { result?: { client_secret?: string } };
+            if (data?.result?.client_secret) {
+                setClientSecret(data.result.client_secret);
             }
         };
         fetchIntent();
     }, [dispatch]);
 
-    if (!clientSecret) return <div>Loading...</div>;
+    if (!clientSecret) return null;
 
     return (
         <StripeProvider clientSecret={clientSecret}>

@@ -2,7 +2,7 @@ export interface Package {
   id: string;
   name?: string;
   description?: string;
-  items?: PackageItem[];
+  package_items?: PackageItem[];
   features?: string;
   created_at?: string;
   updated_at?: string;

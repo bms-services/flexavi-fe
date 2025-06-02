@@ -2,46 +2,50 @@ import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js'
 import { useState } from 'react';
 import { Button } from '../button';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentStripe = ({ onBack }: {
     onBack?: () => void;
 }) => {
     const { t } = useTranslation('dashboard');
+    const navigate = useNavigate();
     const stripe = useStripe();
     const elements = useElements();
+
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (event) => {
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!stripe || !elements || submitted) return;
+        setSubmitted(true);
 
-        if (elements == null) {
-            return;
-        }
-
-        // Trigger form validation and wallet collection
         const { error: submitError } = await elements.submit();
 
         if (submitError) {
             // Show error to your customer
             setErrorMessage(submitError.message);
+            setSubmitted(false);
             return;
         }
 
-        // const { payload } = await dispatch(createProfileIntent());
-
-        const { error } = await stripe.confirmSetup({
+        const { error, setupIntent } = await stripe.confirmSetup({
             elements,
-            // clientSecret: payload.result.client_secret,
             confirmParams: {
-                return_url: import.meta.env.VITE_APP_URL + '/payment/confirm',
+                return_url: `${import.meta.env.VITE_APP_URL}/payment/confirm`,
             },
-            redirect: 'always',
+            redirect: 'if_required',
         });
 
         if (error) {
             setErrorMessage(error.message);
+            setSubmitted(false);
+        } else if (setupIntent && setupIntent.status === 'succeeded') {
+            navigate('/payment/confirm');
         } else {
             setErrorMessage(null);
+            setSubmitted(false);
         }
     };
 

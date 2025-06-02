@@ -32,10 +32,6 @@ export default function PaymentMethodCardDialog({
                         Add your payment method to start your trial. You will not be charged until the trial period ends.
                     </DialogDescription>
                 </DialogHeader>
-                {/* <StripeProvider>
-                    <PaymentStripe onBack={onBack} />
-                </StripeProvider> */}
-
                 <StripeWrapper />
             </DialogContent>
         </Dialog>

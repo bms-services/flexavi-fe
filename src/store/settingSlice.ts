@@ -1,5 +1,6 @@
 import {
   getSettingCompanyShow,
+  postSettingCompanyStore,
   postSettingCompanyUpdate,
 
   getSettingTeamIndex,
@@ -18,6 +19,8 @@ import {
 } from "@/actions/settingAction";
 import { Company, CompanyTeam } from "@/types/company";
 import { createSlice, AsyncThunk } from "@reduxjs/toolkit";
+import { store } from ".";
+import { CompanyPackageItem, Package } from "@/types/package";
 
 export interface AsyncState<T = unknown> {
   success?: boolean;
@@ -42,6 +45,7 @@ export function createAsyncState<T = unknown>(): AsyncState<T> {
 // --- Initial State ---
 const initialState = {
   company: {
+    store: createAsyncState<Company>(),
     show: createAsyncState<Company>(),
     update: createAsyncState(),
   },
@@ -59,7 +63,7 @@ const initialState = {
     store: createAsyncState(),
   },
   package: {
-    update: createAsyncState(),
+    update: createAsyncState<CompanyPackageItem>(),
   },
   payment: {
     update: createAsyncState(),
@@ -85,6 +89,20 @@ const settingSlice = createSlice({
   extraReducers: (builder) => {
     // Company
     builder
+      .addCase(postSettingCompanyStore.pending, (state) => {
+        state.company.store = { ...createAsyncState(), loading: true };
+      })
+      .addCase(postSettingCompanyStore.fulfilled, (state, action) => {
+        state.company.store = { ...state.company.store, ...action.payload, loading: false, success: true };
+      })
+      .addCase(postSettingCompanyStore.rejected, (state, action) => {
+        state.company.store = {
+          ...createAsyncState(),
+          loading: false,
+          success: false,
+          errors: getErrors(action.payload, (action.error as Error)?.message || "Failed to store company"),
+        };
+      })
       .addCase(getSettingCompanyShow.pending, (state) => {
         state.company.show = { ...createAsyncState(), loading: true };
       })

@@ -50,7 +50,7 @@ export default function CompanyInformation({
                         <div>
                             <CardTitle>Company Information</CardTitle>
                             <CardDescription>
-                                Enter your company details. This information will be used on invoices and quotes.
+                                Enter your company details.
                             </CardDescription>
                         </div>
                     </div>
@@ -64,9 +64,9 @@ export default function CompanyInformation({
                                 control,
                                 errors,
                             }}
-                            label="Upload logo"
+                            label="Upload your company logo"
                             multiple={false}
-                            text="Upload an image"
+                            text="Click or drag to upload"
                             dropText="Drag here or click to upload."
                             isCircle
                         />

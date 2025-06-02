@@ -6,16 +6,17 @@ import {
 } from "@/actions/packageAction";
 import { Package } from "@/types/package";
 import { createAsyncState, AsyncState } from "./settingSlice";
+import { PaginationResponse } from "@/@types/global-type";
 
 interface PackageSliceState {
-  index: AsyncState<Package[]>;
+  index: AsyncState<PaginationResponse<Package>>;
   show: AsyncState<Package>;
   update: AsyncState<Package>;
 }
 
 // --- Initial State ---
 const initialState: PackageSliceState = {
-  index: createAsyncState<Package[]>(),
+  index: createAsyncState<PaginationResponse<Package>>(),
   show: createAsyncState<Package>(),
   update: createAsyncState<Package>(),
 };

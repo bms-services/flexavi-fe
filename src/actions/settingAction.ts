@@ -5,7 +5,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 // ------ Company ------ \\
 export const postSettingCompanyStore = createAsyncThunk(
   "setting/company/store",
-  async (formData: Company, { rejectWithValue }) => {
+  async (formData: FormData, { rejectWithValue }) => {
     try {
       const { data } = await mainApi.post(`/setting/company`, formData);
 

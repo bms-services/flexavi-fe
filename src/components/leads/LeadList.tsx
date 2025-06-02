@@ -48,8 +48,6 @@ export const LeadList: React.FC = () => {
   const leadUpdateState = useAppSelector((state) => state.lead.update);
   const leadDestroyState = useAppSelector((state) => state.lead.destroy);
 
-  console.log(leadShowState);
-  
   // whenever params change, fetch the page
   useEffect(() => {
     dispatch(getLeadIndex(params));

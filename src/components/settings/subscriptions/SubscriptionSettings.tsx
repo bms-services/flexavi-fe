@@ -21,18 +21,9 @@ import { User } from "@/types/user";
 export const SubscriptionSettings = () => {
   const dispatch = useAppDispatch();
 
-  // const { loading, response: responsePackageIndex } = useSelector((state: RootState) => state.package.index);
-  // const { response: responseProfileUpdatePackage } = useSelector((state: RootState) => state.setting.package.update);
-  // const { response: responseProfileShow } = useSelector((state: RootState) => state.profile.show);
-
-
   const packageIndexRedux = useSelector((state: RootState) => state.package.index);
   const settingPackageUpdateRedux = useSelector((state: RootState) => state.setting.package.update);
   const profileShowRedux = useSelector((state: RootState) => state.profile.show);
-
-  // const result = responsePackageIndex?.result as PaginatedResponse<Package>;
-  // const resultProfileShow = responseProfileShow?.result as User;
-  // const resultProfileUpdatePackage = responseProfileUpdatePackage?.result as CompanyPackageItem;
 
   const [packageType, setPackageType] = useState<PackageTypeT>(PackageTypeEnum.MONTHLY);
   const [activePackage, setActivePackage] = useState<string | null>(null);
@@ -45,21 +36,22 @@ export const SubscriptionSettings = () => {
     dispatch(getPackageIndex())
   }, [dispatch]);
 
+  useEffect(() => {
+    if (packageIndexRedux.success) {
+      const allItems = packageIndexRedux.result.data.flatMap(pkg =>
+        (pkg.package_items || []).map(item => ({
+          ...item,
+          package_id: pkg.id,
+          package_name: pkg.name,
+          package_description: pkg.description,
+          package_features: Array.isArray(pkg.features) ? pkg.features : [],
+        }))
+      );
 
-  // useEffect(() => {
-  //   if (packageIndexRedux.success) {
-  //     const allItems = packageIndexRedux.result.data.flatMap(pkg => pkg.items.map(item => ({
-  //       ...item,
-  //       package_id: pkg.id,
-  //       package_name: pkg.name,
-  //       package_description: pkg.description,
-  //       package_features: JSON.parse(pkg.features || "[]"),
-  //     })));
-
-  //     setPackageMonthly(allItems.filter(item => item.interval === "month"));
-  //     setPackageYearly(allItems.filter(item => item.interval === "year"));
-  //   }
-  // }, [packageIndexRedux]);
+      setPackageMonthly(allItems.filter(item => item.interval === "month"));
+      setPackageYearly(allItems.filter(item => item.interval === "year"));
+    }
+  }, [packageIndexRedux]);
 
 
   // useEffect(() => {
@@ -69,11 +61,11 @@ export const SubscriptionSettings = () => {
   //   }
   // }, [profileShowRedux]);
 
-  // useEffect(() => {
-  //   if (settingPackageUpdateRedux.success) {
-  //     setActivePackage(settingPackageUpdateRedux.result.package_item_id);
-  //   }
-  // }, [settingPackageUpdateRedux]);
+  useEffect(() => {
+    if (settingPackageUpdateRedux.success) {
+      setActivePackage(settingPackageUpdateRedux.result.package_item_id);
+    }
+  }, [settingPackageUpdateRedux]);
 
   const handleUpgrade = (id: string) => {
     dispatch(putSettingPackageUpdate(id));
