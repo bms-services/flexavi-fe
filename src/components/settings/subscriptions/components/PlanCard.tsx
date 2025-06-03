@@ -10,14 +10,7 @@ interface PlanCardProps extends PackageItem {
   activePackage?: boolean;
   package_name?: string;
   package_description?: string;
-  package_features?: {
-    email_templates?: string;
-    max_invoices?: string;
-    max_leads?: string;
-    max_offers?: string;
-    price?: string;
-    work_contracts?: string;
-  };
+  package_features?: string[];
   stripe_price_id?: string;
   packageType?: PackageTypeT;
   handleUpgrade?: (id: string) => void;
@@ -59,30 +52,12 @@ export const PlanCard = ({
       </CardHeader>
       <CardContent>
         <ul className="space-y-3 min-h-[280px]">
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.email_templates}</span>
-          </li>
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.max_invoices}</span>
-          </li>
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.max_leads}</span>
-          </li>
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.max_offers}</span>
-          </li>
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.work_contracts}</span>
-          </li>
-          <li className="flex items-start gap-2 text-sm">
-            <span className="text-primary mt-0.5">✓</span>
-            <span>{package_features.price}</span>
-          </li>
+          {package_features.map((feature, index) => (
+            <li key={index} className="flex items-start gap-2 text-sm">
+              <span className="text-primary mt-0.5">✓</span>
+              <span>{feature}</span>
+            </li>
+          ))}
         </ul>
       </CardContent>
       <CardFooter className="pt-4 border-t bg-muted/50">

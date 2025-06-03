@@ -42,11 +42,7 @@ const PaymentStripe = ({ onBack, isFirst }: {
         if (error) {
             setErrorMessage(error.message);
             setSubmitted(false);
-        }
-        // else if (setupIntent && setupIntent.status === 'succeeded') {
-        //     navigate('/payment/confirm');
-        // } 
-        else {
+        } else {
             setErrorMessage(null);
             setSubmitted(false);
         }

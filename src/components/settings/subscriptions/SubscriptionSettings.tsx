@@ -54,12 +54,11 @@ export const SubscriptionSettings = () => {
   }, [packageIndexRedux]);
 
 
-  // useEffect(() => {
-  //   if (profileShowRedux.success) {
-  //     const selectedPackageItem = profileShowRedux.result.subscription.selected_package_item;
-  //     setActivePackage(selectedPackageItem.package_item_id);
-  //   }
-  // }, [profileShowRedux]);
+  useEffect(() => {
+    if (profileShowRedux.success) {
+      setActivePackage(profileShowRedux?.result?.package_items?.id);
+    }
+  }, [profileShowRedux]);
 
   useEffect(() => {
     if (settingPackageUpdateRedux.success) {

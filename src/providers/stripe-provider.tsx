@@ -39,7 +39,7 @@ const StripeProvider = ({ clientSecret, children }: StripeProviderProps) => {
                         fontSize: '14px',
                     },
                 },
-            }
+            },
         }}>
             {children}
         </Elements>

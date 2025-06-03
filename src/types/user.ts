@@ -14,9 +14,7 @@ export interface User {
   has_payment_method?: boolean;
   has_active_subscription?: boolean;
   has_verified_email?: boolean;
-  subscription?: {
-    selected_package_item: UserPackageItem;
-  };
+  package_items?: UserPackageItem;
   has_main_company?: boolean;
 }
 
