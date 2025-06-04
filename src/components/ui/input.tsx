@@ -3,7 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Label } from "./label"
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
-import { EyeClosedIcon, EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 
 interface InputC<T> extends React.ComponentProps<"input"> {
