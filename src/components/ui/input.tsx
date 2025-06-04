@@ -1,10 +1,9 @@
-import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Label } from "./label"
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-
+import React, { forwardRef, useState } from "react";
 
 interface InputC<T> extends React.ComponentProps<"input"> {
   label?: string
@@ -17,9 +16,9 @@ interface InputC<T> extends React.ComponentProps<"input"> {
   }
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputC<any>>(
+const Input = forwardRef<HTMLInputElement, InputC<any>>(
   ({ className, type, label, icon, rules, ...props }, ref) => {
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === "password";
     const inputType = isPassword && showPassword ? "text" : type;
 
