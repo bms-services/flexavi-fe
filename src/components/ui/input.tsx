@@ -21,6 +21,8 @@ const Input = forwardRef<HTMLInputElement, InputC<any>>(
     const isPassword = type === "password";
     const inputType = isPassword && showPassword ? "text" : type;
 
+    console.log("Input component rendered with type:", inputType, "and showPassword:", showPassword);
+
     return (
       <div className="relative space-y-1">
         {label && (
