@@ -23,6 +23,6 @@ jobs:
             cd /home/bmsservices-flexavi/htdocs/flexavi.bmsservices.id/flexavi-fe
             git reset --hard origin/main
             git pull origin main
-            rm -rf dist node_modules package-lock.json
+            rm -rf dist
             npm ci
             npm run build
