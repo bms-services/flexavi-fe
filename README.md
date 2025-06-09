@@ -77,3 +77,6 @@ Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-trick
 # Deploy 
 
 Just push your changes to the `main` branch and GitHub Actions will automatically deploy your project to the web.
+
+# Contributing
+We welcome contributions! If you have suggestions or improvements, feel free to open an issue or submit a pull request.
