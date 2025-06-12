@@ -5,6 +5,7 @@ import { SettingsTabContent } from "@/components/settings/tabs/SettingsTabConten
 import { useAppointmentSettings } from "@/hooks/useAppointmentSettings";
 
 const Settings = () => {
+
   const {
     timeBlocks,
     slotSettings,

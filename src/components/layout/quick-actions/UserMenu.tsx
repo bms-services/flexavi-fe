@@ -9,14 +9,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAppDispatch } from '@/hooks/use-redux';
-import { logout } from '@/actions/authActions';
+import { useLogout } from '@/zustand/hooks/useAuth';
 
 export const UserMenu = () => {
-  const dispatch = useAppDispatch();
+  const logoutZ = useLogout();
 
+  /**
+   * Function to handle user logout
+   * This function triggers the logout mutation from Zustand,
+   * which handles the logout process and updates the application state.
+   */
   const handleLogout = () => {
-    dispatch(logout());
+    logoutZ.mutate();
   }
 
   return (

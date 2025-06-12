@@ -15,7 +15,7 @@ import { WorkAgreementsTabContent } from "./WorkAgreementsTabContent";
 import { IntegrationsTabContent } from "./IntegrationsTabContent";
 import { ReputationTabContent } from "./ReputationTabContent";
 
-export const SettingsTabContent = ({ 
+export const SettingsTabContent = ({
   timeBlocks,
   slotSettings,
   colors,
@@ -24,7 +24,7 @@ export const SettingsTabContent = ({
   onSaveSlots,
   onSaveColors,
   onColorsChange
-}: { 
+}: {
   timeBlocks: any;
   slotSettings: any;
   colors: any;
@@ -49,7 +49,7 @@ export const SettingsTabContent = ({
         <PermissionsTabContent />
       </TabsContent>
       <TabsContent value="appointments">
-        <AppointmentsTabContent 
+        <AppointmentsTabContent
           timeBlocks={timeBlocks}
           slotSettings={slotSettings}
           colors={colors}

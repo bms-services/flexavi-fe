@@ -1,23 +1,25 @@
-import { postSettingIntentStore } from "@/actions/settingAction";
-import { useAppDispatch } from "@/hooks/use-redux";
 import StripeProvider from "@/providers/stripe-provider";
 import { useEffect, useState } from "react";
 import PaymentStripe from ".";
+import { useCreateMyIntent } from "@/zustand/hooks/useSetting";
 
 
 export default function StripeWrapper() {
     const [clientSecret, setClientSecret] = useState<string | null>(null);
-    const dispatch = useAppDispatch();
+    const createMyIntentZ = useCreateMyIntent()
 
     useEffect(() => {
         const fetchIntent = async () => {
-            const { payload } = await dispatch(postSettingIntentStore());
-            if (payload?.result?.client_secret) {
-                setClientSecret(payload.result.client_secret);
-            }
+            createMyIntentZ.mutateAsync()
+                .then((data) => {
+                    const { result } = data;
+                    if (result.client_secret) {
+                        setClientSecret(result.client_secret);
+                    }
+                })
         };
         fetchIntent();
-    }, [dispatch]);
+    }, []);
 
     if (!clientSecret) return <div>Loading...</div>;
 

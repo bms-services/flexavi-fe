@@ -1,44 +1,39 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CardContent, CardFooter } from "@/components/ui/card";
-import { UserPlus } from "lucide-react";
-import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
-import { useForm } from "react-hook-form";
-import { User } from "@/types/user";
+import { CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import i18n from "@/lib/i18n";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useRegister } from "@/zustand/hooks/useAuth";
+import { useRegisterStore } from "@/zustand/stores/registerStore";
 import { useEffect } from "react";
-import { registerReset } from "@/store/authSlice";
-// import { registerReset } from "@/store/authSlice";
 
 const RegisterSuccessfully = () => {
+  const { clearEmail, email } = useRegisterStore();
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-
-  const { success, result } = useSelector((state: RootState) => state.auth.register);
   const navigate = useNavigate();
 
+  /**
+   * Function to handle redirect to login page
+   * 
+   * @returns {void}
+   */
   const handleRedirectLogin = () => {
-    dispatch(registerReset());
     navigate("/login");
+    clearEmail();
   }
 
-  // Redirect to login page if registration already cleared
+  // Redirect to register page if email is not set
   useEffect(() => {
-    if (!success) {
-      navigate("/login");
+    if (!email) {
+      navigate("/register");
     }
-  }, [navigate, success]);
+  }, [email, navigate]);
 
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
         <p className="">{t("auth:registerSuccessfully.text.welcome")}
           <span className="font-bold text-primary">
-            &nbsp; {result?.email}
+            &nbsp; {email}
           </span>
         </p>
         <p className="">{t("auth:registerSuccessfully.text.activate")}</p>

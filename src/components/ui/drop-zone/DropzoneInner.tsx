@@ -45,7 +45,6 @@ const DropzoneInner = forwardRef<HTMLInputElement, DropzoneInnerProps>(
         const { getRootProps, getInputProps, isDragActive } = useDropzone({
             onDrop: handleDrop,
             accept: { [accept]: [] },
-            multiple,
         })
 
         const preview = useMemo(() => {
@@ -61,7 +60,7 @@ const DropzoneInner = forwardRef<HTMLInputElement, DropzoneInnerProps>(
                 <div
                     {...getRootProps()}
                     className={cn(
-                        "flex flex-col items-center justify-center border-2 border-dashed border-blue-400 bg-blue-50 hover:bg-blue-100 transition cursor-pointer px-6 py-8 text-center",
+                        "flex min-h-36 flex-col items-center justify-center border-2 border-dashed border-blue-400 bg-blue-50 hover:bg-blue-100 hover:border-dotted transition cursor-pointer px-6 py-8 text-center",
                         isDragActive && "bg-blue-100",
                         isCircle ? "rounded-full w-32 h-32" : "rounded-md",
                         className
@@ -73,17 +72,14 @@ const DropzoneInner = forwardRef<HTMLInputElement, DropzoneInnerProps>(
                     }}
                 >
                     <input {...getInputProps()} />
-                    {icon}
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        {isDragActive ? dropText : text}
-                    </p>
-                    {/* {value && (
-                        <div className="mt-2 text-sm text-blue-800">
-                            {multiple
-                                ? `${(value as File[]).length} bestand(en) geselecteerd`
-                                : `Bestand: ${(value as File)?.name}`}
+                    {!preview && (
+                        <div className="flex flex-col items-center">
+                            {icon}
+                            <p className="mt-2 text-sm text-muted-foreground">
+                                {isDragActive ? dropText : text}
+                            </p>
                         </div>
-                    )} */}
+                    )}
 
                     {errorMessage && (
                         <div className="text-red-500 text-sm mt-1">{errorMessage}</div>

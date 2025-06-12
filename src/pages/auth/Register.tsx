@@ -3,26 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LockIcon, Mail, UserIcon, UserPlus } from "lucide-react";
-import { StatusReducerEnum, useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
 import { User } from "@/types/user";
 import { useTranslation } from "react-i18next";
-import { register as registerPost } from "@/actions/authActions";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
 import PhoneNumber from "@/components/ui/phone-number";
-import { handleErrorForm } from "@/utils/errorHandler";
-import { ErrorType } from "@/lib/redux-thunk";
-
+import { useRegister } from "@/zustand/hooks/useAuth";
+import { RegisterReq } from "@/zustand/types/authT";
+import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { useRegisterStore } from "@/zustand/stores/registerStore";
 const Register = () => {
-  const dispatch = useAppDispatch();
+  const registerZ = useRegister();
+  const { setEmail } = useRegisterStore();
+
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
-
-  const { loading, success, errors, result } = useSelector((state: RootState) => state.auth.register);
 
   const {
     control,
@@ -30,8 +27,8 @@ const Register = () => {
     handleSubmit,
     watch,
     setError,
-    formState: { errors: formErrors },
-  } = useForm<User>({
+    formState: { errors },
+  } = useForm<RegisterReq>({
     defaultValues: {
       name: "",
       email: "",
@@ -41,27 +38,36 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (data: User) => {
+  /**
+   * Function to handle form submission
+   * 
+   * @param data - Form data containing user registration information
+   * @returns {Promise<void>}
+   */
+  const onSubmit = async (data: RegisterReq): Promise<void> => {
     const newData = {
       ...data,
       language: currentLocal,
     };
 
-    const action = await dispatch(registerPost(newData));
-
-    // Mapping Error to Form
-    if (registerPost.rejected.match(action)) {
-      const { errors } = action.payload as { errors: ErrorType };
-      handleErrorForm(errors, setError);
-    }
+    registerZ.mutate(newData, {
+      onSuccess: (res) => {
+        setEmail(res.result.email);
+        navigate("/register-successfully");
+      }
+    });
   };
 
+  /**
+   * Effect to handle registration errors
+   * 
+   * If there are errors during registration, set the appropriate error messages.
+   */
   useEffect(() => {
-    if (success) {
-      navigate("/register-successfully");
+    if (registerZ.error?.errors) {
+      mapApiErrorsToForm(registerZ.error.errors, setError);
     }
-  }, [success, navigate]);
-
+  }, [registerZ.error, setError]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +84,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.name')
             },
-            errors: formErrors,
+            errors,
           }}
         />
         <Input
@@ -93,7 +99,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.email')
             },
-            errors: formErrors,
+            errors,
           }}
         />
         <PhoneNumber
@@ -104,7 +110,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.phone')
             },
-            errors: formErrors,
+            errors,
           }}
         />
         <Input
@@ -119,7 +125,7 @@ const Register = () => {
             options: {
               required: t('auth:register.error.required.password')
             },
-            errors: formErrors,
+            errors,
           }}
         />
         <Input
@@ -139,13 +145,13 @@ const Register = () => {
                 }
               },
             },
-            errors: formErrors,
+            errors,
           }}
         />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <Button type="submit" className="w-full"
-          loading={loading}
+          loading={registerZ.isPending}
         >
           <UserPlus className="mr-2 h-4 w-4" />
           {t('auth:register.button.submit')}

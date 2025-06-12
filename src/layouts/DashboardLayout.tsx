@@ -8,22 +8,19 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CreditCardIcon, MailOpenIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from '@/components/layout/Sidebar';
-import { useAppDispatch } from "@/hooks/use-redux";
-import { getProfileShow, putVerifyEmail, postResendEmailVerification } from '@/actions/profileAction';
-import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
-import { User } from '@/types/user';
 import VerifyEmailDialog from '@/components/settings/email/VerifyEmailDialog';
 import SubscriptionTrialActivateDialog from '@/components/settings/subscriptions/dialogs/SubscriptionTrialActivateDialog';
 import PaymentMethodCardDialog from '@/components/settings/payments/dialogs/PaymentMethodCardDialog';
-
+import Loader from '@/components/ui/loader';
+import { useRequestEmailVerificationMyProfile, useShowMyProfile, useVerifyEmailMyProfile } from '@/zustand/hooks/useProfile';
 
 const DashboardLayout: React.FC = () => {
-    const dispatch = useAppDispatch()
-    const isMobile = useIsMobile();
-
-    const { token } = useAuth();    
+    const { token } = useAuth();
     const { t } = useTranslation('dashboard');
+    const showMyProfileZ = useShowMyProfile();
+    const requestEmailVerificationMyProfileZ = useRequestEmailVerificationMyProfile();
+    const verifyEmailMyProfileZ = useVerifyEmailMyProfile();
+    const isMobile = useIsMobile();
 
     const [modal, setModal] = useState({
         subscription: false,
@@ -31,13 +28,9 @@ const DashboardLayout: React.FC = () => {
         verifyEmail: false,
     });
 
-    const profileShowRedux = useSelector((state: RootState) => state.profile.show);
-    const { result } = profileShowRedux;
-
     useEffect(() => {
-        dispatch(getProfileShow());
-    }, [dispatch]);
-
+        showMyProfileZ.mutateAsync()
+    }, []);
 
     const handleOpenVerifyEmail = () => {
         setModal((modal) => ({
@@ -63,11 +56,9 @@ const DashboardLayout: React.FC = () => {
     }
 
     const handleSubmitOtp = (otp: string) => {
-        dispatch(putVerifyEmail(otp))
-            .unwrap()
+        verifyEmailMyProfileZ.mutateAsync(otp)
             .then(() => {
-                dispatch(getProfileShow());
-
+                showMyProfileZ.mutateAsync();
                 setTimeout(() => {
                     setModal((modal) => ({ ...modal, verifyEmail: false }));
                 }, 1000);
@@ -78,21 +69,13 @@ const DashboardLayout: React.FC = () => {
     }
 
     const handleResendOtp = () => {
-        dispatch(postResendEmailVerification());
+        requestEmailVerificationMyProfileZ.mutateAsync()
     }
 
     // Redirect to login if token is not available
     if (!token) {
         return <Navigate to="/login" replace />;
     }
-
-    // Redirect to create company if user does not have a main company
-    // console.log(profileShowRedux);
-    
-    // if (!result?.has_main_company) {
-    //     return <Navigate to="/create-company" replace />;
-    // }
-
 
     return (
         <div className="flex min-h-screen max-w-full overflow-x-hidden">
@@ -118,7 +101,7 @@ const DashboardLayout: React.FC = () => {
             )}
 
             <div className={`flex-1 min-h-screen flex flex-col ${!isMobile ? 'ml-[200px]' : ''} max-w-full overflow-x-hidden`}>
-                {result?.has_verified_email === false && (
+                {showMyProfileZ.data?.result.has_verified_email === false && (
                     <div className="flex items-center gap-[14px] bg-orange-400 px-4 md:px-6 py-2">
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -134,16 +117,16 @@ const DashboardLayout: React.FC = () => {
                                 </span>
                             </div>
                         </div>
-                        <VerifyEmailDialog 
-                        open={modal.verifyEmail} 
-                        onOpenChange={() => setModal((modal) => ({ ...modal, subscription: false }))} 
-                        handleResendOtp={handleResendOtp}
-                        handleSubmitOtp={handleSubmitOtp}
+                        <VerifyEmailDialog
+                            open={modal.verifyEmail}
+                            onOpenChange={() => setModal((modal) => ({ ...modal, verifyEmail: false }))}
+                            handleResendOtp={handleResendOtp}
+                            handleSubmitOtp={handleSubmitOtp}
                         />
                     </div>
                 )}
 
-                {result?.has_payment_method === false && (
+                {showMyProfileZ.data?.result?.has_payment_method === false && (
                     <div className="flex items-center gap-[14px] bg-indigo-400 px-4 md:px-6 py-2">
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
@@ -169,6 +152,7 @@ const DashboardLayout: React.FC = () => {
                     <div>
                     </div>
                     <Outlet />
+                    <Loader show={showMyProfileZ.isPending} />
                 </main>
             </div>
         </div>

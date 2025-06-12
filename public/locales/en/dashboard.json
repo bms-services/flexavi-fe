@@ -37,7 +37,8 @@
       "submit": "Create Company",
       "start": "Get Started",
       "next": "Next",
-      "back": "Back"
+      "back": "Back",
+      "logout": "Logout"
     },
     "error": {
       "required": {
@@ -63,6 +64,13 @@
       "title": "Payment Method",
       "description": "Get your trial access to all features by adding a payment method.",
       "cta": "Add Payment Method"
+    },
+    "otp": {
+      "title": "Verify Your Email",
+      "description": "Please enter the OTP sent to your email address to verify your account. If you did not receive the OTP, please check your spam folder or request a new one.",
+      "cta": "Verify OTP",
+      "dontHaveOtp": "Don't have an OTP?",
+      "requestNewOtp": "Request a new OTP"
     }
   },
   "settings": {
@@ -115,8 +123,50 @@
         "submit": "Submit"
       },
       "type":{
-       "sales": "Sales",
-       "executive": "Executive"
+        "sales": "Sales",
+        "executive": "Executive"
+      }
+    },
+    "company": {
+      "title": "Company Management",
+      "description": "Manage your company details",
+      "placeholder": {
+        "name": "Enter company name",
+        "email": "Enter company email",
+        "phone": "Enter company phone number",
+        "address": "Enter company address",
+        "tax": "Enter company tax number",
+        "kvk": "Enter company KVK number",
+        "website": "Enter company website",
+        "logo": "Upload company logo",
+        "description": "Enter a short description of the company"
+      },
+      "label": {
+        "name": "Company Name",
+        "email": "Company Email",
+        "phone": "Company Phone",
+        "address": "Company Address",
+        "tax": "Company Tax Number",
+        "kvk": "Company KVK Number",
+        "website": "Company Website",
+        "logo": "Company Logo",
+        "description": "Company Description"
+      },
+      "button": {
+        "submit": "Create Company"
+      },
+      "error": {
+        "required": {
+          "name": "Company name is required",
+          "email": "Company email is required",
+          "phone": "Company phone number is required",
+          "address": "Company address is required",
+          "tax": "Company tax number is required",
+          "kvk": "Company KVK number is required",
+          "website": "Company website is required",
+          "logo": "Company logo is required",
+          "description": "Company description is required"
+        }
       }
     }
   }

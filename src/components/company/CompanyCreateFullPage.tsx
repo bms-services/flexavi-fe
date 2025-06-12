@@ -1,24 +1,37 @@
-import ReactFullpage from '@fullpage/react-fullpage';
-import WelcomeUser from './Section/WelcomeUser';
-import CompanyInformation from './Section/CompanyInformation';
 import { useForm } from 'react-hook-form';
 import { Company } from '@/types/company';
 import { useTranslation } from 'react-i18next';
-import CompanyAddress from './Section/CompanyAddress';
 import { postSettingCompanyStore } from '@/actions/settingAction';
 import { useAppDispatch } from '@/hooks/use-redux';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Building2, Building2Icon, MailIcon, MapPin } from "lucide-react";
+import { Separator } from "@radix-ui/react-select";
+import PhoneNumber from "@/components/ui/phone-number";
+import PostalCode from "@/components/ui/postal-code";
+import { Button } from "@/components/ui/button";
+import { Dropzone } from "@/components/ui/drop-zone/Dropzone";
+import { CompanyReq } from '@/zustand/types/companyT';
+import { useCreateMyCompany } from '@/zustand/hooks/useSetting';
+import { useLogout } from '@/zustand/hooks/useAuth';
+import { mapApiErrorsToForm } from '@/utils/mapApiErrorsToForm';
 
 export default function CompanyCreateFullPage() {
+    const createMyCompanyZ = useCreateMyCompany();
+    const logoutZ = useLogout();
     const { t } = useTranslation('dashboard');
-    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const {
         control,
         handleSubmit,
         register,
         watch,
         setValue,
+        setError,
         formState: { errors }
-    } = useForm<Company>({
+    } = useForm<CompanyReq>({
         defaultValues: {
             name: '',
             description: '',
@@ -40,123 +53,233 @@ export default function CompanyCreateFullPage() {
         },
     })
 
-    const onSubmit = (data: Company) => {
-        dispatch(postSettingCompanyStore(data)).unwrap().then(
-            (data) => {
-                // Handle success, e.g., navigate to another page or show a success message
-                console.log('Company created successfully');
-                console.log(data);
-                
-            }
-        ).catch(
-            (error) => {
-                // Handle error, e.g., show an error message
-                console.error('Error creating company:', error);
+    /**
+     * Function to handle form submission
+     * 
+     * @param data 
+     * @returns {Promise<void>}
+     */
+    const onSubmit = async (data: CompanyReq): Promise<void> => {
+        const formData = new FormData();
+
+        formData.append("name", data.name);
+        formData.append("description", data.description || "");
+        formData.append("vat_number", data.vat_number || "");
+        formData.append("kvk_number", data.kvk_number || "");
+        formData.append("website", data.website || "");
+        formData.append("email", data.email || "");
+        formData.append("phone", data.phone || "");
+
+        if (data.address) {
+            formData.append("address[street]", data.address.street || "");
+            formData.append("address[postal_code]", typeof data.address.postal_code === "object"
+                ? data.address.postal_code.value
+                : data.address.postal_code || "");
+            formData.append("address[house_number]", data.address.house_number || "");
+            formData.append("address[house_number_addition]", data.address.house_number_addition || "");
+            formData.append("address[city]", data.address.city || "");
+            formData.append("address[province]", data.address.province || "");
         }
-        );
+
+        if (data.image && data.image instanceof File) {
+            formData.append("image", data.image);
+        }
+
+        createMyCompanyZ.mutate(formData, {
+            onSuccess: () => {
+                navigate("/");
+            },
+            onError: (error) => {
+                if (error?.errors) {
+                    mapApiErrorsToForm(createMyCompanyZ.error.errors, setError);
+                }
+            }
+        });
     };
 
+    /**
+     * Function to handle user logout
+     * 
+     * This function triggers the logout mutation and redirects the user to the login page.
+     */
+    const handleLogout = () => {
+        logoutZ.mutate();
+    }
+
     return (
-        // <ReactFullpage
-        //     licenseKey={'asd'}
-        //     scrollingSpeed={1000}
-        //     credits={{
-        //         enabled: false,
-        //         label: 'Made with fullPage.js',
-        //         position: 'right',
-        //     }}
-        //     easingcss3='cubic-bezier(0.175, 0.885, 0.320, 1.275)'
-        //     slidesNavPosition='bottom'
-        //     scrollHorizontally={true}
-        //     slidesNavigation={true}
-        //     scrollHorizontallyKey='horizontal'
-        //     controlArrows={true}
-        //     controlArrowColor='#fff'
-        //     controlArrowsHTML={[
-        //         `<div class="fp-prev transition-all duration-300 transform hover:scale-110 hover:-translate-x-1">
-        //             <div class="w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
-        //                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        //                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-        //                 </svg>
-        //             </div>
-        //         </div>`,
-        //         `<div class="fp-next transition-all duration-300 transform hover:scale-110 hover:translate-x-1">
-        //             <div class="w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
-        //               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        //                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-        //               </svg>
-        //             </div>
-        //          </div>`
-        //     ]}
+        <div className='bg-primary'>
+            <div className="w-full max-w-3xl mx-auto px-4 py-8">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                    <Card>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <Building2 className="h-5 w-5 text-muted-foreground" />
+                                <div>
+                                    <CardTitle>Bedrijfsgegevens</CardTitle>
+                                    <CardDescription>
+                                        Beheer je bedrijfsinformatie die wordt weergegeven op offertes en facturen
+                                    </CardDescription>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <Dropzone
+                                    previewUrl={watch('logo_url')}
+                                    rules={{
+                                        name: "image",
+                                        control,
+                                        errors,
+                                    }}
+                                    label="Upload profielfoto"
+                                    multiple={false}
+                                    text="Upload een afbeelding"
+                                    dropText="Sleep hierheen of klik om te uploaden."
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <Input
+                                    label={t('dashboard:company_create.label.name')}
+                                    placeholder={t('dashboard:company_create.placeholder.name')}
+                                    id="companyName"
+                                    type="text"
+                                    icon={<Building2Icon className="h-5 w-5 text-gray-400" />}
+                                    rules={{
+                                        register,
+                                        name: "name",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.name'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                                <Input
+                                    label={t('dashboard:company_create.label.tax')}
+                                    id="tax"
+                                    placeholder={t('dashboard:company_create.placeholder.tax')}
+                                    type="text"
+                                    rules={{
+                                        register,
+                                        name: "vat_number",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.tax'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                                <Input
+                                    label={t('dashboard:company_create.label.kvk')}
+                                    id="kvk"
+                                    type="text"
+                                    placeholder={t('dashboard:company_create.placeholder.kvk')}
+                                    rules={{
+                                        register,
+                                        name: "kvk_number",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.kvk'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                                <Input
+                                    label={t('dashboard:company_create.label.website')}
+                                    id="website"
+                                    type="text"
+                                    placeholder={t('dashboard:company_create.placeholder.website')}
+                                    rules={{
+                                        register,
+                                        name: "website",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.website'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                            </div>
+                            <Textarea
+                                label={t('dashboard:company_create.label.description')}
+                                id="description"
+                                placeholder={t('dashboard:company_create.placeholder.description')}
+                                rules={{
+                                    register,
+                                    name: "description",
+                                    options: {
+                                        maxLength: 250,
+                                    },
+                                    errors,
+                                }}
+                            />
+                        </CardContent>
 
-        //     render={({ state, fullpageApi }) => {
-        //         return (
-        //             <ReactFullpage.Wrapper>
-        //                 <div className='section'>
-        //                     <CompanyInformation
-        //                         state={state}
-        //                         fullpageApi={fullpageApi}
-        //                         register={register}
-        //                         control={control}
-        //                         errors={errors}
-        //                         handleSubmit={handleSubmit}
-        //                         onSubmit={onSubmit}
-        //                         watch={watch}
-        //                         setValue={setValue}
-        //                         t={t}
-        //                     />
-        //                 </div>
+                        <CardContent className="py-0">
+                            <Separator />
+                        </CardContent>
 
-        //                 <div className='section'>
-        //                     <CompanyAddress
-        //                         state={state}
-        //                         fullpageApi={fullpageApi}
-        //                         register={register}
-        //                         control={control}
-        //                         errors={errors}
-        //                         watch={watch}
-        //                         setValue={setValue}
-        //                         handleSubmit={handleSubmit}
-        //                         onSubmit={onSubmit}
-        //                         t={t}
-        //                     />
-        //                 </div>
-        //             </ReactFullpage.Wrapper >
-        //         );
-        //     }}
-        // />
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <MapPin className="h-5 w-5 text-muted-foreground" />
+                                <div>
+                                    <CardTitle>Contact & Locatie</CardTitle>
+                                    <CardDescription>
+                                        Contact- en adresgegevens van je bedrijf
+                                    </CardDescription>
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <Input
+                                    label={t('dashboard:company_create.label.email')}
+                                    placeholder={t('dashboard:company_create.placeholder.email')}
+                                    id={'companyEmail'}
+                                    type="text"
+                                    icon={<MailIcon className="h-5 w-5 " />}
+                                    rules={{
+                                        register,
+                                        name: "email",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.name'),
+                                        },
+                                        errors,
+                                    }}
+                                />
+                                <PhoneNumber
+                                    label={t('dashboard:company_create.label.phone')}
+                                    rules={{
+                                        control,
+                                        name: "phone",
+                                        options: {
+                                            required: t('dashboard:company_create.error.required.phone')
+                                        },
+                                        errors,
+                                    }}
+                                />
+                            </div>
 
+                            <PostalCode
+                                register={register}
+                                fieldPrefix="address"
+                                errors={errors}
+                                control={control}
+                                watch={watch}
+                                setValue={setValue}
+                            />
 
-        <div>
-            <div className='section'>
-                <CompanyInformation
-                    // state={state}
-                    // fullpageApi={fullpageApi}
-                    register={register}
-                    control={control}
-                    errors={errors}
-                    onSubmit={handleSubmit(onSubmit)}
-                    watch={watch}
-                    setValue={setValue}
-                    t={t} 
-                    state={undefined} 
-                    fullpageApi={undefined}                />
-                </div>
+                            <div className="flex justify-between items-center">
+                                <Button type="button" variant='destructive' onClick={handleLogout}>
+                                    {t("dashboard:company_create.button.logout")}
+                                </Button>
 
-                {/* <div className='section'>
-                    <CompanyAddress
-                        // state={state}
-                        // fullpageApi={fullpageApi}
-                        register={register}
-                        control={control}
-                        errors={errors}
-                        watch={watch}
-                        setValue={setValue}
-                        handleSubmit={handleSubmit}
-                        onSubmit={onSubmit}
-                        t={t}
-                    />
-                </div> */}
+                                <Button type="submit"
+                                    loading={createMyCompanyZ.isPending}
+                                >
+                                    {t("dashboard:company_create.button.submit")}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </form>
+            </div>
         </div>
     )
 }

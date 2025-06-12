@@ -29,12 +29,19 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    loginReset: (state) => {
+      state.login = createAuthAsyncState<User>();
+    },
     registerReset: (state) => {
       state.register = createAuthAsyncState<User>();
+    },
+    logoutReset: (state) => {
+      state.logout = createAuthAsyncState<null>();
     },
   },
   extraReducers: (builder) => {
     builder
+      // Login
       .addCase(login.pending, (state) => {
         state.login = { ...createAuthAsyncState(), loading: true };
       })
@@ -56,6 +63,8 @@ const authSlice = createSlice({
           message: getPayloadMessage(action.payload, action.error?.message || "Login failed"),
         };
       })
+
+      // Register
       .addCase(register.pending, (state) => {
         state.register = { ...createAuthAsyncState(), loading: true };
       })
@@ -77,6 +86,8 @@ const authSlice = createSlice({
           message: getPayloadMessage(action.payload, action.error?.message || "Register failed"),
         };
       })
+
+      // Logout
       .addCase(logout.pending, (state) => {
         state.logout = { ...createAuthAsyncState(), loading: true };
       })
@@ -101,28 +112,6 @@ const authSlice = createSlice({
   },
 });
 
-function getPayloadError(payload: unknown, fallback: string): string[] {
-  if (
-    payload &&
-    typeof payload === 'object' &&
-    'errors' in (payload as Record<string, unknown>) &&
-    Array.isArray((payload as Record<string, unknown>).errors)
-  ) {
-    return (payload as { errors: string[] }).errors;
-  }
-  return [fallback];
-}
-function getPayloadMessage(payload: unknown, fallback: string): string {
-  if (
-    payload &&
-    typeof payload === 'object' &&
-    'message' in (payload as Record<string, unknown>) &&
-    typeof (payload as Record<string, unknown>).message === 'string'
-  ) {
-    return (payload as { message: string }).message;
-  }
-  return fallback;
-}
 
 export default authSlice.reducer;
 

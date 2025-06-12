@@ -14,9 +14,6 @@ type StripeProviderProps = {
 const StripeProvider = ({ clientSecret, children }: StripeProviderProps) => {
     return (
         <Elements stripe={stripePromise} options={{
-            // amount: 0,
-            // mode: 'subscription',
-            // currency: 'eur',
             clientSecret,
             appearance: {
                 theme: 'stripe',

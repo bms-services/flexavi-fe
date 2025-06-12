@@ -7,7 +7,8 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { useTranslation } from 'react-i18next';
 
 interface ReceiptUploadDialogProps {
     open: boolean;
@@ -16,30 +17,65 @@ interface ReceiptUploadDialogProps {
     handleSubmitOtp: (otp: string) => void;
 }
 
+const COUNTDOWN_DURATION = import.meta.env.VITE_COUNTDOWN_DURATION
+const OTP_TIMESTAMP_KEY = 'lastOtpSentAt';
+
 export default function VerifyEmailDialog({
     open,
     onOpenChange,
     handleResendOtp,
     handleSubmitOtp,
 }: ReceiptUploadDialogProps) {
+    const { t } = useTranslation('dashboard');
     const [otp, setOtp] = useState('');
+    const [secondsLeft, setSecondsLeft] = useState(0);
+
+    // Check localStorage on mount
+    useEffect(() => {
+        const lastSent = localStorage.getItem(OTP_TIMESTAMP_KEY);
+        if (lastSent) {
+            const diff = Math.floor((Date.now() - parseInt(lastSent)) / 1000);
+            const remaining = COUNTDOWN_DURATION - diff;
+            if (remaining > 0) setSecondsLeft(remaining);
+        }
+    }, []);
+
+    // Countdown effect
+    useEffect(() => {
+        if (secondsLeft <= 0) return;
+
+        const timer = setInterval(() => {
+            setSecondsLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [secondsLeft]);
 
     useEffect(() => {
-        console.log('OTP:', otp.length);
-        
         if (otp.length === 6) {
             handleSubmitOtp(otp);
         }
-    }, [otp, handleSubmitOtp]);
+    }, [otp]);
+
+    const handleResend = () => {
+        handleResendOtp();
+        localStorage.setItem(OTP_TIMESTAMP_KEY, Date.now().toString());
+        setSecondsLeft(COUNTDOWN_DURATION);
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-lg overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Verify Your Email</DialogTitle>
+                    <DialogTitle>{t('dashboard:banner.otp.title')}</DialogTitle>
                     <DialogDescription>
-                        Please enter the OTP sent to your email address to verify your account.
-                        If you did not receive the OTP, please check your spam folder or request a new one.
+                        {t('dashboard:banner.otp.description')}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-4 py-6">
@@ -55,15 +91,21 @@ export default function VerifyEmailDialog({
                         </InputOTPGroup>
                     </InputOTP>
                 </div>
-                <DialogFooter className='!justify-center'>
-                    <span>
-                        Don't receive the OTP?&nbsp;
+                <DialogFooter className="!justify-center">
+                    <span className="text-center text-sm text-gray-600">
+                        {t("dashboard:banner.otp.dontHaveOtp")}&nbsp;
                         <span
-                            role='button'
-                            className="text-blue-600 hover:underline"
-                            onClick={handleResendOtp}
+                            role="button"
+                            aria-disabled={secondsLeft > 0}
+                            className={`inline-block font-medium ${secondsLeft > 0
+                                ? 'cursor-default'
+                                : 'text-blue-600 hover:underline cursor-pointer'
+                                }`}
+                            onClick={secondsLeft > 0 ? undefined : handleResend}
                         >
-                            Resend OTP
+                            {secondsLeft > 0
+                                ? new Date(secondsLeft * 1000).toISOString().substring(14, 19) // format mm:ss
+                                : t("dashboard:banner.otp.requestNewOtp")}
                         </span>
                     </span>
                 </DialogFooter>

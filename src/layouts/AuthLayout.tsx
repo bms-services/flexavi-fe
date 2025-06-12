@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, Outlet, useMatches } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogIn } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import LocalizationToggle from "@/components/ui/localization-toggle";
 import { useTranslation } from 'react-i18next';
@@ -14,8 +13,9 @@ type Handle = {
 };
 
 const AuthLayout: React.FC = () => {
-    const { t } = useTranslation<'auth' | 'dashboard'>();
+    const { t } = useTranslation('auth');
     const { token } = useAuth();
+
     const matches = useMatches();
     const currentHandle = matches.find((match) => match.handle)?.handle as Handle;
 
@@ -25,7 +25,7 @@ const AuthLayout: React.FC = () => {
 
     const safeTranslate = (key?: string) => {
         if (!key) return "";
-        return t(key as typeof resources["en"]);
+        return resources[key] || t(key as unknown as TemplateStringsArray) || key;
     };
 
     return (
@@ -37,10 +37,10 @@ const AuthLayout: React.FC = () => {
                         <Logo />
                     </div>
                     <CardTitle>
-                        {safeTranslate(currentHandle?.title)}
+                        {safeTranslate(currentHandle?.title || 'auth:login.title')}
                     </CardTitle>
                     <CardDescription>
-                        {safeTranslate(currentHandle?.description)}
+                        {safeTranslate(currentHandle?.description || 'auth:login.description')}
                     </CardDescription>
                 </CardHeader>
                 <Outlet />

@@ -8,19 +8,17 @@ import { Building2, MapPin, Ban, Building2Icon, MailIcon } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
 import StripeWrapper from "@/components/ui/payment-stripe/wrapper";
-import { useAppDispatch } from "@/hooks/use-redux";
-import { getSettingCompanyShow, postSettingCompanyUpdate } from "@/actions/settingAction";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { Company } from "@/types/company";
 import { useForm } from "react-hook-form";
 import PhoneNumber from "@/components/ui/phone-number";
 import PostalCode from "@/components/ui/postal-code";
 import { Dropzone } from "@/components/ui/drop-zone/Dropzone";
+import { useShowMyCompany, useUpdateMyCompany } from "@/zustand/hooks/useSetting";
 
 export const CompanySettings: React.FC = () => {
   const { t } = useTranslation('dashboard');
-  const dispatch = useAppDispatch();
+  const showMyCompanyZ = useShowMyCompany();
+  const updateMyCompanyZ = useUpdateMyCompany();
 
   const {
     control,
@@ -52,29 +50,32 @@ export const CompanySettings: React.FC = () => {
     },
   })
 
-  const settingCompanyShowRedux = useSelector((state: RootState) => state.setting.company.show);
-  const settingCompanyUpdateRedux = useSelector((state: RootState) => state.setting.company.update);
-
+  // Fetch company data on component mount
   useEffect(() => {
-    dispatch(getSettingCompanyShow())
-  }, [dispatch]);
+    showMyCompanyZ.mutateAsync().then((data) => {
+      const { result } = data;
 
+      let address = result.address;
+      if (Array.isArray(address)) {
+        address = address[0] || {};
+      }
 
-  useEffect(() => {
-    if (settingCompanyShowRedux.success && typeof settingCompanyShowRedux.result === "object" && settingCompanyShowRedux.result !== null && "address" in settingCompanyShowRedux.result) {
-      const result = settingCompanyShowRedux.result as Company;
-      reset({
-        ...result,
-        address: {
-          ...result.address,
-          postal_code:
-            typeof result.address.postal_code === "string"
-              ? { label: result.address.postal_code, value: result.address.postal_code }
-              : result.address.postal_code,
-        },
-      });
-    }
-  }, [settingCompanyShowRedux, reset]);
+      if (typeof address === "object" && address !== null) {
+        reset({
+          ...result,
+          address: {
+            ...address,
+            postal_code:
+              typeof address.postal_code === "string"
+                ? { label: address.postal_code, value: address.postal_code }
+                : address.postal_code,
+          },
+        });
+      }
+
+    });
+  }, []);
+
 
   const handleUpdate = async (data: Company) => {
     const formData = new FormData();
@@ -101,8 +102,7 @@ export const CompanySettings: React.FC = () => {
     if (data.image && data.image instanceof File) {
       formData.append("image", data.image);
     }
-
-    dispatch(postSettingCompanyUpdate(formData));
+    updateMyCompanyZ.mutateAsync(formData)
   };
 
   return (
@@ -129,11 +129,10 @@ export const CompanySettings: React.FC = () => {
                   control,
                   errors,
                 }}
-                label="Upload profielfoto"
+                label="Upload bedrijfslogo"
                 multiple={false}
                 text="Upload een afbeelding"
                 dropText="Sleep hierheen of klik om te uploaden."
-                isCircle
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -265,9 +264,9 @@ export const CompanySettings: React.FC = () => {
             />
 
             <Button type="submit"
-              loading={settingCompanyUpdateRedux.loading}
+              loading={updateMyCompanyZ.isPending}
             >
-              {t("dashboard:company_create.button.save")}
+              {t("dashboard:settings.company.button.submit")}
             </Button>
           </CardContent>
         </Card>
@@ -286,21 +285,6 @@ export const CompanySettings: React.FC = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="bank-name">Bank</Label>
-              <Input id="bank-name" defaultValue="ING Bank" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="iban">IBAN</Label>
-              <Input id="iban" defaultValue="NL00 INGB 0000 0000 00" />
-            </div>
-          </div> */}
-
-          {/* <StripeProvider>
-            <PaymentStripe />
-          </StripeProvider> */}
-
           <StripeWrapper />
         </CardContent>
       </Card>

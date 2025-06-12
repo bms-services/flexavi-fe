@@ -1,122 +1,172 @@
 {
-  "language": "English",
+  "language": "Nederlands",
   "company_create": {
     "text": {
-      "welcome": "Welcome to Flexavi 🎉",
-      "excited": "We're excited to have you on board. Let's get you set up and ready to go!",
-      "title": "Create a Company",
-      "titleAddress": "Address",
+      "welcome": "Welkom bij Flexavi 🎉",
+      "excited": "We zijn blij dat je erbij bent. Laten we aan de slag gaan!",
+      "title": "Maak een Bedrijf aan",
+      "titleAddress": "Adres",
       "titleContact": "Contact",
-      "description": "Enter your company details to create a new company.",
-      "descriptionAddress": "Enter your company address to create a new company.",
-      "descriptionContact": "Enter your company contact details to create a new company."
+      "description": "Vul je bedrijfsgegevens in om een nieuw bedrijf aan te maken.",
+      "descriptionAddress": "Vul het adres van je bedrijf in om een nieuw bedrijf aan te maken.",
+      "descriptionContact": "Vul de contactgegevens van je bedrijf in om een nieuw bedrijf aan te maken."
     },
     "placeholder": {
       "name": "Bijv. Mijn Dakbedrijf B.V.",
-      "email": "dakbedrijf@company.nl",
+      "email": "dakbedrijf@bedrijf.nl",
       "phone": "+31 6 12345678",
-      "address": "Enter your company address",
+      "address": "Vul het adres van je bedrijf in",
       "tax": "NL123456789B01",
       "kvk": "Bijv. 12345678",
       "website": "https://jouwbedrijf.nl",
-      "logo": "Upload your company logo",
-      "description": "Enter a short description of your company"
+      "logo": "Upload het logo van je bedrijf",
+      "description": "Voer een korte beschrijving van je bedrijf in"
     },
     "label": {
-      "name": "Company Name",
-      "email": "Company Email",
-      "phone": "Company Phone",
-      "address": "Company Address",
-      "tax": "Company Tax Number",
-      "kvk": "Company KVK Number",
-      "website": "Company Website",
-      "logo": "Company Logo",
-      "description": "Company Description"
+      "name": "Bedrijfsnaam",
+      "email": "Bedrijfsemail",
+      "phone": "Telefoonnummer bedrijf",
+      "address": "Bedrijfsadres",
+      "tax": "BTW-nummer bedrijf",
+      "kvk": "KVK-nummer bedrijf",
+      "website": "Website bedrijf",
+      "logo": "Bedrijfslogo",
+      "description": "Bedrijfsbeschrijving"
     },
     "button": {
-      "submit": "Create Company",
-      "start": "Get Started",
-      "next": "Next",
-      "back": "Back"
+      "submit": "Bedrijf aanmaken",
+      "start": "Aan de slag",
+      "next": "Volgende",
+      "back": "Terug",
+      "logout": "Uitloggen"
     },
     "error": {
       "required": {
-        "name": "Company name is required",
-        "email": "Company email is required",
-        "phone": "Company phone number is required",
-        "address": "Company address is required",
-        "tax": "Company tax number is required",
-        "kvk": "Company KVK number is required",
-        "website": "Company website is required",
-        "logo": "Company logo is required",
-        "description": "Company description is required"
+        "name": "Bedrijfsnaam is verplicht",
+        "email": "Bedrijfsemail is verplicht",
+        "phone": "Telefoonnummer van het bedrijf is verplicht",
+        "address": "Bedrijfsadres is verplicht",
+        "tax": "BTW-nummer van het bedrijf is verplicht",
+        "kvk": "KVK-nummer van het bedrijf is verplicht",
+        "website": "Website van het bedrijf is verplicht",
+        "logo": "Bedrijfslogo is verplicht",
+        "description": "Beschrijving van het bedrijf is verplicht"
       }
     }
   },
   "banner": {
     "emailNotVerified": {
-      "title": "Email not Verified",
-      "description": "You're almost there! We've sent a verification code to your email. Please check your inbox and verify your account to get trial access to all features.",
-      "cta": "Verify Now"
+      "title": "E-mail niet geverifieerd",
+      "description": "Je bent er bijna! We hebben een verificatiecode naar je e-mail gestuurd. Controleer je inbox en verifieer je account om toegang tot alle functies te krijgen.",
+      "cta": "Verifieer nu"
     },
     "paymentMethod": {
-      "title": "Payment Method",
-      "description": "Get your trial access to all features by adding a payment method.",
-      "cta": "Add Payment Method"
+      "title": "Betaalmethode",
+      "description": "Krijg toegang tot alle functies door een betaalmethode toe te voegen.",
+      "cta": "Voeg betaalmethode toe"
+    },
+    "otp": {
+      "title": "Verifieer je e-mailadres",
+      "description": "Voer de OTP-code in die naar je e-mailadres is gestuurd om je account te verifiëren. Als je de OTP niet hebt ontvangen, controleer dan je spamfolder of vraag een nieuwe aan.",
+      "cta": "Verifieer OTP",
+      "dontHaveOtp": "Geen OTP ontvangen?",
+      "requestNewOtp": "Vraag een nieuwe OTP aan"
     }
   },
   "settings": {
     "payment": {
-      "title": "Payment Method",
-      "description": "Add a payment method to get your trial access to all features.",
-      "cta": "Add Payment Method",
+      "title": "Betaalmethode",
+      "description": "Voeg een betaalmethode toe om toegang tot alle functies te krijgen.",
+      "cta": "Voeg betaalmethode toe",
       "error": {
         "required": {
-          "name": "Name on Card is required",
-          "number": "Card Number is required",
-          "expiry": "Expiry Date is required",
-          "cvc": "CVC is required"
+          "name": "Naam op de kaart is verplicht",
+          "number": "Kaartnummer is verplicht",
+          "expiry": "Vervaldatum is verplicht",
+          "cvc": "CVC is verplicht"
         }
       }
     },
     "team": {
-      "title": "Team Management",
-      "description": "Manage your team members",
+      "title": "Teambeheer",
+      "description": "Beheer je teamleden",
       "placeholder": {
-        "name": "Enter team member's name",
-        "description": "Enter a short description of the team member",
-        "color": "Select a color for the team member",
-        "type": "Select a type for the team member"
+        "name": "Voer de naam van het teamlid in",
+        "description": "Voer een korte beschrijving van het teamlid in",
+        "color": "Selecteer een kleur voor het teamlid",
+        "type": "Selecteer een type voor het teamlid"
       },
       "label": {
-        "name": "Name",
-        "description": "Description",
-        "color": "Color",
+        "name": "Naam",
+        "description": "Beschrijving",
+        "color": "Kleur",
         "type": "Type"
       },
       "error": {
         "required": {
-          "name": "Name is required",
-          "description": "Description is required",
-          "color": "Color is required",
-          "type": "Type is required"
+          "name": "Naam is verplicht",
+          "description": "Beschrijving is verplicht",
+          "color": "Kleur is verplicht",
+          "type": "Type is verplicht"
         },
         "maxLength": {
-          "name": "Name must be at most 255 characters long",
-          "description": "Description must be at most 255 characters long"
+          "name": "Naam mag maximaal 255 tekens lang zijn",
+          "description": "Beschrijving mag maximaal 255 tekens lang zijn"
         }
-      }, 
-      "button": {
-        "add": "Add Team Member",
-        "edit": "Edit Team Member",
-        "delete": "Delete Team Member",
-        "save": "Save Changes",
-        "cancel": "Cancel",
-        "submit": "Submit"
       },
-      "type":{
-       "sales": "Sales",
-       "executive": "Executive"
+      "button": {
+        "add": "Teamlid toevoegen",
+        "edit": "Teamlid bewerken",
+        "delete": "Teamlid verwijderen",
+        "save": "Wijzigingen opslaan",
+        "cancel": "Annuleren",
+        "submit": "Verzenden"
+      },
+      "type": {
+        "sales": "Verkoop",
+        "executive": "Directie"
+      }
+    },
+    "company": {
+      "title": "Bedrijfsinstellingen",
+      "description": "Beheer je bedrijfsinstellingen",
+      "placeholder": {
+        "name": "Voer de naam van het bedrijf in",
+        "email": "Voer het e-mailadres van het bedrijf in",
+        "phone": "Voer het telefoonnummer van het bedrijf in",
+        "address": "Voer het adres van het bedrijf in",
+        "tax": "Voer het BTW-nummer van het bedrijf in",
+        "kvk": "Voer het KVK-nummer van het bedrijf in",
+        "website": "Voer de website van het bedrijf in",
+        "logo": "Upload het logo van het bedrijf",
+        "description": "Voer een korte beschrijving van het bedrijf in"
+      },
+      "label": {
+        "name": "Bedrijfsnaam",
+        "email": "Bedrijfsemail",
+        "phone": "Telefoonnummer bedrijf",
+        "address": "Bedrijfsadres",
+        "tax": "BTW-nummer bedrijf",
+        "kvk": "KVK-nummer bedrijf",
+        "website": "Website bedrijf",
+        "logo": "Bedrijfslogo",
+        "description": "Bedrijfsbeschrijving"
+      },
+      "button": {
+        "submit": "Bedrijf bijwerken"
+      },
+      "error": {
+        "required": {
+          "name": "Bedrijfsnaam is verplicht",
+          "email": "Bedrijfsemail is verplicht",
+          "phone": "Telefoonnummer van het bedrijf is verplicht",
+          "address": "Bedrijfsadres is verplicht",
+          "tax": "BTW-nummer van het bedrijf is verplicht",
+          "kvk": "KVK-nummer van het bedrijf is verplicht",
+          "website": "Website van het bedrijf is verplicht",
+          "logo": "Bedrijfslogo is verplicht",
+          "description": "Beschrijving van het bedrijf is verplicht"
+        }
       }
     }
   }

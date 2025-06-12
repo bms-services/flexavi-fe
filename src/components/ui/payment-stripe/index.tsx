@@ -18,23 +18,17 @@ const PaymentStripe = ({ onBack }: {
             return;
         }
 
-        // Trigger form validation and wallet collection
         const { error: submitError } = await elements.submit();
 
         if (submitError) {
-            // Show error to your customer
             setErrorMessage(submitError.message);
             return;
         }
 
-        // const { payload } = await dispatch(createProfileIntent());
-
         const { error } = await stripe.confirmSetup({
             elements,
-            // clientSecret: payload.result.client_secret,
             confirmParams: {
-                // return_url: import.meta.env.VITE_APP_URL + 'payment/confirm',
-                return_url: "https://stripe.com/payment/confirm"
+                return_url: import.meta.env.VITE_APP_URL + '/payment/confirm',
             },
             redirect: 'always',
         });

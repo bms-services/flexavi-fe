@@ -1,4 +1,5 @@
 import {
+  postSettingCompanyStore,
   getSettingCompanyShow,
   postSettingCompanyUpdate,
 
@@ -42,8 +43,10 @@ export function createAsyncState<T = unknown>(): AsyncState<T> {
 // --- Initial State ---
 const initialState = {
   company: {
+    index: createAsyncState<Company>(),
+    store: createAsyncState<Company>(),
     show: createAsyncState<Company>(),
-    update: createAsyncState(),
+    update: createAsyncState<Company>(),
   },
   team: {
     index: createAsyncState<CompanyTeam>(),
@@ -85,6 +88,22 @@ const settingSlice = createSlice({
   extraReducers: (builder) => {
     // Company
     builder
+      .addCase(postSettingCompanyStore.pending, (state) => {
+        state.company.store = { ...createAsyncState(), loading: true };
+      })
+      .addCase(postSettingCompanyStore.fulfilled, (state, action) => {
+        state.company.store = { ...state.company.store, ...action.payload, loading: false, success: true };
+      })
+      .addCase(postSettingCompanyStore.rejected, (state, action) => {
+        state.company.store = {
+          ...createAsyncState(),
+          loading: false,
+          success: false,
+          errors: getErrors(action.payload, (action.error as Error)?.message || "Failed to store company"),
+        };
+      })
+
+      // Fetch company details
       .addCase(getSettingCompanyShow.pending, (state) => {
         state.company.show = { ...createAsyncState(), loading: true };
       })

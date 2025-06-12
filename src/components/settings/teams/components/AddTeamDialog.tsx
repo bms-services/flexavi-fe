@@ -13,6 +13,7 @@ import { CompanyTeamTypeEnum } from "@/types/company";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TeamReq } from "@/zustand/types/teamT";
 
 const teamSchema = z.object({
   name: z.string().min(1, "Team naam is verplicht"),
@@ -24,7 +25,7 @@ const teamSchema = z.object({
 interface AddTeamDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: z.infer<typeof teamSchema>) => void;
+  onSubmit: (values: TeamReq) => void;
 }
 
 export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
@@ -40,7 +41,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
       name: "",
       description: "",
       color: "#3b82f6",
-      type: CompanyTeamTypeEnum.SALES, // Default to sales team
+      type: CompanyTeamTypeEnum.SALES,
     },
   });
 
@@ -137,7 +138,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                       <SelectContent>
                         {Object.values(CompanyTeamTypeEnum).map((type) => (
                           <SelectItem key={type} value={type}>
-                            {t(`dashboard:settings.team.type.${type.toLowerCase()}`)}
+                            {t(`dashboard:settings.team.type.${type.toLowerCase() as keyof typeof CompanyTeamTypeEnum}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>

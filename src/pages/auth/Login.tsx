@@ -1,43 +1,39 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
-import { useAppDispatch } from "@/hooks/use-redux";
 import { useForm } from "react-hook-form";
-import { User } from "@/types/user";
-import { login } from "@/actions/authActions";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useEffect } from "react";
+import { LoginReq } from "@/zustand/types/authT";
+import { useLogin } from "@/zustand/hooks/useAuth";
 
 const Login = () => {
-  const dispatch = useAppDispatch();
+  const loginZ = useLogin();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>({
+    reset,
+  } = useForm<LoginReq>({
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const { loading, success, errors: authErrors, result } = useSelector((state: RootState) => state.auth.login);
-
-
   /**
    * Function to handle form submission
    * 
-   * @param data 
-   * @param formData
-   * @returns void
+   * @param data - Form data containing user login information
+   * @returns {Promise<void>}
    */
-  const onSubmit = (data: User): void => {
-    dispatch(login(data));
+  const onSubmit = async (data: LoginReq): Promise<void> => {
+    loginZ.mutate(data);
   };
 
   return (
@@ -74,7 +70,7 @@ const Login = () => {
           }}
         />
         <Link
-          to="/auth/forgot-password"
+          to="/forgot-password"
           className="inline-block text-sm text-primary hover:text-primary/90 hover:underline"
         >
           {t('auth:login.link.forgotPassword')}
@@ -82,7 +78,7 @@ const Login = () => {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <Button type="submit" className="w-full"
-          loading={loading}
+          loading={loginZ.isPending}
         >
           <LogIn className="mr-2 h-4 w-4" />
           {t('auth:login.button.submit')}
