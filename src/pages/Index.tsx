@@ -1,6 +1,5 @@
 
-import React, { useEffect, useState } from "react";
-import { Layout } from "@/components/layout/Layout";
+import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
 import { ShopifyStyleDashboard } from "@/components/dashboard/ShopifyStyleDashboard";
 import { getUpcomingAppointments, getRecentLeads } from "@/data/mockData";
@@ -10,17 +9,13 @@ import { UpcomingAppointments } from "@/components/dashboard/UpcomingAppointment
 import { RecentLeads } from "@/components/dashboard/RecentLeads";
 import { DashboardCharts } from "@/components/dashboard/charts/DashboardCharts";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useAppDispatch } from "@/hooks/use-redux";
-import CompanyCreateFullPage from "@/components/company/CompanyCreateFullPage";
 
 const Dashboard = () => {
-  const dispatch = useAppDispatch();
   const [timeRange, setTimeRange] = useState("week");
   const [lastUpdated] = useState(new Date());
   const upcomingAppointments = getUpcomingAppointments();
   const recentLeads = getRecentLeads();
   const isMobile = useIsMobile();
-
 
   return (
     <div className="container py-3 md:py-6 px-2 md:px-6 space-y-4 md:space-y-6">

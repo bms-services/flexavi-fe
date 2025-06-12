@@ -80,6 +80,7 @@ export const CompanySettings: React.FC = () => {
   const handleUpdate = async (data: Company) => {
     const formData = new FormData();
 
+    formData.append("_method", "PUT");
     formData.append("name", data.name);
     formData.append("description", data.description || "");
     formData.append("vat_number", data.vat_number || "");

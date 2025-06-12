@@ -1,74 +1,64 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Progress } from '@/components/ui/progress';
-import { useUpdateMyPayment } from '@/zustand/hooks/useSetting';
+import { useCreateMyTrial, useUpdateMyPayment } from '@/zustand/hooks/useSetting';
+import { useGlobalStore } from '@/zustand/stores/loaderStore';
+import VectorPaymentMethodSuccess from "@/assets/images/vector/payment-method-success.jpg";
 
 export default function PaymentConfirm() {
-    const updateMyPayment = useUpdateMyPayment();
+    const updateMyPaymentZ = useUpdateMyPayment();
+    const createMyTrialZ = useCreateMyTrial();
+    const { setLoader } = useGlobalStore();
     const [searchParams] = useSearchParams();
+
     const setupIntentId = searchParams.get('setup_intent');
     const redirectStatus = searchParams.get('redirect_status');
 
     useEffect(() => {
-        async function fetchPaymentMethod() {
-            if (setupIntentId && redirectStatus === 'succeeded') {
-                // const { payload } = await dispatch(putSettingPaymentUpdate(setupIntentId));
+        const handleUpdatePayment = async () => {
+            if (!setupIntentId || redirectStatus !== 'succeeded') return;
 
-                // if (payload.result.error) {
-                //     setStatus('error');
-                // } else {
-                //     setStatus('success');
-                // }
+            try {
+                setLoader(true, "Verifying your payment method...");
+                const res = await updateMyPaymentZ.mutateAsync({ setup_intent_id: setupIntentId });
 
-                const res = await updateMyPayment.mutateAsync({ setup_intent_id: setupIntentId });
-
-                console.log(res.result);
-
+                if (res.success) {
+                    await createMyTrialZ.mutateAsync();
+                }
+            } catch (error) {
+                console.error("Error during payment confirm:", error);
+            } finally {
+                setLoader(false);
             }
-        }
+        };
 
-        fetchPaymentMethod();
-    }, [setupIntentId, redirectStatus]);
+        handleUpdatePayment();
+    }, [setupIntentId, redirectStatus, setLoader]);
 
-    // const handleTrial = async () => {
-    //     const { payload } = await dispatch(postSettingTrialStore());
+    if (!setupIntentId || redirectStatus !== 'succeeded') {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <p className="text-gray-500 text-center">Invalid payment confirmation. Please try again.</p>
+            </div>
+        );
+    }
 
-    //     if (payload.success) {
-    //         await dispatch(getProfileShow());
-
-    //         setTimeout(() => {
-    //             navigate('/');
-    //         }, 1000);
-    //     }
-    // };
-
-    return (
-        <div className="flex items-center justify-center min-h-screen">
-            {updateMyPayment.isIdle && (
+    if (updateMyPaymentZ.isSuccess) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center space-y-4">
-                    <Progress />
-                    <p className="text-gray-700">Verifying payment method...</p>
+                    <img
+                        src={VectorPaymentMethodSuccess}
+                        alt="Payment Method Success"
+                        className="w-96 h-auto mx-auto mb-4"
+                    />
+                    <div className="text-center space-y-1">
+                        <p>Your payment method has been successfully confirmed!</p>
+                        <p>You can now start using your account.</p>
+                    </div>
                 </div>
-            )}
+            </div>
+        );
+    }
 
-            {updateMyPayment.isError && (
-                <div className="text-center text-red-500">
-                    <p>Failed to confirm your payment method. Please try again.</p>
-                </div>
-            )}
-
-            {updateMyPayment.isSuccess && (
-                <div className="text-center space-y-2">
-                    <p className="">Your payment method has been successfully confirmed!</p>
-                    <p className="">You can now start using your account.</p>
-                    {/* <Button
-                        onClick={handleTrial}
-                        loading={loadingCreateTrial}
-                    >
-                        Get Trial
-                    </Button> */}
-                </div>
-            )}
-        </div>
-    );
-};
+    return null;
+}

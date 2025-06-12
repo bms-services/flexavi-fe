@@ -5,15 +5,14 @@ import PhoneNumber from "@/components/ui/phone-number";
 import PostalCode from "@/components/ui/postal-code";
 import { useTranslation } from "react-i18next";
 import { Mail, UserIcon } from "lucide-react";
-import { Lead } from "@/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { useFormContext } from "react-hook-form";
+import { useCreateLead, useUpdateLead } from "@/zustand/hooks/useLead";
+import { LeadReq } from "@/zustand/types/leadT";
 
 interface CreateLeadFormProps {
   onCancel: () => void;
   leadId?: string;
-  onSubmit: (data: Lead) => Promise<void>;
+  onSubmit: (data: LeadReq) => Promise<void>;
 }
 
 export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
@@ -22,6 +21,8 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation("dashboard");
+  const createLeadZ = useCreateLead();
+  const updateLeadZ = useUpdateLead();
 
   const {
     register,
@@ -31,20 +32,6 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
     setValue,
     formState: { errors },
   } = useFormContext();
-
-  // const { loading: loadingLeadsStore, response: responseLeadStore } = useSelector((state: RootState) => state.lead.store);
-  // const resultLeadStore = responseLeadStore.result as Lead;
-
-  // const { loading: loadingLeadShow, response: responseLeadShow } = useSelector((state: RootState) => state.lead.show);
-  // const resultLeadShow = responseLeadShow.result as Lead;
-
-  // const { loading: loadingLeadUpdate, response: responseLeadUpdate } = useSelector((state: RootState) => state.lead.update);
-  // const resultLeadUpdate = responseLeadUpdate.result as Lead;
-
-  const leadUpdateRedux = useSelector((state: RootState) => state.lead.update);
-  const leadShowRedux = useSelector((state: RootState) => state.lead.show);
-  const leadStoreRedux = useSelector((state: RootState) => state.lead.store);
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
@@ -106,7 +93,8 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
           Annuleren
         </Button>
         <Button type="submit"
-          loading={leadStoreRedux.loading || leadShowRedux.loading || leadUpdateRedux.loading}>
+          loading={leadId ? updateLeadZ.isPending : createLeadZ.isPending}
+        >
           {leadId ? "Lead Bijwerken" : "Lead Toevoegen"}
         </Button>
       </div>

@@ -1,24 +1,25 @@
 import React, { useMemo, useCallback } from "react";
-import { Lead, leadStatusMap } from "@/types";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { leadStatusMap } from "@/types";
 import { ParamsAction } from "@/@types/global-type";
 import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
+import { LeadRes } from "@/zustand/types/leadT";
+import { useGetLeads } from "@/zustand/hooks/useLead";
 
 interface LeadTableProps {
   params: ParamsAction;
   setParams: React.Dispatch<React.SetStateAction<ParamsAction>>;
-  onEdit?: (row: Lead) => void;
-  onDelete?: (rows: Lead[]) => void;
-  onArchive?: (rows: Lead[]) => void;
+  onEdit?: (row: LeadRes) => void;
+  onDelete?: (rows: LeadRes[]) => void;
+  onArchive?: (rows: LeadRes[]) => void;
 }
 
 export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit, onDelete, onArchive }) => {
-  const leadIndexRedux = useSelector((state: RootState) => state.lead.index);
+  // const leadIndexRedux = useSelector((state: RootState) => state.lead.index);
+  const getLeadsZ = useGetLeads(params);
 
-  const columns = useMemo<CustomColumnDef<Lead>[]>(() => [
+  const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
     { accessorKey: "email", header: "Email", cell: info => info.getValue() },
     { accessorKey: "phone", header: "Phone", cell: info => info.getValue() },
@@ -30,18 +31,18 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
         />
       )
     },
-    {
-      accessorKey: "address",
-      header: "Address",
-      cell: info => {
-        const lead = info.row.original;
-        const addr = lead.address;
-        if (addr) {
-          return `${addr.street} ${addr.house_number}${addr.house_number_addition ? ' ' + addr.house_number_addition : ''}, ${typeof addr.postal_code === 'object' ? addr.postal_code.value : addr.postal_code} ${addr.city}`;
-        }
-        return "-";
-      }
-    },
+    // {
+    //   accessorKey: "address",
+    //   header: "Address",
+    //   cell: info => {
+    //     const lead = info.row.original;
+    //     const addr = lead.address;
+    //     if (addr) {
+    //       return `${addr.street} ${addr.house_number}${addr.house_number_addition ? ' ' + addr.house_number_addition : ''}, ${typeof addr.postal_code === 'object' ? addr.postal_code.value : addr.postal_code} ${addr.city}`;
+    //     }
+    //     return "-";
+    //   }
+    // },
     {
       accessorKey: "created_at",
       header: "Created At",
@@ -57,14 +58,14 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
   const statusFilterOptions = Object.entries(leadStatusMap).map(
     ([value, { label }]) => ({ value, label })
   );
-  
+
   return (
     <div className="space-y-4">
       <TableTanstack
         columns={columns}
-        data={leadIndexRedux.result?.data ?? []}
-        meta={leadIndexRedux.result?.meta}
-        isLoading={leadIndexRedux.loading}
+        data={getLeadsZ.data?.result?.data || []}
+        meta={getLeadsZ.data?.result?.meta}
+        isLoading={getLeadsZ.isLoading}
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}

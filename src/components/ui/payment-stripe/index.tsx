@@ -11,7 +11,7 @@ const PaymentStripe = ({ onBack }: {
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (elements == null) {

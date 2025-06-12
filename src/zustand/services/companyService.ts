@@ -21,7 +21,7 @@ export const createCompanyService = async (formData: CompanyReq) => {
 };
 
 export const updateCompanyService = async ({ id, formData }: { id: string, formData: Partial<CompanyReq> }) => {
-    const { data } = await mainApi.patch(`/company/${id}`, formData);
+    const { data } = await mainApi.put(`/company/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

@@ -1,37 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
-import type { Lead, LeadAddress } from '@/types/leads';
-import { LeadTable } from "./LeadTable";
-import { LeadActions } from "./LeadActions";
-import { CreateLeadDialog } from "./CreateLeadDialog";
-import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
-import {
-  deleteLeadDestroy,
-  getLeadIndex,
-  getLeadShow,
-  putLeadUpdate,
-  postLeadStore,
-} from "@/actions/leadAction";
-import { FormProvider, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+// import { Lead } from "@/types/leads";
+import { useGetLeads, useGetLead, useCreateLead, useUpdateLead, useDeleteLead } from "@/zustand/hooks/useLead";
+// import LeadTable from "./LeadTable";
+// import LeadActions from "./LeadActions";
+// import CreateLeadDialog from "./CreateLeadDialog";
 import { ParamsAction } from "@/@types/global-type";
+import { flattenLeadAddressToObject, objectToFormData } from "@/utils/dataTransform";
+import { LeadActions } from "./LeadActions";
+import { LeadTable } from "./LeadTable";
+import { CreateLeadDialog } from "./CreateLeadDialog";
+import { LeadReq, LeadRes } from "@/zustand/types/leadT";
 
 export const LeadList: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const methods = useForm<Lead>({
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      address: {
-        street: "",
-        postal_code: { label: "", value: "" },
-        house_number: "",
-        house_number_addition: "",
-        city: "",
-        province: "",
-      },
-    },
-  });
-
   const [params, setParams] = useState<ParamsAction>({
     page: 1,
     per_page: 10,
@@ -39,161 +20,68 @@ export const LeadList: React.FC = () => {
     filters: {},
     sorts: {},
   });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const leadIndexState = useAppSelector((state) => state.lead.index);
-  const leadShowState = useAppSelector((state) => state.lead.show);
-  const leadStoreState = useAppSelector((state) => state.lead.store);
-  const leadUpdateState = useAppSelector((state) => state.lead.update);
-  const leadDestroyState = useAppSelector((state) => state.lead.destroy);
+  const methods = useForm<LeadReq>({
+    defaultValues: { name: "", email: "", phone: "", address: { street: "", postal_code: { label: "", value: "" }, house_number: "", house_number_addition: "", city: "", province: "" } }
+  });
 
-  console.log(leadShowState);
-  
-  // whenever params change, fetch the page
-  useEffect(() => {
-    dispatch(getLeadIndex(params));
-  }, [dispatch, params]);
+  const getLeadsZ = useGetLeads(params);
+  const getLeadZ = useGetLead(leadId ?? "");
+  const createLeadZ = useCreateLead();
+  const updateLeadZ = useUpdateLead();
+  const deleteLeadZ = useDeleteLead();
 
-  // Helper to flatten address fields for Laravel-style array input
-  const flattenLeadAddress = (data: Lead) => {
-    const address: Partial<LeadAddress> = data.address || {} as Partial<LeadAddress>;
-    let postalCode = '';
-    if (typeof address.postal_code === 'object' && address.postal_code !== null && 'value' in address.postal_code) {
-      postalCode = address.postal_code.value;
-    } else if (typeof address.postal_code === 'string') {
-      postalCode = address.postal_code;
-    }
-    const flat = {
-      ...data,
-      address: undefined,
-      'address[street]': address.street ?? '',
-      'address[postal_code]': postalCode,
-      'address[house_number]': address.house_number ?? '',
-      'address[house_number_addition]': address.house_number_addition ?? '',
-      'address[city]': address.city ?? '',
-      'address[province]': address.province ?? '',
+  const handleStore = async (data: LeadReq) => {
+    const flattenedAddress = flattenLeadAddressToObject(data.address);
+
+    const leadData: LeadReq = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: flattenedAddress,
     };
-    const fd = new FormData();
-    Object.entries(flat).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        fd.append(key, String(value));
-      }
-    });
-    return fd;
+
+    await createLeadZ.mutateAsync(leadData);
+    setIsDialogOpen(false);
   };
 
-  // Handlers
-  const handleStore = useCallback(
-    async (data: Lead) => {
-      await dispatch(
-        postLeadStore(flattenLeadAddress(data))
-      );
-    },
-    [dispatch]
-  );
+  const handleUpdate = async (data: LeadReq) => {
+    const flattenedAddress = flattenLeadAddressToObject(data.address);
 
-  // Show detail in dialog
-  const handleShow = useCallback(
-    async (row: Lead) => {
-      await dispatch(getLeadShow(row.id));
-      setLeadId(row.id);
-      setIsDialogOpen(true);
-    },
-    [dispatch]
-  );
+    const leadData: LeadReq = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: flattenedAddress,
+    };
 
-  // Update lead
-  const handleUpdate = useCallback(
-    async (data: Lead) => {
-      await dispatch(
-        putLeadUpdate({
-          id: data.id!,
-          formData: flattenLeadAddress(data),
-        })
-      );
-    },
-    [dispatch]
-  );
+    await updateLeadZ.mutateAsync({ id: data.id!, formData: leadData });
+    setIsDialogOpen(false);
+  };
 
-  // Fix: convert Lead[] to string[] for delete
-  const handleDelete = useCallback(
-    async (rows: Lead[]) => {
-      const ids = rows.map((row) => row.id!);
-      await dispatch(deleteLeadDestroy(ids));
-    },
-    [dispatch]
-  );
+  const handleShow = async (row: LeadRes) => {
+    setLeadId(row.id);
+    setIsDialogOpen(true);
+  };
 
-  // Reset & load detail into form
+  const handleDelete = async (ids: LeadRes[]) => {
+    await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
+  };
+
+  // useEffect(() => {
+  //   if (getLeadZ.isSuccess && leadId && isDialogOpen) {
+  //     methods.reset(getLeadZ.data.result);
+  //   }
+  // }, [getLeadZ.isSuccess, leadId, isDialogOpen]);
+
   useEffect(() => {
     if (!isDialogOpen) {
       setLeadId(null);
       methods.reset();
     }
-  }, [isDialogOpen, methods]);
-
-  // When detail fetch succeeds, populate the form
-  useEffect(() => {
-    if (leadShowState.success && isDialogOpen && leadId) {
-      const lead = leadShowState.result;
-      const address: Partial<LeadAddress> = lead.address || {
-        street: "",
-        postal_code: { label: "", value: "" },
-        house_number: "",
-        house_number_addition: "",
-        city: "",
-        province: "",
-      };
-      methods.reset({
-        ...lead,
-        address: {
-          ...address,
-          postal_code:
-            typeof address.postal_code === "string"
-              ? { label: address.postal_code, value: address.postal_code }
-              : address.postal_code,
-        },
-      });
-    }
-  }, [leadShowState, methods, isDialogOpen, leadId]);
-
-  // Reset form when dialog opens without leadId
-  useEffect(() => {
-    if (isDialogOpen && !leadId) {
-      methods.reset({
-        name: "",
-        email: "",
-        phone: "",
-        address: {
-          street: "",
-          postal_code: { label: "", value: "" },
-          house_number: "",
-          house_number_addition: "",
-          city: "",
-          province: "",
-        },
-      });
-    }
-  }, [isDialogOpen, leadId, methods]);
-
-  // **After** store/update/destroy all succeed, close dialog and re-fetch
-  useEffect(() => {
-    if (
-      leadStoreState.success ||
-      leadUpdateState.success ||
-      leadDestroyState.success
-    ) {
-      setIsDialogOpen(false);
-      dispatch(getLeadIndex(params));
-    }
-  }, [
-    leadStoreState.success,
-    leadUpdateState.success,
-    leadDestroyState.success,
-    dispatch,
-    params,
-  ]);
+  }, [isDialogOpen]);
 
   return (
     <div className="space-y-2">
@@ -206,7 +94,6 @@ export const LeadList: React.FC = () => {
         setParams={setParams}
         onEdit={handleShow}
         onDelete={handleDelete}
-        onArchive={() => { }}
       />
 
       <FormProvider {...methods}>

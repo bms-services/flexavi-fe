@@ -13,10 +13,13 @@ import SubscriptionTrialActivateDialog from '@/components/settings/subscriptions
 import PaymentMethodCardDialog from '@/components/settings/payments/dialogs/PaymentMethodCardDialog';
 import Loader from '@/components/ui/loader';
 import { useRequestEmailVerificationMyProfile, useShowMyProfile, useVerifyEmailMyProfile } from '@/zustand/hooks/useProfile';
+import { useGlobalStore } from '@/zustand/stores/loaderStore';
 
 const DashboardLayout: React.FC = () => {
     const { token } = useAuth();
     const { t } = useTranslation('dashboard');
+    const { setLoader } = useGlobalStore();
+
     const showMyProfileZ = useShowMyProfile();
     const requestEmailVerificationMyProfileZ = useRequestEmailVerificationMyProfile();
     const verifyEmailMyProfileZ = useVerifyEmailMyProfile();
@@ -29,8 +32,19 @@ const DashboardLayout: React.FC = () => {
     });
 
     useEffect(() => {
-        showMyProfileZ.mutateAsync()
-    }, []);
+        const fetchProfile = async () => {
+            try {
+                setLoader(true, "Loading your dashboard...");
+                await showMyProfileZ.mutateAsync();
+            } catch (error) {
+                setLoader(false);
+            } finally {
+                setLoader(false);
+            }
+        };
+
+        fetchProfile();
+    }, [setLoader]);
 
     const handleOpenVerifyEmail = () => {
         setModal((modal) => ({
@@ -152,7 +166,7 @@ const DashboardLayout: React.FC = () => {
                     <div>
                     </div>
                     <Outlet />
-                    <Loader show={showMyProfileZ.isPending} />
+                    <Loader />
                 </main>
             </div>
         </div>

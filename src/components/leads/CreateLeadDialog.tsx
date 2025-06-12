@@ -7,12 +7,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateLeadForm } from "./CreateLeadForm";
-import { Lead } from "@/types";
+import { LeadReq } from "@/zustand/types/leadT";
 
 interface CreateLeadDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: Lead) => Promise<void>;
+  onSubmit: (data: LeadReq) => Promise<void>;
   leadId?: string;
 }
 
