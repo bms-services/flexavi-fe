@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { ApiError, ApiSuccess } from "@/zustand/types/apiT";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { CompanyRes } from "../types/companyT";
 import { createMyCompanyService, showMyCompanyService, updateMyCompanyService, deleteMyCompanyService, getMyTeamService, getMyTeamsService, createMyTeamService, deleteMyTeamService, updateMyTeamService, updateMyPaymentService, updateMyPackageService, createMyTrialService, createMyIntentService } from "../services/settingService";
 import { TeamReq, TeamRes } from "../types/teamT";
@@ -7,8 +7,9 @@ import { PaymentReq, PaymentRes, PackageReq, PackageRes, IntentRes, TrialRes } f
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
-    return useMutation<ApiSuccess<CompanyRes>, ApiError>({
-        mutationFn: showMyCompanyService,
+    return useQuery<ApiSuccess<CompanyRes>, ApiError>({
+        queryKey: ['my-company'],
+        queryFn: showMyCompanyService,
     });
 };
 
@@ -31,15 +32,18 @@ export const useDeleteMyCompany = () => {
 }
 
 // ------ Team ------ \\
-export const useGetMyTeams = () => {
-    return useMutation<ApiSuccess<TeamRes[]>, ApiError>({
-        mutationFn: getMyTeamsService,
+export const useGetMyTeams = (params?: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<TeamRes>>({
+        queryKey: ['my-teams', params],
+        queryFn: () => getMyTeamsService(params),
     });
-}
+};
 
-export const useGetMyTeam = () => {
-    return useMutation<ApiSuccess<TeamRes>, ApiError, string>({
-        mutationFn: getMyTeamService,
+export const useGetMyTeam = (id: string) => {
+    return useQuery<ApiSuccess<TeamRes>>({
+        queryKey: ['my-team', id],
+        queryFn: () => getMyTeamService(id),
+        enabled: !!id,
     });
 };
 

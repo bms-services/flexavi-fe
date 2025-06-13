@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LockIcon, Mail, UserIcon, UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { User } from "@/types/user";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";

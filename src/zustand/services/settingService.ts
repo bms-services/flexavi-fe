@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { CompanyReq, CompanyRes } from "../types/companyT";
-import { ApiSuccess } from "../types/apiT";
+import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 
@@ -31,8 +31,8 @@ export const deleteMyCompanyService = async (id: string): Promise<ApiSuccess<Com
 
 
 // Team
-export const getMyTeamsService = async (): Promise<ApiSuccess<TeamRes[]>> => {
-    const { data } = await mainApi.get("/setting/team");
+export const getMyTeamsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<TeamRes>> => {
+    const { data } = await mainApi.get("/setting/team", { params });
     if (!data.success) throw data;
     return data;
 };

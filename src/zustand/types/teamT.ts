@@ -10,7 +10,14 @@ export type TeamRes = {
     name: string;
     description: string;
     color: string;
-    type: string;
+    type: TeamType;
     created_at: string;
     updated_at: string;
+}
+
+export type TeamType = "sales" | "executive";
+
+export enum TeamTypeEnum {
+    SALES = "sales",
+    EXECUTIVE = "executive",
 }

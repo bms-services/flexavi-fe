@@ -14,8 +14,11 @@ import PaymentMethodCardDialog from '@/components/settings/payments/dialogs/Paym
 import Loader from '@/components/ui/loader';
 import { useRequestEmailVerificationMyProfile, useShowMyProfile, useVerifyEmailMyProfile } from '@/zustand/hooks/useProfile';
 import { useGlobalStore } from '@/zustand/stores/loaderStore';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const DashboardLayout: React.FC = () => {
+    usePageTitle();
+
     const { token } = useAuth();
     const { t } = useTranslation('dashboard');
     const { setLoader } = useGlobalStore();

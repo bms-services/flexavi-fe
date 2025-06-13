@@ -1,18 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-// import { Lead } from "@/types/leads";
 import { useGetLeads, useGetLead, useCreateLead, useUpdateLead, useDeleteLead } from "@/zustand/hooks/useLead";
-// import LeadTable from "./LeadTable";
-// import LeadActions from "./LeadActions";
-// import CreateLeadDialog from "./CreateLeadDialog";
 import { ParamsAction } from "@/@types/global-type";
-import { flattenAddressToObject, objectToFormData } from "@/utils/dataTransform";
+import { flattenAddressToObject } from "@/utils/dataTransform";
 import { LeadActions } from "./LeadActions";
 import { LeadTable } from "./LeadTable";
 import { CreateLeadDialog } from "./CreateLeadDialog";
 import { LeadReq, LeadRes } from "@/zustand/types/leadT";
+import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { useNavigate } from "react-router-dom";
+
+const defaultLeadData: LeadReq = {
+  name: "",
+  email: "",
+  phone: "",
+  address: {
+    street: "",
+    postal_code: { label: "", value: "" },
+    house_number: "",
+    house_number_addition: "",
+    city: "",
+    province: ""
+  }
+};
 
 export const LeadList: React.FC = () => {
+  const navigate = useNavigate();
   const [params, setParams] = useState<ParamsAction>({
     page: 1,
     per_page: 10,
@@ -20,11 +33,12 @@ export const LeadList: React.FC = () => {
     filters: {},
     sorts: {},
   });
+
   const [leadId, setLeadId] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const methods = useForm<LeadReq>({
-    defaultValues: { name: "", email: "", phone: "", address: { street: "", postal_code: { label: "", value: "" }, house_number: "", house_number_addition: "", city: "", province: "" } }
+    defaultValues: defaultLeadData,
   });
 
   const getLeadsZ = useGetLeads(params);
@@ -33,75 +47,146 @@ export const LeadList: React.FC = () => {
   const updateLeadZ = useUpdateLead();
   const deleteLeadZ = useDeleteLead();
 
-  const handleStore = async (data: LeadReq) => {
-    const flattenedAddress = flattenAddressToObject(data.address);
-
-    const leadData: LeadReq = {
-      ...data,
-      address: flattenedAddress,
-    };
-
-    await createLeadZ.mutateAsync(leadData);
-    setIsDialogOpen(false);
-  };
-
-  const handleUpdate = async (data: LeadReq) => {
-    const flattenedAddress = flattenAddressToObject(data.address);
-
-    const leadData: LeadReq = {
-      ...data,
-      address: flattenedAddress,
-    };
-
-    await updateLeadZ.mutateAsync({ id: data.id!, formData: leadData });
-    setIsDialogOpen(false);
-  };
-
-  const handleShow = async (row: LeadRes) => {
+  /**
+   * Handle edit lead
+   * 
+   * @param row 
+   * @returns void
+   */
+  const handleEdit = (row: LeadRes) => {
     setLeadId(row.id);
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (ids: LeadRes[]) => {
-    await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
+  /**
+   * Handle show lead detail
+   * 
+   * @param row 
+   * @returns void
+   */
+  const handleShow = (row: LeadRes) => {
+    navigate(`/lead/${row.id}`);
   };
 
-  // Reset form and load lead data when dialog opens
+  /**
+   * Handle create lead
+   * 
+   * @returns void
+   */
+  const handleCreate = () => {
+    methods.reset(defaultLeadData);
+    setLeadId(null);
+    setIsDialogOpen(true);
+  };
+
+  /**
+   * Handle store lead
+   * 
+   * @param data 
+   * @returns Promise<void>
+   */
+  const handleStore = async (data: LeadReq) => {
+    const flattenedAddress = flattenAddressToObject(data.address);
+    const leadData: LeadReq = { ...data, address: flattenedAddress };
+
+    try {
+      await createLeadZ.mutateAsync(leadData);
+      await getLeadsZ.refetch();
+      setIsDialogOpen(false);
+    } catch (error) {
+      throw new Error("Failed to create lead: " + error);
+    }
+  };
+
+  /**
+   * Handle update lead
+   * 
+   * @param data 
+   * @returns Promise<void>
+   */
+  const handleUpdate = async (data: LeadReq) => {
+    const flattenedAddress = flattenAddressToObject(data.address);
+    const leadData: LeadReq = { ...data, address: flattenedAddress };
+
+    try {
+      await updateLeadZ.mutateAsync({ id: data.id!, formData: leadData });
+      await getLeadsZ.refetch();
+      setIsDialogOpen(false);
+    } catch (error) {
+      throw new Error("Failed to update lead: " + error);
+    }
+  };
+
+  /**
+   * Handle delete lead
+   * 
+   * @param ids 
+   * @returns Promise<void>
+   */
+  const handleDelete = async (ids: LeadRes[]) => {
+    try {
+      await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
+      await getLeadsZ.refetch();
+      setLeadId(null);
+    } catch (error) {
+      throw new Error("Failed to delete lead: " + error);
+    }
+  };
+
+  // Load data lead when dialog is opened
   useEffect(() => {
-    if (getLeadZ.isSuccess && leadId && isDialogOpen) {
+    if (getLeadZ.isSuccess && leadId && isDialogOpen && getLeadZ.data) {
       const leadData: LeadReq = {
         ...getLeadZ.data.result,
         address: {
           ...getLeadZ.data.result.address,
           postal_code: typeof getLeadZ.data.result.address.postal_code === "string"
-            ? { label: getLeadZ.data.result.address.postal_code, value: getLeadZ.data.result.address.postal_code }
+            ? {
+              label: getLeadZ.data.result.address.postal_code,
+              value: getLeadZ.data.result.address.postal_code,
+            }
             : getLeadZ.data.result.address.postal_code,
         },
       };
 
       methods.reset(leadData);
     }
-  }, [getLeadZ.isSuccess, leadId, isDialogOpen]);
+  }, [getLeadZ.isSuccess, getLeadZ.data, leadId, isDialogOpen, methods]);
 
-  // Reset form when dialog closes
+  // Reset Form When Dialog Closed
   useEffect(() => {
     if (!isDialogOpen) {
       setLeadId(null);
-      methods.reset();
+      methods.reset(defaultLeadData);
     }
-  }, [isDialogOpen]);
+  }, [isDialogOpen, methods]);
+
+  // Handle error validation create
+  useEffect(() => {
+    if (createLeadZ.error?.errors) {
+      mapApiErrorsToForm(createLeadZ.error.errors, methods.setError);
+    }
+  }, [createLeadZ.error, methods]);
+
+  // Handle error validation update
+  useEffect(() => {
+    if (updateLeadZ.error?.errors) {
+      mapApiErrorsToForm(updateLeadZ.error.errors, methods.setError);
+    }
+  }, [updateLeadZ.error, methods]);
 
   return (
     <div className="space-y-2">
       <div className="flex justify-end">
-        <LeadActions onCreateClick={() => setIsDialogOpen(true)} />
+        <LeadActions onCreateClick={handleCreate} />
       </div>
 
       <LeadTable
         params={params}
         setParams={setParams}
-        onEdit={handleShow}
+        onEdit={handleEdit}
         onDelete={handleDelete}
+        onShow={handleShow}
       />
 
       <FormProvider {...methods}>
@@ -110,6 +195,7 @@ export const LeadList: React.FC = () => {
           onOpenChange={setIsDialogOpen}
           onSubmit={leadId ? handleUpdate : handleStore}
           leadId={leadId}
+          isLoading={leadId ? getLeadZ.isLoading : false}
         />
       </FormProvider>
     </div>

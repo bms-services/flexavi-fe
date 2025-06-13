@@ -11,8 +11,11 @@ import StatsSection from "@/components/landing/StatsSection";
 import CTASection from "@/components/landing/CTASection";
 import ReviewsWidget from "@/components/landing/ReviewsWidget";
 import { useEffect } from "react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 export default function Landing() {
+  usePageTitle();
+
   // Add scroll animations
   useEffect(() => {
     // Check if IntersectionObserver is supported
@@ -45,7 +48,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background">
       <MainHeader />
-      
+
       <HeroSection />
       <StatsSection />
       <FeatureSection />

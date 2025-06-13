@@ -9,14 +9,13 @@ import {
   Table as ReactTable,
   Row,
 } from "@tanstack/react-table";
-import { PencilIcon } from "lucide-react";
+import { MoveRightIcon, PencilIcon } from "lucide-react";
 import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import { toastCreate } from "./toast/toast-create";
 import { MetaResponse, ParamsAction } from "@/@types/global-type";
 import { Input } from "./input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { t } from "i18next";
 import { useDebounce } from "use-debounce";
 
 
@@ -34,6 +33,7 @@ type DataTableProps<TData> = {
     };
   };
   onParamsChange: (p: Partial<ParamsAction>) => void;
+  onShow?: (row: TData) => void;
   onEdit?: (row: TData) => void;
   onDelete?: (rows: TData[]) => void;
   onArchive?: (rows: TData[]) => void;
@@ -90,6 +90,7 @@ export default function TableTanstack<TData>({
   filterOptions,
   onParamsChange,
   params,
+  onShow,
   onEdit,
   onDelete,
   onArchive,
@@ -97,7 +98,6 @@ export default function TableTanstack<TData>({
   const safeMeta = meta ?? defaultMeta;
   const { page, per_page, search = "", filters = {}, sorts = {} } = params;
   const { current_page, last_page, from, to, total, per_page: meta_per_page } = safeMeta;
-
 
   const [localSearch, setLocalSearch] = useState(search);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -130,27 +130,39 @@ export default function TableTanstack<TData>({
       ...columns,
     ];
 
-    if (onEdit) {
+    if (onEdit || onShow) {
       base.push({
         id: "_actions",
         header: "",
         meta: { className: "text-center align-middle" },
         cell: ({ row }) => (
           <div className="flex justify-center items-center gap-2">
-            <Button
-              variant="link"
-              className="py-0 px-1 text-black hover:text-blue-500"
-              onClick={() => onEdit(row.original)}
-            >
-              <PencilIcon className="h-4 w-4" />
-            </Button>
+            {onEdit && (
+              <Button
+                variant="link"
+                className="py-0 px-1 text-black hover:text-blue-500"
+                onClick={() => onEdit(row.original)}
+              >
+                <PencilIcon className="h-4 w-4" />
+              </Button>
+            )}
+
+            {onShow && (
+              <Button
+                variant="link"
+                className="py-0 px-1 text-black hover:text-blue-500"
+                onClick={() => onShow(row.original)}
+              >
+                <MoveRightIcon className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         ),
       });
     }
 
     return base;
-  }, [columns, onEdit]);
+  }, [columns, onEdit, onShow]);
 
   const handleSort = useCallback((columnId: string) => {
     // 1) clone existing sorts
@@ -296,7 +308,6 @@ export default function TableTanstack<TData>({
                     {flexRender(header.column.columnDef.header, header.getContext())}
                     {sorts[header.id] === "asc" && <span>↑</span>}
                     {sorts[header.id] === "desc" && <span>↓</span>}
-
                   </th>
                 ))}
               </tr>

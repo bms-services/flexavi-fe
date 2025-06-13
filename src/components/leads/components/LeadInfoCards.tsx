@@ -1,11 +1,11 @@
 
 import React from "react";
-import { LeadDetail } from "@/types";
 import { ContactInfo } from "./ContactInfo";
 import { LeadDetailsCard } from "./LeadDetails";
+import { LeadRes } from "@/zustand/types/leadT";
 
 interface LeadInfoCardsProps {
-  lead: LeadDetail;
+  lead: LeadRes;
 }
 
 export const LeadInfoCards: React.FC<LeadInfoCardsProps> = ({ lead }) => {

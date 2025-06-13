@@ -4,9 +4,10 @@ import { Card, CardHeader, CardDescription, CardTitle } from "@/components/ui/ca
 import { LeadDetail, QuoteStatus, InvoiceStatus } from "@/types";
 import { getLeadStats, formatCurrency } from "@/utils/leadStats";
 import { Badge } from "@/components/ui/badge";
+import { LeadRes } from "@/zustand/types/leadT";
 
 interface LeadStatsProps {
-  lead: LeadDetail;
+  lead: LeadRes;
 }
 
 export const LeadStats: React.FC<LeadStatsProps> = ({ lead }) => {
@@ -14,7 +15,7 @@ export const LeadStats: React.FC<LeadStatsProps> = ({ lead }) => {
 
   const getQuoteStatusBadge = (status: QuoteStatus | undefined) => {
     if (!status) return "Geen";
-    
+
     const statusConfig = {
       draft: { label: "Concept", variant: "outline" as const },
       sent: { label: "Verzonden", variant: "default" as const },
@@ -29,7 +30,7 @@ export const LeadStats: React.FC<LeadStatsProps> = ({ lead }) => {
 
   const getInvoiceStatusBadge = (status: InvoiceStatus | undefined) => {
     if (!status) return "Geen";
-    
+
     const statusConfig = {
       draft: { label: "Concept", variant: "outline" as const },
       sent: { label: "Verzonden", variant: "default" as const },
@@ -64,8 +65,8 @@ export const LeadStats: React.FC<LeadStatsProps> = ({ lead }) => {
         <CardHeader className="p-4">
           <CardDescription>Laatste Offerte</CardDescription>
           <CardTitle className="text-lg">
-            {leadStats.latestQuoteStatus ? 
-              getQuoteStatusBadge(leadStats.latestQuoteStatus) : 
+            {leadStats.latestQuoteStatus ?
+              getQuoteStatusBadge(leadStats.latestQuoteStatus) :
               "Geen"
             }
           </CardTitle>
@@ -75,8 +76,8 @@ export const LeadStats: React.FC<LeadStatsProps> = ({ lead }) => {
         <CardHeader className="p-4">
           <CardDescription>Laatste Factuur</CardDescription>
           <CardTitle className="text-lg">
-            {leadStats.latestInvoiceStatus ? 
-              getInvoiceStatusBadge(leadStats.latestInvoiceStatus) : 
+            {leadStats.latestInvoiceStatus ?
+              getInvoiceStatusBadge(leadStats.latestInvoiceStatus) :
               "Geen"
             }
           </CardTitle>

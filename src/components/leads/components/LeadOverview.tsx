@@ -1,6 +1,5 @@
 
 import React from "react";
-import { LeadDetail } from "@/types";
 import { LeadHeader } from "./LeadHeader";
 import { LeadStats } from "./LeadStats";
 import { ActiveQuotes } from "./ActiveQuotes";
@@ -9,9 +8,10 @@ import { LeadDetailActions } from "./LeadActions";
 import { WozValueCard } from "./WozValueCard";
 import { LeadLocationMap } from "./LeadLocationMap";
 import { LeadMedia } from "./LeadMedia";
+import { LeadRes } from "@/zustand/types/leadT";
 
 interface LeadOverviewProps {
-  lead: LeadDetail;
+  lead: LeadRes;
 }
 
 export const LeadOverview: React.FC<LeadOverviewProps> = ({ lead }) => {
@@ -22,15 +22,15 @@ export const LeadOverview: React.FC<LeadOverviewProps> = ({ lead }) => {
         <LeadStats lead={lead} />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <ActiveQuotes quotes={lead.quotes} />
         <RecentActivities activities={[...lead.quotes, ...lead.invoices]} />
-      </div>
+      </div> */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <WozValueCard address={lead.address} />
         <LeadLocationMap address={lead.address} />
-      </div>
+      </div> */}
 
       <LeadMedia leadId={lead.id} />
       <LeadDetailActions />

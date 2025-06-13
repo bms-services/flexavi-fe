@@ -50,16 +50,13 @@ export const CompanySettings: React.FC = () => {
     },
   })
 
-  // Fetch company data on component mount
   useEffect(() => {
-    showMyCompanyZ.mutateAsync().then((data) => {
-      const { result } = data;
-
+    if (showMyCompanyZ.isSuccess) {
+      const { result } = showMyCompanyZ.data;
       let address = result.address;
       if (Array.isArray(address)) {
         address = address[0] || {};
       }
-
       if (typeof address === "object" && address !== null) {
         reset({
           ...result,
@@ -72,9 +69,8 @@ export const CompanySettings: React.FC = () => {
           },
         });
       }
-
-    });
-  }, []);
+    }
+  }, [showMyCompanyZ.isSuccess, showMyCompanyZ.data, reset]);
 
 
   const handleUpdate = async (data: Company) => {
@@ -122,7 +118,7 @@ export const CompanySettings: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               <Dropzone
                 previewUrl={watch('logo_url')}
                 rules={{

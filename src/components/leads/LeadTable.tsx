@@ -10,12 +10,13 @@ import { useGetLeads } from "@/zustand/hooks/useLead";
 interface LeadTableProps {
   params: ParamsAction;
   setParams: React.Dispatch<React.SetStateAction<ParamsAction>>;
+  onShow?: (row: LeadRes) => void;
   onEdit?: (row: LeadRes) => void;
   onDelete?: (rows: LeadRes[]) => void;
   onArchive?: (rows: LeadRes[]) => void;
 }
 
-export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit, onDelete, onArchive }) => {
+export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive }) => {
   const getLeadsZ = useGetLeads(params);
   const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -82,6 +83,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}
+        onShow={onShow}
         onDelete={onDelete}
         onArchive={onArchive}
         filterOptions={{

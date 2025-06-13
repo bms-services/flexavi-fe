@@ -2,24 +2,25 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { CompanyTeam } from "@/types/company";
+// import { CompanyTeam } from "@/types/company";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { TeamRes } from "@/zustand/types/teamT";
 
 interface TeamTypeSectionProps {
   title: string;
   description: string;
-  selectedTeam: string;
+  teamId: string;
   handleOpenDetailTeam: (teamId: string) => void;
-  handleOpenAddMember: (team: CompanyTeam) => void;
-  teams?: CompanyTeam[];
+  handleOpenAddMember: (team: TeamRes) => void;
+  teams?: TeamRes[];
 }
 
 export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
   title,
   description,
-  selectedTeam,
+  teamId,
   handleOpenDetailTeam,
   handleOpenAddMember,
   teams = [],
@@ -35,7 +36,7 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
       </div>
       {teams.length > 0 ? (
         <Accordion type="single" collapsible className="w-full rounded-lg border bg-white shadow-sm"
-          value={selectedTeam}
+          value={teamId}
           onValueChange={(value) => handleOpenDetailTeam(value)}
         >
           {teams.map((team) => (

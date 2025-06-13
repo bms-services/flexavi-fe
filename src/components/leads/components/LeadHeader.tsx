@@ -1,10 +1,10 @@
 
 import React from "react";
-import { LeadDetail } from "@/types";
 import { LeadStatusBadge } from "../LeadStatusBadge";
+import { LeadRes } from "@/zustand/types/leadT";
 
 interface LeadHeaderProps {
-  lead: LeadDetail;
+  lead: LeadRes;
 }
 
 export const LeadHeader: React.FC<LeadHeaderProps> = ({ lead }) => {

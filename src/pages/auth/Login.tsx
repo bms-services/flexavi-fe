@@ -1,24 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { LoginReq } from "@/zustand/types/authT";
 import { useLogin } from "@/zustand/hooks/useAuth";
 
 const Login = () => {
   const loginZ = useLogin();
   const { t } = useTranslation();
-  const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<LoginReq>({
     defaultValues: {
       email: "",

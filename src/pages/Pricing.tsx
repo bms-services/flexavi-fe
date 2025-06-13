@@ -5,8 +5,11 @@ import { MainFooter } from "@/components/layout/MainFooter";
 import { PricingPlans } from "@/components/pricing/PricingPlans";
 import { FeatureComparison } from "@/components/pricing/FeatureComparison";
 import { FAQ } from "@/components/pricing/FAQ";
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export default function Pricing() {
+  usePageTitle();
+
   const plans = [
     {
       name: "Starter",
@@ -100,7 +103,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background">
       <MainHeader />
-      
+
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -120,19 +123,19 @@ export default function Pricing() {
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold mb-4">Veel gestelde vragen</h2>
             <div className="max-w-3xl mx-auto text-left space-y-8">
-              <FAQ 
+              <FAQ
                 question="Hoe werkt de proefperiode?"
                 answer="Je kunt DakLeadHub 30 dagen gratis uitproberen met alle functies. Geen creditcard nodig en je kunt op elk moment opzeggen."
               />
-              <FAQ 
+              <FAQ
                 question="Kan ik later van pakket wisselen?"
                 answer="Ja, je kunt op elk moment upgraden of downgraden. Het verschil wordt naar rato verrekend."
               />
-              <FAQ 
+              <FAQ
                 question="Zitten er verborgen kosten aan?"
                 answer="Nee, je betaalt alleen het maandelijkse bedrag van je gekozen pakket. Geen setupkosten of verborgen extra's."
               />
-              <FAQ 
+              <FAQ
                 question="Hoe zit het met support?"
                 answer="Alle pakketten hebben toegang tot onze klantenservice. Professional en Enterprise gebruikers krijgen prioriteit support."
               />

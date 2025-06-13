@@ -7,12 +7,12 @@ import { NotesTab } from "../tabs/NotesTab";
 import { QuotesTab } from "../tabs/QuotesTab";
 import { WorkOrdersTab } from "../tabs/WorkOrdersTab";
 import { InvoicesTab } from "../tabs/InvoicesTab";
-import { LeadDetail } from "@/types";
 import { ProjectsTab } from "../tabs/ProjectsTab";
 import { ReviewsTab } from "../tabs/ReviewsTab";
+import { LeadRes } from "@/zustand/types/leadT";
 
 interface LeadTabsProps {
-  lead: LeadDetail;
+  lead: LeadRes;
 }
 
 export const LeadTabs = ({ lead }: LeadTabsProps) => {
@@ -72,7 +72,7 @@ export const LeadTabs = ({ lead }: LeadTabsProps) => {
       <TabsContent value="notes">
         <NotesTab notes={lead.notes} leadId={lead.id} />
       </TabsContent>
-      
+
       <TabsContent value="reviews">
         <ReviewsTab lead={lead} />
       </TabsContent>
