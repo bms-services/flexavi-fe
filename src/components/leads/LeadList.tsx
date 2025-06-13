@@ -6,7 +6,7 @@ import { useGetLeads, useGetLead, useCreateLead, useUpdateLead, useDeleteLead } 
 // import LeadActions from "./LeadActions";
 // import CreateLeadDialog from "./CreateLeadDialog";
 import { ParamsAction } from "@/@types/global-type";
-import { flattenLeadAddressToObject, objectToFormData } from "@/utils/dataTransform";
+import { flattenAddressToObject, objectToFormData } from "@/utils/dataTransform";
 import { LeadActions } from "./LeadActions";
 import { LeadTable } from "./LeadTable";
 import { CreateLeadDialog } from "./CreateLeadDialog";
@@ -34,12 +34,10 @@ export const LeadList: React.FC = () => {
   const deleteLeadZ = useDeleteLead();
 
   const handleStore = async (data: LeadReq) => {
-    const flattenedAddress = flattenLeadAddressToObject(data.address);
+    const flattenedAddress = flattenAddressToObject(data.address);
 
     const leadData: LeadReq = {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
+      ...data,
       address: flattenedAddress,
     };
 
@@ -48,12 +46,10 @@ export const LeadList: React.FC = () => {
   };
 
   const handleUpdate = async (data: LeadReq) => {
-    const flattenedAddress = flattenLeadAddressToObject(data.address);
+    const flattenedAddress = flattenAddressToObject(data.address);
 
     const leadData: LeadReq = {
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
+      ...data,
       address: flattenedAddress,
     };
 
@@ -70,12 +66,24 @@ export const LeadList: React.FC = () => {
     await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
   };
 
-  // useEffect(() => {
-  //   if (getLeadZ.isSuccess && leadId && isDialogOpen) {
-  //     methods.reset(getLeadZ.data.result);
-  //   }
-  // }, [getLeadZ.isSuccess, leadId, isDialogOpen]);
+  // Reset form and load lead data when dialog opens
+  useEffect(() => {
+    if (getLeadZ.isSuccess && leadId && isDialogOpen) {
+      const leadData: LeadReq = {
+        ...getLeadZ.data.result,
+        address: {
+          ...getLeadZ.data.result.address,
+          postal_code: typeof getLeadZ.data.result.address.postal_code === "string"
+            ? { label: getLeadZ.data.result.address.postal_code, value: getLeadZ.data.result.address.postal_code }
+            : getLeadZ.data.result.address.postal_code,
+        },
+      };
 
+      methods.reset(leadData);
+    }
+  }, [getLeadZ.isSuccess, leadId, isDialogOpen]);
+
+  // Reset form when dialog closes
   useEffect(() => {
     if (!isDialogOpen) {
       setLeadId(null);

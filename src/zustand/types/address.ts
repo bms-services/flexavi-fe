@@ -1,6 +1,6 @@
 export type AddressReq = {
     street: string;
-    postal_code: { label: string; value: string };
+    postal_code: { label: string; value: string } | string;
     house_number: string;
     house_number_addition?: string;
     city: string;
@@ -9,7 +9,7 @@ export type AddressReq = {
 
 export type AddressRes = {
     street: string;
-    postal_code: string;
+    postal_code: { label: string; value: string } | string;
     house_number: string;
     house_number_addition?: string;
     city: string;

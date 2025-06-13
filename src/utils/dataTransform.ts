@@ -1,9 +1,7 @@
 import { AddressReq, AddressRes } from "@/zustand/types/address";
 
-export const flattenLeadAddressToObject = (address: AddressReq): AddressReq => {
+export const flattenAddressToObject = (address: AddressReq): AddressReq => {
     const { postal_code, ...rest } = address;
-
-    console.log(address);
 
     const postalCodeValue =
         typeof postal_code === 'object' && postal_code !== null && 'value' in postal_code
@@ -16,8 +14,8 @@ export const flattenLeadAddressToObject = (address: AddressReq): AddressReq => {
     };
 };
 
-export const flattenLeadAddressToFormData = (address: AddressReq): FormData => {
-    const flat = flattenLeadAddressToObject(address);
+export const flattenAddressToFormData = (address: AddressReq): FormData => {
+    const flat = flattenAddressToObject(address);
     const fd = new FormData();
 
     Object.entries(flat).forEach(([key, value]) => {

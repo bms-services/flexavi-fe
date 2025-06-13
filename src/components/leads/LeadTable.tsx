@@ -16,9 +16,7 @@ interface LeadTableProps {
 }
 
 export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit, onDelete, onArchive }) => {
-  // const leadIndexRedux = useSelector((state: RootState) => state.lead.index);
   const getLeadsZ = useGetLeads(params);
-
   const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
     { accessorKey: "email", header: "Email", cell: info => info.getValue() },
@@ -31,18 +29,21 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
         />
       )
     },
-    // {
-    //   accessorKey: "address",
-    //   header: "Address",
-    //   cell: info => {
-    //     const lead = info.row.original;
-    //     const addr = lead.address;
-    //     if (addr) {
-    //       return `${addr.street} ${addr.house_number}${addr.house_number_addition ? ' ' + addr.house_number_addition : ''}, ${typeof addr.postal_code === 'object' ? addr.postal_code.value : addr.postal_code} ${addr.city}`;
-    //     }
-    //     return "-";
-    //   }
-    // },
+    {
+      accessorKey: "address",
+      header: "Address",
+      cell: info => {
+        const lead = info.row.original;
+        const addr = lead.address;
+        if (addr) {
+          return `${addr.street} ${addr.house_number}${addr.house_number_addition ? ' ' + addr.house_number_addition : ''}, ${addr.postal_code
+            ? (typeof addr.postal_code === 'object' ? addr.postal_code.value : addr.postal_code)
+            : ''
+            } ${addr.city}`;
+        }
+        return "-";
+      }
+    },
     {
       accessorKey: "created_at",
       header: "Created At",
@@ -50,11 +51,23 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onEdit,
     },
   ], []);
 
+  /**
+   * Handles changes to the table parameters such as pagination, sorting, and filtering.
+   * 
+   * @param changed - Partial object containing the parameters that have changed.
+   * This function merges the new parameters with the existing ones in the state.
+   */
   const handleParamsChange = useCallback(
     (changed: Partial<ParamsAction>) => setParams(prev => ({ ...prev, ...changed })),
     [setParams]
   );
 
+
+  /**
+   * Maps the lead status to filter options for the table.
+   * 
+   * @returns An array of objects containing value and label for each lead status.
+   */
   const statusFilterOptions = Object.entries(leadStatusMap).map(
     ([value, { label }]) => ({ value, label })
   );
