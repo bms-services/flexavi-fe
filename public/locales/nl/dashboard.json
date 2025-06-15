@@ -125,7 +125,9 @@
       "type": {
         "sales": "Verkoop",
         "executive": "Directie"
-      }
+      },
+      "create": "Teamlid aanmaken",
+      "edit": "Teamlid bewerken"
     },
     "company": {
       "title": "Bedrijfsinstellingen",

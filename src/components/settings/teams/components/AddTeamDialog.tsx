@@ -1,73 +1,105 @@
-
 import React, { useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormDescription, FormMessage } from "@/components/ui/form";
+import {
+  Dialog, DialogContent, DialogDescription,
+  DialogFooter, DialogHeader, DialogTitle
+} from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { CompanyTeamTypeEnum } from "@/types/company";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TeamReq } from "@/zustand/types/teamT";
+
+import { TeamReq, TeamTypeEnum } from "@/zustand/types/teamT";
+import { useGetMyTeams } from "@/zustand/hooks/useSetting";
 
 const teamSchema = z.object({
   name: z.string().min(1, "Team naam is verplicht"),
   description: z.string().optional(),
   color: z.string().default("#3b82f6"),
-  type: z.nativeEnum(CompanyTeamTypeEnum).default(CompanyTeamTypeEnum.SALES),
+  type: z.nativeEnum(TeamTypeEnum).default(TeamTypeEnum.SALES),
 });
+
+const defaultTeam: TeamReq = {
+  name: "",
+  description: "",
+  color: "#3b82f6",
+  type: TeamTypeEnum.SALES,
+};
 
 interface AddTeamDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (values: TeamReq) => void;
+  onStore: (values: TeamReq) => void;
+  onUpdate: (id: string, values: TeamReq) => void;
+  teamId?: string;
 }
 
 export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
   open,
   onOpenChange,
-  onSubmit,
+  onStore,
+  onUpdate,
+  teamId
 }) => {
   const { t } = useTranslation("dashboard");
+  const getMyTeamsZ = useGetMyTeams();
 
-  const form = useForm({
+  const form = useForm<TeamReq>({
     resolver: zodResolver(teamSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      color: "#3b82f6",
-      type: CompanyTeamTypeEnum.SALES,
-    },
+    defaultValues: defaultTeam,
   });
 
-  const settingTeamStoreRedux = useSelector((state: RootState) => state.setting.team.store);
-
   useEffect(() => {
-    if (settingTeamStoreRedux.success) {
-      onOpenChange(false);
-      form.reset();
+    if (!open) return;
+
+    if (teamId && getMyTeamsZ.data?.result.data) {
+      const team = getMyTeamsZ.data.result.data.find(team => team.id === teamId);
+      if (team) {
+        form.reset({
+          name: team.name,
+          description: team.description || "",
+          color: team.color || "#3b82f6",
+          type: (Object.values(TeamTypeEnum) as string[]).includes(team.type as string)
+            ? team.type as TeamTypeEnum
+            : TeamTypeEnum.SALES,
+        });
+      } else {
+        form.reset(defaultTeam);
+      }
+    } else {
+      form.reset(defaultTeam);
     }
-  }, [settingTeamStoreRedux, onOpenChange, form]);
+  }, [teamId, getMyTeamsZ.data, open, form]);
+
+  const handleSubmit = async (data: TeamReq) => {
+    if (teamId) {
+      onUpdate(teamId, data);
+    } else {
+      onStore(data);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Nieuw team
+            {teamId ? t('dashboard:settings.team.edit') : t('dashboard:settings.team.create')}
           </DialogTitle>
           <DialogDescription>
-            Voeg een nieuw team toe en wijs gebruikers toe aan dit team.
+            {teamId
+              ? t('dashboard:settings.team.description.edit')
+              : t('dashboard:settings.team.description.create')}
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+
             <Input
               label={t('dashboard:settings.team.label.name')}
               placeholder={t('dashboard:settings.team.placeholder.name')}
@@ -91,9 +123,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
               rules={{
                 register: form.register,
                 name: "description",
-                options: {
-                  maxLength: 250,
-                },
+                options: { maxLength: 250 },
                 errors: form.formState.errors,
               }}
             />
@@ -113,7 +143,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                     </div>
                   </FormControl>
                   <FormDescription>
-                    Kies een kleur om dit team te identificeren in de agenda
+                    {t('dashboard:settings.team.description.color')}
                   </FormDescription>
                 </FormItem>
               )}
@@ -129,16 +159,15 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                     <Select
                       onValueChange={field.onChange}
                       value={field.value}
-                      defaultValue={CompanyTeamTypeEnum.SALES}
+                      defaultValue={TeamTypeEnum.SALES}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder={t('dashboard:settings.team.placeholder.type')} />
                       </SelectTrigger>
-
                       <SelectContent>
-                        {Object.values(CompanyTeamTypeEnum).map((type) => (
+                        {Object.values(TeamTypeEnum).map((type) => (
                           <SelectItem key={type} value={type}>
-                            {t(`dashboard:settings.team.type.${type.toLowerCase() as keyof typeof CompanyTeamTypeEnum}`)}
+                            {t(`dashboard:settings.team.type.${type.toLowerCase()}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -147,6 +176,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                 </FormItem>
               )}
             />
+
             <DialogFooter>
               <Button type="submit">
                 {t('dashboard:settings.team.button.submit')}

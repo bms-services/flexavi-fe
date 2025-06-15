@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, PencilIcon, TrashIcon } from "lucide-react";
 // import { CompanyTeam } from "@/types/company";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
 import { useSelector } from "react-redux";
@@ -11,18 +11,22 @@ import { TeamRes } from "@/zustand/types/teamT";
 interface TeamTypeSectionProps {
   title: string;
   description: string;
-  teamId: string;
-  handleOpenDetailTeam: (teamId: string) => void;
-  handleOpenAddMember: (team: TeamRes) => void;
+  collapseId: string;
+  handleCreateMember: (data: TeamRes) => void;
+  handleShowTeam: (id: string) => void;
+  handleEditTeam: (data: TeamRes) => void;
+  handleDeleteTeam: (data: TeamRes) => void;
   teams?: TeamRes[];
 }
 
 export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
   title,
   description,
-  teamId,
-  handleOpenDetailTeam,
-  handleOpenAddMember,
+  collapseId,
+  handleCreateMember,
+  handleShowTeam,
+  handleEditTeam,
+  handleDeleteTeam,
   teams = [],
 }) => {
 
@@ -36,8 +40,8 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
       </div>
       {teams.length > 0 ? (
         <Accordion type="single" collapsible className="w-full rounded-lg border bg-white shadow-sm"
-          value={teamId}
-          onValueChange={(value) => handleOpenDetailTeam(value)}
+          value={collapseId}
+          onValueChange={(value) => handleShowTeam(value)}
         >
           {teams.map((team) => (
             <AccordionItem
@@ -45,27 +49,53 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
               key={team.id}
               className="border-b last:border-b-0 transition hover:bg-gray-50"
             >
-              <AccordionTrigger className="flex justify-between w-full gap-2 items-center px-4 py-3 font-semibold text-gray-800 hover:text-primary-600 transition-colors">
-                <div className="flex justify-between w-full items-center">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-7 h-7 rounded-md"
-                      style={{ backgroundColor: team.color }}
-                    ></div>
-                    <div className="flex flex-col">
-                      <p className="text-left">{team.name}</p>
-                      <p className="text-left text-[12px]">{team.description}</p>
+              <AccordionTrigger asChild>
+                <div className="flex justify-between w-full gap-2 items-center px-4 py-3 font-semibold text-gray-800 hover:text-primary-600 transition-colors">
+                  <div className="flex justify-between w-full items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-md" style={{ backgroundColor: team.color }} />
+                      <div className="flex flex-col">
+                        <p className="text-left">{team.name}</p>
+                        <p className="text-left text-[12px]">{team.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCreateMember(team);
+                        }}
+                      >
+                        Voeg lid toe
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditTeam(team);
+                        }}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteTeam(team);
+                        }}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleOpenAddMember(team)}
-                  >
-                    Voeg lid toe
-                  </Button>
+                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
                 </div>
-                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
               </AccordionTrigger>
               <AccordionContent className="overflow-hidden px-6 py-4 bg-gray-50 text-sm text-gray-700 transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                 <div className="flex flex-col gap-2">

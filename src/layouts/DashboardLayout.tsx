@@ -38,7 +38,7 @@ const DashboardLayout: React.FC = () => {
         const fetchProfile = async () => {
             try {
                 setLoader(true, "Loading your dashboard...");
-                await showMyProfileZ.mutateAsync();
+                await showMyProfileZ.refetch();
             } catch (error) {
                 setLoader(false);
             } finally {
@@ -75,7 +75,7 @@ const DashboardLayout: React.FC = () => {
     const handleSubmitOtp = (otp: string) => {
         verifyEmailMyProfileZ.mutateAsync(otp)
             .then(() => {
-                showMyProfileZ.mutateAsync();
+                showMyProfileZ.refetch();
                 setTimeout(() => {
                     setModal((modal) => ({ ...modal, verifyEmail: false }));
                 }, 1000);

@@ -103,7 +103,8 @@ export function ToastActionContent({
         onCancel={() => setConfirming(null)}
         onConfirm={handleConfirm}
         title={`Confirm ${confirming === "delete" ? "deletion" : "archiving"}?`}
-        description={`Are you sure you want to ${confirming} the selected item(s)? This action cannot be undone.`} />
+        description={`Are you sure you want to ${confirming} the selected item(s)? This action cannot be undone.`}
+      />
     </>
   );
 }

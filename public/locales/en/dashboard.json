@@ -125,6 +125,42 @@
       "type":{
         "sales": "Sales",
         "executive": "Executive"
+      },
+      "create": "Create Team Member",
+      "edit": "Edit Team Member"
+    },
+    "team_member": {
+      "title": "Team Member Management",
+      "description": "Manage your team members' details",
+      "placeholder": {
+        "name": "Enter team member's name",
+        "email": "Enter team member's email",
+        "phone": "Enter team member's phone number",
+        "role": "Select team member's role",
+        "workingDays": "Select team member's working days",
+        "workingHours": "Select team member's working hours"
+        
+      },
+      "label": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "role": "Role",
+        "workingDays": "Working Days",
+        "workingHours": "Working Hours"
+      },
+      "button": {
+        "submit": "Save Team Member"
+      },
+      "error": {
+        "required": {
+          "name": "Team member name is required",
+          "email": "Team member email is required",
+          "phone": "Team member phone number is required",
+          "role": "Team member role is required",
+          "workingDays": "Team member working days are required",
+          "workingHours": "Team member working hours are required"
+        }
       }
     },
     "company": {

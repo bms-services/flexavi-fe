@@ -50,7 +50,7 @@ export const createMyTeamService = async (formData: TeamReq): Promise<ApiSuccess
 };
 
 export const updateMyTeamService = async (id: string, formData: TeamReq): Promise<ApiSuccess<TeamRes>> => {
-    const { data } = await mainApi.patch(`/setting/team/${id}`, formData);
+    const { data } = await mainApi.put(`/setting/team/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

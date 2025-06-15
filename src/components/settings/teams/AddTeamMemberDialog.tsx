@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -10,8 +10,12 @@ import { z } from "zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { UseFormReturn } from "react-hook-form";
 import { EmployeeReq } from "@/zustand/types/employee";
+import { UserIcon, Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import PhoneNumber from "@/components/ui/phone-number";
+
+type WorkingDayKey = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
 
 const memberSchema = z.object({
@@ -47,21 +51,43 @@ interface AddTeamMemberDialogProps {
   teamId: string;
 }
 
+const defaultValues = {
+  email: "",
+  name: "",
+  phone: "",
+  role: "sales" as const,
+  working_days: {
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+  },
+  working_hours: {
+    start: "09:00",
+    end: "17:00",
+  },
+}
+
+
 export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
   open,
   onOpenChange,
   onSubmit,
   teamId,
 }) => {
-  const form = useForm({
+  const { t } = useTranslation("dashboard");
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset: resetForm,
+  } = useForm<EmployeeReq>({
     resolver: zodResolver(memberSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      role: "sales" as const,
-    },
+    defaultValues: defaultValues,
   });
 
   const days = [
@@ -74,39 +100,6 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
     { id: "sunday", label: "Zondag" },
   ];
 
-  const handleSubmit = (values: z.infer<typeof memberSchema>) => {
-    const newEmployee: EmployeeReq = {
-      name: `${values.firstName} ${values.lastName}`,
-      email: values.email,
-      phone: values.phoneNumber || "",
-      start_date: new Date().toISOString().split('T')[0],
-      rates: {
-        hourly_rate: 0,
-        daily_rate: 0,
-      },
-      working_days: {
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false,
-      },
-      working_hours: {
-        start: "09:00",
-        end: "17:00",
-      },
-      available_days: days.map(day => day.id),
-      active: true,
-      team_ids: [teamId],
-    };
-
-    onSubmit(newEmployee);
-    form.reset();
-    onOpenChange(false);
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -117,167 +110,150 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Voornaam</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Voer voornaam in" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Input
+            label={t('dashboard:settings.team_member.label.name')}
+            placeholder={t('dashboard:settings.team_member.placeholder.name')}
+            id="name"
+            type="text"
+            icon={<UserIcon className="h-5 w-5 " />}
+            rules={{
+              register,
+              name: "name",
+              options: {
+                required: t('dashboard:settings.team_member.error.required.name')
+              },
+              errors,
+            }}
+          />
+          <Input
+            label={t('dashboard:settings.team_member.label.email')}
+            placeholder={t('dashboard:settings.team_member.placeholder.email')}
+            id={'email'}
+            type="email"
+            icon={<Mail className="h-5 w-5 " />}
+            rules={{
+              register,
+              name: "email",
+              options: {
+                required: t('dashboard:settings.team_member.error.required.email')
+              },
+              errors,
+            }}
+          />
+          <PhoneNumber
+            label={t('dashboard:settings.team_member.label.phone')}
+            rules={{
+              control,
+              name: "phone",
+              options: {
+                required: t('dashboard:settings.team_member.error.required.phone')
+              },
+              errors,
+            }}
+          />
 
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Achternaam</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Voer achternaam in" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rol</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="sales" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Verkoop medewerker
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="installation" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Uitvoerend medewerker
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="both" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Beide rollen
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="naam@bedrijf.nl" type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Telefoonnummer (optioneel)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="06 12345678" type="tel" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rol</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="sales" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Verkoop medewerker
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="installation" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Uitvoerend medewerker
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="both" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Beide rollen
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* <WorkScheduleForm form={form} /> */}
+          {/* <WorkScheduleForm form={form} /> */}
+          <div className="space-y-4">
             <div className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Werkdagen</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {days.map((day) => (
-                    <FormField
-                      key={day.id}
-                      control={form.control}
-                      name={`working_days.${day.id}` as keyof EmployeeReq}
-                      render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value as boolean}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">{day.label}</FormLabel>
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="working_hours.start"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start tijd</FormLabel>
-                      <FormControl>
-                        <Input type="time" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="working_hours.end"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Eind tijd</FormLabel>
-                      <FormControl>
-                        <Input type="time" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+              <h3 className="text-sm font-medium">Werkdagen</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {days.map((day) => (
+                  <FormField
+                    key={day.id}
+                    control={control}
+                    name={`working_days.${day.id}` as WorkingDayKey}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value as unknown as boolean}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="font-normal">{day.label}</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                ))}
               </div>
             </div>
 
-            <DialogFooter>
-              <Button type="submit">Medewerker toevoegen</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={control}
+                name="working_hours.start"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Start tijd</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="working_hours.end"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Eind tijd</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button type="submit">Medewerker toevoegen</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

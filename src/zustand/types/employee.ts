@@ -25,6 +25,7 @@ export type EmployeeRes = {
     available_days: string[];
     active: boolean;
     team_ids: string[];
+    role: EmployeeRole;
     created_at: string;
     updated_at: string;
 }
@@ -34,6 +35,8 @@ export type EmployeeRate = {
     hourly_rate: number;
     daily_rate: number;
 };
+
+export type EmployeeRole = "sales" | "installation";
 
 
 export type EmployeeWorkingDays = {
