@@ -199,7 +199,6 @@ export const TeamSettings: React.FC = () => {
             }
           }}
           onSubmit={handleStoreMember}
-          teamId={teamId ?? ""}
         />
       </CardContent>
     </Card>

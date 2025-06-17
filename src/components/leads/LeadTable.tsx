@@ -6,6 +6,7 @@ import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
 import { LeadRes } from "@/zustand/types/leadT";
 import { useGetLeads } from "@/zustand/hooks/useLead";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
 interface LeadTableProps {
   params: ParamsAction;
@@ -59,7 +60,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow,
    * This function merges the new parameters with the existing ones in the state.
    */
   const handleParamsChange = useCallback(
-    (changed: Partial<ParamsAction>) => setParams(prev => ({ ...prev, ...changed })),
+    (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
     [setParams]
   );
 

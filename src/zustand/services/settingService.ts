@@ -3,6 +3,7 @@ import { CompanyReq, CompanyRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
+import { EmployeeRes } from "../types/employee";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -60,6 +61,28 @@ export const deleteMyTeamService = async (id: string): Promise<ApiSuccess<TeamRe
     if (!data.success) throw data;
     return data;
 };
+
+// Employee
+export const inviteEmployeeService = async (formData: FormData): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.post("/setting/employee/invite", formData);
+    if (!data.success) throw data;
+    return data;
+}
+export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
+    const { data } = await mainApi.get("/setting/company/employee/list", { params });
+    if (!data.success) throw data;
+    return data;
+}
+export const cancelInvitedEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.post(`/setting/company/employee/reject/${id}`);
+    if (!data.success) throw data;
+    return data;
+}
+export const resendInviteEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.post(`/setting/company/employee/resend/${id}/resend`);
+    if (!data.success) throw data;
+    return data;
+}
 
 // Payment
 export const updateMyPaymentService = async (formData: PaymentReq): Promise<ApiSuccess<PaymentRes>> => {

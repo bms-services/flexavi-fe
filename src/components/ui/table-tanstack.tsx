@@ -9,7 +9,7 @@ import {
   Table as ReactTable,
   Row,
 } from "@tanstack/react-table";
-import { MoveRightIcon, PencilIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, MoveRightIcon, PencilIcon } from "lucide-react";
 import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import { toastCreate } from "./toast/toast-create";
@@ -250,6 +250,8 @@ export default function TableTanstack<TData>({
     return pages;
   };
 
+  const pageSize = [5, 10, 20, 50];
+
   return (
     <div className="rounded-md border bg-white p-4">
       <div className="flex flex-col sm:flex-row sm:items-center mb-4 gap-2">
@@ -352,20 +354,23 @@ export default function TableTanstack<TData>({
             disabled={current_page === 1}
             className="px-2 py-1 border rounded disabled:opacity-50"
           >
-            Prev
+            <ChevronLeftIcon className="h-4 w-4" />
           </button>
 
           <div className="flex items-center gap-1">
             {generatePages().map((item, idx) =>
               item === "ellipsis" ? (
-                <span key={`e-${idx}`} className="px-2">…</span>
+                <span key={`e-${idx}`} className="px-2 text-muted-foreground">…</span>
               ) : (
                 <button
                   key={item}
                   onClick={() => onParamsChange({ page: item as number })}
                   className={`
-            px-2 py-1 border rounded
-            ${item === current_page ? "bg-gray-200 font-semibold" : ""}
+            px-3 py-1 rounded border text-sm transition
+            ${item === current_page
+                      ? "bg-primary text-white font-semibold border-primary"
+                      : "bg-white hover:bg-gray-100 border-gray-300"
+                    }
           `}
                 >
                   {item}
@@ -379,27 +384,32 @@ export default function TableTanstack<TData>({
             disabled={current_page === last_page}
             className="px-2 py-1 border rounded disabled:opacity-50"
           >
-            Next
+            <ChevronRightIcon className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div>
-            {from} - {to} of {total} items
+        <div className="flex items-center w-fit gap-4">
+          <div className="text-muted-foreground w-fit">
+            {from ?? 0} - {to ?? 0} of {total} items
           </div>
-          <select
-            value={per_page}
-            onChange={(e) =>
-              onParamsChange({ per_page: Number(e.target.value), page: 1 })
-            }
-            className="border rounded px-2 py-1"
+          <Select
+            value={per_page.toString()}
+            onValueChange={(value) => {
+              const size = Number(value);
+              onParamsChange({ per_page: size, page: 1 });
+            }}
           >
-            {[5, 10, 20, 50].map((size) => (
-              <option key={size} value={size}>
-                {size} / page
-              </option>
-            ))}
-          </select>
+            <SelectTrigger>
+              <SelectValue placeholder="Items per page" />
+            </SelectTrigger>
+            <SelectContent>
+              {pageSize.map((size) => (
+                <SelectItem key={size} value={size.toString()}>
+                  {size} items
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

@@ -68,12 +68,12 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
       />
 
       <PhoneNumber
-        label={t('dashboard:company_create.label.phone')}
+        label={t('dashboard:companyCreate.label.phone')}
         rules={{
           control,
           name: "phone",
           options: {
-            required: t('dashboard:company_create.error.required.phone')
+            required: t('dashboard:companyCreate.error.required.phone')
           },
           errors,
         }}

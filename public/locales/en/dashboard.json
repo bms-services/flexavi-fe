@@ -1,6 +1,6 @@
 {
   "language": "English",
-  "company_create": {
+  "companyCreate": {
     "text": {
       "welcome": "Welcome to Flexavi 🎉",
       "excited": "We're excited to have you on board. Let's get you set up and ready to go!",
@@ -51,6 +51,11 @@
         "website": "Company website is required",
         "logo": "Company logo is required",
         "description": "Company description is required"
+      },
+      "invalid": {
+        "email": "Please enter a valid email address",
+        "phone": "Please enter a valid phone number",
+        "website": "Please enter a valid website URL"
       }
     }
   },
@@ -89,7 +94,11 @@
     },
     "team": {
       "title": "Team Management",
-      "description": "Manage your team members",
+      "description": {
+        "color": "Select a color for the team member",
+        "edit": "Edit team member details",
+        "create": "Create a new team member"
+      },
       "placeholder": {
         "name": "Enter team member's name",
         "description": "Enter a short description of the team member",
@@ -129,7 +138,7 @@
       "create": "Create Team Member",
       "edit": "Edit Team Member"
     },
-    "team_member": {
+    "teamMember": {
       "title": "Team Member Management",
       "description": "Manage your team members' details",
       "placeholder": {
@@ -139,7 +148,6 @@
         "role": "Select team member's role",
         "workingDays": "Select team member's working days",
         "workingHours": "Select team member's working hours"
-        
       },
       "label": {
         "name": "Name",

@@ -9,6 +9,7 @@ export type EmployeeReq = {
     working_days: EmployeeWorkingDays;
     working_hours: EmployeeWorkingHours;
     available_days: string[];
+    role: EmployeeRole;
     active: boolean;
     team_ids: string[];
 };

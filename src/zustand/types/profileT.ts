@@ -17,6 +17,7 @@ export type ProfileRes = {
     has_verified_email: boolean;
     has_payment_method: boolean;
     address: ProfileAddressRes;
+    status_subscription: StatusSubscriptionType;
     created_at: string;
     updated_at: string;
 }
@@ -39,4 +40,13 @@ export type ProfileAddressRes = {
     province?: string;
     created_at: string;
     updated_at: string;
+}
+
+export type StatusSubscriptionType = 'trialing' | 'active' | 'canceled' | 'incomplete' | 'past_due' | 'unpaid';
+
+export enum StatusSubscriptionEnum {
+    TRIALING = 'trialing',
+    ACTIVE = 'active',
+    CANCELED = 'canceled',
+    INCOMPLETE = 'incomplete',
 }

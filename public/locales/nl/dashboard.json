@@ -1,6 +1,6 @@
 {
   "language": "Nederlands",
-  "company_create": {
+  "companyCreate": {
     "text": {
       "welcome": "Welkom bij Flexavi 🎉",
       "excited": "We zijn blij dat je erbij bent. Laten we aan de slag gaan!",
@@ -51,6 +51,11 @@
         "website": "Website van het bedrijf is verplicht",
         "logo": "Bedrijfslogo is verplicht",
         "description": "Beschrijving van het bedrijf is verplicht"
+      },
+      "invalid": {
+      "email": "Voer een geldig e-mailadres in",
+      "phone": "Voer een geldig telefoonnummer in",
+      "website": "Voer een geldige website-URL in"
       }
     }
   },
@@ -89,7 +94,11 @@
     },
     "team": {
       "title": "Teambeheer",
-      "description": "Beheer je teamleden",
+      "description": {
+        "color": "Selecteer een kleur voor het teamlid",
+        "edit": "Bewerk de details van het teamlid",
+        "create": "Maak een nieuw teamlid aan"
+      },
       "placeholder": {
         "name": "Voer de naam van het teamlid in",
         "description": "Voer een korte beschrijving van het teamlid in",
@@ -114,6 +123,34 @@
           "description": "Beschrijving mag maximaal 255 tekens lang zijn"
         }
       },
+        "team_member": {
+        "title": "Teamlid",
+        "description": "Beheer je teamleden",
+        "placeholder": {
+          "name": "Voer de naam van het teamlid in",
+          "description": "Voer een korte beschrijving van het teamlid in",
+          "color": "Selecteer een kleur voor het teamlid",
+          "type": "Selecteer een type voor het teamlid"
+        },
+        "label": {
+          "name": "Naam",
+          "description": "Beschrijving",
+          "color": "Kleur",
+          "type": "Type"
+        },
+        "error": {
+          "required": {
+            "name": "Naam is verplicht",
+            "description": "Beschrijving is verplicht",
+            "color": "Kleur is verplicht",
+            "type": "Type is verplicht"
+          },
+          "maxLength": {
+            "name": "Naam mag maximaal 255 tekens lang zijn",
+            "description": "Beschrijving mag maximaal 255 tekens lang zijn"
+          }
+        }
+      },
       "button": {
         "add": "Teamlid toevoegen",
         "edit": "Teamlid bewerken",
@@ -128,6 +165,40 @@
       },
       "create": "Teamlid aanmaken",
       "edit": "Teamlid bewerken"
+    },
+    "teamMember": {
+      "title": "Teamlidbeheer",
+      "description": "Beheer de details van je teamleden",
+      "placeholder": {
+        "name": "Voer de naam van het teamlid in",
+        "email": "Voer het e-mailadres van het teamlid in",
+        "phone": "Voer het telefoonnummer van het teamlid in",
+        "role": "Selecteer de rol van het teamlid",
+        "workingDays": "Selecteer de werkdagen van het teamlid",
+        "workingHours": "Selecteer de werktijden van het teamlid"
+      },
+      "label": {
+        "name": "Naam",
+        "email": "E-mail",
+        "phone": "Telefoonnummer",
+        "role": "Rol",
+        "workingDays": "Werkdagen",
+        "workingHours": "Werktijden"
+      },
+      "error": {
+        "required": {
+          "name": "Naam is verplicht",
+          "email": "E-mail is verplicht",
+          "phone": "Telefoonnummer is verplicht",
+          "role": "Rol is verplicht",
+          "workingDays": "Werkdagen zijn verplicht",
+          "workingHours": "Werktijden zijn verplicht"
+        },
+        "maxLength": {
+          "name": "Naam mag maximaal 255 tekens lang zijn",
+          "description": "Beschrijving mag maximaal 255 tekens lang zijn"
+        }
+      }
     },
     "company": {
       "title": "Bedrijfsinstellingen",

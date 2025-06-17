@@ -41,7 +41,7 @@ const memberSchema = z.object({
   team_ids: z.array(z.string()).min(1, "Selecteer ten minste één team"),
 });
 
-interface AddTeamMemberDialogProps {
+interface InviteEmployeeProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (employee: EmployeeReq) => void;
@@ -68,14 +68,14 @@ const defaultValues = {
 }
 
 
-export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
+export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
   open,
   onOpenChange,
   onSubmit,
 }) => {
   const { t } = useTranslation("dashboard");
   const form = useForm<EmployeeReq>({
-    resolver: zodResolver(memberSchema),
+    // resolver: zodResolver(memberSchema),
     defaultValues: defaultValues,
   });
 

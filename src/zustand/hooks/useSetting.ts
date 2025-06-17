@@ -1,9 +1,35 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { CompanyRes } from "../types/companyT";
-import { createMyCompanyService, showMyCompanyService, updateMyCompanyService, deleteMyCompanyService, getMyTeamService, getMyTeamsService, createMyTeamService, deleteMyTeamService, updateMyTeamService, updateMyPaymentService, updateMyPackageService, createMyTrialService, createMyIntentService } from "../services/settingService";
 import { TeamReq, TeamRes } from "../types/teamT";
-import { PaymentReq, PaymentRes, PackageReq, PackageRes, IntentRes, TrialRes } from "../types/stripeT";
+import {
+    PaymentReq,
+    PaymentRes,
+    PackageReq,
+    PackageRes,
+    IntentRes,
+    TrialRes
+} from "../types/stripeT";
+import {
+    createMyCompanyService,
+    showMyCompanyService,
+    updateMyCompanyService,
+    deleteMyCompanyService,
+    getMyTeamService,
+    getMyTeamsService,
+    createMyTeamService,
+    deleteMyTeamService,
+    updateMyTeamService,
+    updateMyPaymentService,
+    updateMyPackageService,
+    createMyTrialService,
+    createMyIntentService,
+    inviteEmployeeService,
+    getInvitedEmployeesService,
+    resendInviteEmployeeService,
+    cancelInvitedEmployeeService
+} from "../services/settingService";
+import { EmployeeRes } from "../types/employee";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -62,6 +88,29 @@ export const useUpdateMyTeam = () => {
 export const useDeleteMyTeam = () => {
     return useMutation<ApiSuccess<TeamRes>, ApiError, string>({
         mutationFn: deleteMyTeamService,
+    });
+};
+
+// ------ Employee ------ \\
+export const useGetInvitedEmployees = (params?: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
+        queryKey: ['invited-employees', params],
+        queryFn: () => getInvitedEmployeesService(params),
+    });
+};
+export const useInviteEmployee = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, FormData>({
+        mutationFn: inviteEmployeeService,
+    });
+};
+export const useResendInviteEmployee = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
+        mutationFn: resendInviteEmployeeService,
+    });
+};
+export const useCancelInvitedEmployee = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
+        mutationFn: cancelInvitedEmployeeService,
     });
 };
 
