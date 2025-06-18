@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,14 +18,16 @@ import {
   useGetMyTeams,
   useCreateMyTeam,
   useDeleteMyTeam,
-  useUpdateMyTeam
+  useUpdateMyTeam,
+  useAddMemberMyTeam
 } from "@/zustand/hooks/useSetting";
 
-import { Employee } from "@/types/employee";
-import { TeamReq, TeamRes, TeamTypeEnum } from "@/zustand/types/teamT";
+import { TeamMemberReq, TeamReq, TeamRes, TeamTypeEnum } from "@/zustand/types/teamT";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { EmployeeReq } from "@/zustand/types/employee";
+import { Employee } from "@/types/employee";
+import { EmployeeReq } from "@/zustand/types/employeeT";
+import { addMemberMyTeamService } from "@/zustand/services/settingService";
 
 export const TeamSettings: React.FC = () => {
   const [teamId, setTeamId] = useState<string | null>(null);
@@ -51,6 +53,7 @@ export const TeamSettings: React.FC = () => {
   const createMyTeamZ = useCreateMyTeam();
   const updateMyTeamZ = useUpdateMyTeam();
   const deleteMyTeamZ = useDeleteMyTeam();
+  const addMemberMyTeamZ = useAddMemberMyTeam()
 
   const teams = getMyTeamsZ.data?.result.data ?? [];
   const salesTeams = teams.filter(team => team.type === TeamTypeEnum.SALES);
@@ -116,10 +119,15 @@ export const TeamSettings: React.FC = () => {
     setModal((prev) => ({ ...prev, member: true }));
   };
 
-  const handleStoreMember = (data: EmployeeReq) => {
-    // implementasikan jika sudah ada API untuk add member
-  };
-
+  const handleStoreMember = (data: TeamMemberReq) => {
+    try {
+      addMemberMyTeamZ.mutateAsync({ id: teamId ?? "", formData: data });
+      setModal((prev) => ({ ...prev, member: false }));
+      getMyTeamZ.refetch();
+    } catch (err) {
+      console.error("Failed to add member to team:", err);
+    }
+  }
 
   return (
     <Card>
@@ -128,6 +136,7 @@ export const TeamSettings: React.FC = () => {
         <CardDescription>
           Voeg nieuwe teams toe of bewerk bestaande teams.
         </CardDescription>
+
         <Button onClick={handleCreateTeam}>
           <span className="flex flex-row items-center gap-2">
             <PlusIcon className="h-4 w-4" />
@@ -178,6 +187,7 @@ export const TeamSettings: React.FC = () => {
           onStore={handleStoreTeam}
           onUpdate={handleUpdateTeam}
           teamId={teamId ?? ""}
+          team={getMyTeamsZ.data?.result.data.find(team => team.id === teamId) ?? null}
         />
 
         <ConfirmDialog

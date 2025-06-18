@@ -7,12 +7,10 @@ import {
     FieldErrors,
     FieldValues,
     RegisterOptions,
-    UseFormRegister,
 } from "react-hook-form";
 
 import { Label } from '../label';
-import { ActionMeta, GroupBase, OptionsOrGroups } from "react-select";
-import { Select } from "@radix-ui/react-select";
+import { ActionMeta } from "react-select";
 
 interface SelectSearchAsyncProps extends React.ComponentProps<typeof AsyncSelect> {
     id?: string
@@ -46,7 +44,7 @@ export default function SelectSearchAsync({ id, label, rules, isLoading, isDisab
             <Controller
                 control={rules.control}
                 name={rules.name}
-                rules={{ required: "This field is required", ...rules.options }}
+                rules={rules.options}
                 render={({ field }) => (
                     <AsyncSelect
                         isClearable

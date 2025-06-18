@@ -15,6 +15,7 @@ export function ToastActionContent({
   onDelete,
   onArchive,
   onDismiss,
+  loading = false,
 }: {
   title?: string;
   description?: string;
@@ -22,6 +23,7 @@ export function ToastActionContent({
   onDismiss?: () => void;
   onDelete?: () => void;
   onArchive?: () => void;
+  loading?: boolean;
 }) {
   const [confirming, setConfirming] = useState<"delete" | "archive" | null>(null);
 
@@ -104,6 +106,8 @@ export function ToastActionContent({
         onConfirm={handleConfirm}
         title={`Confirm ${confirming === "delete" ? "deletion" : "archiving"}?`}
         description={`Are you sure you want to ${confirming} the selected item(s)? This action cannot be undone.`}
+        loading={loading}
+        isConfirm={confirming === "archive"}
       />
     </>
   );

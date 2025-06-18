@@ -1,9 +1,9 @@
 import { mainApi } from "@/utils/axios";
-import { CompanyReq, CompanyRes } from "../types/companyT";
+import { CompanyReq, CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { TeamReq, TeamRes } from "../types/teamT";
+import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
-import { EmployeeRes } from "../types/employee";
+import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -62,24 +62,69 @@ export const deleteMyTeamService = async (id: string): Promise<ApiSuccess<TeamRe
     return data;
 };
 
-// Employee
-export const inviteEmployeeService = async (formData: FormData): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post("/setting/employee/invite", formData);
+export const addMemberMyTeamService = async (id: string, formData: TeamMemberReq): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.post(`/setting/team/${id}/employee`, formData);
     if (!data.success) throw data;
     return data;
-}
-export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
+};
+
+// Employee
+export const getMyEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
     const { data } = await mainApi.get("/setting/company/employee/list", { params });
     if (!data.success) throw data;
     return data;
 }
+
+export const getMyEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.get(`/setting/company/employee/${id}`);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const updateMyEmployeeService = async (id: string, formData: EmployeeReq): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.put(`/setting/company/employee/${id}`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteMyEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.delete(`/setting/company/employee/${id}`);
+    if (!data.success) throw data;
+    return data;
+}
+
+// Employee Invitation
+export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
+    const { data } = await mainApi.get("/setting/company/invitation/employee/list", { params });
+    if (!data.success) throw data;
+    return data;
+}
+export const inviteEmployeeService = async (formData: EmployeeReq): Promise<ApiSuccess<EmployeeRes>> => {
+    const { data } = await mainApi.post("/setting/company/invitation/employee/invite", formData);
+    if (!data.success) throw data;
+    return data;
+}
 export const cancelInvitedEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post(`/setting/company/employee/reject/${id}`);
+    const { data } = await mainApi.post('/setting/company/invitation/employee/cancel', { id });
     if (!data.success) throw data;
     return data;
 }
 export const resendInviteEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post(`/setting/company/employee/resend/${id}/resend`);
+    const { data } = await mainApi.post(`/setting/company/invitation/employee/resend`, { id });
+    if (!data.success) throw data;
+    return data;
+}
+
+// Role 
+export const getCompanyRolesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<CompanyRoleRes>> => {
+    const { data } = await mainApi.get("/setting/company/roles", { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+// WorkDays 
+export const getMyWorkDaysService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeWorkdaysRes>> => {
+    const { data } = await mainApi.get("/setting/company/work-days", { params });
     if (!data.success) throw data;
     return data;
 }

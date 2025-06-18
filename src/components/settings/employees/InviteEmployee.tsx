@@ -1,45 +1,32 @@
-
 import React from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 import { Checkbox } from "@/components/ui/checkbox";
-import { EmployeeReq } from "@/zustand/types/employee";
+import { EmployeeReq } from "@/zustand/types/employeeT";
 import { UserIcon, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PhoneNumber from "@/components/ui/phone-number";
-
-const memberSchema = z.object({
-  firstName: z.string().min(1, "Voornaam is verplicht"),
-  lastName: z.string().min(1, "Achternaam is verplicht"),
-  email: z.string().email("Ongeldig e-mailadres").min(1, "E-mailadres is verplicht"),
-  phoneNumber: z.string().optional(),
-  role: z.enum(["sales", "installation", "both"], {
-    errorMap: () => ({ message: "Selecteer een rol" }),
-  }),
-  workingDays: z.object({
-    monday: z.boolean().default(false),
-    tuesday: z.boolean().default(false),
-    wednesday: z.boolean().default(false),
-    thursday: z.boolean().default(false),
-    friday: z.boolean().default(false),
-    saturday: z.boolean().default(false),
-    sunday: z.boolean().default(false),
-  }),
-  workingHours: z.object({
-    start: z.string().min(1, "Starttijd is verplicht"),
-    end: z.string().min(1, "Eindtijd is verplicht"),
-  }),
-  availableDays: z.array(z.string()).min(1, "Selecteer ten minste één beschikbare dag"),
-  active: z.boolean().default(true),
-  team_ids: z.array(z.string()).min(1, "Selecteer ten minste één team"),
-});
+import {
+  useGetCompanyRoles,
+  useGetMyWorkDays,
+} from "@/zustand/hooks/useSetting";
 
 interface InviteEmployeeProps {
   open: boolean;
@@ -47,26 +34,15 @@ interface InviteEmployeeProps {
   onSubmit: (employee: EmployeeReq) => void;
 }
 
-const defaultValues = {
+const defaultValues: EmployeeReq = {
   email: "",
   name: "",
   phone: "",
-  role: "sales" as const,
-  working_days: {
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
-  },
-  working_hours: {
-    start: "09:00",
-    end: "17:00",
-  },
-}
-
+  company_user_role_id: "",
+  work_days: [],
+  start_time: "09:00",
+  end_time: "17:00",
+};
 
 export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
   open,
@@ -74,20 +50,17 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation("dashboard");
+
+  const getCompanyRolesZ = useGetCompanyRoles({ page: 1, per_page: 100 });
+  const getMyWorkDaysZ = useGetMyWorkDays({ page: 1, per_page: 100 });
+
   const form = useForm<EmployeeReq>({
-    // resolver: zodResolver(memberSchema),
-    defaultValues: defaultValues,
+    defaultValues,
+    mode: "onSubmit",
   });
 
-  const days = [
-    { id: "monday", label: "Maandag" },
-    { id: "tuesday", label: "Dinsdag" },
-    { id: "wednesday", label: "Woensdag" },
-    { id: "thursday", label: "Donderdag" },
-    { id: "friday", label: "Vrijdag" },
-    { id: "saturday", label: "Zaterdag" },
-    { id: "sunday", label: "Zondag" },
-  ];
+  const watchStart = form.watch("start_time");
+  const watchEnd = form.watch("end_time");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -102,42 +75,44 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              label={t('dashboard:settings.teamMember.label.name')}
-              placeholder={t('dashboard:settings.teamMember.placeholder.name')}
+              label={t("dashboard:settings.teamMember.label.name")}
+              placeholder={t("dashboard:settings.teamMember.placeholder.name")}
               id="name"
               type="text"
-              icon={<UserIcon className="h-5 w-5 " />}
+              icon={<UserIcon className="h-5 w-5" />}
               rules={{
                 register: form.register,
                 name: "name",
                 options: {
-                  required: t('dashboard:settings.teamMember.error.required.name')
+                  required: t("dashboard:settings.teamMember.error.required.name"),
                 },
                 errors: form.formState.errors,
               }}
             />
+
             <Input
-              label={t('dashboard:settings.teamMember.label.email')}
-              placeholder={t('dashboard:settings.teamMember.placeholder.email')}
-              id={'email'}
+              label={t("dashboard:settings.teamMember.label.email")}
+              placeholder={t("dashboard:settings.teamMember.placeholder.email")}
+              id="email"
               type="email"
-              icon={<Mail className="h-5 w-5 " />}
+              icon={<Mail className="h-5 w-5" />}
               rules={{
                 register: form.register,
                 name: "email",
                 options: {
-                  required: t('dashboard:settings.teamMember.error.required.email')
+                  required: t("dashboard:settings.teamMember.error.required.email"),
                 },
                 errors: form.formState.errors,
               }}
             />
+
             <PhoneNumber
-              label={t('dashboard:settings.teamMember.label.phone')}
+              label={t("dashboard:settings.teamMember.label.phone")}
               rules={{
                 control: form.control,
                 name: "phone",
                 options: {
-                  required: t('dashboard:settings.teamMember.error.required.phone')
+                  required: t("dashboard:settings.teamMember.error.required.phone"),
                 },
                 errors: form.formState.errors,
               }}
@@ -145,39 +120,31 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
 
             <FormField
               control={form.control}
-              name="role"
+              name="company_user_role_id"
+              rules={{
+                required: t("dashboard:settings.teamMember.error.required.role"),
+              }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Rol</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
+                      value={field.value}
                       className="flex flex-col space-y-1"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="sales" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Verkoop medewerker
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="installation" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Uitvoerend medewerker
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="both" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Beide rollen
-                        </FormLabel>
-                      </FormItem>
+                      {getCompanyRolesZ.isSuccess &&
+                        getCompanyRolesZ.data.result.data.map((role) => (
+                          <FormItem
+                            key={role.id}
+                            className="flex items-center space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <RadioGroupItem value={role.id} />
+                            </FormControl>
+                            <FormLabel className="font-normal">{role.name}</FormLabel>
+                          </FormItem>
+                        ))}
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
@@ -185,59 +152,93 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               )}
             />
 
-            {/* <WorkScheduleForm form={form} /> */}
-            <div className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">Werkdagen</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {days.map((day) => (
-                    <FormField
-                      key={day.id}
-                      control={form.control}
-                      name={`working_days.${day.id}`}
-                      render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value as unknown as boolean}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal mt-0">{day.label}</FormLabel>
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-                </div>
-              </div>
+            <FormField
+              control={form.control}
+              name="work_days"
+              rules={{
+                required: t("dashboard:settings.teamMember.error.required.workingDays"),
+                validate: (value) =>
+                  (Array.isArray(value) && value.length > 0) ||
+                  t("dashboard:settings.teamMember.error.required.workingDays"),
+              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t("dashboard:settings.teamMember.label.workingDays")}
+                  </FormLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {getMyWorkDaysZ.isSuccess &&
+                      getMyWorkDaysZ.data.result.data.map((day) => {
+                        const checked = field.value?.includes(day.id);
+                        return (
+                          <FormItem
+                            key={day.id}
+                            className="flex items-center space-x-2"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={checked}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    field.onChange([...(field.value || []), day.id]);
+                                  } else {
+                                    field.onChange(
+                                      (field.value || []).filter((id) => id !== day.id)
+                                    );
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal !mt-0">{day.name}</FormLabel>
+                          </FormItem>
+                        );
+                      })}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="working_hours.start"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start tijd</FormLabel>
-                      <FormControl>
-                        <Input type="time" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="start_time"
+                rules={{
+                  required: t("dashboard:settings.teamMember.error.required.startTime"),
+                  validate: (value) =>
+                    value < watchEnd ||
+                    t("dashboard:settings.teamMember.error.startTimeLessThanEndTime"),
+                }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("dashboard:settings.teamMember.label.startTime")}</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="working_hours.end"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Eind tijd</FormLabel>
-                      <FormControl>
-                        <Input type="time" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="end_time"
+                rules={{
+                  required: t("dashboard:settings.teamMember.error.required.endTime"),
+                  validate: (value) =>
+                    value > watchStart ||
+                    t("dashboard:settings.teamMember.error.endTimeGreaterThanStartTime"),
+                }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("dashboard:settings.teamMember.label.endTime")}</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <DialogFooter>

@@ -14,6 +14,12 @@ export const registerService = async (formData: RegisterReq): Promise<ApiSuccess
     return data;
 }
 
+export const registerEmployeeService = async (formData: RegisterReq): Promise<ApiSuccess<RegisterRes>> => {
+    const { data } = await mainApi.post("/register-employee", formData);
+    if (!data.success) throw data;
+    return data;
+};
+
 export const logoutService = async (): Promise<ApiSuccess<LogoutRes>> => {
     const { data } = await mainApi.delete("/logout");
     if (!data.success) throw data;

@@ -8,12 +8,12 @@ import axios from "axios";
 import { get } from "lodash";
 
 interface PostalCodeProps<T> {
-    register: UseFormRegister<T>;
+    register: UseFormRegister<FieldValues>;
     fieldPrefix?: string;
-    errors: FieldErrors<T>;
-    control: Control<T>;
-    watch: UseFormWatch<T>;
-    setValue: UseFormSetValue<T>;
+    errors: FieldErrors<FieldValues>;
+    control: Control<FieldValues>;
+    watch: UseFormWatch<FieldValues>;
+    setValue: UseFormSetValue<FieldValues>;
 }
 
 const postalCodeUrl = import.meta.env.VITE_POSTAL_CODE_API_URL;
@@ -74,12 +74,12 @@ export default function PostalCode<T>({ register, errors, watch, setValue, contr
     };
 
     const set = (field: string, val: string) => {
-        setValue(prefix(field) as Path<T>, val as PathValue<T, Path<T>>, { shouldValidate: true });
+        setValue(prefix(field) as Path<T>, val as never, { shouldValidate: true });
     };
 
     // Set postal_code as object for SelectSearchAsync, but type-safe
     const setPostalCode = (val: Option | string) => {
-        setValue(prefix("postal_code") as Path<T>, val as PathValue<T, Path<T>>, { shouldValidate: true });
+        setValue(prefix("postal_code") as Path<T>, val as never, { shouldValidate: true });
     };
 
     const debouncedLookupAddress = useDebouncedCallback(

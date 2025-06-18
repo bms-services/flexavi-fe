@@ -1,5 +1,3 @@
-
-import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { CompanyTabContent } from "./CompanyTabContent";
 import { TeamsTabContent } from "./TeamsTabContent";

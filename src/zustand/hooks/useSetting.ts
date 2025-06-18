@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { CompanyRes } from "../types/companyT";
-import { TeamReq, TeamRes } from "../types/teamT";
+import { CompanyRes, CompanyRoleRes } from "../types/companyT";
+import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import {
     PaymentReq,
     PaymentRes,
@@ -27,9 +27,16 @@ import {
     inviteEmployeeService,
     getInvitedEmployeesService,
     resendInviteEmployeeService,
-    cancelInvitedEmployeeService
+    cancelInvitedEmployeeService,
+    getCompanyRolesService,
+    getMyEmployeeService,
+    getMyEmployeesService,
+    deleteMyEmployeeService,
+    updateMyEmployeeService,
+    addMemberMyTeamService,
+    getMyWorkDaysService
 } from "../services/settingService";
-import { EmployeeRes } from "../types/employee";
+import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -91,15 +98,51 @@ export const useDeleteMyTeam = () => {
     });
 };
 
+export const useAddMemberMyTeam = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, { id: string, formData: TeamMemberReq }>({
+        mutationFn: ({ id, formData }) => addMemberMyTeamService(id, formData),
+    });
+};
+
 // ------ Employee ------ \\
+export const useGetMyEmployees = (params?: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
+        queryKey: ['my-employees', params],
+        queryFn: () => getMyEmployeesService(params),
+        retry: false,
+    });
+};
+
+export const useGetMyEmployee = (id: string) => {
+    return useQuery<ApiSuccess<EmployeeRes>, ApiError>({
+        queryKey: ['my-employee', id],
+        queryFn: () => getMyEmployeeService(id),
+        enabled: !!id,
+    });
+};
+
+export const useUpdateMyEmployee = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, { id: string, formData: EmployeeReq }>({
+        mutationFn: ({ id, formData }) => updateMyEmployeeService(id, formData),
+    });
+};
+
+export const useDeleteMyEmployee = () => {
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
+        mutationFn: deleteMyEmployeeService,
+    });
+};
+
+// ------ Employee Invitation ------ \\
 export const useGetInvitedEmployees = (params?: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
         queryKey: ['invited-employees', params],
         queryFn: () => getInvitedEmployeesService(params),
+        retry: false,
     });
 };
 export const useInviteEmployee = () => {
-    return useMutation<ApiSuccess<EmployeeRes>, ApiError, FormData>({
+    return useMutation<ApiSuccess<EmployeeRes>, ApiError, EmployeeReq>({
         mutationFn: inviteEmployeeService,
     });
 };
@@ -113,6 +156,27 @@ export const useCancelInvitedEmployee = () => {
         mutationFn: cancelInvitedEmployeeService,
     });
 };
+
+// Company Roles 
+export const useGetCompanyRoles = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<CompanyRoleRes>, ApiError>({
+        queryKey: ['company-roles', params],
+        queryFn: () => getCompanyRolesService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+};
+
+// Company Work Days
+export const useGetMyWorkDays = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<EmployeeWorkdaysRes>, ApiError>({
+        queryKey: ['my-work-days'],
+        queryFn: () => getMyWorkDaysService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+};
+
 
 // ------ Payment ------ \\
 export const useUpdateMyPayment = () => {

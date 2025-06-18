@@ -5,7 +5,7 @@ import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
 import { LeadRes } from "@/zustand/types/leadT";
-import { useGetLeads } from "@/zustand/hooks/useLead";
+import { useDeleteLead, useGetLeads } from "@/zustand/hooks/useLead";
 import { ParamGlobal } from "@/zustand/types/apiT";
 
 interface LeadTableProps {
@@ -19,6 +19,7 @@ interface LeadTableProps {
 
 export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive }) => {
   const getLeadsZ = useGetLeads(params);
+  const deleteLeadZ = useDeleteLead();
   const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
     { accessorKey: "email", header: "Email", cell: info => info.getValue() },
@@ -81,6 +82,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow,
         data={getLeadsZ.data?.result?.data || []}
         meta={getLeadsZ.data?.result?.meta}
         isLoading={getLeadsZ.isLoading}
+        isLoadingAction={deleteLeadZ.isPending}
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}

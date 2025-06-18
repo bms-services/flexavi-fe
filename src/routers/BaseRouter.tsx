@@ -54,6 +54,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import CompanyCreateFullPage from '@/components/company/CompanyCreateFullPage';
 import PaymentConfirm from '@/pages/payment/PaymentConfirm';
 import i18n from '@/lib/i18n';
+import RegisterEmployee from '@/pages/auth/RegisterEmployee';
 
 const baseRouter = createBrowserRouter([
     {
@@ -75,6 +76,14 @@ const baseRouter = createBrowserRouter([
                 handle: {
                     title: () => i18n.t("auth:register.text.title"),
                     description: () => i18n.t("auth:register.text.description"),
+                },
+            },
+            {
+                path: "register/employee",
+                element: <RegisterEmployee />,
+                handle: {
+                    title: () => i18n.t("auth:registerEmployee.text.title"),
+                    description: () => i18n.t("auth:registerEmployee.text.description"),
                 },
             },
             {

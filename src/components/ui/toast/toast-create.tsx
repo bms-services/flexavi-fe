@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 
 
-export const toastCreate = () => {
+export const toastCreate = (loading: boolean) => {
   let toastId: Id | null = null;
 
   const show = ({
@@ -37,6 +37,7 @@ export const toastCreate = () => {
         }}
         onDelete={onDelete}
         onArchive={onArchive}
+        loading={loading}
       />
     );
 

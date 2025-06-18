@@ -25,6 +25,7 @@ type DataTableProps<TData> = {
   data: TData[];
   meta?: MetaResponse;
   isLoading: boolean;
+  isLoadingAction?: boolean;
   params: ParamsAction;
   filterOptions?: {
     [key: string]: {
@@ -61,12 +62,15 @@ const defaultMeta: MetaResponse = {
 function useRowSelectionToast<TData>(
   table: ReactTable<TData>,
   rowSelection: RowSelectionState,
+  isLoadingAction: boolean | undefined,
   onDelete?: (rows: TData[]) => void,
   onArchive?: (rows: TData[]) => void
 ) {
-  const toastRef = useRef(toastCreate());
+  const toastRef = useRef(toastCreate(isLoadingAction));
 
   useEffect(() => {
+    if (!onDelete && !onArchive) return;
+
     const selectedRows = table.getSelectedRowModel().rows.map((r) => r.original);
     if (selectedRows.length > 0) {
       toastRef.current.show({
@@ -89,6 +93,7 @@ export default function TableTanstack<TData>({
   isLoading,
   filterOptions,
   onParamsChange,
+  isLoadingAction = false,
   params,
   onShow,
   onEdit,
@@ -106,8 +111,10 @@ export default function TableTanstack<TData>({
   const didMountRef = useRef(false);
 
   const processedColumns = useMemo<CustomColumnDef<TData>[]>(() => {
-    const base: CustomColumnDef<TData>[] = [
-      {
+    const base: CustomColumnDef<TData>[] = [];
+
+    if (onDelete || onArchive) {
+      base.push({
         id: "_select",
         meta: { className: "text-center align-middle" },
         header: ({ table }) => (
@@ -126,9 +133,10 @@ export default function TableTanstack<TData>({
             />
           </div>
         ),
-      },
-      ...columns,
-    ];
+      });
+    }
+
+    base.push(...columns);
 
     if (onEdit || onShow) {
       base.push({
@@ -146,7 +154,6 @@ export default function TableTanstack<TData>({
                 <PencilIcon className="h-4 w-4" />
               </Button>
             )}
-
             {onShow && (
               <Button
                 variant="link"
@@ -162,24 +169,21 @@ export default function TableTanstack<TData>({
     }
 
     return base;
-  }, [columns, onEdit, onShow]);
+  }, [columns, onEdit, onShow, onDelete, onArchive]);
 
   const handleSort = useCallback((columnId: string) => {
     // 1) clone existing sorts
     const next: Record<string, "asc" | "desc"> = { ...sorts };
     const current = next[columnId];
 
-    // 2) cycle: none → asc → desc → none
     if (!current) {
       next[columnId] = "asc";
     } else if (current === "asc") {
       next[columnId] = "desc";
     } else {
-      // was "desc"
       delete next[columnId];
     }
 
-    // 3) push up (we no longer force page=1 unless you want to)
     onParamsChange({ sorts: next });
   }, [sorts, onParamsChange]);
 
@@ -203,7 +207,7 @@ export default function TableTanstack<TData>({
   });
 
   // Show delete/archive toast
-  useRowSelectionToast(table, rowSelection, onDelete, onArchive);
+  useRowSelectionToast(table, rowSelection, isLoadingAction, onDelete, onArchive);
 
   // Reset selection when parameters change
   useEffect(() => {

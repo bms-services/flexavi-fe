@@ -91,7 +91,6 @@ export const LeadList: React.FC = () => {
 
     try {
       await createLeadZ.mutateAsync(leadData);
-      await getLeadsZ.refetch();
       setIsDialogOpen(false);
     } catch (error) {
       throw new Error("Failed to create lead: " + error);
@@ -110,7 +109,6 @@ export const LeadList: React.FC = () => {
 
     try {
       await updateLeadZ.mutateAsync({ id: data.id!, formData: leadData });
-      await getLeadsZ.refetch();
       setIsDialogOpen(false);
     } catch (error) {
       throw new Error("Failed to update lead: " + error);
@@ -126,7 +124,6 @@ export const LeadList: React.FC = () => {
   const handleDelete = async (ids: LeadRes[]) => {
     try {
       await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
-      await getLeadsZ.refetch();
       setLeadId(null);
     } catch (error) {
       throw new Error("Failed to delete lead: " + error);

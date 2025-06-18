@@ -8,12 +8,16 @@ export function ConfirmDialog({
     description,
     onCancel,
     onConfirm,
+    isConfirm = false,
+    loading = false
 }: {
     open: boolean;
     title?: string;
     description?: string;
     onCancel: () => void;
     onConfirm: () => void;
+    isConfirm?: boolean;
+    loading?: boolean;
 }) {
     return (
         <Dialog open={open} onOpenChange={onCancel}>
@@ -28,7 +32,12 @@ export function ConfirmDialog({
                 </DialogHeader>
                 <DialogFooter>
                     <Button variant="outline" onClick={onCancel}>Cancel</Button>
-                    <Button variant="destructive" onClick={onConfirm}>Confirm</Button>
+                    <Button
+                        loading={loading}
+                        variant={
+                            isConfirm ? "default" : "destructive"
+                        }
+                        onClick={onConfirm}>Confirm</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

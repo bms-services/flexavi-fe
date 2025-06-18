@@ -29,3 +29,19 @@ export type CompanyRes = {
     created_at: string;
     updated_at: string;
 }
+
+
+export type CompanyRoleReq = {
+    name: string;
+    description: string;
+    permissions: string[];
+};
+
+export type CompanyRoleRes = {
+    id: string;
+    name: string;
+    description: string;
+    permissions: string[];
+    created_at: string;
+    updated_at: string;
+};

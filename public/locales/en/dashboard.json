@@ -147,7 +147,8 @@
         "phone": "Enter team member's phone number",
         "role": "Select team member's role",
         "workingDays": "Select team member's working days",
-        "workingHours": "Select team member's working hours"
+        "startTime": "Select team member's working hours",
+        "endTime": "Select team member's end time"
       },
       "label": {
         "name": "Name",
@@ -155,7 +156,8 @@
         "phone": "Phone",
         "role": "Role",
         "workingDays": "Working Days",
-        "workingHours": "Working Hours"
+        "startTime": "Working Hours",
+        "endTime": "End Time"
       },
       "button": {
         "submit": "Save Team Member"
@@ -167,8 +169,16 @@
           "phone": "Team member phone number is required",
           "role": "Team member role is required",
           "workingDays": "Team member working days are required",
-          "workingHours": "Team member working hours are required"
-        }
+          "startTime": "Team member start time is required",
+          "endTime": "Team member end time is required"
+        },
+        "maxLength": {
+          "name": "Name must be at most 255 characters long",
+          "email": "Email must be at most 255 characters long",
+          "phone": "Phone number must be at most 20 characters long"
+        },
+        "startTimeLessThanEndTime": "Start time must be before end time",
+        "endTimeGreaterThanStartTime": "End time must be after start time"
       }
     },
     "company": {

@@ -15,6 +15,11 @@ export type TeamRes = {
     updated_at: string;
 }
 
+
+export type TeamMemberReq = {
+    company_user_id: string;
+}
+
 export type TeamType = "sales" | "executive";
 
 export enum TeamTypeEnum {

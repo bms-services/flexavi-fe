@@ -175,7 +175,8 @@
         "phone": "Voer het telefoonnummer van het teamlid in",
         "role": "Selecteer de rol van het teamlid",
         "workingDays": "Selecteer de werkdagen van het teamlid",
-        "workingHours": "Selecteer de werktijden van het teamlid"
+        "startTime": "Selecteer de starttijd van het teamlid",
+        "endTime": "Selecteer de eindtijd van het teamlid"
       },
       "label": {
         "name": "Naam",
@@ -183,7 +184,8 @@
         "phone": "Telefoonnummer",
         "role": "Rol",
         "workingDays": "Werkdagen",
-        "workingHours": "Werktijden"
+        "startTime": "Starttijd",
+        "endTime": "Eindtijd"
       },
       "error": {
         "required": {
@@ -192,12 +194,16 @@
           "phone": "Telefoonnummer is verplicht",
           "role": "Rol is verplicht",
           "workingDays": "Werkdagen zijn verplicht",
-          "workingHours": "Werktijden zijn verplicht"
+          "startTime": "Starttijd is verplicht",
+          "endTime": "Eindtijd is verplicht"
         },
         "maxLength": {
           "name": "Naam mag maximaal 255 tekens lang zijn",
-          "description": "Beschrijving mag maximaal 255 tekens lang zijn"
-        }
+          "email": "E-mail mag maximaal 255 tekens lang zijn",
+          "phone": "Telefoonnummer mag maximaal 20 tekens lang zijn"
+        },
+        "startTimeLessThanEndTime": "Starttijd moet voor de eindtijd liggen",
+        "endTimeGreaterThanStartTime": "Eindtijd moet na de starttijd liggen"
       }
     },
     "company": {

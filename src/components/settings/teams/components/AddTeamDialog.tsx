@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { TeamReq, TeamTypeEnum } from "@/zustand/types/teamT";
+import { TeamReq, TeamRes, TeamTypeEnum } from "@/zustand/types/teamT";
 import { useGetMyTeams } from "@/zustand/hooks/useSetting";
 
 const teamSchema = z.object({
@@ -36,6 +36,7 @@ interface AddTeamDialogProps {
   onStore: (values: TeamReq) => void;
   onUpdate: (id: string, values: TeamReq) => void;
   teamId?: string;
+  team?: TeamRes;
 }
 
 export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
@@ -43,10 +44,11 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
   onOpenChange,
   onStore,
   onUpdate,
-  teamId
+  teamId,
+  team
 }) => {
   const { t } = useTranslation("dashboard");
-  const getMyTeamsZ = useGetMyTeams();
+  // const getMyTeamsZ = useGetMyTeams();
 
   const form = useForm<TeamReq>({
     resolver: zodResolver(teamSchema),
@@ -56,8 +58,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
   useEffect(() => {
     if (!open) return;
 
-    if (teamId && getMyTeamsZ.data?.result.data) {
-      const team = getMyTeamsZ.data.result.data.find(team => team.id === teamId);
+    if (teamId) {
       if (team) {
         form.reset({
           name: team.name,
@@ -73,7 +74,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
     } else {
       form.reset(defaultTeam);
     }
-  }, [teamId, getMyTeamsZ.data, open, form]);
+  }, [open, teamId, team, form]);
 
   const handleSubmit = async (data: TeamReq) => {
     if (teamId) {
