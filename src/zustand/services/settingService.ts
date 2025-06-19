@@ -95,22 +95,22 @@ export const deleteMyEmployeeService = async (id: string): Promise<ApiSuccess<Em
 
 // Employee Invitation
 export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
-    const { data } = await mainApi.get("/setting/company/invitation/employee/list", { params });
+    const { data } = await mainApi.get("/setting/company/invitation/employee", { params });
     if (!data.success) throw data;
     return data;
 }
 export const inviteEmployeeService = async (formData: EmployeeReq): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post("/setting/company/invitation/employee/invite", formData);
+    const { data } = await mainApi.post("/setting/company/invitation/employee", formData);
     if (!data.success) throw data;
     return data;
 }
 export const cancelInvitedEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post('/setting/company/invitation/employee/cancel', { id });
+    const { data } = await mainApi.delete(`/setting/company/invitation/employee/${id}`);
     if (!data.success) throw data;
     return data;
 }
 export const resendInviteEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
-    const { data } = await mainApi.post(`/setting/company/invitation/employee/resend`, { id });
+    const { data } = await mainApi.put(`/setting/company/invitation/employee/${id}`);
     if (!data.success) throw data;
     return data;
 }

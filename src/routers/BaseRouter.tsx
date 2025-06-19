@@ -55,6 +55,7 @@ import CompanyCreateFullPage from '@/components/company/CompanyCreateFullPage';
 import PaymentConfirm from '@/pages/payment/PaymentConfirm';
 import i18n from '@/lib/i18n';
 import RegisterEmployee from '@/pages/auth/RegisterEmployee';
+import ForgotPasswordSuccessfully from '@/pages/auth/ForgotPasswordSuccessfully';
 
 const baseRouter = createBrowserRouter([
     {
@@ -87,7 +88,7 @@ const baseRouter = createBrowserRouter([
                 },
             },
             {
-                path: "register-successfully",
+                path: "register/success",
                 element: <RegisterSuccessfully />,
                 handle: {
                     title: () => i18n.t("auth:registerSuccessfully.text.title"),
@@ -100,6 +101,14 @@ const baseRouter = createBrowserRouter([
                 handle: {
                     title: () => i18n.t("auth:forgotPassword.text.title"),
                     description: () => i18n.t("auth:forgotPassword.text.description"),
+                },
+            },
+            {
+                path: "forgot-password/success",
+                element: <ForgotPasswordSuccessfully />,
+                handle: {
+                    title: () => i18n.t("auth:forgotPasswordSuccessfully.text.title"),
+                    description: () => i18n.t("auth:forgotPasswordSuccessfully.text.description"),
                 },
             },
         ],

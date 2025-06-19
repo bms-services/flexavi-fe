@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LogIn, Mail, Lock } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { LoginReq } from "@/zustand/types/authT";
 import { useLogin } from "@/zustand/hooks/useAuth";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Login = () => {
   const loginZ = useLogin();
@@ -14,11 +15,13 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<LoginReq>({
     defaultValues: {
       email: "",
       password: "",
+      remember_me: false,
     },
   });
 
@@ -65,6 +68,24 @@ const Login = () => {
             errors,
           }}
         />
+
+        <div className="flex items-center space-x-2">
+          <Controller
+            name="remember_me"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={(checked) => field.onChange(!!checked)}
+                id="remember_me"
+              />
+            )}
+          />
+          <label htmlFor="remember_me" className="text-sm">
+            {t("auth:login.label.rememberMe")}
+          </label>
+        </div>
+
         <Link
           to="/forgot-password"
           className="inline-block text-sm text-primary hover:text-primary/90 hover:underline"

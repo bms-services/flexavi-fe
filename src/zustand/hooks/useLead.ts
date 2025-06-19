@@ -10,14 +10,14 @@ import {
 } from "../services/leadService";
 
 export const useGetLeads = (params?: ParamGlobal) => {
-    return useQuery<ApiSuccessPaginated<LeadRes>>({
+    return useQuery<ApiSuccessPaginated<LeadRes>, ApiError>({
         queryKey: ['leads', params],
         queryFn: () => getLeadsService(params),
     });
 };
 
 export const useGetLead = (id: string) => {
-    return useQuery<ApiSuccess<LeadRes>>({
+    return useQuery<ApiSuccess<LeadRes>, ApiError>({
         queryKey: ['lead', id],
         queryFn: () => getLeadService(id),
         enabled: !!id,

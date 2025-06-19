@@ -8,9 +8,12 @@ import { useForgotPassword } from "@/zustand/hooks/useAuth";
 import { useTranslation } from "react-i18next";
 import { ForgotPasswordReq } from "@/zustand/types/authT";
 import { useForm } from "react-hook-form";
+import { useForgotPasswordStore } from "@/zustand/stores/authStore";
 
 const ForgotPassword = () => {
   const forgotPasswordZ = useForgotPassword();
+  const { setEmail } = useForgotPasswordStore();
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -25,9 +28,14 @@ const ForgotPassword = () => {
   });
 
   const onSubmit = async (data: ForgotPasswordReq): Promise<void> => {
-    forgotPasswordZ.mutate(data);
+    try {
+      await forgotPasswordZ.mutateAsync(data);
+      setEmail(data.email);
+      navigate('/forgot-password/success');
+    } catch (error) {
+      throw new Error("Failed to send reset password email");
+    }
   };
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

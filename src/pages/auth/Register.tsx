@@ -11,7 +11,7 @@ import PhoneNumber from "@/components/ui/phone-number";
 import { useRegister } from "@/zustand/hooks/useAuth";
 import { RegisterReq } from "@/zustand/types/authT";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
-import { useRegisterStore } from "@/zustand/stores/registerStore";
+import { useRegisterStore } from "@/zustand/stores/authStore";
 const Register = () => {
   const registerZ = useRegister();
   const { setEmail } = useRegisterStore();
@@ -52,7 +52,7 @@ const Register = () => {
     registerZ.mutate(newData, {
       onSuccess: (res) => {
         setEmail(res.result.email);
-        navigate("/register-successfully");
+        navigate("/register/success",);
       }
     });
   };

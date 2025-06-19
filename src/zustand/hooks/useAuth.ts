@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
-import { forgotPasswordService, loginService, logoutService, registerService, registerEmployeeService } from "@/zustand/services/authService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { forgotPasswordService, loginService, logoutService, registerService, registerEmployeeService, verifyRegisterEmployeeService, resetPasswordService, verifyResetPasswordService } from "@/zustand/services/authService";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { ForgotPasswordReq, ForgotPasswordRes, LoginReq, LoginRes, LogoutRes, RegisterReq, RegisterRes } from "@/zustand/types/authT";
+import { ForgotPasswordReq, ForgotPasswordRes, LoginReq, LoginRes, LogoutRes, RegisterEmployeeReq, RegisterEmployeeRes, RegisterReq, RegisterRes, ResetPasswordReq, ResetPasswordRes, VerifyRegisterEmployeeRes, VerifyRegisterEmployeeReq, VerifyResetPasswordReq, VerifyResetPasswordRes } from "@/zustand/types/authT";
 import { ApiError, ApiSuccess } from "@/zustand/types/apiT";
 
 export const useLogin = () => {
@@ -21,10 +21,19 @@ export const useRegister = () => {
 };
 
 export const useRegisterEmployee = () => {
-    return useMutation<ApiSuccess<RegisterRes>, ApiError, RegisterReq>({
+    return useMutation<ApiSuccess<RegisterEmployeeRes>, ApiError, RegisterEmployeeReq>({
         mutationFn: registerEmployeeService,
     });
-}
+};
+
+export const useVerifyRegisterEmployee = (token: string) => {
+    return useQuery<ApiSuccess<VerifyRegisterEmployeeRes>, ApiError>({
+        queryKey: ['verify-register-employee', token],
+        queryFn: () => verifyRegisterEmployeeService(token),
+        enabled: (token) => !!token,
+        retry: false,
+    });
+};
 
 export const useLogout = () => {
     const logout = useAuthStore((s) => s.logout);
@@ -44,3 +53,18 @@ export const useForgotPassword = () => {
         mutationFn: forgotPasswordService,
     });
 }
+
+export const useResetPassword = () => {
+    return useMutation<ApiSuccess<ResetPasswordRes>, ApiError, ResetPasswordReq>({
+        mutationFn: resetPasswordService,
+    });
+}
+
+export const useVerifyResetPassword = (token: string) => {
+    return useQuery<ApiSuccess<VerifyResetPasswordRes>, ApiError>({
+        queryKey: ['verify-reset-password', token],
+        queryFn: () => verifyResetPasswordService(token),
+        enabled: (token) => !!token,
+        retry: false,
+    });
+};

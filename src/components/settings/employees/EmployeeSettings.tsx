@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { UserPlus, User, DotSquareIcon, XIcon, MailIcon } from "lucide-react";
 import { useGetInvitedEmployees, useInviteEmployee, useResendInviteEmployee, useCancelInvitedEmployee } from "@/zustand/hooks/useSetting";
-import { EmployeeReq, EmployeeRes } from "@/zustand/types/employeeT";
+import { EmployeeInvitationStatus, EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes } from "@/zustand/types/employeeT";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
@@ -20,7 +20,6 @@ export const EmployeeSettings: React.FC = () => {
   });
 
   const [employeeId, setEmployeeId] = useState<string>("");
-
   const [params, setParams] = useState<ParamGlobal>({
     page: 1,
     per_page: 10,
@@ -59,7 +58,12 @@ export const EmployeeSettings: React.FC = () => {
       header: "Actions",
       meta: { className: "text-center align-middle" },
       cell: ({ row }) => {
-        const id = row.original.id;
+        const { id, status } = row.original;
+        const allowedStatuses: EmployeeInvitationStatus[] = ["invited", "resent"];
+
+        if (!allowedStatuses.includes(status)) {
+          return null;
+        }
 
         return (
           <div className="flex justify-center items-center gap-2">
@@ -79,9 +83,10 @@ export const EmployeeSettings: React.FC = () => {
             </Button>
           </div>
         );
-      }
+      },
     },
   ], []);
+
 
   /**
      * Handles changes to the table parameters such as pagination, sorting, and filtering.
@@ -138,6 +143,11 @@ export const EmployeeSettings: React.FC = () => {
   };
 
 
+  const statusFilterOptions = Object.entries(EmployeeInvitationStatusMap).map(
+    ([value, { label }]) => ({ value, label })
+  );
+
+
   return (
     <Card>
       <CardHeader>
@@ -165,6 +175,12 @@ export const EmployeeSettings: React.FC = () => {
             isLoading={getInvitedEmployeesZ.isLoading}
             params={params}
             onParamsChange={handleParamsChange}
+            filterOptions={{
+              status: {
+                label: "Status",
+                options: statusFilterOptions,
+              },
+            }}
           />
         </div>
         <InviteEmployee

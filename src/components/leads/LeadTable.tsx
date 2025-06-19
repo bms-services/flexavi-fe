@@ -6,7 +6,8 @@ import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
 import { LeadRes } from "@/zustand/types/leadT";
 import { useDeleteLead, useGetLeads } from "@/zustand/hooks/useLead";
-import { ParamGlobal } from "@/zustand/types/apiT";
+import { ApiError, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
+import { UseQueryResult } from "@tanstack/react-query";
 
 interface LeadTableProps {
   params: ParamsAction;
@@ -15,10 +16,11 @@ interface LeadTableProps {
   onEdit?: (row: LeadRes) => void;
   onDelete?: (rows: LeadRes[]) => void;
   onArchive?: (rows: LeadRes[]) => void;
+  getLeadsZ: UseQueryResult<ApiSuccessPaginated<LeadRes>, ApiError>
 }
 
-export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive }) => {
-  const getLeadsZ = useGetLeads(params);
+export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive, getLeadsZ }) => {
+  // const getLeadsZ = useGetLeads(params);
   const deleteLeadZ = useDeleteLead();
   const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -82,7 +84,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow,
         data={getLeadsZ.data?.result?.data || []}
         meta={getLeadsZ.data?.result?.meta}
         isLoading={getLeadsZ.isLoading}
-        isLoadingAction={deleteLeadZ.isPending}
+        isLoadingAction={deleteLeadZ.isPending || deleteLeadZ.isPending}
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}

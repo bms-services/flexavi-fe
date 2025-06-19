@@ -7,17 +7,26 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
-import { useRegisterEmployee } from "@/zustand/hooks/useAuth";
-import { RegisterReq } from "@/zustand/types/authT";
+import { useRegisterEmployee, useVerifyRegisterEmployee } from "@/zustand/hooks/useAuth";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
-import { useRegisterStore } from "@/zustand/stores/registerStore";
+import { useRegisterStore } from "@/zustand/stores/authStore";
+import { useSearchParams } from "react-router-dom";
+import { RegisterEmployeeReq } from "@/zustand/types/authT";
+import PhoneNumber from "@/components/ui/phone-number";
+
 const RegisterEmployee = () => {
-  const registerEmployeeZ = useRegisterEmployee();
-  const { setEmail } = useRegisterStore();
 
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
+  // get token from param
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+
+  const { setEmail } = useRegisterStore();
+  const registerEmployeeZ = useRegisterEmployee();
+  const verifyRegisterEmployeeZ = useVerifyRegisterEmployee(token)
+
 
   const {
     control,
@@ -25,16 +34,20 @@ const RegisterEmployee = () => {
     handleSubmit,
     watch,
     setError,
+    setValue,
     formState: { errors },
-  } = useForm<RegisterReq>({
+  } = useForm<RegisterEmployeeReq>({
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       password: "",
       password_confirmation: "",
+      token: token,
     },
   });
+
+
 
   /**
    * Function to handle form submission
@@ -42,18 +55,19 @@ const RegisterEmployee = () => {
    * @param data - Form data containing user registration information
    * @returns {Promise<void>}
    */
-  const onSubmit = async (data: RegisterReq): Promise<void> => {
-    const newData = {
-      ...data,
-      language: currentLocal,
-    };
+  const onSubmit = async (data: RegisterEmployeeReq): Promise<void> => {
+    try {
+      const newData = {
+        ...data,
+        language: currentLocal,
+      };
 
-    registerEmployeeZ.mutate(newData, {
-      onSuccess: (res) => {
-        setEmail(res.result.email);
-        navigate("/register-successfully");
-      }
-    });
+      const res = await registerEmployeeZ.mutateAsync(newData);
+      setEmail(res.result.email);
+      navigate("/register/success");
+    } catch (error) {
+      throw new Error("Registration failed");
+    }
   };
 
   /**
@@ -67,12 +81,82 @@ const RegisterEmployee = () => {
     }
   }, [registerEmployeeZ.error, setError]);
 
+
+  useEffect(() => {
+    if (verifyRegisterEmployeeZ.isSuccess) {
+      const { name, email, phone } = verifyRegisterEmployeeZ.data.result;
+      setValue("name", name);
+      setValue("email", email);
+      setValue("phone", phone);
+    }
+
+    if (verifyRegisterEmployeeZ.error) {
+      navigate("/login");
+    }
+  }, [verifyRegisterEmployeeZ.isSuccess, verifyRegisterEmployeeZ.error, setValue]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
-        <p className="text-[14px]">
-          {t('auth:registerEmployee.text.subDescription')}
-        </p>
+        {verifyRegisterEmployeeZ.isSuccess && (
+          <div>
+            <p className="text-[14px]">
+              Hii <b>{verifyRegisterEmployeeZ.data.result.name}</b>,&nbsp;
+              {t('auth:registerEmployee.text.subDescription')}&nbsp;
+              <span className="text-primary font-semibold">
+                {verifyRegisterEmployeeZ.data.result.company_name}
+              </span>
+            </p>
+
+            <p className="text-[14px]">
+              {t('auth:registerEmployee.text.subDescription2')}
+            </p>
+          </div>
+        )}
+        <Input
+          label={t('auth:registerEmployee.label.name')}
+          placeholder={t('auth:registerEmployee.placeholder.name')}
+          id="name"
+          type="text"
+          icon={<LockIcon className="h-5 w-5 " />}
+          disabled
+          rules={{
+            register,
+            name: "name",
+            options: {
+              required: t('auth:registerEmployee.error.required.name')
+            },
+            errors,
+          }}
+        />
+        <Input
+          label={t('auth:registerEmployee.label.email')}
+          placeholder={t('auth:registerEmployee.placeholder.email')}
+          id="email"
+          type="email"
+          icon={<LockIcon className="h-5 w-5 " />}
+          disabled
+          rules={{
+            register,
+            name: "email",
+            options: {
+              required: t('auth:registerEmployee.error.required.email')
+            },
+            errors,
+          }}
+        />
+        <PhoneNumber
+          label={t('auth:registerEmployee.label.phone')}
+          disabled
+          rules={{
+            control,
+            name: "phone",
+            options: {
+              required: t('auth:registerEmployee.error.required.phone')
+            },
+            errors,
+          }}
+        />
 
         <Input
           label={t('auth:registerEmployee.label.password')}
@@ -115,15 +199,15 @@ const RegisterEmployee = () => {
           loading={registerEmployeeZ.isPending}
         >
           <UserPlus className="mr-2 h-4 w-4" />
-          {t('auth:register.button.submit')}
+          {t('auth:registerEmployee.button.submit')}
         </Button>
         <p className="text-sm text-muted-foreground text-center">
-          {t('auth:register.text.alreadyHaveAccount')}
+          {t('auth:registerEmployee.text.alreadyHaveAccount')}
           <Link
             to="/login"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            &nbsp;{t('auth:register.link.login')}
+            &nbsp;{t('auth:registerEmployee.link.login')}
           </Link>
         </p>
       </CardFooter>

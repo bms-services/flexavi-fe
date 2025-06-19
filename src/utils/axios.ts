@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import errorHandler from "./errorHandler";
 import successHandler from "./successHandler";
+import { ApiError } from "@/zustand/types/apiT";
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 const tokenName = import.meta.env.VITE_TOKEN_NAME;
@@ -65,10 +66,16 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 
       return response;
     },
-    (error: AxiosError<Record<string, string[]>>) => {
-      const err = error.response?.data;
-      errorHandler(err);
-      return Promise.reject(err);
+    (error: AxiosError<ApiError>) => {
+      const status = error.response?.status;
+      const token = getAuthToken();
+      if (token && (status === 401 || status === 403)) {
+        Cookies.remove(tokenName);
+        window.location.href = "/login"; // redirect ke login
+      }
+
+      errorHandler(error);
+      return Promise.reject(error);
     }
   );
 

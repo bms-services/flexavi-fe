@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { useGetLeads, useGetLead, useCreateLead, useUpdateLead, useDeleteLead } from "@/zustand/hooks/useLead";
-import { ParamsAction } from "@/@types/global-type";
 import { flattenAddressToObject } from "@/utils/dataTransform";
 import { LeadActions } from "./LeadActions";
 import { LeadTable } from "./LeadTable";
@@ -9,6 +8,7 @@ import { CreateLeadDialog } from "./CreateLeadDialog";
 import { LeadReq, LeadRes } from "@/zustand/types/leadT";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import { useNavigate } from "react-router-dom";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
 const defaultLeadData: LeadReq = {
   name: "",
@@ -26,7 +26,7 @@ const defaultLeadData: LeadReq = {
 
 export const LeadList: React.FC = () => {
   const navigate = useNavigate();
-  const [params, setParams] = useState<ParamsAction>({
+  const [params, setParams] = useState<ParamGlobal>({
     page: 1,
     per_page: 10,
     search: "",
@@ -184,6 +184,7 @@ export const LeadList: React.FC = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onShow={handleShow}
+        getLeadsZ={getLeadsZ}
       />
 
       <FormProvider {...methods}>

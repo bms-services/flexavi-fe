@@ -58,12 +58,12 @@ export type EmployeeWorkdaysRes = {
     name: string;
 }
 
-
-
 export const EmployeeInvitationStatusMap = {
-    new: { label: "invited", variant: "primary" },
-    in_progress: { label: "accepted", variant: "secondary" },
-    rejected: { label: "canceled", variant: "destructive" },
-}
+    invited: { label: "Invited", variant: "primary" },
+    accepted: { label: "Accepted", variant: "success" },
+    rejected: { label: "Rejected", variant: "light" },
+    cancelled: { label: "Cancelled", variant: "destructive" },
+    resent: { label: "Resent", variant: "warning" },
+} as const;
 
-export type EmployeeInvitationStatus = "invited" | "accepted" | "canceled";
+export type EmployeeInvitationStatus = "invited" | "accepted" | "cancelled" | "rejected" | "resent";

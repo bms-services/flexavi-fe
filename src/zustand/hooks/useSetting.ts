@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
@@ -138,22 +138,33 @@ export const useGetInvitedEmployees = (params?: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
         queryKey: ['invited-employees', params],
         queryFn: () => getInvitedEmployeesService(params),
-        retry: false,
     });
 };
 export const useInviteEmployee = () => {
+    const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, EmployeeReq>({
         mutationFn: inviteEmployeeService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['invited-employees'] });
+        },
     });
 };
 export const useResendInviteEmployee = () => {
+    const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
         mutationFn: resendInviteEmployeeService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['invited-employees'] });
+        },
     });
 };
 export const useCancelInvitedEmployee = () => {
+    const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
         mutationFn: cancelInvitedEmployeeService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['invited-employees'] });
+        },
     });
 };
 
