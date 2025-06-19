@@ -13,6 +13,12 @@ type ForgotPasswordStore = {
     clearEmail: () => void;
 }
 
+type ResetPasswordStore = {
+    email: string | null;
+    setEmail: (email: string) => void;
+    clearEmail: () => void;
+}
+
 export const useRegisterStore = create<RegisterStore>((set) => ({
     email: null,
     setEmail: (email) => set({ email }),
@@ -20,6 +26,12 @@ export const useRegisterStore = create<RegisterStore>((set) => ({
 }));
 
 export const useForgotPasswordStore = create<ForgotPasswordStore>((set) => ({
+    email: null,
+    setEmail: (email) => set({ email }),
+    clearEmail: () => set({ email: null }),
+}));
+
+export const useResetPasswordStore = create<ResetPasswordStore>((set) => ({
     email: null,
     setEmail: (email) => set({ email }),
     clearEmail: () => set({ email: null }),

@@ -60,10 +60,10 @@ export const useResetPassword = () => {
     });
 }
 
-export const useVerifyResetPassword = (token: string) => {
+export const useVerifyResetPassword = (params: VerifyResetPasswordReq) => {
     return useQuery<ApiSuccess<VerifyResetPasswordRes>, ApiError>({
-        queryKey: ['verify-reset-password', token],
-        queryFn: () => verifyResetPasswordService(token),
+        queryKey: ['verify-reset-password', params],
+        queryFn: () => verifyResetPasswordService(params),
         enabled: (token) => !!token,
         retry: false,
     });

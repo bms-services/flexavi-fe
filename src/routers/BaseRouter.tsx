@@ -6,6 +6,7 @@ import ForgotPassword from '@/pages/auth/ForgotPassword';
 import Login from '@/pages/auth/Login';
 import Register from '@/pages/auth/Register';
 
+
 import AdminDashboard from '@/pages/admin/AdminDashboard';
 import CalculatorDetail from '@/pages/CalculatorDetail';
 import Community from '@/pages/Community';
@@ -56,6 +57,8 @@ import PaymentConfirm from '@/pages/payment/PaymentConfirm';
 import i18n from '@/lib/i18n';
 import RegisterEmployee from '@/pages/auth/RegisterEmployee';
 import ForgotPasswordSuccessfully from '@/pages/auth/ForgotPasswordSuccessfully';
+import ResetPassword from '@/pages/auth/ResetPassword';
+import ResetPasswordSuccessfully from '@/pages/auth/ResetPasswordSuccessfully';
 
 const baseRouter = createBrowserRouter([
     {
@@ -111,6 +114,22 @@ const baseRouter = createBrowserRouter([
                     description: () => i18n.t("auth:forgotPasswordSuccessfully.text.description"),
                 },
             },
+            {
+                path: "reset-password",
+                element: <ResetPassword />,
+                handle: {
+                    title: () => i18n.t("auth:resetPassword.text.title"),
+                    description: () => i18n.t("auth:resetPassword.text.description"),
+                },
+            },
+            {
+                path: "reset-password/success",
+                element: <ResetPasswordSuccessfully />,
+                handle: {
+                    title: () => i18n.t("auth:resetPasswordSuccessfully.text.title"),
+                    description: () => i18n.t("auth:resetPasswordSuccessfully.text.description"),
+                },
+            }
         ],
     },
     { path: "/create-company", element: <CompanyCreateFullPage />, handle: { title: "Create Company" } },

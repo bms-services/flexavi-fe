@@ -45,8 +45,8 @@ export const resetPasswordService = async (formData: ResetPasswordReq): Promise<
 };
 
 
-export const verifyResetPasswordService = async (token: string): Promise<ApiSuccess<VerifyResetPasswordRes>> => {
-    const { data } = await mainApi.get("/reset-password", { params: { token } });
+export const verifyResetPasswordService = async (params: VerifyResetPasswordReq): Promise<ApiSuccess<VerifyResetPasswordRes>> => {
+    const { data } = await mainApi.get("/reset-password", { params });
     if (!data.success) throw data;
     return data;
 };

@@ -15,11 +15,9 @@ import { RegisterEmployeeReq } from "@/zustand/types/authT";
 import PhoneNumber from "@/components/ui/phone-number";
 
 const RegisterEmployee = () => {
-
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
-  // get token from param
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 

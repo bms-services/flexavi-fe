@@ -75,6 +75,7 @@ export type LogoutRes = {
 };
 
 export type ResetPasswordReq = {
+    email: string;
     token: string;
     password: string;
     password_confirmation: string;
@@ -86,8 +87,11 @@ export type ResetPasswordRes = {
 
 export type VerifyResetPasswordReq = {
     token: string;
+    email: string;
 };
 
 export type VerifyResetPasswordRes = {
     message: string;
+    email: string;
+    name: string;
 };
