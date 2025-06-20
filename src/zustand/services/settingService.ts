@@ -70,7 +70,7 @@ export const addMemberMyTeamService = async (id: string, formData: TeamMemberReq
 
 // Employee
 export const getMyEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
-    const { data } = await mainApi.get("/setting/company/employee/list", { params });
+    const { data } = await mainApi.get("/setting/company/employee", { params });
     if (!data.success) throw data;
     return data;
 }

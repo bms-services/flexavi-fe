@@ -1,10 +1,9 @@
-import React, { useMemo, useCallback, useEffect, useRef, useState } from "react";
+import { useMemo, useCallback, useEffect, useRef, useState } from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-  Updater,
   RowSelectionState,
   Table as ReactTable,
   Row,
@@ -13,27 +12,27 @@ import { ChevronLeftIcon, ChevronRightIcon, MoveRightIcon, PencilIcon } from "lu
 import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import { toastCreate } from "./toast/toast-create";
-import { MetaResponse, ParamsAction } from "@/@types/global-type";
 import { Input } from "./input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useDebounce } from "use-debounce";
+import { Meta, ParamGlobal } from "@/zustand/types/apiT";
 
 
 // Constrain TData to have an 'id' field
 type DataTableProps<TData> = {
   columns: CustomColumnDef<TData>[];
   data: TData[];
-  meta?: MetaResponse;
+  meta?: Meta;
   isLoading: boolean;
   isLoadingAction?: boolean;
-  params: ParamsAction;
+  params: ParamGlobal;
   filterOptions?: {
     [key: string]: {
       label: string;
       options: { value: string; label: string }[];
     };
   };
-  onParamsChange: (p: Partial<ParamsAction>) => void;
+  onParamsChange: (p: Partial<ParamGlobal>) => void;
   onShow?: (row: TData) => void;
   onEdit?: (row: TData) => void;
   onDelete?: (rows: TData[]) => void;
@@ -48,13 +47,15 @@ export type CustomColumnDef<TData> = ColumnDef<TData, unknown> & {
 };
 
 // Safe default meta
-const defaultMeta: MetaResponse = {
+const defaultMeta: Meta = {
   current_page: 1,
-  last_page: 1,
-  total: 0,
   per_page: 10,
+  first_page_url: "",
+  last_page_url: "",
+  total: 0,
   from: 0,
   to: 0,
+  last_page: 1,
   next_page_url: "",
   prev_page_url: "",
 };
@@ -66,7 +67,7 @@ function useRowSelectionToast<TData>(
   onDelete?: (rows: TData[]) => void,
   onArchive?: (rows: TData[]) => void
 ) {
-  const toastRef = useRef(toastCreate(isLoadingAction));
+  const toastRef = useRef(toastCreate(isLoadingAction ?? false));
 
   useEffect(() => {
     if (!onDelete && !onArchive) return;
@@ -101,8 +102,8 @@ export default function TableTanstack<TData>({
   onArchive,
 }: DataTableProps<TData>) {
   const safeMeta = meta ?? defaultMeta;
-  const { page, per_page, search = "", filters = {}, sorts = {} } = params;
-  const { current_page, last_page, from, to, total, per_page: meta_per_page } = safeMeta;
+  const { per_page, search = "", filters = {}, sorts = {} } = params;
+  const { current_page, last_page, from, to, total } = safeMeta;
 
   const [localSearch, setLocalSearch] = useState(search);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -193,10 +194,10 @@ export default function TableTanstack<TData>({
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     pageCount: safeMeta.last_page,
-    state: { pagination: { pageIndex: params.page - 1, pageSize: params.per_page }, rowSelection },
+    state: { pagination: { pageIndex: (params.page ?? 1) - 1, pageSize: params.per_page ?? 10 }, rowSelection },
     onRowSelectionChange: setRowSelection,
     enableRowSelection: true,
-    getRowId: (originalRow: TData, index: number, parent?: Row<TData>) => {
+    getRowId: (originalRow: TData, index: number) => {
       if (typeof originalRow === "object" && originalRow !== null && "id" in originalRow) {
         return (originalRow as {
           id: string;
@@ -397,7 +398,7 @@ export default function TableTanstack<TData>({
             {from ?? 0} - {to ?? 0} of {total} items
           </div>
           <Select
-            value={per_page.toString()}
+            value={(per_page ?? 10).toString()}
             onValueChange={(value) => {
               const size = Number(value);
               onParamsChange({ per_page: size, page: 1 });

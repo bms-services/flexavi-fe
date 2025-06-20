@@ -2,7 +2,7 @@
 import React from "react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Building2, Calendar, Users2, User, Paperclip, Mail, 
+  Building2, Calendar, Users2, User, Paperclip, Mail,
   Pen, CreditCard, Shield, FileText, Webhook, Star
 } from "lucide-react";
 
@@ -30,6 +30,10 @@ export const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
             <TabsTrigger value="employees" className="w-full justify-start">
               <User className="h-4 w-4 mr-2" />
               Medewerkers
+            </TabsTrigger>
+            <TabsTrigger value="employees-invitation" className="w-full justify-start">
+              <User className="h-4 w-4 mr-2" />
+              Uitnodigingen
             </TabsTrigger>
             <TabsTrigger value="permissions" className="w-full justify-start">
               <Shield className="h-4 w-4 mr-2" />

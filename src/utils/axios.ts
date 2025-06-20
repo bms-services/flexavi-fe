@@ -69,7 +69,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     (error: AxiosError<ApiError>) => {
       const status = error.response?.status;
       const token = getAuthToken();
-      if (token && (status === 401 || status === 403)) {
+      if (token && (status === 401)) {
         Cookies.remove(tokenName);
         window.location.href = "/login"; // redirect ke login
       }

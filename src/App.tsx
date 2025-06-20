@@ -1,9 +1,7 @@
-import { StrictMode, Suspense } from "react";
+import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./providers/auth-provider";
 import baseRouter from "./routers/BaseRouter";
-import { Provider } from 'react-redux'
-import { store } from './store/index.ts'
 import { ToastContainer } from 'react-toastify';
 import Loader from "./components/ui/loader.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,12 +20,10 @@ function App() {
       <Loader />
     }>
       <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <AuthProvider>
-            <ToastContainer />
-            <RouterProvider router={baseRouter} />
-          </AuthProvider>
-        </Provider>
+        <AuthProvider>
+          <ToastContainer />
+          <RouterProvider router={baseRouter} />
+        </AuthProvider>
       </QueryClientProvider>
     </Suspense>
     // </StrictMode>

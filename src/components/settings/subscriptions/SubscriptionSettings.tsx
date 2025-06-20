@@ -7,32 +7,16 @@ import { InvoiceHistory } from "./components/InvoiceHistory";
 import { CurrentPlan } from "./components/CurrentPlan";
 import { CancelSubscription } from "./components/CancelSubscription";
 import { useAppDispatch } from "@/hooks/use-redux";
-import { getPackageIndex } from "@/actions/packageAction";
-import { RootState } from "@/store";
+
 import { useSelector } from "react-redux";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { PaginatedResponse } from "@/lib/redux-thunk";
 import { CompanyPackageItem, Package, PackageItem, PackageTypeEnum, PackageTypeT } from "@/types/package";
-import { putSettingPackageUpdate } from "@/actions/settingAction";
 import { User } from "@/types/user";
 
 
 
 export const SubscriptionSettings = () => {
   const dispatch = useAppDispatch();
-
-  // const { loading, response: responsePackageIndex } = useSelector((state: RootState) => state.package.index);
-  // const { response: responseProfileUpdatePackage } = useSelector((state: RootState) => state.setting.package.update);
-  // const { response: responseProfileShow } = useSelector((state: RootState) => state.profile.show);
-
-
-  const packageIndexRedux = useSelector((state: RootState) => state.package.index);
-  const settingPackageUpdateRedux = useSelector((state: RootState) => state.setting.package.update);
-  const profileShowRedux = useSelector((state: RootState) => state.profile.show);
-
-  // const result = responsePackageIndex?.result as PaginatedResponse<Package>;
-  // const resultProfileShow = responseProfileShow?.result as User;
-  // const resultProfileUpdatePackage = responseProfileUpdatePackage?.result as CompanyPackageItem;
 
   const [packageType, setPackageType] = useState<PackageTypeT>(PackageTypeEnum.MONTHLY);
   const [activePackage, setActivePackage] = useState<string | null>(null);
@@ -41,9 +25,9 @@ export const SubscriptionSettings = () => {
 
   const filteredPackages = packageType === PackageTypeEnum.MONTHLY ? packageMonthly : packageYearly;
 
-  useEffect(() => {
-    dispatch(getPackageIndex())
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getPackageIndex())
+  // }, [dispatch]);
 
 
   // useEffect(() => {
@@ -76,7 +60,7 @@ export const SubscriptionSettings = () => {
   // }, [settingPackageUpdateRedux]);
 
   const handleUpgrade = (id: string) => {
-    dispatch(putSettingPackageUpdate(id));
+    // dispatch(putSettingPackageUpdate(id));
   }
 
   return (

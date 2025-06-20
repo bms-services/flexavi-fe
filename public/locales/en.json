@@ -1,5 +1,213 @@
 {
   "language": "English",
+  "login": {
+    "text": {
+      "title": "Login",
+      "description": "Please enter your credentials to login.",
+      "notHaveAccount": "Don't have an account?"
+    },
+    "link": {
+      "register": "Register here",
+      "forgotPassword": "Forgot your password?"
+    },
+    "placeholder": {
+      "email": "Enter your email",
+      "password": "Enter your password"
+    },
+    "label": {
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember Me"
+    },
+    "button": {
+      "submit": "Login"
+    },
+    "error": {
+      "invalidCredentials": "Invalid email or password.",
+      "userNotFound": "User not found.",
+      "accountLocked": "Your account is locked. Please contact support.",
+      "required": {
+        "email": "Email is required",
+        "password": "Password is required"
+      }
+    }
+  },
+  "register": {
+    "text": {
+      "title": "Register",
+      "description": "Create a new account.",
+      "alreadyHaveAccount": "Already have an account?"
+    },
+    "link": {
+      "login": "Login here"
+    },
+    "placeholder": {
+      "name": "Enter your name",
+      "email": "Enter your email",
+      "phone": "Enter your phone number",
+      "password": "Enter your password",
+      "passwordConfirmation": "Confirm your password"
+    },
+    "label": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password",
+      "passwordConfirmation": "Confirm Password"
+    },
+    "button": {
+      "submit": "Register"
+    },
+    "error": {
+      "emailExists": "Email already exists.",
+      "weakPassword": "Password is too weak.",
+      "passwordMismatch": "Passwords do not match.",
+      "required": {
+        "name": "Name is required",
+        "email": "Email is required",
+        "phone": "Phone number is required",
+        "password": "Password is required",
+        "passwordConfirmation": "Password confirmation is required",
+        "passwordConfirmationMismatch": "Password confirmation does not match"
+      }
+    }
+  },
+  "registerSuccessfully": {
+    "text": {
+      "title": "Registration Successful",
+      "description": "You have successfully registered.",
+      "welcome": "Welcome to our platform!",
+      "activate": "To activate your trial, please login and add credit card information."
+    },
+    "button": {
+      "login": "Login"
+    }
+  },
+  "registerEmployee": {
+    "text": {
+      "title": "Register Employee",
+      "description": "Create a new employee account.",
+      "subDescription": "You invited an employee to join",
+      "subDescription2": "Please fill in the details below to create their account.",
+      "alreadyHaveAccount": "Does the employee already have an account?"
+    },
+    "link": {
+      "login": "Login here"
+    },
+    "placeholder": {
+      "email": "Enter employee email",
+      "name": "Enter employee name",
+      "phone": "Enter employee phone number",
+      "password": "Enter employee password",
+      "passwordConfirmation": "Confirm employee password"
+    },
+    "label": {
+      "email": "Employee Email",
+      "name": "Employee Name",
+      "phone": "Employee Phone",
+      "password": "Employee Password",
+      "passwordConfirmation": "Confirm Employee Password"
+    },
+    "button": {
+      "submit": "Register Employee"
+    },
+    "error": {
+      "emailExists": "Employee email already exists.",
+      "weakPassword": "Employee password is too weak.",
+      "passwordMismatch": "Employee passwords do not match.",
+      "required": {
+        "email": "Employee email is required",
+        "name": "Employee name is required",
+        "phone": "Employee phone number is required",
+        "password": "Employee password is required",
+        "passwordConfirmation": "Employee password confirmation is required",
+        "passwordConfirmationMismatch": "Employee password confirmation does not match"
+      }
+    }
+  },
+  "forgotPassword": {
+    "text": {
+      "title": "Forgot Password",
+      "description": "Enter your email to reset your password.",
+      "haveAccount": "Already have an account?"
+    },
+    "link": {
+      "loginHere": "Login here"
+    },
+    "placeholder": {
+      "email": "Enter your email"
+    },
+    "label": {
+      "email": "Email"
+    },
+    "button": {
+      "submit": "Send Reset Link"
+    },
+    "error": {
+      "emailNotFound": "Email not found.",
+      "required": {
+        "email": "Email is required"
+      }
+    }
+  },
+  "forgotPasswordSuccessfully": {
+    "text": {
+      "title": "Password Reset Link Sent",
+      "description": "A password reset link has been sent to your email.",
+      "success": "Now you can reset your password.",
+      "checkEmail": "Please check your email and follow the instructions to reset your password."
+    },
+    "button": {
+      "login": "Login"
+    }
+  },
+  "resetPassword": {
+    "text": {
+      "title": "Reset Password",
+      "description": "Enter your email to reset your password.",
+      "subDescription": "Please enter your new password below.",
+      "alreadyHaveAccount": "Already have an account?"
+    },
+    "label": {
+      "email": "Email",
+      "password": "New Password",
+      "passwordConfirmation": "Confirm New Password"
+    },
+    "placeholder": {
+      "email": "Enter your email",
+      "password": "Enter your new password",
+      "passwordConfirmation": "Confirm your new password"
+    },
+    "button": {
+      "submit": "Send Reset Link"
+    },
+    "link": {
+      "login": "Login here"
+    },
+    "error": {
+      "emailNotFound": "Email not found.",
+      "required": {
+        "email": "Email is required",
+        "password": "New password is required",
+        "passwordConfirmation": "Password confirmation is required",
+        "passwordConfirmationMismatch": "Password confirmation does not match"
+      },
+      "invalid": {
+        "email": "Invalid email format"
+      }
+    }
+  },
+  "resetPasswordSuccessfully": {
+    "text": {
+      "title": "Password Reset Successful",
+      "description": "Your password has been successfully reset.",
+      "success": "You can now login with your new password.",
+      "checkEmail": "Please check your email for confirmation."
+    },
+    "button": {
+      "login": "Login"
+    }
+  },
   "companyCreate": {
     "text": {
       "welcome": "Welcome to Flexavi 🎉",

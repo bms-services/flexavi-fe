@@ -72,17 +72,16 @@ const DashboardLayout: React.FC = () => {
         }));
     }
 
-    const handleSubmitOtp = (otp: string) => {
-        verifyEmailMyProfileZ.mutateAsync(otp)
-            .then(() => {
-                showMyProfileZ.refetch();
-                setTimeout(() => {
-                    setModal((modal) => ({ ...modal, verifyEmail: false }));
-                }, 1000);
-            })
-            .catch((error) => {
-                console.error('Failed to verify email:', error);
-            });
+    const handleSubmitOtp = async (otp: string) => {
+        try {
+            await verifyEmailMyProfileZ.mutateAsync(otp);
+            await showMyProfileZ.refetch();
+            setTimeout(() => {
+                setModal((modal) => ({ ...modal, verifyEmail: false }));
+            }, 1000);
+        } catch (error) {
+            throw new Error("Failed to verify email");
+        }
     }
 
     const handleResendOtp = () => {

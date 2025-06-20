@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run type-check && vite build --mode production",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "serve": "vite preview",
-    "local:init": "npm run i18next-resources-for-ts toc -i ./public/locales/en -o ./src/@types/resources.ts"
+    "type:check": "tsc --noEmit",
+    "type:generate": "npm run i18next-resources-for-ts toc -i ./public/locales -o ./src/types/i18n-resources.d.ts"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.3",

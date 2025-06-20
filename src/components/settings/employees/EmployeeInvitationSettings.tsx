@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UserPlus, User, DotSquareIcon, XIcon, MailIcon } from "lucide-react";
-import { useGetInvitedEmployees, useInviteEmployee, useResendInviteEmployee, useCancelInvitedEmployee, useGetMyEmployees } from "@/zustand/hooks/useSetting";
+import { useGetInvitedEmployees, useInviteEmployee, useResendInviteEmployee, useCancelInvitedEmployee } from "@/zustand/hooks/useSetting";
 import { EmployeeInvitationStatus, EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes } from "@/zustand/types/employeeT";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
@@ -12,7 +12,7 @@ import { InviteEmployee } from "./InviteEmployee";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import EmployeeInvitationStatusBadge from "./EmployeeInvitationStatusBadge";
 
-export const EmployeeSettings: React.FC = () => {
+export const EmployeeInvitationSettings: React.FC = () => {
   const [modal, setModal] = useState({
     member: false,
     resend: false,
@@ -28,12 +28,10 @@ export const EmployeeSettings: React.FC = () => {
     sorts: {},
   });
 
-  // const getInvitedEmployeesZ = useGetInvitedEmployees(params);
-  // const inviteEmployeeZ = useInviteEmployee();
-  // const resendInviteEmployeeZ = useResendInviteEmployee();
-  // const cancelInvitedEmployeeZ = useCancelInvitedEmployee();
-
-  const getMyEmployeesZ = useGetMyEmployees(params);
+  const getInvitedEmployeesZ = useGetInvitedEmployees(params);
+  const inviteEmployeeZ = useInviteEmployee();
+  const resendInviteEmployeeZ = useResendInviteEmployee();
+  const cancelInvitedEmployeeZ = useCancelInvitedEmployee();
 
   const columns = useMemo<CustomColumnDef<EmployeeRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -124,7 +122,7 @@ export const EmployeeSettings: React.FC = () => {
 
   const handleInviteEmployee = async (data: EmployeeReq) => {
     try {
-      // await inviteEmployeeZ.mutateAsync(data);
+      await inviteEmployeeZ.mutateAsync(data);
       setModal((prev) => ({ ...prev, member: false }));
     } catch (error) {
       console.error("Failed to invite employee:", error);
@@ -134,7 +132,7 @@ export const EmployeeSettings: React.FC = () => {
 
   const handleResendEmployeeInvite = async (id: string) => {
     try {
-      // await resendInviteEmployeeZ.mutateAsync(id);
+      await resendInviteEmployeeZ.mutateAsync(id);
       setModal((prev) => ({ ...prev, resend: false }));
     } catch (error) {
       console.error("Failed to resend employee invite:", error);
@@ -143,7 +141,7 @@ export const EmployeeSettings: React.FC = () => {
 
   const handleCancelEmployeeInvite = async (id: string) => {
     try {
-      // await cancelInvitedEmployeeZ.mutateAsync(id);
+      await cancelInvitedEmployeeZ.mutateAsync(id);
       setModal((prev) => ({ ...prev, cancel: false }));
     } catch (error) {
       console.error("Failed to cancel employee invite:", error);
@@ -161,10 +159,10 @@ export const EmployeeSettings: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <User className="h-5 w-5" />
-          Medewerkers
+          Medewerkers uitnodigingen
         </CardTitle>
         <CardDescription>
-          Beheer alle medewerkers, hun rollen en toegangsrechten binnen het systeem.
+          Hier kun je medewerkers uitnodigen om zich aan te sluiten bij je team. Je kunt hun status beheren en uitnodigingen opnieuw verzenden of annuleren.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -178,9 +176,9 @@ export const EmployeeSettings: React.FC = () => {
 
           <TableTanstack
             columns={columns}
-            data={getMyEmployeesZ.data?.result?.data || []}
-            meta={getMyEmployeesZ.data?.result?.meta}
-            isLoading={getMyEmployeesZ.isLoading}
+            data={getInvitedEmployeesZ.data?.result?.data || []}
+            meta={getInvitedEmployeesZ.data?.result?.meta}
+            isLoading={getInvitedEmployeesZ.isLoading}
             params={params}
             onParamsChange={handleParamsChange}
             filterOptions={{
@@ -208,7 +206,7 @@ export const EmployeeSettings: React.FC = () => {
           title="Weet je het zeker?"
           description="Weet je zeker dat je de uitnodiging opnieuw wilt verzenden?"
           isConfirm
-        // loading={resendInviteEmployeeZ.isPending}
+          loading={resendInviteEmployeeZ.isPending}
         />
 
         <ConfirmDialog
@@ -217,7 +215,7 @@ export const EmployeeSettings: React.FC = () => {
           onConfirm={() => handleCancelEmployeeInvite(employeeId)}
           title="Weet je het zeker?"
           description="Weet je zeker dat je de uitnodiging wilt annuleren?"
-        // loading={cancelInvitedEmployeeZ.isPending}
+          loading={cancelInvitedEmployeeZ.isPending}
         />
       </CardContent>
     </Card>

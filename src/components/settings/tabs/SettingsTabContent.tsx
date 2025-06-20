@@ -41,7 +41,10 @@ export const SettingsTabContent = ({
         <TeamsTabContent />
       </TabsContent>
       <TabsContent value="employees">
-        <EmployeesTabContent />
+        <EmployeesTabContent isInvitation={false} />
+      </TabsContent>
+      <TabsContent value="employees-invitation">
+        <EmployeesTabContent isInvitation={true} />
       </TabsContent>
       <TabsContent value="permissions">
         <PermissionsTabContent />
