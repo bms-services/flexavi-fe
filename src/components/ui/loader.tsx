@@ -77,7 +77,6 @@
 //     );
 // }
 
-import { BoxesLoader } from "react-awesome-loaders";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useGlobalStore } from "@/zustand/stores/loaderStore";
@@ -89,6 +88,40 @@ const defaultMessages = [
     "Spinning up something cool...",
     "Almost there..."
 ];
+
+interface CustomBoxesLoaderProps {
+    color?: string;
+    size?: string;
+}
+
+// Custom boxes loader using framer-motion
+const CustomBoxesLoader = ({ color = "#6366F1", size = "128px" }: CustomBoxesLoaderProps) => {
+    return (
+        <div className="flex items-center justify-center gap-2">
+            {[0, 1, 2, 3].map((index) => (
+                <motion.div
+                    key={index}
+                    initial={{ y: 0 }}
+                    animate={{ y: [0, -20, 0] }}
+                    transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        delay: index * 0.2,
+                        ease: "easeInOut",
+                    }}
+                    style={{
+                        width: size,
+                        height: size,
+                        maxWidth: "25%",
+                        aspectRatio: "1",
+                        backgroundColor: color,
+                        borderRadius: "8px",
+                    }}
+                />
+            ))}
+        </div>
+    );
+};
 
 export default function Loader(): JSX.Element | null {
     const { show, message } = useGlobalStore();
@@ -121,10 +154,9 @@ export default function Loader(): JSX.Element | null {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <BoxesLoader
-                        boxColor={"#6366F1"}
-                        desktopSize={"128px"}
-                        mobileSize={"80px"}
+                    <CustomBoxesLoader
+                        color="#6366F1"
+                        size="60px"
                     />
 
                     <div className="fixed bottom-8 left-0 w-full flex justify-center pointer-events-none">

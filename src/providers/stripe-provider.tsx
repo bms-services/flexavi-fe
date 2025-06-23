@@ -1,8 +1,7 @@
 // components/Stripe/StripeProvider.tsx
 import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe, SetupIntent, StripeElementsOptionsClientSecret } from '@stripe/stripe-js';
-import { ReactNode, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { loadStripe } from '@stripe/stripe-js';
+import { ReactNode } from 'react';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 

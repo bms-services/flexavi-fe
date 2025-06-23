@@ -1,0 +1,894 @@
+{
+  "en": {
+    "language": "English",
+    "login": {
+      "text": {
+        "title": "Login",
+        "description": "Please enter your credentials to login.",
+        "notHaveAccount": "Don't have an account?"
+      },
+      "link": {
+        "register": "Register here",
+        "forgotPassword": "Forgot your password?"
+      },
+      "placeholder": {
+        "email": "Enter your email",
+        "password": "Enter your password"
+      },
+      "label": {
+        "email": "Email",
+        "password": "Password",
+        "rememberMe": "Remember Me"
+      },
+      "button": {
+        "submit": "Login"
+      },
+      "error": {
+        "invalidCredentials": "Invalid email or password.",
+        "userNotFound": "User not found.",
+        "accountLocked": "Your account is locked. Please contact support.",
+        "required": {
+          "email": "Email is required",
+          "password": "Password is required"
+        }
+      }
+    },
+    "register": {
+      "text": {
+        "title": "Register",
+        "description": "Create a new account.",
+        "alreadyHaveAccount": "Already have an account?"
+      },
+      "link": {
+        "login": "Login here"
+      },
+      "placeholder": {
+        "name": "Enter your name",
+        "email": "Enter your email",
+        "phone": "Enter your phone number",
+        "password": "Enter your password",
+        "passwordConfirmation": "Confirm your password"
+      },
+      "label": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "password": "Password",
+        "passwordConfirmation": "Confirm Password"
+      },
+      "button": {
+        "submit": "Register"
+      },
+      "error": {
+        "emailExists": "Email already exists.",
+        "weakPassword": "Password is too weak.",
+        "passwordMismatch": "Passwords do not match.",
+        "required": {
+          "name": "Name is required",
+          "email": "Email is required",
+          "phone": "Phone number is required",
+          "password": "Password is required",
+          "passwordConfirmation": "Password confirmation is required",
+          "passwordConfirmationMismatch": "Password confirmation does not match"
+        }
+      }
+    },
+    "registerSuccessfully": {
+      "text": {
+        "title": "Registration Successful",
+        "description": "You have successfully registered.",
+        "welcome": "Welcome to our platform!",
+        "activate": "To activate your trial, please login and add credit card information."
+      },
+      "button": {
+        "login": "Login"
+      }
+    },
+    "registerEmployee": {
+      "text": {
+        "title": "Register Employee",
+        "description": "Create a new employee account.",
+        "subDescription": "You invited an employee to join",
+        "subDescription2": "Please fill in the details below to create their account.",
+        "alreadyHaveAccount": "Does the employee already have an account?"
+      },
+      "link": {
+        "login": "Login here"
+      },
+      "placeholder": {
+        "email": "Enter employee email",
+        "name": "Enter employee name",
+        "phone": "Enter employee phone number",
+        "password": "Enter employee password",
+        "passwordConfirmation": "Confirm employee password"
+      },
+      "label": {
+        "email": "Employee Email",
+        "name": "Employee Name",
+        "phone": "Employee Phone",
+        "password": "Employee Password",
+        "passwordConfirmation": "Confirm Employee Password"
+      },
+      "button": {
+        "submit": "Register Employee"
+      },
+      "error": {
+        "emailExists": "Employee email already exists.",
+        "weakPassword": "Employee password is too weak.",
+        "passwordMismatch": "Employee passwords do not match.",
+        "required": {
+          "email": "Employee email is required",
+          "name": "Employee name is required",
+          "phone": "Employee phone number is required",
+          "password": "Employee password is required",
+          "passwordConfirmation": "Employee password confirmation is required",
+          "passwordConfirmationMismatch": "Employee password confirmation does not match"
+        }
+      }
+    },
+    "forgotPassword": {
+      "text": {
+        "title": "Forgot Password",
+        "description": "Enter your email to reset your password.",
+        "haveAccount": "Already have an account?"
+      },
+      "link": {
+        "loginHere": "Login here"
+      },
+      "placeholder": {
+        "email": "Enter your email"
+      },
+      "label": {
+        "email": "Email"
+      },
+      "button": {
+        "submit": "Send Reset Link"
+      },
+      "error": {
+        "emailNotFound": "Email not found.",
+        "required": {
+          "email": "Email is required"
+        }
+      }
+    },
+    "forgotPasswordSuccessfully": {
+      "text": {
+        "title": "Password Reset Link Sent",
+        "description": "A password reset link has been sent to your email.",
+        "success": "Now you can reset your password.",
+        "checkEmail": "Please check your email and follow the instructions to reset your password."
+      },
+      "button": {
+        "login": "Login"
+      }
+    },
+    "resetPassword": {
+      "text": {
+        "title": "Reset Password",
+        "description": "Enter your email to reset your password.",
+        "subDescription": "Please enter your new password below.",
+        "alreadyHaveAccount": "Already have an account?"
+      },
+      "label": {
+        "email": "Email",
+        "password": "New Password",
+        "passwordConfirmation": "Confirm New Password"
+      },
+      "placeholder": {
+        "email": "Enter your email",
+        "password": "Enter your new password",
+        "passwordConfirmation": "Confirm your new password"
+      },
+      "button": {
+        "submit": "Send Reset Link"
+      },
+      "link": {
+        "login": "Login here"
+      },
+      "error": {
+        "emailNotFound": "Email not found.",
+        "required": {
+          "email": "Email is required",
+          "password": "New password is required",
+          "passwordConfirmation": "Password confirmation is required",
+          "passwordConfirmationMismatch": "Password confirmation does not match"
+        },
+        "invalid": {
+          "email": "Invalid email format"
+        }
+      }
+    },
+    "resetPasswordSuccessfully": {
+      "text": {
+        "title": "Password Reset Successful",
+        "description": "Your password has been successfully reset.",
+        "success": "You can now login with your new password.",
+        "checkEmail": "Please check your email for confirmation."
+      },
+      "button": {
+        "login": "Login"
+      }
+    },
+    "companyCreate": {
+      "text": {
+        "welcome": "Welcome to Flexavi 🎉",
+        "excited": "We're excited to have you on board. Let's get you set up and ready to go!",
+        "title": "Create a Company",
+        "titleAddress": "Address",
+        "titleContact": "Contact",
+        "description": "Enter your company details to create a new company.",
+        "descriptionAddress": "Enter your company address to create a new company.",
+        "descriptionContact": "Enter your company contact details to create a new company."
+      },
+      "placeholder": {
+        "name": "Bijv. Mijn Dakbedrijf B.V.",
+        "email": "dakbedrijf@company.nl",
+        "phone": "+31 6 12345678",
+        "address": "Enter your company address",
+        "tax": "NL123456789B01",
+        "kvk": "Bijv. 12345678",
+        "website": "https://jouwbedrijf.nl",
+        "logo": "Upload your company logo",
+        "description": "Enter a short description of your company"
+      },
+      "label": {
+        "name": "Company Name",
+        "email": "Company Email",
+        "phone": "Company Phone",
+        "address": "Company Address",
+        "tax": "Company Tax Number",
+        "kvk": "Company KVK Number",
+        "website": "Company Website",
+        "logo": "Company Logo",
+        "description": "Company Description"
+      },
+      "button": {
+        "submit": "Create Company",
+        "start": "Get Started",
+        "next": "Next",
+        "back": "Back",
+        "logout": "Logout"
+      },
+      "error": {
+        "required": {
+          "name": "Company name is required",
+          "email": "Company email is required",
+          "phone": "Company phone number is required",
+          "address": "Company address is required",
+          "tax": "Company tax number is required",
+          "kvk": "Company KVK number is required",
+          "website": "Company website is required",
+          "logo": "Company logo is required",
+          "description": "Company description is required"
+        },
+        "invalid": {
+          "email": "Please enter a valid email address",
+          "phone": "Please enter a valid phone number",
+          "website": "Please enter a valid website URL"
+        }
+      }
+    },
+    "banner": {
+      "emailNotVerified": {
+        "title": "Email not Verified",
+        "description": "You're almost there! We've sent a verification code to your email. Please check your inbox and verify your account to get trial access to all features.",
+        "cta": "Verify Now"
+      },
+      "paymentMethod": {
+        "title": "Payment Method",
+        "description": "Get your trial access to all features by adding a payment method.",
+        "cta": "Add Payment Method"
+      },
+      "otp": {
+        "title": "Verify Your Email",
+        "description": "Please enter the OTP sent to your email address to verify your account. If you did not receive the OTP, please check your spam folder or request a new one.",
+        "cta": "Verify OTP",
+        "dontHaveOtp": "Don't have an OTP?",
+        "requestNewOtp": "Request a new OTP"
+      }
+    },
+    "settings": {
+      "payment": {
+        "title": "Payment Method",
+        "description": "Add a payment method to get your trial access to all features.",
+        "cta": "Add Payment Method",
+        "error": {
+          "required": {
+            "name": "Name on Card is required",
+            "number": "Card Number is required",
+            "expiry": "Expiry Date is required",
+            "cvc": "CVC is required"
+          }
+        }
+      },
+      "team": {
+        "title": "Team Management",
+        "description": {
+          "color": "Select a color for the team member",
+          "edit": "Edit team member details",
+          "create": "Create a new team member"
+        },
+        "placeholder": {
+          "name": "Enter team member's name",
+          "description": "Enter a short description of the team member",
+          "color": "Select a color for the team member",
+          "type": "Select a type for the team member"
+        },
+        "label": {
+          "name": "Name",
+          "description": "Description",
+          "color": "Color",
+          "type": "Type"
+        },
+        "error": {
+          "required": {
+            "name": "Name is required",
+            "description": "Description is required",
+            "color": "Color is required",
+            "type": "Type is required"
+          },
+          "maxLength": {
+            "name": "Name must be at most 255 characters long",
+            "description": "Description must be at most 255 characters long"
+          }
+        },
+        "button": {
+          "add": "Add Team Member",
+          "edit": "Edit Team Member",
+          "delete": "Delete Team Member",
+          "save": "Save Changes",
+          "cancel": "Cancel",
+          "submit": "Submit"
+        },
+        "type": {
+          "sales": "Sales",
+          "executive": "Executive"
+        },
+        "create": "Create Team Member",
+        "edit": "Edit Team Member"
+      },
+      "teamMember": {
+        "title": "Team Member Management",
+        "description": "Manage your team members' details",
+        "placeholder": {
+          "name": "Enter team member's name",
+          "email": "Enter team member's email",
+          "phone": "Enter team member's phone number",
+          "role": "Select team member's role",
+          "workingDays": "Select team member's working days",
+          "startTime": "Select team member's working hours",
+          "endTime": "Select team member's end time"
+        },
+        "label": {
+          "name": "Name",
+          "email": "Email",
+          "phone": "Phone",
+          "role": "Role",
+          "workingDays": "Working Days",
+          "startTime": "Working Hours",
+          "endTime": "End Time"
+        },
+        "button": {
+          "submit": "Save Team Member"
+        },
+        "error": {
+          "required": {
+            "name": "Team member name is required",
+            "email": "Team member email is required",
+            "phone": "Team member phone number is required",
+            "role": "Team member role is required",
+            "workingDays": "Team member working days are required",
+            "startTime": "Team member start time is required",
+            "endTime": "Team member end time is required"
+          },
+          "maxLength": {
+            "name": "Name must be at most 255 characters long",
+            "email": "Email must be at most 255 characters long",
+            "phone": "Phone number must be at most 20 characters long"
+          },
+          "startTimeLessThanEndTime": "Start time must be before end time",
+          "endTimeGreaterThanStartTime": "End time must be after start time"
+        }
+      },
+      "company": {
+        "title": "Company Management",
+        "description": "Manage your company details",
+        "placeholder": {
+          "name": "Enter company name",
+          "email": "Enter company email",
+          "phone": "Enter company phone number",
+          "address": "Enter company address",
+          "tax": "Enter company tax number",
+          "kvk": "Enter company KVK number",
+          "website": "Enter company website",
+          "logo": "Upload company logo",
+          "description": "Enter a short description of the company"
+        },
+        "label": {
+          "name": "Company Name",
+          "email": "Company Email",
+          "phone": "Company Phone",
+          "address": "Company Address",
+          "tax": "Company Tax Number",
+          "kvk": "Company KVK Number",
+          "website": "Company Website",
+          "logo": "Company Logo",
+          "description": "Company Description"
+        },
+        "button": {
+          "submit": "Create Company"
+        },
+        "error": {
+          "required": {
+            "name": "Company name is required",
+            "email": "Company email is required",
+            "phone": "Company phone number is required",
+            "address": "Company address is required",
+            "tax": "Company tax number is required",
+            "kvk": "Company KVK number is required",
+            "website": "Company website is required",
+            "logo": "Company logo is required",
+            "description": "Company description is required"
+          }
+        }
+      }
+    }
+  },
+  "nl": {
+    "language": "Nederlands",
+    "login": {
+      "text": {
+        "title": "Inloggen",
+        "description": "Voer uw gegevens in om in te loggen.",
+        "notHaveAccount": "Heeft u nog geen account?"
+      },
+      "link": {
+        "register": "Registreer hier",
+        "forgotPassword": "Wachtwoord vergeten?"
+      },
+      "placeholder": {
+        "email": "Vul uw e-mailadres in",
+        "password": "Vul uw wachtwoord in"
+      },
+      "label": {
+        "email": "E-mailadres",
+        "password": "Wachtwoord",
+        "rememberMe": "Onthoud mij"
+      },
+      "button": {
+        "submit": "Inloggen"
+      },
+      "error": {
+        "invalidCredentials": "Ongeldig e-mailadres of wachtwoord.",
+        "userNotFound": "Gebruiker niet gevonden.",
+        "accountLocked": "Uw account is geblokkeerd. Neem contact op met de support.",
+        "required": {
+          "email": "E-mailadres is verplicht",
+          "password": "Wachtwoord is verplicht"
+        }
+      }
+    },
+    "register": {
+      "text": {
+        "title": "Registreren",
+        "description": "Maak een nieuw account aan.",
+        "alreadyHaveAccount": "Heeft u al een account?"
+      },
+      "link": {
+        "login": "Log hier in"
+      },
+      "placeholder": {
+        "name": "Vul uw naam in",
+        "email": "Vul uw e-mailadres in",
+        "phone": "Vul uw telefoonnummer in",
+        "password": "Vul uw wachtwoord in",
+        "passwordConfirmation": "Bevestig uw wachtwoord"
+      },
+      "label": {
+        "name": "Naam",
+        "email": "E-mailadres",
+        "phone": "Telefoonnummer",
+        "password": "Wachtwoord",
+        "passwordConfirmation": "Bevestig wachtwoord"
+      },
+      "button": {
+        "submit": "Registreren"
+      },
+      "error": {
+        "emailExists": "E-mailadres bestaat al.",
+        "weakPassword": "Wachtwoord is te zwak.",
+        "passwordMismatch": "Wachtwoorden komen niet overeen.",
+        "required": {
+          "name": "Naam is verplicht",
+          "email": "E-mailadres is verplicht",
+          "phone": "Telefoonnummer is verplicht",
+          "password": "Wachtwoord is verplicht",
+          "passwordConfirmation": "Wachtwoordbevestiging is verplicht",
+          "passwordConfirmationMismatch": "Wachtwoordbevestiging komt niet overeen"
+        }
+      }
+    },
+    "registerSuccessfully": {
+      "text": {
+        "title": "Registratie succesvol",
+        "description": "U bent succesvol geregistreerd.",
+        "welcome": "Welkom op ons platform!",
+        "activate": "Om uw proefperiode te activeren, log in en voeg uw creditcardgegevens toe."
+      },
+      "button": {
+        "login": "Inloggen"
+      }
+    },
+    "registerEmployee": {
+      "text": {
+        "title": "Medewerker registreren",
+        "description": "Maak een nieuw medewerkersaccount aan.",
+        "subDescription": "U heeft een medewerker uitgenodigd om deel te nemen",
+        "subDescription2": "Vul hieronder de gegevens in om het account aan te maken.",
+        "alreadyHaveAccount": "Heeft de medewerker al een account?"
+      },
+      "link": {
+        "login": "Log hier in"
+      },
+      "placeholder": {
+        "email": "Vul het e-mailadres van de medewerker in",
+        "name": "Vul de naam van de medewerker in",
+        "phone": "Vul het telefoonnummer van de medewerker in",
+        "password": "Vul het wachtwoord van de medewerker in",
+        "passwordConfirmation": "Bevestig het wachtwoord van de medewerker"
+      },
+      "label": {
+        "email": "E-mailadres medewerker",
+        "name": "Naam medewerker",
+        "phone": "Telefoon medewerker",
+        "password": "Wachtwoord medewerker",
+        "passwordConfirmation": "Bevestig wachtwoord medewerker"
+      },
+      "button": {
+        "submit": "Medewerker registreren"
+      },
+      "error": {
+        "emailExists": "E-mailadres van medewerker bestaat al.",
+        "weakPassword": "Wachtwoord van medewerker is te zwak.",
+        "passwordMismatch": "Wachtwoorden van medewerker komen niet overeen.",
+        "required": {
+          "email": "E-mailadres van medewerker is verplicht",
+          "name": "Naam van medewerker is verplicht",
+          "phone": "Telefoonnummer van medewerker is verplicht",
+          "password": "Wachtwoord van medewerker is verplicht",
+          "passwordConfirmation": "Wachtwoordbevestiging van medewerker is verplicht",
+          "passwordConfirmationMismatch": "Wachtwoordbevestiging van medewerker komt niet overeen"
+        }
+      }
+    },
+    "forgotPassword": {
+      "text": {
+        "title": "Wachtwoord vergeten",
+        "description": "Vul uw e-mailadres in om uw wachtwoord te resetten.",
+        "haveAccount": "Heeft u al een account?"
+      },
+      "link": {
+        "loginHere": "Log hier in"
+      },
+      "placeholder": {
+        "email": "Vul uw e-mailadres in"
+      },
+      "label": {
+        "email": "E-mailadres"
+      },
+      "button": {
+        "submit": "Reset link versturen"
+      },
+      "error": {
+        "emailNotFound": "E-mailadres niet gevonden.",
+        "required": {
+          "email": "E-mailadres is verplicht"
+        }
+      }
+    },
+    "forgotPasswordSuccessfully": {
+      "text": {
+        "title": "Wachtwoord reset link verzonden",
+        "description": "Er is een link naar uw e-mail gestuurd om uw wachtwoord te resetten.",
+        "success": "U kunt nu uw wachtwoord resetten.",
+        "checkEmail": "Controleer uw e-mail en volg de instructies om uw wachtwoord te resetten."
+      },
+      "button": {
+        "login": "Inloggen"
+      }
+    },
+    "resetPassword": {
+      "text": {
+        "title": "Wachtwoord resetten",
+        "description": "Vul uw e-mailadres in om uw wachtwoord te resetten.",
+        "subDescription": "Voer hieronder uw nieuwe wachtwoord in.",
+        "alreadyHaveAccount": "Heeft u al een account?"
+      },
+      "label": {
+        "email": "E-mailadres",
+        "password": "Nieuw wachtwoord",
+        "passwordConfirmation": "Bevestig nieuw wachtwoord"
+      },
+      "placeholder": {
+        "email": "Vul uw e-mailadres in",
+        "password": "Vul uw nieuwe wachtwoord in",
+        "passwordConfirmation": "Bevestig uw nieuwe wachtwoord"
+      },
+      "button": {
+        "submit": "Wachtwoord resetten"
+      },
+      "link": {
+        "login": "Log hier in"
+      },
+      "error": {
+        "emailNotFound": "E-mailadres niet gevonden.",
+        "required": {
+          "email": "E-mailadres is verplicht",
+          "password": "Nieuw wachtwoord is verplicht",
+          "passwordConfirmation": "Bevestiging van nieuw wachtwoord is verplicht",
+          "passwordConfirmationMismatch": "Wachtwoordbevestiging komt niet overeen"
+        }
+      }
+    },
+    "resetPasswordSuccessfully": {
+      "text": {
+        "title": "Wachtwoord succesvol gereset",
+        "description": "Uw wachtwoord is succesvol gereset.",
+        "success": "U kunt nu inloggen met uw nieuwe wachtwoord.",
+        "checkEmail": "Controleer uw e-mail voor bevestiging."
+      },
+      "button": {
+        "login": "Inloggen"
+      }
+    },
+    "companyCreate": {
+      "text": {
+        "welcome": "Welkom bij Flexavi 🎉",
+        "excited": "We zijn blij dat je erbij bent. Laten we aan de slag gaan!",
+        "title": "Maak een Bedrijf aan",
+        "titleAddress": "Adres",
+        "titleContact": "Contact",
+        "description": "Vul je bedrijfsgegevens in om een nieuw bedrijf aan te maken.",
+        "descriptionAddress": "Vul het adres van je bedrijf in om een nieuw bedrijf aan te maken.",
+        "descriptionContact": "Vul de contactgegevens van je bedrijf in om een nieuw bedrijf aan te maken."
+      },
+      "placeholder": {
+        "name": "Bijv. Mijn Dakbedrijf B.V.",
+        "email": "dakbedrijf@bedrijf.nl",
+        "phone": "+31 6 12345678",
+        "address": "Vul het adres van je bedrijf in",
+        "tax": "NL123456789B01",
+        "kvk": "Bijv. 12345678",
+        "website": "https://jouwbedrijf.nl",
+        "logo": "Upload het logo van je bedrijf",
+        "description": "Voer een korte beschrijving van je bedrijf in"
+      },
+      "label": {
+        "name": "Bedrijfsnaam",
+        "email": "Bedrijfsemail",
+        "phone": "Telefoonnummer bedrijf",
+        "address": "Bedrijfsadres",
+        "tax": "BTW-nummer bedrijf",
+        "kvk": "KVK-nummer bedrijf",
+        "website": "Website bedrijf",
+        "logo": "Bedrijfslogo",
+        "description": "Bedrijfsbeschrijving"
+      },
+      "button": {
+        "submit": "Bedrijf aanmaken",
+        "start": "Aan de slag",
+        "next": "Volgende",
+        "back": "Terug",
+        "logout": "Uitloggen"
+      },
+      "error": {
+        "required": {
+          "name": "Bedrijfsnaam is verplicht",
+          "email": "Bedrijfsemail is verplicht",
+          "phone": "Telefoonnummer van het bedrijf is verplicht",
+          "address": "Bedrijfsadres is verplicht",
+          "tax": "BTW-nummer van het bedrijf is verplicht",
+          "kvk": "KVK-nummer van het bedrijf is verplicht",
+          "website": "Website van het bedrijf is verplicht",
+          "logo": "Bedrijfslogo is verplicht",
+          "description": "Beschrijving van het bedrijf is verplicht"
+        },
+        "invalid": {
+          "email": "Voer een geldig e-mailadres in",
+          "phone": "Voer een geldig telefoonnummer in",
+          "website": "Voer een geldige website-URL in"
+        }
+      }
+    },
+    "banner": {
+      "emailNotVerified": {
+        "title": "E-mail niet geverifieerd",
+        "description": "Je bent er bijna! We hebben een verificatiecode naar je e-mail gestuurd. Controleer je inbox en verifieer je account om toegang tot alle functies te krijgen.",
+        "cta": "Verifieer nu"
+      },
+      "paymentMethod": {
+        "title": "Betaalmethode",
+        "description": "Krijg toegang tot alle functies door een betaalmethode toe te voegen.",
+        "cta": "Voeg betaalmethode toe"
+      },
+      "otp": {
+        "title": "Verifieer je e-mailadres",
+        "description": "Voer de OTP-code in die naar je e-mailadres is gestuurd om je account te verifiëren. Als je de OTP niet hebt ontvangen, controleer dan je spamfolder of vraag een nieuwe aan.",
+        "cta": "Verifieer OTP",
+        "dontHaveOtp": "Geen OTP ontvangen?",
+        "requestNewOtp": "Vraag een nieuwe OTP aan"
+      }
+    },
+    "settings": {
+      "payment": {
+        "title": "Betaalmethode",
+        "description": "Voeg een betaalmethode toe om toegang tot alle functies te krijgen.",
+        "cta": "Voeg betaalmethode toe",
+        "error": {
+          "required": {
+            "name": "Naam op de kaart is verplicht",
+            "number": "Kaartnummer is verplicht",
+            "expiry": "Vervaldatum is verplicht",
+            "cvc": "CVC is verplicht"
+          }
+        }
+      },
+      "team": {
+        "title": "Teambeheer",
+        "description": {
+          "color": "Selecteer een kleur voor het teamlid",
+          "edit": "Bewerk de details van het teamlid",
+          "create": "Maak een nieuw teamlid aan"
+        },
+        "placeholder": {
+          "name": "Voer de naam van het teamlid in",
+          "description": "Voer een korte beschrijving van het teamlid in",
+          "color": "Selecteer een kleur voor het teamlid",
+          "type": "Selecteer een type voor het teamlid"
+        },
+        "label": {
+          "name": "Naam",
+          "description": "Beschrijving",
+          "color": "Kleur",
+          "type": "Type"
+        },
+        "error": {
+          "required": {
+            "name": "Naam is verplicht",
+            "description": "Beschrijving is verplicht",
+            "color": "Kleur is verplicht",
+            "type": "Type is verplicht"
+          },
+          "maxLength": {
+            "name": "Naam mag maximaal 255 tekens lang zijn",
+            "description": "Beschrijving mag maximaal 255 tekens lang zijn"
+          }
+        },
+        "team_member": {
+          "title": "Teamlid",
+          "description": "Beheer je teamleden",
+          "placeholder": {
+            "name": "Voer de naam van het teamlid in",
+            "description": "Voer een korte beschrijving van het teamlid in",
+            "color": "Selecteer een kleur voor het teamlid",
+            "type": "Selecteer een type voor het teamlid"
+          },
+          "label": {
+            "name": "Naam",
+            "description": "Beschrijving",
+            "color": "Kleur",
+            "type": "Type"
+          },
+          "error": {
+            "required": {
+              "name": "Naam is verplicht",
+              "description": "Beschrijving is verplicht",
+              "color": "Kleur is verplicht",
+              "type": "Type is verplicht"
+            },
+            "maxLength": {
+              "name": "Naam mag maximaal 255 tekens lang zijn",
+              "description": "Beschrijving mag maximaal 255 tekens lang zijn"
+            }
+          }
+        },
+        "button": {
+          "add": "Teamlid toevoegen",
+          "edit": "Teamlid bewerken",
+          "delete": "Teamlid verwijderen",
+          "save": "Wijzigingen opslaan",
+          "cancel": "Annuleren",
+          "submit": "Verzenden"
+        },
+        "type": {
+          "sales": "Verkoop",
+          "executive": "Directie"
+        },
+        "create": "Teamlid aanmaken",
+        "edit": "Teamlid bewerken"
+      },
+      "teamMember": {
+        "title": "Teamlidbeheer",
+        "description": "Beheer de details van je teamleden",
+        "placeholder": {
+          "name": "Voer de naam van het teamlid in",
+          "email": "Voer het e-mailadres van het teamlid in",
+          "phone": "Voer het telefoonnummer van het teamlid in",
+          "role": "Selecteer de rol van het teamlid",
+          "workingDays": "Selecteer de werkdagen van het teamlid",
+          "startTime": "Selecteer de starttijd van het teamlid",
+          "endTime": "Selecteer de eindtijd van het teamlid"
+        },
+        "label": {
+          "name": "Naam",
+          "email": "E-mail",
+          "phone": "Telefoonnummer",
+          "role": "Rol",
+          "workingDays": "Werkdagen",
+          "startTime": "Starttijd",
+          "endTime": "Eindtijd"
+        },
+        "error": {
+          "required": {
+            "name": "Naam is verplicht",
+            "email": "E-mail is verplicht",
+            "phone": "Telefoonnummer is verplicht",
+            "role": "Rol is verplicht",
+            "workingDays": "Werkdagen zijn verplicht",
+            "startTime": "Starttijd is verplicht",
+            "endTime": "Eindtijd is verplicht"
+          },
+          "maxLength": {
+            "name": "Naam mag maximaal 255 tekens lang zijn",
+            "email": "E-mail mag maximaal 255 tekens lang zijn",
+            "phone": "Telefoonnummer mag maximaal 20 tekens lang zijn"
+          },
+          "startTimeLessThanEndTime": "Starttijd moet voor de eindtijd liggen",
+          "endTimeGreaterThanStartTime": "Eindtijd moet na de starttijd liggen"
+        }
+      },
+      "company": {
+        "title": "Bedrijfsinstellingen",
+        "description": "Beheer je bedrijfsinstellingen",
+        "placeholder": {
+          "name": "Voer de naam van het bedrijf in",
+          "email": "Voer het e-mailadres van het bedrijf in",
+          "phone": "Voer het telefoonnummer van het bedrijf in",
+          "address": "Voer het adres van het bedrijf in",
+          "tax": "Voer het BTW-nummer van het bedrijf in",
+          "kvk": "Voer het KVK-nummer van het bedrijf in",
+          "website": "Voer de website van het bedrijf in",
+          "logo": "Upload het logo van het bedrijf",
+          "description": "Voer een korte beschrijving van het bedrijf in"
+        },
+        "label": {
+          "name": "Bedrijfsnaam",
+          "email": "Bedrijfsemail",
+          "phone": "Telefoonnummer bedrijf",
+          "address": "Bedrijfsadres",
+          "tax": "BTW-nummer bedrijf",
+          "kvk": "KVK-nummer bedrijf",
+          "website": "Website bedrijf",
+          "logo": "Bedrijfslogo",
+          "description": "Bedrijfsbeschrijving"
+        },
+        "button": {
+          "submit": "Bedrijf bijwerken"
+        },
+        "error": {
+          "required": {
+            "name": "Bedrijfsnaam is verplicht",
+            "email": "Bedrijfsemail is verplicht",
+            "phone": "Telefoonnummer van het bedrijf is verplicht",
+            "address": "Bedrijfsadres is verplicht",
+            "tax": "BTW-nummer van het bedrijf is verplicht",
+            "kvk": "KVK-nummer van het bedrijf is verplicht",
+            "website": "Website van het bedrijf is verplicht",
+            "logo": "Bedrijfslogo is verplicht",
+            "description": "Beschrijving van het bedrijf is verplicht"
+          }
+        }
+      }
+    }
+  }
+}

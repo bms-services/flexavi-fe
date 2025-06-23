@@ -65,7 +65,7 @@ export const useDeleteMyCompany = () => {
 }
 
 // ------ Team ------ \\
-export const useGetMyTeams = (params?: ParamGlobal) => {
+export const useGetMyTeams = (params: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<TeamRes>>({
         queryKey: ['my-teams', params],
         queryFn: () => getMyTeamsService(params),
@@ -105,7 +105,7 @@ export const useAddMemberMyTeam = () => {
 };
 
 // ------ Employee ------ \\
-export const useGetMyEmployees = (params?: ParamGlobal) => {
+export const useGetMyEmployees = (params: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
         queryKey: ['my-employees', params],
         queryFn: () => getMyEmployeesService(params),
@@ -134,7 +134,7 @@ export const useDeleteMyEmployee = () => {
 };
 
 // ------ Employee Invitation ------ \\
-export const useGetInvitedEmployees = (params?: ParamGlobal) => {
+export const useGetInvitedEmployees = (params: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
         queryKey: ['invited-employees', params],
         queryFn: () => getInvitedEmployeesService(params),

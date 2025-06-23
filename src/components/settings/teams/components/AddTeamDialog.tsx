@@ -36,7 +36,7 @@ interface AddTeamDialogProps {
   onStore: (values: TeamReq) => void;
   onUpdate: (id: string, values: TeamReq) => void;
   teamId?: string;
-  team?: TeamRes;
+  team: TeamRes | null;
 }
 
 export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({

@@ -4,17 +4,14 @@ import HttpBackend from "i18next-http-backend";
 
 const lng = import.meta.env.VITE_LOCAL as string;
 
-export const defaultNS = "auth";
 i18n
   .use(initReactI18next)
   .use(HttpBackend)
   .init({
     lng,
     fallbackLng: lng,
-    ns: ["auth", "dashboard"],
-    defaultNS,
     backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json",
+      loadPath: "/locales/{{lng}}.json",
     },
     debug: true,
     interpolation: {

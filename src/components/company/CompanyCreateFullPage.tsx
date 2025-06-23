@@ -1,8 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Company } from '@/types/company';
 import { useTranslation } from 'react-i18next';
-import { postSettingCompanyStore } from '@/actions/settingAction';
-import { useAppDispatch } from '@/hooks/use-redux';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

@@ -70,64 +70,64 @@ const baseRouter = createBrowserRouter([
                 path: "login",
                 element: <Login />,
                 handle: {
-                    title: () => i18n.t("auth:login.text.title"),
-                    description: () => i18n.t("auth:login.text.description"),
+                    title: () => i18n.t("login.text.title"),
+                    description: () => i18n.t("login.text.description"),
                 },
             },
             {
                 path: "register",
                 element: <Register />,
                 handle: {
-                    title: () => i18n.t("auth:register.text.title"),
-                    description: () => i18n.t("auth:register.text.description"),
+                    title: () => i18n.t("register.text.title"),
+                    description: () => i18n.t("register.text.description"),
                 },
             },
             {
                 path: "register/employee",
                 element: <RegisterEmployee />,
                 handle: {
-                    title: () => i18n.t("auth:registerEmployee.text.title"),
-                    description: () => i18n.t("auth:registerEmployee.text.description"),
+                    title: () => i18n.t("registerEmployee.text.title"),
+                    description: () => i18n.t("registerEmployee.text.description"),
                 },
             },
             {
                 path: "register/success",
                 element: <RegisterSuccessfully />,
                 handle: {
-                    title: () => i18n.t("auth:registerSuccessfully.text.title"),
-                    description: () => i18n.t("auth:registerSuccessfully.text.description"),
+                    title: () => i18n.t("registerSuccessfully.text.title"),
+                    description: () => i18n.t("registerSuccessfully.text.description"),
                 },
             },
             {
                 path: "forgot-password",
                 element: <ForgotPassword />,
                 handle: {
-                    title: () => i18n.t("auth:forgotPassword.text.title"),
-                    description: () => i18n.t("auth:forgotPassword.text.description"),
+                    title: () => i18n.t("forgotPassword.text.title"),
+                    description: () => i18n.t("forgotPassword.text.description"),
                 },
             },
             {
                 path: "forgot-password/success",
                 element: <ForgotPasswordSuccessfully />,
                 handle: {
-                    title: () => i18n.t("auth:forgotPasswordSuccessfully.text.title"),
-                    description: () => i18n.t("auth:forgotPasswordSuccessfully.text.description"),
+                    title: () => i18n.t("forgotPasswordSuccessfully.text.title"),
+                    description: () => i18n.t("forgotPasswordSuccessfully.text.description"),
                 },
             },
             {
                 path: "reset-password",
                 element: <ResetPassword />,
                 handle: {
-                    title: () => i18n.t("auth:resetPassword.text.title"),
-                    description: () => i18n.t("auth:resetPassword.text.description"),
+                    title: () => i18n.t("resetPassword.text.title"),
+                    description: () => i18n.t("resetPassword.text.description"),
                 },
             },
             {
                 path: "reset-password/success",
                 element: <ResetPasswordSuccessfully />,
                 handle: {
-                    title: () => i18n.t("auth:resetPasswordSuccessfully.text.title"),
-                    description: () => i18n.t("auth:resetPasswordSuccessfully.text.description"),
+                    title: () => i18n.t("resetPasswordSuccessfully.text.title"),
+                    description: () => i18n.t("resetPasswordSuccessfully.text.description"),
                 },
             }
         ],

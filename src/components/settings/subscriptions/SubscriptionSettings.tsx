@@ -1,29 +1,20 @@
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { mockInvoices } from "@/data/mockInvoices";
-import { PlanCard } from "./components/PlanCard";
-import { InvoiceHistory } from "./components/InvoiceHistory";
-import { CurrentPlan } from "./components/CurrentPlan";
-import { CancelSubscription } from "./components/CancelSubscription";
-import { useAppDispatch } from "@/hooks/use-redux";
+// import { PlanCard } from "./components/PlanCard";
 
-import { useSelector } from "react-redux";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { CompanyPackageItem, Package, PackageItem, PackageTypeEnum, PackageTypeT } from "@/types/package";
-import { User } from "@/types/user";
+import { PackageTypeEnum, PackageTypeT } from "@/types/package";
 
 
 
 export const SubscriptionSettings = () => {
-  const dispatch = useAppDispatch();
-
   const [packageType, setPackageType] = useState<PackageTypeT>(PackageTypeEnum.MONTHLY);
-  const [activePackage, setActivePackage] = useState<string | null>(null);
-  const [packageMonthly, setPackageMonthly] = useState<PackageItem[]>([]);
-  const [packageYearly, setPackageYearly] = useState<PackageItem[]>([]);
+  // const [activePackage, setActivePackage] = useState<string | null>(null);
+  // const [packageMonthly, setPackageMonthly] = useState<PackageItem[]>([]);
+  // const [packageYearly, setPackageYearly] = useState<PackageItem[]>([]);
 
-  const filteredPackages = packageType === PackageTypeEnum.MONTHLY ? packageMonthly : packageYearly;
+  // const filteredPackages = packageType === PackageTypeEnum.MONTHLY ? packageMonthly : packageYearly;
 
   // useEffect(() => {
   //   dispatch(getPackageIndex())
@@ -59,9 +50,9 @@ export const SubscriptionSettings = () => {
   //   }
   // }, [settingPackageUpdateRedux]);
 
-  const handleUpgrade = (id: string) => {
-    // dispatch(putSettingPackageUpdate(id));
-  }
+  // const handleUpgrade = (id: string) => {
+  //   // dispatch(putSettingPackageUpdate(id));
+  // }
 
   return (
     <div className="space-y-8">
@@ -82,7 +73,7 @@ export const SubscriptionSettings = () => {
       </ToggleGroup>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredPackages.map(plan => (
+        {/* {filteredPackages.map(plan => (
           <PlanCard
             key={plan.id}
             handleUpgrade={handleUpgrade}
@@ -90,7 +81,7 @@ export const SubscriptionSettings = () => {
             packageType={packageType}
             {...plan}
           />
-        ))}
+        ))} */}
       </div>
 
       {/* <InvoiceHistory

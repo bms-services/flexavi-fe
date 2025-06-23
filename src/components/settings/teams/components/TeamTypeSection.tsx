@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, PencilIcon, TrashIcon } from "lucide-react";
 // import { CompanyTeam } from "@/types/company";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/store";
 import { TeamRes } from "@/zustand/types/teamT";
 
 interface TeamTypeSectionProps {
@@ -30,7 +30,7 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
   teams = [],
 }) => {
 
-  const settingTeamShowRedux = useSelector((state: RootState) => state.setting.team.show);
+  // const settingTeamShowRedux = useSelector((state: RootState) => state.setting.team.show);
 
   return (
     <div className="flex flex-col gap-2 bg-gray-50 rounded-lg shadow-sm">
@@ -100,7 +100,7 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
               <AccordionContent className="overflow-hidden px-6 py-4 bg-gray-50 text-sm text-gray-700 transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                 <div className="flex flex-col gap-2">
                   <span className="font-medium">Teamleden:</span>
-                  {settingTeamShowRedux.success && settingTeamShowRedux.result.company_users?.map((member) => (
+                  {/* {settingTeamShowRedux.success && settingTeamShowRedux.result.company_users?.map((member) => (
                     <div className="space-y-2" key={member.id}>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="relative flex shrink-0 overflow-hidden rounded-full h-6 w-6">
@@ -111,7 +111,7 @@ export const TeamTypeSection: React.FC<TeamTypeSectionProps> = ({
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </AccordionContent>
             </AccordionItem>

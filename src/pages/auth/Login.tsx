@@ -39,8 +39,8 @@ const Login = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         <Input
-          label={t('auth:login.label.email')}
-          placeholder={t('auth:login.placeholder.email')}
+          label={t('login.label.email')}
+          placeholder={t('login.placeholder.email')}
           id={'email'}
           type="email"
           icon={<Mail className="h-5 w-5 " />}
@@ -48,14 +48,14 @@ const Login = () => {
             register,
             name: "email",
             options: {
-              required: t('auth:login.error.required.email'),
+              required: t('login.error.required.email'),
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:login.label.password')}
-          placeholder={t('auth:login.placeholder.password')}
+          label={t('login.label.password')}
+          placeholder={t('login.placeholder.password')}
           id={'password'}
           type="password"
           icon={<Lock className="h-5 w-5 " />}
@@ -63,7 +63,7 @@ const Login = () => {
             register,
             name: "password",
             options: {
-              required: t('auth:login.error.required.password'),
+              required: t('login.error.required.password'),
             },
             errors,
           }}
@@ -82,7 +82,7 @@ const Login = () => {
             )}
           />
           <label htmlFor="remember_me" className="text-sm">
-            {t("auth:login.label.rememberMe")}
+            {t("login.label.rememberMe")}
           </label>
         </div>
 
@@ -90,7 +90,7 @@ const Login = () => {
           to="/forgot-password"
           className="inline-block text-sm text-primary hover:text-primary/90 hover:underline"
         >
-          {t('auth:login.link.forgotPassword')}
+          {t('login.link.forgotPassword')}
         </Link>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
@@ -98,15 +98,15 @@ const Login = () => {
           loading={loginZ.isPending}
         >
           <LogIn className="mr-2 h-4 w-4" />
-          {t('auth:login.button.submit')}
+          {t('login.button.submit')}
         </Button>
         <p className="text-sm text-muted-foreground text-center">
-          {t('auth:login.text.notHaveAccount')}
+          {t('login.text.notHaveAccount')}
           <Link
             to="/register"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            &nbsp;{t('auth:login.link.register')}
+            &nbsp;{t('login.link.register')}
           </Link>
         </p>
       </CardFooter>

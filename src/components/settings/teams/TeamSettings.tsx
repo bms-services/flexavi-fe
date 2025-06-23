@@ -31,7 +31,7 @@ import { addMemberMyTeamService } from "@/zustand/services/settingService";
 
 export const TeamSettings: React.FC = () => {
   const [teamId, setTeamId] = useState<string | null>(null);
-  const [collapseId, setCollapseId] = useState<string | null>(null);
+  const [collapseId, setCollapseId] = useState<string>("");
 
   const [modal, setModal] = useState({
     member: false,
