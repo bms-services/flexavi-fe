@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiError, ApiSuccess, ApiSuccessPaginated, Paginated, ParamGlobal } from "@/zustand/types/apiT";
+import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { LeadReq, LeadRes } from "../types/leadT";
 import {
     createLeadService,
@@ -9,7 +9,7 @@ import {
     updateLeadService,
 } from "../services/leadService";
 
-export const useGetLeads = (params?: ParamGlobal) => {
+export const useGetLeads = (params: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<LeadRes>, ApiError>({
         queryKey: ['leads', params],
         queryFn: () => getLeadsService(params),
@@ -46,7 +46,7 @@ export const useUpdateLead = () => {
 
 export const useDeleteLead = () => {
     const queryClient = useQueryClient();
-    return useMutation<ApiSuccess<LeadRes>, ApiError, { ids: string[]; force: boolean }>({
+    return useMutation<ApiSuccess<LeadRes[]>, ApiError, { ids: string[]; force: boolean }>({
         mutationFn: ({ ids, force }) => deleteLeadService(ids, force),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['leads'] });

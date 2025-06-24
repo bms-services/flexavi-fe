@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { mockLeads } from "@/data/mockData";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { Lead } from "@/types";
 import {
   Dialog,
@@ -39,8 +39,8 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const [showNewCustomerDialog, setShowNewCustomerDialog] = React.useState(false);
-  
-  
+
+
   // Ensure mockLeads is always an array
   const customers = Array.isArray(mockLeads) ? mockLeads : [];
 
@@ -132,8 +132,8 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
         </PopoverContent>
       </Popover>
 
-      <Dialog 
-        open={showNewCustomerDialog} 
+      <Dialog
+        open={showNewCustomerDialog}
         onOpenChange={(open) => {
           setShowNewCustomerDialog(open);
           // If dialog is closed but not via form submission, make sure popover is also closed

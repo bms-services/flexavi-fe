@@ -2,7 +2,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { SupportTicketStatus, SupportTicketPriority } from "@/types/support";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface SupportTicketStatusBadgeProps {
   status: SupportTicketStatus;

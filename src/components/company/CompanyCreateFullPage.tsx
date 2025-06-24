@@ -137,8 +137,8 @@ export default function CompanyCreateFullPage() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Input
-                                    label={t('dashboard:companyCreate.label.name')}
-                                    placeholder={t('dashboard:companyCreate.placeholder.name')}
+                                    label={t('companyCreate.label.name')}
+                                    placeholder={t('companyCreate.placeholder.name')}
                                     id="companyName"
                                     type="text"
                                     icon={<Building2Icon className="h-5 w-5 text-gray-400" />}
@@ -146,58 +146,58 @@ export default function CompanyCreateFullPage() {
                                         register,
                                         name: "name",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.name'),
+                                            required: t('companyCreate.error.required.name'),
                                         },
                                         errors,
                                     }}
                                 />
                                 <Input
-                                    label={t('dashboard:companyCreate.label.tax')}
+                                    label={t('companyCreate.label.tax')}
                                     id="tax"
-                                    placeholder={t('dashboard:companyCreate.placeholder.tax')}
+                                    placeholder={t('companyCreate.placeholder.tax')}
                                     type="text"
                                     rules={{
                                         register,
                                         name: "vat_number",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.tax'),
+                                            required: t('companyCreate.error.required.tax'),
                                         },
                                         errors,
                                     }}
                                 />
                                 <Input
-                                    label={t('dashboard:companyCreate.label.kvk')}
+                                    label={t('companyCreate.label.kvk')}
                                     id="kvk"
                                     type="text"
-                                    placeholder={t('dashboard:companyCreate.placeholder.kvk')}
+                                    placeholder={t('companyCreate.placeholder.kvk')}
                                     rules={{
                                         register,
                                         name: "kvk_number",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.kvk'),
+                                            required: t('companyCreate.error.required.kvk'),
                                         },
                                         errors,
                                     }}
                                 />
                                 <Input
-                                    label={t('dashboard:companyCreate.label.website')}
+                                    label={t('companyCreate.label.website')}
                                     id="website"
                                     type="text"
-                                    placeholder={t('dashboard:companyCreate.placeholder.website')}
+                                    placeholder={t('companyCreate.placeholder.website')}
                                     rules={{
                                         register,
                                         name: "website",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.website'),
+                                            required: t('companyCreate.error.required.website'),
                                         },
                                         errors,
                                     }}
                                 />
                             </div>
                             <Textarea
-                                label={t('dashboard:companyCreate.label.description')}
+                                label={t('companyCreate.label.description')}
                                 id="description"
-                                placeholder={t('dashboard:companyCreate.placeholder.description')}
+                                placeholder={t('companyCreate.placeholder.description')}
                                 rules={{
                                     register,
                                     name: "description",
@@ -227,8 +227,8 @@ export default function CompanyCreateFullPage() {
                         <CardContent className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Input
-                                    label={t('dashboard:companyCreate.label.email')}
-                                    placeholder={t('dashboard:companyCreate.placeholder.email')}
+                                    label={t('companyCreate.label.email')}
+                                    placeholder={t('companyCreate.placeholder.email')}
                                     id={'companyEmail'}
                                     type="text"
                                     icon={<MailIcon className="h-5 w-5 " />}
@@ -236,22 +236,22 @@ export default function CompanyCreateFullPage() {
                                         register,
                                         name: "email",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.name'),
+                                            required: t('companyCreate.error.required.name'),
                                             pattern: {
                                                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                                message: t('dashboard:companyCreate.error.invalid.email')
+                                                message: t('companyCreate.error.invalid.email')
                                             }
                                         },
                                         errors,
                                     }}
                                 />
                                 <PhoneNumber
-                                    label={t('dashboard:companyCreate.label.phone')}
+                                    label={t('companyCreate.label.phone')}
                                     rules={{
                                         control,
                                         name: "phone",
                                         options: {
-                                            required: t('dashboard:companyCreate.error.required.phone')
+                                            required: t('companyCreate.error.required.phone')
                                         },
                                         errors,
                                     }}
@@ -269,13 +269,13 @@ export default function CompanyCreateFullPage() {
 
                             <div className="flex justify-between items-center">
                                 <Button type="button" variant='destructive' onClick={handleLogout}>
-                                    {t("dashboard:companyCreate.button.logout")}
+                                    {t("companyCreate.button.logout")}
                                 </Button>
 
                                 <Button type="submit"
                                     loading={createMyCompanyZ.isPending}
                                 >
-                                    {t("dashboard:companyCreate.button.submit")}
+                                    {t("companyCreate.button.submit")}
                                 </Button>
                             </div>
                         </CardContent>

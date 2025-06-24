@@ -30,16 +30,16 @@ const ResetPasswordSuccessfully = () => {
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
-        <p className="">{t("auth:resetPasswordSuccessfully.text.success")}
+        <p className="">{t("resetPasswordSuccessfully.text.success")}&nbsp;
           <span className="font-bold text-primary">
-            &nbsp; {email}
+            {" "}{email}
           </span>
         </p>
-        <p className="">{t("auth:resetPasswordSuccessfully.text.checkEmail")}</p>
+        <p className="">{t("resetPasswordSuccessfully.text.checkEmail")}</p>
       </div>
       <Button
         onClick={handleRedirectLogin}
-        className="w-full">{t("auth:resetPasswordSuccessfully.button.login")}</Button>
+        className="w-full">{t("resetPasswordSuccessfully.button.login")}</Button>
     </CardContent>
   );
 };

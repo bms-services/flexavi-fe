@@ -8,20 +8,42 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatEuro(amount: number): string {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+export function formatEuro(amount: string | number | null | undefined): string {
+  if (amount == null || amount === "") return "€ 0,00";
+  const numeric = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (isNaN(numeric)) return "€ 0,00";
+
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numeric);
 }
 
-export function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount);
+
+export function formatCurrency(input: string): string {
+  if (!input) return "0.00";
+  const normalized = input.replace(/\./g, '').replace(',', '.');
+  const parsed = parseFloat(normalized).toFixed(2);
+  return parsed;
+}
+
+export function formatCurrencyToNumber(value: string | null | undefined): number {
+  if (!value) return 0;
+  const cleaned = value.replace(/\./g, '').replace(',', '.');
+  return parseFloat(cleaned);
+}
+
+export function formatPercentage(value: string | number | null | undefined): string {
+  if (value == null || value === "") return "0,00%";
+  const numeric = typeof value === "string" ? parseFloat(value) : value;
+  if (isNaN(numeric)) return "0,00%";
+  return new Intl.NumberFormat("nl-NL", {
+    style: "percent",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numeric / 100);
 }
 
 export function formatIsoToDate(date: string): string {

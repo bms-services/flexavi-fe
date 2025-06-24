@@ -59,7 +59,7 @@ const PaymentStripe = ({ onBack }: {
                     type="submit"
                     loading={!stripe || !elements}
                 >
-                    {t('dashboard:settings.payment.cta')}
+                    {t('settings.payment.cta')}
                 </Button>
             </div>
         </form>

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
-import { ShopifyStyleDashboard } from "@/components/dashboard/ShopifyStyleDashboard";
+// import { ShopifyStyleDashboard } from "@/components/dashboard/ShopifyStyleDashboard";
 import { getUpcomingAppointments, getRecentLeads } from "@/data/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, PlusCircle } from "lucide-react";
@@ -25,7 +25,7 @@ const Dashboard = () => {
         lastUpdated={lastUpdated}
       />
 
-      <ShopifyStyleDashboard timeRange={timeRange} />
+      {/* <ShopifyStyleDashboard timeRange={timeRange} /> */}
 
       <DashboardCharts timeRange={timeRange} />
 

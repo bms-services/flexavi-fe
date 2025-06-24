@@ -31,16 +31,16 @@ const RegisterSuccessfully = () => {
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
-        <p className="">{t("auth:registerSuccessfully.text.welcome")}
+        <p className="">{t("registerSuccessfully.text.welcome")}
           <span className="font-bold text-primary">
-            &nbsp; {email}
+            {" "}{email}
           </span>
         </p>
-        <p className="">{t("auth:registerSuccessfully.text.activate")}</p>
+        <p className="">{t("registerSuccessfully.text.activate")}</p>
       </div>
       <Button
         onClick={handleRedirectLogin}
-        className="w-full">{t("auth:registerSuccessfully.button.login")}</Button>
+        className="w-full">{t("registerSuccessfully.button.login")}</Button>
     </CardContent>
   );
 };

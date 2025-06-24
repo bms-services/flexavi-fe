@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { FormProvider, useForm } from "react-hook-form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { EmployeeReq } from "@/zustand/types/employeeT";
+import { EmployeeReq, EmployeeRole, EmployeeRoleEnum, EmployeeRoleMap } from "@/zustand/types/employeeT";
 import { UserIcon, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PhoneNumber from "@/components/ui/phone-number";
@@ -62,6 +62,13 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
   const watchStart = form.watch("start_time");
   const watchEnd = form.watch("end_time");
 
+  const handleRoleName = (role: EmployeeRole) => {
+    if (EmployeeRoleMap[role]) {
+      return t(`settings.employee.role.${EmployeeRoleMap[role].value}`);
+    }
+    return role;
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -75,8 +82,8 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Input
-              label={t("dashboard:settings.teamMember.label.name")}
-              placeholder={t("dashboard:settings.teamMember.placeholder.name")}
+              label={t("settings.teamMember.label.name")}
+              placeholder={t("settings.teamMember.placeholder.name")}
               id="name"
               type="text"
               icon={<UserIcon className="h-5 w-5" />}
@@ -84,15 +91,15 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                 register: form.register,
                 name: "name",
                 options: {
-                  required: t("dashboard:settings.teamMember.error.required.name"),
+                  required: t("settings.teamMember.error.required.name"),
                 },
                 errors: form.formState.errors,
               }}
             />
 
             <Input
-              label={t("dashboard:settings.teamMember.label.email")}
-              placeholder={t("dashboard:settings.teamMember.placeholder.email")}
+              label={t("settings.teamMember.label.email")}
+              placeholder={t("settings.teamMember.placeholder.email")}
               id="email"
               type="email"
               icon={<Mail className="h-5 w-5" />}
@@ -100,19 +107,19 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                 register: form.register,
                 name: "email",
                 options: {
-                  required: t("dashboard:settings.teamMember.error.required.email"),
+                  required: t("settings.teamMember.error.required.email"),
                 },
                 errors: form.formState.errors,
               }}
             />
 
             <PhoneNumber
-              label={t("dashboard:settings.teamMember.label.phone")}
+              label={t("settings.teamMember.label.phone")}
               rules={{
                 control: form.control,
                 name: "phone",
                 options: {
-                  required: t("dashboard:settings.teamMember.error.required.phone"),
+                  required: t("settings.teamMember.error.required.phone"),
                 },
                 errors: form.formState.errors,
               }}
@@ -122,7 +129,7 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               control={form.control}
               name="company_user_role_id"
               rules={{
-                required: t("dashboard:settings.teamMember.error.required.role"),
+                required: t("settings.teamMember.error.required.role"),
               }}
               render={({ field }) => (
                 <FormItem>
@@ -142,7 +149,9 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                             <FormControl>
                               <RadioGroupItem value={role.id} />
                             </FormControl>
-                            <FormLabel className="font-normal">{role.name}</FormLabel>
+                            <FormLabel className="text-[14px] !font-normal">
+                              {handleRoleName(role.name)}
+                            </FormLabel>
                           </FormItem>
                         ))}
                     </RadioGroup>
@@ -156,15 +165,15 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               control={form.control}
               name="work_days"
               rules={{
-                required: t("dashboard:settings.teamMember.error.required.workingDays"),
+                required: t("settings.teamMember.error.required.workingDays"),
                 validate: (value) =>
                   (Array.isArray(value) && value.length > 0) ||
-                  t("dashboard:settings.teamMember.error.required.workingDays"),
+                  t("settings.teamMember.error.required.workingDays"),
               }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t("dashboard:settings.teamMember.label.workingDays")}
+                    {t("settings.teamMember.label.workingDays")}
                   </FormLabel>
                   <div className="grid grid-cols-2 gap-2">
                     {getMyWorkDaysZ.isSuccess &&
@@ -189,7 +198,7 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal !mt-0">{day.name}</FormLabel>
+                            <FormLabel className="text-[14px] !font-normal !mt-0">{day.name}</FormLabel>
                           </FormItem>
                         );
                       })}
@@ -204,14 +213,14 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                 control={form.control}
                 name="start_time"
                 rules={{
-                  required: t("dashboard:settings.teamMember.error.required.startTime"),
+                  required: t("settings.teamMember.error.required.startTime"),
                   validate: (value) =>
                     value < watchEnd ||
-                    t("dashboard:settings.teamMember.error.startTimeLessThanEndTime"),
+                    t("settings.teamMember.error.startTimeLessThanEndTime"),
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("dashboard:settings.teamMember.label.startTime")}</FormLabel>
+                    <FormLabel>{t("settings.teamMember.label.startTime")}</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
@@ -224,14 +233,14 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                 control={form.control}
                 name="end_time"
                 rules={{
-                  required: t("dashboard:settings.teamMember.error.required.endTime"),
+                  required: t("settings.teamMember.error.required.endTime"),
                   validate: (value) =>
                     value > watchStart ||
-                    t("dashboard:settings.teamMember.error.endTimeGreaterThanStartTime"),
+                    t("settings.teamMember.error.endTimeGreaterThanStartTime"),
                 }}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("dashboard:settings.teamMember.label.endTime")}</FormLabel>
+                    <FormLabel>{t("settings.teamMember.label.endTime")}</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>

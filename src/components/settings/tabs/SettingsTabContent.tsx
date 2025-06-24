@@ -13,25 +13,7 @@ import { WorkAgreementsTabContent } from "./WorkAgreementsTabContent";
 import { IntegrationsTabContent } from "./IntegrationsTabContent";
 import { ReputationTabContent } from "./ReputationTabContent";
 
-export const SettingsTabContent = ({
-  timeBlocks,
-  slotSettings,
-  colors,
-  onTimeBlocksChange,
-  onSlotSettingsChange,
-  onSaveSlots,
-  onSaveColors,
-  onColorsChange
-}: {
-  timeBlocks: any;
-  slotSettings: any;
-  colors: any;
-  onTimeBlocksChange: any;
-  onSlotSettingsChange: any;
-  onSaveSlots: any;
-  onSaveColors: any;
-  onColorsChange: any;
-}) => {
+export const SettingsTabContent = () => {
   return (
     <>
       <TabsContent value="company">
@@ -50,16 +32,7 @@ export const SettingsTabContent = ({
         <PermissionsTabContent />
       </TabsContent>
       <TabsContent value="appointments">
-        <AppointmentsTabContent
-          timeBlocks={timeBlocks}
-          slotSettings={slotSettings}
-          colors={colors}
-          onTimeBlocksChange={onTimeBlocksChange}
-          onSlotSettingsChange={onSlotSettingsChange}
-          onSaveSlots={onSaveSlots}
-          onSaveColors={onSaveColors}
-          onColorsChange={onColorsChange}
-        />
+        <AppointmentsTabContent />
       </TabsContent>
       <TabsContent value="account">
         <AccountTabContent />

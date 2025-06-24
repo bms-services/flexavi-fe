@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatEuro } from "@/lib/utils";
+import { formatEuro } from "@/utils/format";
 import { Package, PackageItem, PackageTypeT } from "@/types/package";
 import { ArrowUpCircle } from "lucide-react";
 

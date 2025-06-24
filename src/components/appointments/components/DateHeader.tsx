@@ -2,7 +2,7 @@
 import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { DateHeaderProps } from "../types";
 import { Button } from "@/components/ui/button";
 
@@ -17,8 +17,8 @@ export const DateHeader = ({ date, isToday, onDateClick, isMobile }: DateHeaderP
       onClick={() => onDateClick?.(date)}
     >
       <div className="font-medium truncate">
-        {isMobile 
-          ? format(parseISO(date), "E", { locale: nl }) 
+        {isMobile
+          ? format(parseISO(date), "E", { locale: nl })
           : format(parseISO(date), "EEE", { locale: nl })}
       </div>
       <div className="text-muted-foreground text-[10px] md:text-xs">

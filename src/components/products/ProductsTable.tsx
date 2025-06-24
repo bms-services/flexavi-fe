@@ -1,115 +1,84 @@
-
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Product } from "@/types/product";
-import { Pencil, Trash2 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import React, { useMemo, useCallback } from "react";
+// import { leadStatusMap } from "@/types";
+import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
+import { formatEuro, formatIsoToDate, formatPercentage } from "@/utils/format";
+import { ApiError, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
+import { UseQueryResult } from "@tanstack/react-query";
+import { ProductRes } from "@/zustand/types/productT";
 
 interface ProductsTableProps {
-  products: Product[];
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-  onEditProduct: (product: Product) => void;
-  formatCurrency: (amount: number) => string;
+  params: ParamGlobal;
+  setParams: React.Dispatch<React.SetStateAction<ParamGlobal>>;
+  onShow?: (row: ProductRes) => void;
+  onEdit?: (row: ProductRes) => void;
+  onDelete?: (rows: ProductRes[]) => void;
+  onArchive?: (rows: ProductRes[]) => void;
+  getProductsZ: UseQueryResult<ApiSuccessPaginated<ProductRes>, ApiError>
 }
 
-export const ProductsTable: React.FC<ProductsTableProps> = ({
-  products,
-  searchTerm,
-  onSearchChange,
-  onEditProduct,
-  formatCurrency,
-}) => {
+export const ProductsTable: React.FC<ProductsTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive, getProductsZ }) => {
+  const data = getProductsZ.data?.result.data ?? [];
+  const meta = getProductsZ.data?.result.meta;
+
+  const columns = useMemo<CustomColumnDef<ProductRes>[]>(() => [
+    { accessorKey: "title", header: "Titel", cell: info => info.getValue() },
+    { accessorKey: "unit", header: "Eenheid", cell: info => info.getValue() },
+    { accessorKey: "price", header: "Prijs", cell: info => formatEuro(info.getValue() as string) },
+    { accessorKey: "btw_percentage", header: "BTW", cell: info => formatPercentage(info.getValue() as string) },
+    {
+      accessorKey: "category.name",
+      header: "Categorie",
+      cell: info => info.row.original.category?.name ?? "-",
+    },
+    {
+      accessorKey: "created_at",
+      header: "Aangemaakt",
+      cell: info => formatIsoToDate(info.row.original.created_at),
+    },
+  ], []);
+
+  /**
+   * Handles changes to the table parameters such as pagination, sorting, and filtering.
+   * 
+   * @param changed - Partial object containing the parameters that have changed.
+   * This function merges the new parameters with the existing ones in the state.
+   */
+  const handleParamsChange = useCallback(
+    (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
+    [setParams]
+  );
+
+
+  /**
+   * Maps the lead status to filter options for the table.
+   * 
+   * @returns An array of objects containing value and label for each lead status.
+   */
+  // const statusFilterOptions = Object.entries(leadStatusMap).map(
+  //   ([value, { label }]) => ({ value, label })
+  // );
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <CardTitle>Productoverzicht</CardTitle>
-            <CardDescription>
-              Een lijst van alle producten en diensten
-            </CardDescription>
-          </div>
-          <div className="relative w-full sm:w-auto sm:max-w-xs">
-            <Input
-              type="search"
-              placeholder="Zoek producten..."
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-8"
-            />
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="w-full overflow-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Acties</TableHead>
-                <TableHead>Titel</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Omschrijving
-                </TableHead>
-                <TableHead className="hidden sm:table-cell">Eenheid</TableHead>
-                <TableHead>Prijs</TableHead>
-                <TableHead className="hidden sm:table-cell">BTW</TableHead>
-                <TableHead>Categorie</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onEditProduct(product)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{product.title}</TableCell>
-                  <TableCell className="hidden md:table-cell max-w-xs truncate">
-                    {product.description}
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    {product.unit}
-                  </TableCell>
-                  <TableCell>{formatCurrency(product.pricePerUnit)}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    {product.vat}%
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{product.category}</Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <TableTanstack
+        columns={columns}
+        data={data}
+        meta={meta}
+        isLoading={getProductsZ.isLoading}
+        // isLoadingAction={deleteLeadZ.isPending || deleteLeadZ.isPending}
+        params={params}
+        onParamsChange={handleParamsChange}
+        onEdit={onEdit}
+        onShow={onShow}
+        onDelete={onDelete}
+        onArchive={onArchive}
+      // filterOptions={{
+      //   status: {
+      //     label: "Status",
+      //     options: statusFilterOptions,
+      //   }
+      // }}
+      />
+    </div>
   );
 };

@@ -11,7 +11,7 @@ import { LeadReq } from "@/zustand/types/leadT";
 
 interface CreateLeadFormProps {
   onCancel: () => void;
-  leadId?: string;
+  leadId: string;
   onSubmit: (data: LeadReq) => Promise<void>;
 }
 
@@ -31,13 +31,13 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
     watch,
     setValue,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<LeadReq>();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <Input
-        label={t('auth:register.label.name')}
-        placeholder={t('auth:register.placeholder.name')}
+        label={t('register.label.name')}
+        placeholder={t('register.placeholder.name')}
         id="name"
         type="text"
         icon={<UserIcon className="h-5 w-5 " />}
@@ -45,15 +45,15 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
           register,
           name: "name",
           options: {
-            required: t('auth:register.error.required.name')
+            required: t('register.error.required.name')
           },
           errors,
         }}
       />
 
       <Input
-        label={t('auth:login.label.email')}
-        placeholder={t('auth:login.placeholder.email')}
+        label={t('login.label.email')}
+        placeholder={t('login.placeholder.email')}
         id={'email'}
         type="email"
         icon={<Mail className="h-5 w-5 " />}
@@ -61,19 +61,19 @@ export const CreateLeadForm: React.FC<CreateLeadFormProps> = ({
           register,
           name: "email",
           options: {
-            required: t('auth:login.error.required.email'),
+            required: t('login.error.required.email'),
           },
           errors,
         }}
       />
 
       <PhoneNumber
-        label={t('dashboard:companyCreate.label.phone')}
+        label={t('companyCreate.label.phone')}
         rules={{
           control,
           name: "phone",
           options: {
-            required: t('dashboard:companyCreate.error.required.phone')
+            required: t('companyCreate.error.required.phone')
           },
           errors,
         }}

@@ -19,9 +19,9 @@ export default function WelcomeUser({
             <div className="layer">
                 <div className="w-full flex flex-col items-center justify-center text-white px-6">
                     <div className="max-w-md text-center">
-                        <h1 className="text-4xl font-extrabold mb-4">{t('dashboard:companyCreate.text.welcome')}</h1>
+                        <h1 className="text-4xl font-extrabold mb-4">{t('companyCreate.text.welcome')}</h1>
                         <p className="text-lg mb-8 text-blue-100">
-                            {t('dashboard:companyCreate.text.excited')}
+                            {t('companyCreate.text.excited')}
                         </p>
 
                         <button
@@ -31,7 +31,7 @@ export default function WelcomeUser({
                             }}
                             type="button"
                         >
-                            {t('dashboard:companyCreate.button.start')}
+                            {t('companyCreate.button.start')}
                         </button>
                     </div>
                 </div>

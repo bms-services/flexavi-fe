@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { parseISO, format, isToday, addDays, startOfWeek, endOfWeek } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Clock, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface ScheduleSettings {
   salesMorningSlots: number;
@@ -38,25 +38,25 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
 
   // Define time slots with dynamic max appointments from settings
   const timeSlots = [
-    { 
-      label: "Ochtend", 
-      time: "9:00-12:00", 
+    {
+      label: "Ochtend",
+      time: "9:00-12:00",
       salesMax: scheduleSettings.salesMorningSlots,
       installationMax: scheduleSettings.installationMorningSlots,
       startHour: 9,
       endHour: 12
     },
-    { 
-      label: "Middag", 
-      time: "12:00-17:00", 
+    {
+      label: "Middag",
+      time: "12:00-17:00",
       salesMax: scheduleSettings.salesAfternoonSlots,
       installationMax: scheduleSettings.installationAfternoonSlots,
       startHour: 12,
       endHour: 17
     },
-    { 
-      label: "Avond", 
-      time: "17:00-21:00", 
+    {
+      label: "Avond",
+      time: "17:00-21:00",
       salesMax: scheduleSettings.salesEveningSlots,
       installationMax: scheduleSettings.installationEveningSlots,
       startHour: 17,
@@ -88,7 +88,7 @@ export const AppointmentStats: React.FC<AppointmentStatsProps> = ({
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
             {daysToShow.map((date) => (
-              <div 
+              <div
                 key={date}
                 className={cn(
                   "p-4 rounded-lg border",

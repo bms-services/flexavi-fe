@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { FileText } from "lucide-react";
-import { formatEuro } from "@/lib/utils";
+import { formatEuro } from "@/utils/format";
 import { useNavigate } from "react-router-dom";
 
 interface DocumentsTabsPanelProps {
@@ -26,15 +26,15 @@ export const DocumentsTabsPanel: React.FC<DocumentsTabsPanelProps> = ({
   getStatusColor,
 }) => {
   const navigate = useNavigate();
-  
+
   const handleQuoteClick = (quoteId: string) => {
     navigate(`/quotes/edit/${quoteId}`);
   };
-  
+
   const handleInvoiceClick = (invoiceId: string) => {
     navigate(`/invoices/edit/${invoiceId}`);
   };
-  
+
   const handleWorkOrderClick = (workOrderId: string) => {
     navigate(`/workagreements/${workOrderId}`);
   };
@@ -66,8 +66,8 @@ export const DocumentsTabsPanel: React.FC<DocumentsTabsPanelProps> = ({
                 </TableHeader>
                 <TableBody>
                   {quotes.map(quote => (
-                    <TableRow 
-                      key={quote.id} 
+                    <TableRow
+                      key={quote.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleQuoteClick(quote.id)}
                     >
@@ -98,8 +98,8 @@ export const DocumentsTabsPanel: React.FC<DocumentsTabsPanelProps> = ({
                 </TableHeader>
                 <TableBody>
                   {invoices.map(invoice => (
-                    <TableRow 
-                      key={invoice.id} 
+                    <TableRow
+                      key={invoice.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleInvoiceClick(invoice.id)}
                     >
@@ -130,8 +130,8 @@ export const DocumentsTabsPanel: React.FC<DocumentsTabsPanelProps> = ({
                 </TableHeader>
                 <TableBody>
                   {workAgreements.map(agreement => (
-                    <TableRow 
-                      key={agreement.id} 
+                    <TableRow
+                      key={agreement.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleWorkOrderClick(agreement.id)}
                     >

@@ -34,7 +34,7 @@ export const LeadList: React.FC = () => {
     sorts: {},
   });
 
-  const [leadId, setLeadId] = useState<string | null>(null);
+  const [leadId, setLeadId] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const methods = useForm<LeadReq>({
@@ -48,34 +48,13 @@ export const LeadList: React.FC = () => {
   const deleteLeadZ = useDeleteLead();
 
   /**
-   * Handle edit lead
-   * 
-   * @param row 
-   * @returns void
-   */
-  const handleEdit = (row: LeadRes) => {
-    setLeadId(row.id);
-    setIsDialogOpen(true);
-  };
-
-  /**
-   * Handle show lead detail
-   * 
-   * @param row 
-   * @returns void
-   */
-  const handleShow = (row: LeadRes) => {
-    navigate(`/lead/${row.id}`);
-  };
-
-  /**
    * Handle create lead
    * 
    * @returns void
    */
   const handleCreate = () => {
     methods.reset(defaultLeadData);
-    setLeadId(null);
+    setLeadId("");
     setIsDialogOpen(true);
   };
 
@@ -98,6 +77,17 @@ export const LeadList: React.FC = () => {
   };
 
   /**
+   * Handle edit lead
+   * 
+   * @param row 
+   * @returns void
+   */
+  const handleEdit = (data: LeadReq) => {
+    setLeadId(data.id ?? "");
+    setIsDialogOpen(true);
+  };
+
+  /**
    * Handle update lead
    * 
    * @param data 
@@ -116,15 +106,29 @@ export const LeadList: React.FC = () => {
   };
 
   /**
+   * Handle show lead detail
+   * 
+   * @param row 
+   * @returns void
+   */
+  const handleShow = (data: LeadReq) => {
+    navigate(`/lead/${data.id}`);
+  };
+
+  /**
    * Handle delete lead
    * 
    * @param ids 
    * @returns Promise<void>
    */
-  const handleDelete = async (ids: LeadRes[]) => {
+  const handleDelete = async (ids: LeadReq[]) => {
+    const leadIds = ids.map(id => id.id).filter((id): id is string => typeof id === "string");
     try {
-      await deleteLeadZ.mutateAsync({ ids: ids.map(id => id.id), force: false });
-      setLeadId(null);
+      await deleteLeadZ.mutateAsync({
+        ids: leadIds,
+        force: false
+      });
+      setLeadId("");
     } catch (error) {
       throw new Error("Failed to delete lead: " + error);
     }
@@ -153,24 +157,24 @@ export const LeadList: React.FC = () => {
   // Reset Form When Dialog Closed
   useEffect(() => {
     if (!isDialogOpen) {
-      setLeadId(null);
+      setLeadId("");
       methods.reset(defaultLeadData);
     }
   }, [isDialogOpen, methods]);
 
   // Handle error validation create
   useEffect(() => {
-    if (createLeadZ.error?.errors) {
+    if (createLeadZ.isError) {
       mapApiErrorsToForm(createLeadZ.error.errors, methods.setError);
     }
-  }, [createLeadZ.error, methods]);
+  }, [createLeadZ.isError, createLeadZ.error, methods.setError]);
 
   // Handle error validation update
   useEffect(() => {
-    if (updateLeadZ.error?.errors) {
+    if (updateLeadZ.isError) {
       mapApiErrorsToForm(updateLeadZ.error.errors, methods.setError);
     }
-  }, [updateLeadZ.error, methods]);
+  }, [updateLeadZ.isError, updateLeadZ.error, methods.setError]);
 
   return (
     <div className="space-y-2">

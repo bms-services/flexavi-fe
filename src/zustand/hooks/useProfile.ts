@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiError, ApiSuccess } from "@/zustand/types/apiT";
 import { requestEmailVerificationMyProfileService, showMyProfileService, updateMyProfileService, verifyEmailMyProfileService } from "../services/profileService";
-import { ProfileRes } from "../types/profileT";
+import { ProfileReq, ProfileRes } from "../types/profileT";
 
 export const useShowMyProfile = () => {
     return useQuery<ApiSuccess<ProfileRes>, ApiError>({
@@ -11,7 +11,7 @@ export const useShowMyProfile = () => {
 }
 
 export const useUpdateMyProfile = () => {
-    return useMutation<ApiSuccess<ProfileRes>, ApiError, { id: string; formData: FormData }>({
+    return useMutation<ApiSuccess<ProfileRes>, ApiError, ProfileReq>({
         mutationFn: updateMyProfileService,
     });
 };

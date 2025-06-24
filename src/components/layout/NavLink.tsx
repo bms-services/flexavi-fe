@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { NavItem } from "@/types/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -11,27 +11,27 @@ interface NavLinkProps extends NavItem {
 
 export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, children, isActive }) => {
   const location = useLocation();
-  
+
   // Check if any child is active to determine if dropdown should be open
   const hasActiveChild = children?.some(child => location.pathname === child.href);
-  
+
   // Set dropdown open state initially based on whether any child is active
   const [isOpen, setIsOpen] = useState(hasActiveChild || false);
-  
+
   // Update dropdown open state when route changes
   useEffect(() => {
     if (hasActiveChild) {
       setIsOpen(true);
     }
   }, [location.pathname, hasActiveChild]);
-  
+
   if (children) {
     return (
       <div className="w-full">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none", 
+            "flex w-full items-center justify-start px-2 py-1.5 rounded-md text-[14px] font-medium transition-colors outline-none",
             "text-sidebar-foreground hover:bg-sidebar-accent/50 focus-visible:bg-sidebar-accent/50",
             "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sidebar-accent"
           )}
@@ -44,7 +44,7 @@ export const NavLink: React.FC<NavLinkProps> = ({ name, href, icon: Icon, childr
             <ChevronDown className="h-3.5 w-3.5 ml-1 opacity-75" />
           )}
         </button>
-        
+
         {isOpen && (
           <div className="mt-0.5 space-y-0.5">
             {children.map((child) => (

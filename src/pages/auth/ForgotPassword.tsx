@@ -41,8 +41,8 @@ const ForgotPassword = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         <Input
-          label={t('auth:forgotPassword.label.email')}
-          placeholder={t('auth:forgotPassword.placeholder.email')}
+          label={t('forgotPassword.label.email')}
+          placeholder={t('forgotPassword.placeholder.email')}
           id={'email'}
           type="email"
           icon={<Mail className="h-5 w-5 " />}
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
             register,
             name: "email",
             options: {
-              required: t('auth:forgotPassword.error.required.email'),
+              required: t('forgotPassword.error.required.email'),
             },
             errors,
           }}
@@ -59,15 +59,15 @@ const ForgotPassword = () => {
       <CardFooter className="flex flex-col space-y-4">
         <Button type="submit" className="w-full">
           <Key className="mr-2 h-4 w-4" />
-          {t('auth:forgotPassword.button.submit')}
+          {t('forgotPassword.button.submit')}
         </Button>
         <p className="text-sm text-muted-foreground text-center">
-          {t('auth:forgotPassword.text.haveAccount')}
+          {t('forgotPassword.text.haveAccount')}
           <Link
             to="/login"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            {t('auth:forgotPassword.link.loginHere')}
+            {t('forgotPassword.link.loginHere')}
           </Link>
         </p>
       </CardFooter>

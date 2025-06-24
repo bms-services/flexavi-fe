@@ -13,7 +13,7 @@ interface CreateLeadDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: LeadReq) => Promise<void>;
-  leadId?: string;
+  leadId: string;
   isLoading?: boolean;
 }
 
@@ -37,7 +37,6 @@ export const CreateLeadDialog: React.FC<CreateLeadDialogProps> = ({
             onSubmit={onSubmit}
             onCancel={() => onOpenChange(false)}
             leadId={leadId}
-          // isLoading={isLoading}
           />
         )}
       </DialogContent>

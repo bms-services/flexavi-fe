@@ -452,6 +452,59 @@
           "description": "Beschrijving van het bedrijf is verplicht"
         }
       }
+    },
+    "employee": {
+      "role": {
+        "sales": "Verkoop",
+        "executive": "Directie",
+        "administrator": "Administrator"
+      }
+    }
+  },
+  "product": {
+    "title": "Producten",
+    "description": "Beheer je producten en diensten",
+    "placeholder": {
+      "title": "Voer de naam van het product in",
+      "description": "Voer een korte beschrijving van het product in",
+      "price": "Voer de prijs van het product in",
+      "category": "Selecteer een categorie voor het product",
+      "unit": "Selecteer een eenheid voor het product",
+      "btw_percentage": "Voer het BTW-percentage van het product in"
+    },
+    "label": {
+      "title": "Productnaam",
+      "description": "Beschrijving",
+      "price": "Prijs",
+      "category": "Categorie",
+      "unit": "Eenheid",
+      "btw_percentage": "BTW-percentage"
+    },
+    "button": {
+      "add": "Product toevoegen",
+      "edit": "Product bewerken",
+      "delete": "Product verwijderen",
+      "save": "Wijzigingen opslaan",
+      "cancel": "Annuleren",
+      "submit": "Verzenden"
+    },
+    "error": {
+      "required": {
+        "title": "Productnaam is verplicht",
+        "description": "Beschrijving is verplicht",
+        "price": "Prijs is verplicht",
+        "category": "Categorie is verplicht",
+        "unit": "Eenheid is verplicht",
+        "btw_percentage": "BTW-percentage is verplicht"
+      },
+      "maxLength": {
+        "title": "Productnaam mag maximaal 255 tekens lang zijn",
+        "description": "Beschrijving mag maximaal 255 tekens lang zijn"
+      },
+      "invalid": {
+        "price": "Voer een geldige prijs in",
+        "btw_percentage": "Voer een geldig BTW-percentage in"
+      }
     }
   }
 }

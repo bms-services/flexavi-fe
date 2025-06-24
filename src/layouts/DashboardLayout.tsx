@@ -122,14 +122,14 @@ const DashboardLayout: React.FC = () => {
                         <MailOpenIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
                             <h6 className="text-[14px] font-medium text-white">
-                                {t('dashboard:banner.emailNotVerified.title')}
+                                {t('banner.emailNotVerified.title')}
                             </h6>
                             <div className='flex items-center gap-1'>
                                 <span className="text-[12px] font-normal text-white">
-                                    {t("dashboard:banner.emailNotVerified.description")}&nbsp;
+                                    {t("banner.emailNotVerified.description")}
                                 </span>
                                 <span onClick={handleOpenVerifyEmail} className="text-[12px] font-normal text-white cursor-pointer hover:underline">
-                                    {t("dashboard:banner.emailNotVerified.cta")}
+                                    {t("banner.emailNotVerified.cta")}
                                 </span>
                             </div>
                         </div>
@@ -147,14 +147,14 @@ const DashboardLayout: React.FC = () => {
                         <CreditCardIcon className="h-6 w-6 text-white" />
                         <div className='flex flex-col'>
                             <h6 className="text-[14px] font-medium text-white">
-                                {t('dashboard:banner.paymentMethod.title')}
+                                {t('banner.paymentMethod.title')}
                             </h6>
                             <div className='flex items-center gap-1'>
                                 <span className="text-[12px] font-normal text-white">
-                                    {t("dashboard:banner.paymentMethod.description")}&nbsp;
+                                    {t("banner.paymentMethod.description")}
                                 </span>
                                 <span onClick={handleOpenSubscription} className="text-[12px] font-normal text-white cursor-pointer hover:underline">
-                                    {t("dashboard:banner.paymentMethod.cta")}
+                                    {t("banner.paymentMethod.cta")}
                                 </span>
                             </div>
                         </div>

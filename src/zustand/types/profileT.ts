@@ -1,19 +1,14 @@
 export type ProfileReq = {
     name: string;
-    description: string;
-    vat_number: string;
-    kvk_number: string;
-    website: string;
     email: string;
     phone: string;
-    logo_url?: string;
-    logo_public_id?: string;
-    address: ProfileAddressReq;
-    image: File;
 };
 
 export type ProfileRes = {
     id: string;
+    name: string;
+    email: string;
+    phone: string;
     has_verified_email: boolean;
     has_payment_method: boolean;
     address: ProfileAddressRes;

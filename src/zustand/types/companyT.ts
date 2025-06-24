@@ -1,4 +1,5 @@
 import { AddressReq, AddressRes } from "./address";
+import { EmployeeRole } from "./employeeT";
 
 export type CompanyReq = {
     name: string;
@@ -39,7 +40,7 @@ export type CompanyRoleReq = {
 
 export type CompanyRoleRes = {
     id: string;
-    name: string;
+    name: EmployeeRole;
     description: string;
     permissions: string[];
     created_at: string;

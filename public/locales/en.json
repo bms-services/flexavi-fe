@@ -430,6 +430,58 @@
           "description": "Company description is required"
         }
       }
+    },
+    "employee": {
+      "role": {
+        "sales": "Sales",
+        "executive": "Executive",
+        "administrator": "Administrator"
+      }
+    }
+  },
+  "product": {
+    "title": "Product Management",
+    "description": "Manage your products and services",
+    "placeholder": {
+      "title": "Enter product title",
+      "description": "Enter product description",
+      "price": "Enter product price",
+      "category": "Select product category",
+      "unit": "Select product unit",
+      "btw_percentage": "Enter VAT percentage"
+    },
+    "label": {
+      "title": "Product Title",
+      "description": "Product Description",
+      "price": "Product Price",
+      "category": "Product Category",
+      "unit": "Product Unit",
+      "btw_percentage": "VAT Percentage"
+    },
+    "button": {
+      "submit": "Save Product",
+      "add": "Add Product",
+      "edit": "Edit Product",
+      "delete": "Delete Product",
+      "cancel": "Cancel"
+    },
+    "error": {
+      "required": {
+        "title": "Product title is required",
+        "description": "Product description is required",
+        "price": "Product price is required",
+        "category": "Product category is required",
+        "unit": "Product unit is required",
+        "btw_percentage": "VAT percentage is required"
+      },
+      "maxLength": {
+        "title": "Product title must be at most 255 characters long",
+        "description": "Product description must be at most 500 characters long"
+      },
+      "invalid": {
+        "price": "Product price must be a valid number",
+        "btw_percentage": "VAT percentage must be a valid number"
+      }
     }
   }
 }

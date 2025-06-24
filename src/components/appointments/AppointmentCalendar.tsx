@@ -22,8 +22,8 @@ import { nl } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Appointment } from "@/types";
-import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import { cn } from "@/utils/format";
 
 interface AppointmentCalendarProps {
   appointments: Appointment[];
@@ -70,18 +70,18 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   // Helper to get appointments by team type for a specific day
   const getTeamTypeCount = (date: string) => {
     if (!daysWithAppointments[date]) return null;
-    
+
     const counts = {
       sales: 0,
       installation: 0,
       repair: 0,
       maintenance: 0
     };
-    
+
     daysWithAppointments[date].forEach(app => {
       counts[app.teamType]++;
     });
-    
+
     return counts;
   };
 
@@ -155,7 +155,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             return (
               <div
                 key={day.toString()}
-                className={cn("h-16 p-1 border rounded cursor-pointer hover:bg-muted/50 transition-colors relative", 
+                className={cn("h-16 p-1 border rounded cursor-pointer hover:bg-muted/50 transition-colors relative",
                   isSelected && "border-primary bg-primary/10",
                   isToday && "bg-accent/50"
                 )}
@@ -163,7 +163,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
               >
                 <div className="flex flex-col h-full">
                   <div className="flex justify-between items-center">
-                    <span className={cn("text-sm font-medium", 
+                    <span className={cn("text-sm font-medium",
                       !isSameMonth(day, currentMonth) && "opacity-30",
                       isSelected && "text-primary font-bold"
                     )}>
@@ -175,7 +175,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                       </Badge>
                     )}
                   </div>
-                  
+
                   {isFullyBooked && (
                     <div className="absolute top-1 right-1">
                       <Badge variant="destructive" className="px-1 h-5">
@@ -183,7 +183,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                       </Badge>
                     </div>
                   )}
-                  
+
                   {teamCounts && (
                     <div className="mt-auto grid grid-cols-2 gap-1">
                       {teamCounts.sales > 0 && (
@@ -205,7 +205,7 @@ export const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             );
           })}
         </div>
-        
+
         <div className="flex flex-wrap gap-2 mt-4 text-xs text-muted-foreground">
           <div className="flex items-center">
             <div className="w-3 h-1.5 bg-blue-500 rounded-full mr-1"></div>

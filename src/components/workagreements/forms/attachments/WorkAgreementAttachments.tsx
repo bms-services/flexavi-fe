@@ -3,7 +3,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Paperclip, FileText, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface WorkAgreementAttachmentsProps {
   attachments: File[];
@@ -61,7 +61,7 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
               <span className="text-xs text-muted-foreground">Standaard bijlage</span>
             </div>
           ))}
-          
+
           {attachments.map((file, index) => (
             <div
               key={index}

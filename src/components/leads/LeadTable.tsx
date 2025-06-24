@@ -1,17 +1,16 @@
 import React, { useMemo, useCallback } from "react";
 import { leadStatusMap } from "@/types";
-import { ParamsAction } from "@/@types/global-type";
 import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
 import { LeadRes } from "@/zustand/types/leadT";
-import { useDeleteLead, useGetLeads } from "@/zustand/hooks/useLead";
+import { useDeleteLead } from "@/zustand/hooks/useLead";
 import { ApiError, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { UseQueryResult } from "@tanstack/react-query";
 
 interface LeadTableProps {
-  params: ParamsAction;
-  setParams: React.Dispatch<React.SetStateAction<ParamsAction>>;
+  params: ParamGlobal;
+  setParams: React.Dispatch<React.SetStateAction<ParamGlobal>>;
   onShow?: (row: LeadRes) => void;
   onEdit?: (row: LeadRes) => void;
   onDelete?: (rows: LeadRes[]) => void;
@@ -20,7 +19,9 @@ interface LeadTableProps {
 }
 
 export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive, getLeadsZ }) => {
-  // const getLeadsZ = useGetLeads(params);
+  const data = getLeadsZ.data?.result.data ?? [];
+  const meta = getLeadsZ.data?.result.meta;
+
   const deleteLeadZ = useDeleteLead();
   const columns = useMemo<CustomColumnDef<LeadRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -81,8 +82,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow,
     <div className="space-y-4">
       <TableTanstack
         columns={columns}
-        data={getLeadsZ.data?.result?.data || []}
-        meta={getLeadsZ.data?.result?.meta}
+        data={data}
+        meta={meta}
         isLoading={getLeadsZ.isLoading}
         isLoadingAction={deleteLeadZ.isPending || deleteLeadZ.isPending}
         params={params}

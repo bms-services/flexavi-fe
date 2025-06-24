@@ -2,7 +2,7 @@
 import React from "react";
 import { User, MapPin, Phone, Mail, Info, Home, BadgeEuro } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { formatEuro } from "@/lib/utils";
+import { formatEuro } from "@/utils/format";
 
 interface CustomerInfoPanelProps {
   lead: {

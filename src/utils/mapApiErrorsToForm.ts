@@ -1,5 +1,5 @@
 import { ApiError } from "@/zustand/types/apiT";
-import { Path, UseFormSetError } from "react-hook-form";
+import { FieldValues, Path, UseFormSetError } from "react-hook-form";
 
 /**
  * Maps API validation errors to React Hook Form errors
@@ -7,7 +7,7 @@ import { Path, UseFormSetError } from "react-hook-form";
  * @param errors - Error object from API response
  * @param setError - React Hook Form's setError function
  */
-export function mapApiErrorsToForm<T>(
+export function mapApiErrorsToForm<T extends FieldValues>(
     errors: ApiError["errors"],
     setError: UseFormSetError<T>
 ): void {

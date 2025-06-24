@@ -1,6 +1,5 @@
 import { mainApi } from "@/utils/axios";
-import { CompanyRes } from "../types/companyT";
-import { ProfileRes } from "../types/profileT";
+import { ProfileReq, ProfileRes } from "../types/profileT";
 import { ApiSuccess } from "../types/apiT";
 
 export const showMyProfileService = async (): Promise<ApiSuccess<ProfileRes>> => {
@@ -9,8 +8,8 @@ export const showMyProfileService = async (): Promise<ApiSuccess<ProfileRes>> =>
     return data;
 };
 
-export const updateMyProfileService = async ({ id, formData }: { id: string, formData: FormData }): Promise<ApiSuccess<ProfileRes>> => {
-    const { data } = await mainApi.patch(`/profile/${id}`, formData);
+export const updateMyProfileService = async (formData: ProfileReq): Promise<ApiSuccess<ProfileRes>> => {
+    const { data } = await mainApi.patch(`/profile`, formData);
     if (!data.success) throw data;
     return data;
 };

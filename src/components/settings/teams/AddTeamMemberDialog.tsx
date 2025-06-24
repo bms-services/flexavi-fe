@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Control, FieldValues, FormProvider, useForm } from "react-hook-form";
 
 import { useTranslation } from "react-i18next";
-import SelectSearchAsync, { Option } from "@/components/ui/select-search-async";
+import { SelectSearchAsync, Option } from "@/components/ui/select-search-async";
 import { TeamMemberReq } from "@/zustand/types/teamT";
 import { getMyEmployeesService } from "@/zustand/services/settingService";
 
@@ -78,10 +78,6 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
               placeholder="Zoek medewerker..."
               loadOptions={loadOptions}
               defaultOptions
-              onChange={(newValue: Option, actionMeta) => {
-                form.setValue("company_user_id", newValue.value);
-              }}
-            // value={normalizePostalCode(rawPostalCode)}
             />
             <DialogFooter>
               <Button type="submit">Medewerker toevoegen</Button>

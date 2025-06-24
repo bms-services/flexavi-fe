@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,149 +8,154 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Product } from "@/types/product";
-import { mockCategories } from "@/data/mockCategories";
+import { ProductReq } from "@/zustand/types/productT";
+import { Option, SelectSearchAsync } from "../ui/select-search-async";
+import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { getProductCategoriesService } from "@/zustand/services/productService";
+import { InputCurrency } from "../ui/input-currency";
 
 interface ProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  product?: Product;
-  onSave: (product: Partial<Product>) => void;
+  productId?: string;
+  onSave: (product: ProductReq) => void;
 }
-
 export function ProductDialog({
   open,
   onOpenChange,
-  product,
+  productId,
   onSave,
 }: ProductDialogProps) {
-  const [formData, setFormData] = useState<Partial<Product>>({
-    title: product?.title || "",
-    description: product?.description || "",
-    unit: product?.unit || "",
-    pricePerUnit: product?.pricePerUnit || 0,
-    vat: product?.vat || 21,
-    category: product?.category || "",
-  });
+  const { t } = useTranslation();
+  const [defaultOptions, setDefaultOptions] = useState<Option[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-    onOpenChange(false);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext<ProductReq>();
+
+  const loadOptions = async (inputValue: string) => {
+    const response = await getProductCategoriesService({
+      page: 1,
+      per_page: 10,
+      search: inputValue,
+    });
+
+    return response.result.data.map((item) => ({
+      value: item.id,
+      label: item.name
+    }));
   };
+
+  useEffect(() => {
+    if (open) {
+      loadOptions("").then(setDefaultOptions);
+    }
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSave)}>
           <DialogHeader>
             <DialogTitle>
-              {product ? "Product Bewerken" : "Nieuw Product"}
+              {productId ? "Product Bewerken" : "Nieuw Product"}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Titel</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, title: e.target.value }))
-                }
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description">Omschrijving</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, description: e.target.value }))
-                }
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="category">Categorie</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecteer een categorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  {mockCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Input
+              id="title"
+              label="Titel"
+              rules={{
+                register,
+                name: "title",
+                options: {
+                  required: t('product.error.required.name')
+                },
+                errors,
+              }}
+            />
+            <Textarea
+              id="description"
+              label="Omschrijving"
+              rules={{
+                register,
+                name: "description",
+                options: {
+                },
+                errors,
+              }}
+            />
+
+            <SelectSearchAsync
+              id="category"
+              label="Categorie"
+              loadOptions={loadOptions}
+              defaultOptions={defaultOptions}
+              rules={{
+                name: "category_id",
+                control,
+                options: {
+                  required: t('product.error.required.category')
+                },
+                errors,
+              }}
+            />
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="unit">Eenheid</Label>
-                <Input
-                  id="unit"
-                  value={formData.unit}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, unit: e.target.value }))
-                  }
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="pricePerUnit">Prijs per eenheid</Label>
-                <Input
-                  id="pricePerUnit"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.pricePerUnit}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      pricePerUnit: parseFloat(e.target.value),
-                    }))
-                  }
-                  required
-                />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="vat">BTW percentage</Label>
               <Input
-                id="vat"
+                id="unit"
+                label="Eenheid"
                 type="number"
-                min="0"
-                max="100"
-                value={formData.vat}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    vat: parseInt(e.target.value),
-                  }))
-                }
-                required
+                rules={{
+                  register,
+                  name: "unit",
+                  options: {
+                    required: t('product.error.required.unit'),
+                    validate: {
+                      positive: value => parseFloat(value as string) > 0 || t('product.error.positive.unit'),
+                    }
+                  },
+                  errors,
+                }}
+              />
+              <InputCurrency
+                id="price"
+                label="Prijs per eenheid"
+                rules={{
+                  control,
+                  name: "price",
+                  options: { required: "Prijs is verplicht" },
+                  errors,
+                }}
               />
             </div>
+            <InputCurrency
+              id="vat"
+              label="BTW percentage"
+              isPercent
+              rules={{
+                control,
+                name: "btw_percentage",
+                options: {
+                  required: t('product.error.required.vat'),
+                  validate: {
+                    range: value => {
+                      const numValue = parseFloat(value as string);
+                      return (numValue >= 0 && numValue <= 100) || t('product.error.range.vat');
+                    }
+                  }
+                },
+                errors,
+              }}
+            />
           </div>
           <DialogFooter>
-            <Button type="submit">{product ? "Opslaan" : "Toevoegen"}</Button>
+            <Button type="submit">{productId ? "Opslaan" : "Toevoegen"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -29,17 +29,17 @@ const ForgotPasswordSuccessfully = () => {
   return (
     <CardContent className="space-y-4">
       <div className="text-[14px]">
-        <p className="">
+        <p>
           <span className="font-bold text-primary">
-            {email}
+            {email}{" "}
           </span>
-          &nbsp;{t("auth:forgotPasswordSuccessfully.text.success")}&nbsp;
-          {t("auth:forgotPasswordSuccessfully.text.checkEmail")}
+          {t("forgotPasswordSuccessfully.text.success")}
+          {t("forgotPasswordSuccessfully.text.checkEmail")}
         </p>
       </div>
       <Button
         onClick={handleRedirectLogin}
-        className="w-full">{t("auth:forgotPasswordSuccessfully.button.login")}</Button>
+        className="w-full">{t("forgotPasswordSuccessfully.button.login")}</Button>
     </CardContent>
   );
 };

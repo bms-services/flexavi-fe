@@ -155,6 +155,8 @@ export const EmployeeSettings: React.FC = () => {
     ([value, { label }]) => ({ value, label })
   );
 
+  const data = getMyEmployeesZ.data?.result?.data || [];
+  const meta = getMyEmployeesZ.data?.result?.meta;
 
   return (
     <Card>
@@ -178,8 +180,8 @@ export const EmployeeSettings: React.FC = () => {
 
           <TableTanstack
             columns={columns}
-            data={getMyEmployeesZ.data?.result?.data || []}
-            meta={getMyEmployeesZ.data?.result?.meta}
+            data={data}
+            meta={meta}
             isLoading={getMyEmployeesZ.isLoading}
             params={params}
             onParamsChange={handleParamsChange}

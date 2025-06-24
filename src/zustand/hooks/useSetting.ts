@@ -34,9 +34,12 @@ import {
     deleteMyEmployeeService,
     updateMyEmployeeService,
     addMemberMyTeamService,
-    getMyWorkDaysService
+    getMyWorkDaysService,
+    getMyAgendaSettingsService,
+    updateMyAgendaSettingsService
 } from "../services/settingService";
 import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
+import { AgendaSettingReq, AgendaSettingRes } from "../types/agenda";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -216,3 +219,21 @@ export const useCreateMyTrial = () => {
         mutationFn: createMyTrialService,
     });
 }
+
+
+// ------ Agenda Settings ------ \\
+export const useGetMyAgendaSettings = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<AgendaSettingRes>, ApiError>({
+        queryKey: ['my-agenda-settings', params],
+        queryFn: () => getMyAgendaSettingsService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+}
+
+export const useUpdateMyAgendaSettings = () => {
+    return useMutation<ApiSuccess<AgendaSettingRes>, ApiError, AgendaSettingReq[]>({
+        mutationFn: updateMyAgendaSettingsService,
+    });
+};
+

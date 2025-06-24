@@ -28,8 +28,8 @@ const AuthLayout: React.FC = () => {
     const resolveHandleValue = (value?: string | (() => string)) =>
         typeof value === "function" ? value() : value || "";
 
-    const titleKey = resolveHandleValue(currentHandle?.title || "auth:login.text.title");
-    const descriptionKey = resolveHandleValue(currentHandle?.description || "auth:login.text.description");
+    const titleKey = resolveHandleValue(currentHandle?.title || "login.text.title");
+    const descriptionKey = resolveHandleValue(currentHandle?.description || "login.text.description");
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background px-4">

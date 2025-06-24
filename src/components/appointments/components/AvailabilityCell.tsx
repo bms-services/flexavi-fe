@@ -3,7 +3,7 @@ import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { Clock, Calendar, MapPin, FileText } from "lucide-react";
 import {
   HoverCard,
@@ -23,29 +23,29 @@ const appointmentTypeLabels = {
   rescheduled: "Verzet",
 };
 
-export const AvailabilityCell = ({ 
-  date, 
-  team, 
-  timeSlot, 
-  appointments, 
+export const AvailabilityCell = ({
+  date,
+  team,
+  timeSlot,
+  appointments,
   maxSlots,
   searchLocation,
   isMobile
 }: AvailabilityCellProps) => {
   const count = appointments.filter(app => {
     const hour = parseInt(app.startTime.split(":")[0]);
-    return app.date === date && 
-           app.teamId === team.id && 
-           hour >= timeSlot.start && 
-           hour < timeSlot.end;
+    return app.date === date &&
+      app.teamId === team.id &&
+      hour >= timeSlot.start &&
+      hour < timeSlot.end;
   }).length;
 
   const available = maxSlots - count;
   const isFullyBooked = available === 0;
   const isLimitedAvailability = available <= 1;
 
-  const dateAppointments = appointments.filter(app => 
-    app.date === date && 
+  const dateAppointments = appointments.filter(app =>
+    app.date === date &&
     app.teamId === team.id &&
     parseInt(app.startTime.split(":")[0]) >= timeSlot.start &&
     parseInt(app.startTime.split(":")[0]) < timeSlot.end
@@ -56,20 +56,20 @@ export const AvailabilityCell = ({
     .filter(Boolean);
 
   const cities = [...new Set(locations)].join(', ');
-  
-  const hasSearchedLocation = searchLocation ? 
-    cities.toLowerCase().includes(searchLocation.toLowerCase()) : 
+
+  const hasSearchedLocation = searchLocation ?
+    cities.toLowerCase().includes(searchLocation.toLowerCase()) :
     false;
 
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <div className="relative">
-          <Badge 
+          <Badge
             variant="outline"
             className={cn(
               "w-full justify-between gap-0.5 md:gap-1 cursor-pointer transition-colors text-[10px] md:text-sm px-1 py-0.5 md:px-3 md:py-1.5",
-              isFullyBooked 
+              isFullyBooked
                 ? "border-green-700" // Dark green border when fully booked
                 : "border-blue-500",  // Blue border when not fully booked
               hasSearchedLocation && "border-green-500 bg-green-50", // Light green background only for location matches
@@ -138,13 +138,13 @@ export const AvailabilityCell = ({
               Geen afspraken gepland
             </p>
           )}
-          
+
           <p className={cn(
             "text-sm font-medium border-t pt-2",
             isFullyBooked ? "text-destructive" : "text-primary"
           )}>
-            {isFullyBooked 
-              ? "Volledig volgeboekt" 
+            {isFullyBooked
+              ? "Volledig volgeboekt"
               : `${available} ${available === 1 ? 'plek' : 'plekken'} beschikbaar`}
           </p>
         </div>

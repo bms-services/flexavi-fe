@@ -6,7 +6,6 @@ import {
   useReactTable,
   RowSelectionState,
   Table as ReactTable,
-  Row,
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon, MoveRightIcon, PencilIcon } from "lucide-react";
 import { Checkbox } from "./checkbox";

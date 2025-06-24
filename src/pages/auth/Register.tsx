@@ -72,8 +72,8 @@ const Register = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         <Input
-          label={t('auth:register.label.name')}
-          placeholder={t('auth:register.placeholder.name')}
+          label={t('register.label.name')}
+          placeholder={t('register.placeholder.name')}
           id="name"
           type="text"
           icon={<UserIcon className="h-5 w-5 " />}
@@ -81,14 +81,14 @@ const Register = () => {
             register,
             name: "name",
             options: {
-              required: t('auth:register.error.required.name')
+              required: t('register.error.required.name')
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:register.label.email')}
-          placeholder={t('auth:register.placeholder.email')}
+          label={t('register.label.email')}
+          placeholder={t('register.placeholder.email')}
           id={'email'}
           type="email"
           icon={<Mail className="h-5 w-5 " />}
@@ -96,25 +96,25 @@ const Register = () => {
             register,
             name: "email",
             options: {
-              required: t('auth:register.error.required.email')
+              required: t('register.error.required.email')
             },
             errors,
           }}
         />
         <PhoneNumber
-          label={t('auth:register.label.phone')}
+          label={t('register.label.phone')}
           rules={{
             control,
             name: "phone",
             options: {
-              required: t('auth:register.error.required.phone')
+              required: t('register.error.required.phone')
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:register.label.password')}
-          placeholder={t('auth:register.placeholder.password')}
+          label={t('register.label.password')}
+          placeholder={t('register.placeholder.password')}
           id="password"
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
@@ -122,25 +122,25 @@ const Register = () => {
             register,
             name: "password",
             options: {
-              required: t('auth:register.error.required.password')
+              required: t('register.error.required.password')
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:register.label.passwordConfirmation')}
-          placeholder={t('auth:register.placeholder.passwordConfirmation')}
-          id="password-confirmation"
+          label={t('register.label.passwordConfirmation')}
+          placeholder={t('register.placeholder.passwordConfirmation')}
+          id="password_confirmation"
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
           rules={{
             register,
-            name: "password-confirmation",
+            name: "password_confirmation",
             options: {
-              required: t('auth:register.error.required.passwordConfirmation'),
+              required: t('register.error.required.passwordConfirmation'),
               validate: (value) => {
                 if (value !== watch("password")) {
-                  return t('auth:register.error.required.passwordConfirmationMismatch')
+                  return t('register.error.required.passwordConfirmationMismatch')
                 }
               },
             },
@@ -153,15 +153,15 @@ const Register = () => {
           loading={registerZ.isPending}
         >
           <UserPlus className="mr-2 h-4 w-4" />
-          {t('auth:register.button.submit')}
+          {t('register.button.submit')}
         </Button>
         <p className="text-sm text-muted-foreground text-center">
-          {t('auth:register.text.alreadyHaveAccount')}
+          {t('register.text.alreadyHaveAccount')}
           <Link
             to="/login"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            &nbsp;{t('auth:register.link.login')}
+            {t('register.link.login')}
           </Link>
         </p>
       </CardFooter>

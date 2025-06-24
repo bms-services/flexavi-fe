@@ -24,23 +24,18 @@ export default function PaymentConfirm() {
 
             try {
                 setLoader(true, "Verifying your payment method...");
-
-                // Step 1: Pastikan data profil sudah ter-load
                 if (showMyProfileZ.isLoading || !showMyProfileZ.data) {
                     setLoader(true, "Loading your profile data...");
                     await showMyProfileZ.refetch();
                 }
 
-                // Step 2: Update payment method
                 setLoader(true, "Updating your payment method...");
                 const res = await updateMyPaymentZ.mutateAsync({ setup_intent_id: setupIntentId });
 
                 if (res.success) {
-                    // Step 3: Refresh profile data untuk mendapatkan status terbaru
                     setLoader(true, "Refreshing profile data...");
                     const profileResult = await showMyProfileZ.refetch();
 
-                    // Step 4: Pastikan data ada dan check status subscription
                     const statusSubscription = profileResult.data?.result?.status_subscription;
                     console.log("Current subscription status:", statusSubscription);
 
@@ -49,7 +44,6 @@ export default function PaymentConfirm() {
                         return;
                     }
 
-                    // Step 5: Buat trial untuk user baru
                     setLoader(true, "Setting up your trial subscription...");
                     await createMyTrialZ.mutateAsync();
                 }

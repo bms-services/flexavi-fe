@@ -1,7 +1,7 @@
 import React, { forwardRef, useMemo } from "react"
 import { useDropzone } from "react-dropzone"
 import { UploadCloud } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/format"
 
 interface DropzoneInnerProps {
     value?: File | File[]

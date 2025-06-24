@@ -96,7 +96,7 @@ export default function AdminDashboard() {
                 </CardContent>
               </Card>
 
-              <ShopifyStyleDashboard timeRange={timeRange} />
+              {/* <ShopifyStyleDashboard timeRange={timeRange} /> */}
             </TabsContent>
 
             <TabsContent value="members" className="mt-0 w-full">

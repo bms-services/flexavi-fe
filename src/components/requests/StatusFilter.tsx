@@ -1,7 +1,7 @@
 
 import React from "react";
 import { RequestStatus } from "@/types/requests";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface StatusFilterProps {
   selectedStatus: RequestStatus | "all";

@@ -99,7 +99,6 @@ export const EmployeeInvitationSettings: React.FC = () => {
     [setParams]
   );
 
-
   /**
    * Function for open modal create employee.
    * 
@@ -153,7 +152,8 @@ export const EmployeeInvitationSettings: React.FC = () => {
     ([value, { label }]) => ({ value, label })
   );
 
-
+  const data = getInvitedEmployeesZ.data?.result?.data || [];
+  const meta = getInvitedEmployeesZ.data?.result?.meta;
   return (
     <Card>
       <CardHeader>
@@ -176,8 +176,8 @@ export const EmployeeInvitationSettings: React.FC = () => {
 
           <TableTanstack
             columns={columns}
-            data={getInvitedEmployeesZ.data?.result?.data || []}
-            meta={getInvitedEmployeesZ.data?.result?.meta}
+            data={data}
+            meta={meta}
             isLoading={getInvitedEmployeesZ.isLoading}
             params={params}
             onParamsChange={handleParamsChange}

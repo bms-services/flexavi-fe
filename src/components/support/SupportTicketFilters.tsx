@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface SupportTicketFiltersProps {
   className?: string;
@@ -52,8 +52,8 @@ export function SupportTicketFilters({ className, onFilterChange }: SupportTicke
           onChange={(e) => handleFilterChange("search", e.target.value)}
         />
       </div>
-      
-      <Select 
+
+      <Select
         value={filters.status}
         onValueChange={(value) => handleFilterChange("status", value)}
       >
@@ -70,8 +70,8 @@ export function SupportTicketFilters({ className, onFilterChange }: SupportTicke
           <SelectItem value="closed">Gesloten</SelectItem>
         </SelectContent>
       </Select>
-      
-      <Select 
+
+      <Select
         value={filters.priority}
         onValueChange={(value) => handleFilterChange("priority", value)}
       >
@@ -86,8 +86,8 @@ export function SupportTicketFilters({ className, onFilterChange }: SupportTicke
           <SelectItem value="urgent">Urgent</SelectItem>
         </SelectContent>
       </Select>
-      
-      <Select 
+
+      <Select
         value={filters.category}
         onValueChange={(value) => handleFilterChange("category", value)}
       >
@@ -103,10 +103,10 @@ export function SupportTicketFilters({ className, onFilterChange }: SupportTicke
           <SelectItem value="general">Algemeen</SelectItem>
         </SelectContent>
       </Select>
-      
+
       <div className="flex gap-2">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="flex-1"
           onClick={resetFilters}
         >

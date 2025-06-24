@@ -2,7 +2,7 @@
 import React from "react";
 import { KnowledgeBaseCategory } from "@/types/knowledge-base";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface FAQCategoriesProps {
   categories: KnowledgeBaseCategory[];
@@ -10,10 +10,10 @@ interface FAQCategoriesProps {
   onSelectCategory: (categoryId: string) => void;
 }
 
-export function FAQCategories({ 
-  categories, 
-  activeCategory, 
-  onSelectCategory 
+export function FAQCategories({
+  categories,
+  activeCategory,
+  onSelectCategory
 }: FAQCategoriesProps) {
   return (
     <div className="flex flex-wrap gap-2 mb-8 justify-center">
@@ -21,13 +21,13 @@ export function FAQCategories({
         variant={activeCategory === "all" ? "default" : "outline"}
         onClick={() => onSelectCategory("all")}
         className={cn(
-          "rounded-full", 
+          "rounded-full",
           activeCategory === "all" ? "bg-primary" : ""
         )}
       >
         Alle vragen
       </Button>
-      
+
       {categories.map(category => (
         <Button
           key={category.id}

@@ -3,7 +3,7 @@ import React from "react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { Clock, Calendar, MapPin, FileText } from "lucide-react";
 import {
   HoverCard,
@@ -36,20 +36,20 @@ const appointmentTypeLabels = {
   rescheduled: "Verzet",
 };
 
-export const AvailabilityCell = ({ 
-  date, 
-  team, 
-  timeSlot, 
-  appointments, 
+export const AvailabilityCell = ({
+  date,
+  team,
+  timeSlot,
+  appointments,
   maxSlots,
-  searchLocation 
+  searchLocation
 }: AvailabilityCellProps) => {
   const count = appointments.filter(app => {
     const hour = parseInt(app.startTime.split(":")[0]);
-    return app.date === date && 
-           app.teamId === team.id && 
-           hour >= timeSlot.start && 
-           hour < timeSlot.end;
+    return app.date === date &&
+      app.teamId === team.id &&
+      hour >= timeSlot.start &&
+      hour < timeSlot.end;
   }).length;
 
   const available = maxSlots - count;
@@ -57,8 +57,8 @@ export const AvailabilityCell = ({
   const isLimitedAvailability = available <= 1;
   const isSufficientCapacity = count >= maxSlots * 0.75; // Consider 75% full as sufficient capacity
 
-  const dateAppointments = appointments.filter(app => 
-    app.date === date && 
+  const dateAppointments = appointments.filter(app =>
+    app.date === date &&
     app.teamId === team.id &&
     parseInt(app.startTime.split(":")[0]) >= timeSlot.start &&
     parseInt(app.startTime.split(":")[0]) < timeSlot.end
@@ -69,16 +69,16 @@ export const AvailabilityCell = ({
     .filter(Boolean);
 
   const cities = [...new Set(locations)].join(', ');
-  
-  const hasSearchedLocation = searchLocation ? 
-    cities.toLowerCase().includes(searchLocation.toLowerCase()) : 
+
+  const hasSearchedLocation = searchLocation ?
+    cities.toLowerCase().includes(searchLocation.toLowerCase()) :
     false;
 
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <div className="relative">
-          <Badge 
+          <Badge
             variant={isFullyBooked ? "destructive" : isLimitedAvailability ? "warning" : "outline"}
             className={cn(
               "w-full justify-between gap-1 cursor-pointer transition-colors text-xs md:text-sm px-2 md:px-3 py-1 md:py-1.5",
@@ -149,13 +149,13 @@ export const AvailabilityCell = ({
               Geen afspraken gepland
             </p>
           )}
-          
+
           <p className={cn(
             "text-sm font-medium",
             isFullyBooked ? "text-destructive" : "text-primary"
           )}>
-            {isFullyBooked 
-              ? "Volledig volgeboekt" 
+            {isFullyBooked
+              ? "Volledig volgeboekt"
               : `${available} ${available === 1 ? 'plek' : 'plekken'} beschikbaar`}
           </p>
         </div>

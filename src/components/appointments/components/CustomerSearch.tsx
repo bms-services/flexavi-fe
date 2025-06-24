@@ -23,7 +23,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { mockLeads } from "@/data/mockLeads";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { Lead } from "@/types";
 import { CreateCustomerForm } from "./CreateCustomerForm";
 
@@ -58,8 +58,8 @@ export const CustomerSearch: React.FC<CustomerSearchProps> = ({
     onSelectCustomer(newCustomer);
     setShowNewCustomerDialog(false);
     setOpen(false);
-    
-   
+
+
   };
 
   const handleOpenNewCustomerDialog = () => {

@@ -106,7 +106,7 @@ const Login = () => {
             to="/register"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            &nbsp;{t('login.link.register')}
+            {t('login.link.register')}
           </Link>
         </p>
       </CardFooter>

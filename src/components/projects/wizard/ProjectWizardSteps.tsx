@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/format';
 import { Users, Box, Truck, FileText, CircleDollarSign, Image } from 'lucide-react';
 
 interface Step {

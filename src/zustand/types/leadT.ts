@@ -20,6 +20,7 @@ export type LeadStatus =
 
 export type LeadReq = {
     id?: string;
+    ids?: string[];
     name: string;
     email: string;
     phone: string;

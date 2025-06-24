@@ -25,7 +25,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { CalendarIcon } from "lucide-react";
 
 export const TeamAvailabilityOverview = ({
@@ -74,7 +74,7 @@ export const TeamAvailabilityOverview = ({
   const handleTeamNameEdit = (team: TeamDetails) => {
     setEditingTeam(team);
   };
-  
+
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       setSelectedDate(date);
@@ -82,7 +82,7 @@ export const TeamAvailabilityOverview = ({
       const selectedWeekStart = startOfWeek(date, { weekStartsOn: 1 });
       const currentWeekStart = startOfWeek(parseISO(startDate), { weekStartsOn: 1 });
       const weekDiff = Math.round(
-        (selectedWeekStart.getTime() - currentWeekStart.getTime()) / 
+        (selectedWeekStart.getTime() - currentWeekStart.getTime()) /
         (7 * 24 * 60 * 60 * 1000)
       );
       setDateOffset(weekDiff);
@@ -102,18 +102,18 @@ export const TeamAvailabilityOverview = ({
             className="pl-9"
           />
         </div>
-        
+
         <div className="flex flex-col gap-2 sm:items-end">
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="icon" 
+            <Button
+              variant="outline"
+              size="icon"
               onClick={handlePreviousDays}
               disabled={dateOffset === 0}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            
+
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="min-w-[180px] justify-start">
@@ -134,10 +134,10 @@ export const TeamAvailabilityOverview = ({
                 />
               </PopoverContent>
             </Popover>
-            
-            <Button 
-              variant="outline" 
-              size="icon" 
+
+            <Button
+              variant="outline"
+              size="icon"
               onClick={handleNextDays}
             >
               <ChevronRight className="h-4 w-4" />
@@ -172,7 +172,7 @@ export const TeamAvailabilityOverview = ({
             isMobile={isMobile}
           />
         </div>
-        
+
         <div className="min-w-[700px] mt-6">
           <InstallationTeamSection
             title="Uitvoerende Teams"

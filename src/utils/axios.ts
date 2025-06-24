@@ -71,11 +71,11 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
       const token = getAuthToken();
       if (token && (status === 401)) {
         Cookies.remove(tokenName);
-        window.location.href = "/login"; // redirect ke login
+        window.location.href = "/login";
       }
 
       errorHandler(error);
-      return Promise.reject(error);
+      return Promise.reject(error.response?.data);
     }
   );
 

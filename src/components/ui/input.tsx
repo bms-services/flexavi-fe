@@ -1,21 +1,22 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/format"
 import { Label } from "./label"
-import { FieldErrors, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
+import { FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
 import React from "react";
 
-interface InputC<T> extends React.ComponentProps<"input"> {
+interface InputC<T extends FieldValues> extends React.ComponentProps<"input"> {
   label?: string
   icon?: React.ReactNode
   rules?: {
     register: UseFormRegister<T>,
-    name: string,
+    name: Path<T>,
     options: RegisterOptions<T>,
     errors: FieldErrors<T>
   }
+  error?: FieldError
 }
 
-const Input = React.forwardRef(<T,>(
-  { className, type, label, icon, rules, ...props }: InputC<T>,
+const Input = React.forwardRef(<T extends FieldValues,>(
+  { className, type, label, icon, rules, error, ...props }: InputC<T>,
   ref: React.Ref<HTMLInputElement>
 ) => {
   return (
@@ -48,8 +49,13 @@ const Input = React.forwardRef(<T,>(
           {rules.errors[rules.name]?.message as string}
         </div>
       )}
+      {error && error && (
+        <div className="text-red-500 text-sm mt-1">
+          {error.message as string}
+        </div>
+      )}
     </div>
   );
-}) as <T>(props: InputC<T> & { ref?: React.Ref<HTMLInputElement> }) => JSX.Element;
+}) as <T extends FieldValues>(props: InputC<T> & { ref?: React.Ref<HTMLInputElement> }) => JSX.Element;
 
 export { Input }

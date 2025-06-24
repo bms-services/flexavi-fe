@@ -1,5 +1,4 @@
 
-import React from "react";
 import { PersonalInfoSettings } from "../account/PersonalInfoSettings";
 import { PasswordSettings } from "../account/PasswordSettings";
 

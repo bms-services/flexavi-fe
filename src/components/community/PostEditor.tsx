@@ -7,7 +7,7 @@ import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered } from "luc
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/format';
 
 interface PostEditorProps {
   value: string;
@@ -88,7 +88,7 @@ export function PostEditor({ value, onChange, placeholder }: PostEditorProps) {
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
-        
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -96,8 +96,8 @@ export function PostEditor({ value, onChange, placeholder }: PostEditorProps) {
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
-            <Picker 
-              data={data} 
+            <Picker
+              data={data}
               onEmojiSelect={addEmoji}
               theme="light"
               locale="nl"
@@ -105,7 +105,7 @@ export function PostEditor({ value, onChange, placeholder }: PostEditorProps) {
           </PopoverContent>
         </Popover>
       </div>
-      
+
       <EditorContent editor={editor} />
     </div>
   );

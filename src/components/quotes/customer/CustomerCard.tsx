@@ -7,21 +7,21 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Command, 
-  CommandEmpty, 
-  CommandGroup, 
-  CommandInput, 
-  CommandItem, 
-  CommandList 
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
 } from "@/components/ui/command";
-import { 
-  Popover, 
-  PopoverContent, 
-  PopoverTrigger 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface CustomerCardProps {
   selectedCustomer: Lead | null;
@@ -29,10 +29,10 @@ interface CustomerCardProps {
   disabled?: boolean;
 }
 
-export const CustomerCard: React.FC<CustomerCardProps> = ({ 
-  selectedCustomer, 
+export const CustomerCard: React.FC<CustomerCardProps> = ({
+  selectedCustomer,
   onSelectCustomer,
-  disabled = false 
+  disabled = false
 }) => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,8 +44,8 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
   };
 
   const filteredCustomers = mockLeads.filter(
-    customer => 
-      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    customer =>
+      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.phone.includes(searchTerm)
   );
@@ -74,8 +74,8 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0">
               <Command>
-                <CommandInput 
-                  placeholder="Zoek klant..." 
+                <CommandInput
+                  placeholder="Zoek klant..."
                   onValueChange={setSearchTerm}
                 />
                 <CommandEmpty>Geen klanten gevonden.</CommandEmpty>

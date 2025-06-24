@@ -4,6 +4,7 @@ import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
+import { AgendaSettingReq, AgendaSettingRes } from "../types/agenda";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -153,6 +154,19 @@ export const createMyTrialService = async (): Promise<ApiSuccess<TrialRes>> => {
 // Package
 export const updateMyPackageService = async (formData: PackageReq): Promise<ApiSuccess<PackageRes>> => {
     const { data } = await mainApi.post("/setting/package", formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+// Agenda
+export const getMyAgendaSettingsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<AgendaSettingRes>> => {
+    const { data } = await mainApi.get("/setting/agenda/list", { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const updateMyAgendaSettingsService = async (formData: AgendaSettingReq[]): Promise<ApiSuccess<AgendaSettingRes>> => {
+    const { data } = await mainApi.post("/setting/agenda/create", formData);
     if (!data.success) throw data;
     return data;
 }

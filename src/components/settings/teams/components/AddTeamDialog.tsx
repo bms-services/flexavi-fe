@@ -89,12 +89,12 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {teamId ? t('dashboard:settings.team.edit') : t('dashboard:settings.team.create')}
+            {teamId ? t('settings.team.edit') : t('settings.team.create')}
           </DialogTitle>
           <DialogDescription>
             {teamId
-              ? t('dashboard:settings.team.description.edit')
-              : t('dashboard:settings.team.description.create')}
+              ? t('settings.team.description.edit')
+              : t('settings.team.description.create')}
           </DialogDescription>
         </DialogHeader>
 
@@ -102,23 +102,23 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
 
             <Input
-              label={t('dashboard:settings.team.label.name')}
-              placeholder={t('dashboard:settings.team.placeholder.name')}
+              label={t('settings.team.label.name')}
+              placeholder={t('settings.team.placeholder.name')}
               id="name"
               type="text"
               rules={{
                 register: form.register,
                 name: "name",
                 options: {
-                  required: t('dashboard:settings.team.error.required.name'),
+                  required: t('settings.team.error.required.name'),
                 },
                 errors: form.formState.errors,
               }}
             />
 
             <Textarea
-              label={t('dashboard:settings.team.label.description')}
-              placeholder={t('dashboard:settings.team.placeholder.description')}
+              label={t('settings.team.label.description')}
+              placeholder={t('settings.team.placeholder.description')}
               id="description"
               maxLength={250}
               rules={{
@@ -134,7 +134,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('dashboard:settings.team.label.color')}</FormLabel>
+                  <FormLabel>{t('settings.team.label.color')}</FormLabel>
                   <FormControl>
                     <div className="flex gap-2 items-center">
                       <Input type="color" {...field} className="w-12 h-10 p-1" />
@@ -144,7 +144,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                     </div>
                   </FormControl>
                   <FormDescription>
-                    {t('dashboard:settings.team.description.color')}
+                    {t('settings.team.description.color')}
                   </FormDescription>
                 </FormItem>
               )}
@@ -155,7 +155,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('dashboard:settings.team.label.type')}</FormLabel>
+                  <FormLabel>{t('settings.team.label.type')}</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -163,12 +163,12 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
                       defaultValue={TeamTypeEnum.SALES}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder={t('dashboard:settings.team.placeholder.type')} />
+                        <SelectValue placeholder={t('settings.team.placeholder.type')} />
                       </SelectTrigger>
                       <SelectContent>
                         {Object.values(TeamTypeEnum).map((type) => (
                           <SelectItem key={type} value={type}>
-                            {t(`dashboard:settings.team.type.${type.toLowerCase()}`)}
+                            {t(`settings.team.type.${type.toLowerCase()}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -180,7 +180,7 @@ export const AddTeamDialog: React.FC<AddTeamDialogProps> = ({
 
             <DialogFooter>
               <Button type="submit">
-                {t('dashboard:settings.team.button.submit')}
+                {t('settings.team.button.submit')}
               </Button>
             </DialogFooter>
           </form>

@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Group } from "@/types/community";
 import { useCommunityGroups } from "@/hooks/community";
 import { Users, Camera, Briefcase, MessageSquare, FileImage, Headphones } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 
 interface CommunityGroupsProps {
   onSelectGroup: (group: Group) => void;
@@ -33,7 +33,7 @@ export function CommunityGroups({ onSelectGroup, selectedGroup }: CommunityGroup
             <Users className="h-4 w-4" />
             <span>Alle groepen</span>
           </button>
-          
+
           {groups.map((group) => (
             <button
               key={group.id}

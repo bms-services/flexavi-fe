@@ -2,7 +2,7 @@
 import React from "react";
 import { Appointment } from "@/types";
 import { Clock, MapPin, User, GripVertical, Info, FileText } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { Badge } from "@/components/ui/badge";
 import { mockLeads } from "@/data/mockData";
 
@@ -26,7 +26,7 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
   appointments,
   onDragStart
 }) => {
-  const sortedAppointments = [...appointments].sort((a, b) => 
+  const sortedAppointments = [...appointments].sort((a, b) =>
     a.startTime.localeCompare(b.startTime)
   );
 
@@ -38,14 +38,14 @@ export const TeamAppointmentList: React.FC<TeamAppointmentListProps> = ({
     <div className="space-y-2">
       {sortedAppointments.map((appointment) => {
         const leadInfo = getLeadInfo(appointment.leadId);
-        
+
         return (
-          <div 
+          <div
             key={appointment.id}
             className={cn(
               "p-2 rounded-lg border shadow-sm",
-              appointment.teamType === "sales" 
-                ? "bg-blue-50 border-blue-200" 
+              appointment.teamType === "sales"
+                ? "bg-blue-50 border-blue-200"
                 : "bg-green-50 border-green-200",
               onDragStart ? "cursor-move hover:shadow-md transition-shadow" : ""
             )}

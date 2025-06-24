@@ -73,9 +73,9 @@ export default function VerifyEmailDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-lg overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>{t('dashboard:banner.otp.title')}</DialogTitle>
+                    <DialogTitle>{t('banner.otp.title')}</DialogTitle>
                     <DialogDescription>
-                        {t('dashboard:banner.otp.description')}
+                        {t('banner.otp.description')}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-4 py-6">
@@ -93,7 +93,7 @@ export default function VerifyEmailDialog({
                 </div>
                 <DialogFooter className="!justify-center">
                     <span className="text-center text-sm text-gray-600">
-                        {t("dashboard:banner.otp.dontHaveOtp")}&nbsp;
+                        {t("banner.otp.dontHaveOtp")}{" "}
                         <span
                             role="button"
                             aria-disabled={secondsLeft > 0}
@@ -105,7 +105,7 @@ export default function VerifyEmailDialog({
                         >
                             {secondsLeft > 0
                                 ? new Date(secondsLeft * 1000).toISOString().substring(14, 19) // format mm:ss
-                                : t("dashboard:banner.otp.requestNewOtp")}
+                                : t("banner.otp.requestNewOtp")}
                         </span>
                     </span>
                 </DialogFooter>

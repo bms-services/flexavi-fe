@@ -1,4 +1,3 @@
-import { l } from "node_modules/framer-motion/dist/types.d-CQt5spQA";
 
 export type EmployeeReq = {
     name: string;
@@ -34,7 +33,17 @@ export type EmployeeRate = {
     daily_rate: number;
 };
 
-export type EmployeeRole = "sales" | "installation";
+export type EmployeeRole = "sales" | "administrator";
+
+export enum EmployeeRoleEnum {
+    Sales = "sales",
+    Administrator = "administrator",
+};
+
+export const EmployeeRoleMap = {
+    sales: { label: "Sales", value: "sales", variant: "primary" },
+    administrator: { label: "Administrator", value: "administrator", variant: "secondary" },
+} as const;
 
 
 export type EmployeeWorkingDays = {

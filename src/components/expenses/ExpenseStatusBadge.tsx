@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/format";
 import { ExpenseStatus } from "@/types/expenses";
 
 interface ExpenseStatusBadgeProps {

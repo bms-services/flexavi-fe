@@ -23,7 +23,7 @@ const RegisterEmployee = () => {
 
   const { setEmail } = useRegisterStore();
   const registerEmployeeZ = useRegisterEmployee();
-  const verifyRegisterEmployeeZ = useVerifyRegisterEmployee(token)
+  const verifyRegisterEmployeeZ = useVerifyRegisterEmployee(token || "");
 
 
   const {
@@ -41,7 +41,7 @@ const RegisterEmployee = () => {
       phone: "",
       password: "",
       password_confirmation: "",
-      token: token,
+      token: token || "",
     },
   });
 
@@ -99,21 +99,21 @@ const RegisterEmployee = () => {
         {verifyRegisterEmployeeZ.isSuccess && (
           <div>
             <p className="text-[14px]">
-              Hii <b>{verifyRegisterEmployeeZ.data.result.name}</b>,&nbsp;
-              {t('auth:registerEmployee.text.subDescription')}&nbsp;
+              Hii <b>{verifyRegisterEmployeeZ.data.result.name}</b>,
+              {t('registerEmployee.text.subDescription')}
               <span className="text-primary font-semibold">
                 {verifyRegisterEmployeeZ.data.result.company_name}
               </span>
             </p>
 
             <p className="text-[14px]">
-              {t('auth:registerEmployee.text.subDescription2')}
+              {t('registerEmployee.text.subDescription2')}
             </p>
           </div>
         )}
         <Input
-          label={t('auth:registerEmployee.label.name')}
-          placeholder={t('auth:registerEmployee.placeholder.name')}
+          label={t('registerEmployee.label.name')}
+          placeholder={t('registerEmployee.placeholder.name')}
           id="name"
           type="text"
           icon={<LockIcon className="h-5 w-5 " />}
@@ -122,14 +122,14 @@ const RegisterEmployee = () => {
             register,
             name: "name",
             options: {
-              required: t('auth:registerEmployee.error.required.name')
+              required: t('registerEmployee.error.required.name')
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:registerEmployee.label.email')}
-          placeholder={t('auth:registerEmployee.placeholder.email')}
+          label={t('registerEmployee.label.email')}
+          placeholder={t('registerEmployee.placeholder.email')}
           id="email"
           type="email"
           icon={<LockIcon className="h-5 w-5 " />}
@@ -138,27 +138,27 @@ const RegisterEmployee = () => {
             register,
             name: "email",
             options: {
-              required: t('auth:registerEmployee.error.required.email')
+              required: t('registerEmployee.error.required.email')
             },
             errors,
           }}
         />
         <PhoneNumber
-          label={t('auth:registerEmployee.label.phone')}
+          label={t('registerEmployee.label.phone')}
           disabled
           rules={{
             control,
             name: "phone",
             options: {
-              required: t('auth:registerEmployee.error.required.phone')
+              required: t('registerEmployee.error.required.phone')
             },
             errors,
           }}
         />
 
         <Input
-          label={t('auth:registerEmployee.label.password')}
-          placeholder={t('auth:registerEmployee.placeholder.password')}
+          label={t('registerEmployee.label.password')}
+          placeholder={t('registerEmployee.placeholder.password')}
           id="password"
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
@@ -166,14 +166,14 @@ const RegisterEmployee = () => {
             register,
             name: "password",
             options: {
-              required: t('auth:registerEmployee.error.required.password')
+              required: t('registerEmployee.error.required.password')
             },
             errors,
           }}
         />
         <Input
-          label={t('auth:registerEmployee.label.passwordConfirmation')}
-          placeholder={t('auth:registerEmployee.placeholder.passwordConfirmation')}
+          label={t('registerEmployee.label.passwordConfirmation')}
+          placeholder={t('registerEmployee.placeholder.passwordConfirmation')}
           id="password-confirmation"
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
@@ -181,10 +181,10 @@ const RegisterEmployee = () => {
             register,
             name: "password-confirmation",
             options: {
-              required: t('auth:registerEmployee.error.required.passwordConfirmation'),
+              required: t('registerEmployee.error.required.passwordConfirmation'),
               validate: (value) => {
                 if (value !== watch("password")) {
-                  return t('auth:registerEmployee.error.required.passwordConfirmationMismatch')
+                  return t('registerEmployee.error.required.passwordConfirmationMismatch')
                 }
               },
             },
@@ -197,15 +197,15 @@ const RegisterEmployee = () => {
           loading={registerEmployeeZ.isPending}
         >
           <UserPlus className="mr-2 h-4 w-4" />
-          {t('auth:registerEmployee.button.submit')}
+          {t('registerEmployee.button.submit')}
         </Button>
         <p className="text-sm text-muted-foreground text-center">
-          {t('auth:registerEmployee.text.alreadyHaveAccount')}
+          {t('registerEmployee.text.alreadyHaveAccount')}
           <Link
             to="/login"
             className="text-primary hover:text-primary/90 hover:underline"
           >
-            &nbsp;{t('auth:registerEmployee.link.login')}
+            {t('registerEmployee.link.login')}
           </Link>
         </p>
       </CardFooter>
