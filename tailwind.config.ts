@@ -1,6 +1,7 @@
 
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from 'tailwindcss-animate'
+import twElements from "tw-elements/plugin.cjs";
 
 export default {
 	darkMode: ["class"],
@@ -9,6 +10,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./node_modules/tw-elements/js/**/*.js"
 	],
 	prefix: "",
 	theme: {
@@ -108,5 +110,5 @@ export default {
 		}
 	},
 	// plugins: [require("tailwindcss-animate")],
-	plugins: [tailwindcssAnimate],
+	plugins: [tailwindcssAnimate, twElements],
 } satisfies Config;

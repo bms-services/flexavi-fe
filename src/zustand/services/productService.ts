@@ -55,7 +55,7 @@ export const createProductCategoryService = async (formData: ProductCategoryReq)
 };
 
 export const updateProductCategoryService = async ({ id, formData }: { id: string, formData: Partial<ProductCategoryReq> }): Promise<ApiSuccess<ProductCategoryRes>> => {
-    const { data } = await mainApi.put(`/products/category/update/${id}`, formData);
+    const { data } = await mainApi.patch(`/products/category/update/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

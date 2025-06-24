@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,68 +8,69 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Category } from "@/types/category";
+import { ProductCategoryReq } from "@/zustand/types/productT";
+import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface CategoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  category?: Category;
-  onSave: (category: Partial<Category>) => void;
+  productCategoryId?: string;
+  onSave: (data: ProductCategoryReq) => void;
 }
 
 export function CategoryDialog({
   open,
   onOpenChange,
-  category,
+  productCategoryId,
   onSave,
 }: CategoryDialogProps) {
-  const [formData, setFormData] = useState<Partial<Category>>({
-    name: category?.name || "",
-    description: category?.description || "",
-  });
+  const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-    onOpenChange(false);
-  };
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useFormContext<ProductCategoryReq>();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSave)}>
           <DialogHeader>
             <DialogTitle>
-              {category ? "Categorie Bewerken" : "Nieuwe Categorie"}
+              {productCategoryId ? "Categorie Bewerken" : "Nieuwe Categorie"}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Naam</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description">Omschrijving</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, description: e.target.value }))
-                }
-              />
-            </div>
+            <Input
+              id="title"
+              label="Titel"
+              rules={{
+                register,
+                name: "name",
+                options: {
+                  required: t('productCategory.error.required.name')
+                },
+                errors,
+              }}
+            />
+            <Textarea
+              id="description"
+              label="Omschrijving"
+              rules={{
+                register,
+                name: "description",
+                options: {
+                },
+                errors,
+              }}
+            />
           </div>
           <DialogFooter>
-            <Button type="submit">{category ? "Opslaan" : "Toevoegen"}</Button>
+            <Button type="submit">{productCategoryId ? "Opslaan" : "Toevoegen"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

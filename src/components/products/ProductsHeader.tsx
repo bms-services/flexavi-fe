@@ -10,7 +10,6 @@ interface ProductsHeaderProps {
 
 export const ProductsHeader: React.FC<ProductsHeaderProps> = ({
   onNewProduct,
-  onNewCategory,
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -23,8 +22,12 @@ export const ProductsHeader: React.FC<ProductsHeaderProps> = ({
       <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
         <Button
           variant="outline"
-          onClick={onNewCategory}
           className="w-full sm:w-auto"
+          data-twe-offcanvas-toggle
+          data-twe-target="#productCategoryCanvas"
+          aria-controls="productCategoryCanvas"
+          data-twe-ripple-init
+          data-twe-ripple-color="light"
         >
           <FolderIcon className="mr-2 h-4 w-4" />
           Categorie

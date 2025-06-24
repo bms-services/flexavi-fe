@@ -9,12 +9,14 @@ import { mockCategories } from "@/data/mockCategories";
 import { ProductsHeader } from "@/components/products/ProductsHeader";
 import { CategoriesOverview } from "@/components/products/CategoriesOverview";
 import { ProductsTable } from "@/components/products/ProductsTable";
-import { useGetProduct, useGetProducts, useCreateProduct, useUpdateProduct, useDeleteProduct } from "@/zustand/hooks/useProduct";
+import { useGetProduct, useGetProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProductCategories, useCreateProductCategory, useUpdateProductCategory, useDeleteProductCategory } from "@/zustand/hooks/useProduct";
 import { ParamGlobal } from "@/zustand/types/apiT";
-import { ProductReq, ProductRes } from "@/zustand/types/productT";
+import { ProductCategoryReq, ProductReq, ProductRes, ProductCategoryRes } from "@/zustand/types/productT";
 import { FormProvider, useForm } from "react-hook-form";
 import { formatCurrency, formatCurrencyToNumber } from "@/utils/format";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import ProductCategoryCanvas from "@/components/products/ProductCategoryCanvas";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const defaultProductData: ProductReq = {
   title: "",
@@ -25,15 +27,25 @@ const defaultProductData: ProductReq = {
   btw_percentage: "0"
 };
 
+const defaultCategoryData: ProductCategoryReq = {
+  name: "",
+  description: "",
+};
+
 const Products = () => {
   // const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [modal, setModal] = useState({
     product: false,
     category: false,
+    deleteCategory: false,
   });
 
   const methods = useForm<ProductReq>({
     defaultValues: defaultProductData,
+  });
+
+  const methodCategory = useForm<ProductCategoryReq>({
+    defaultValues: defaultCategoryData,
   });
 
   const [params, setParams] = useState<ParamGlobal>({
@@ -44,13 +56,29 @@ const Products = () => {
     sorts: {},
   });
 
+  const [paramsCategory, setParamsCategory] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
+
   const [productId, setProductId] = useState<string>("");
+  const [productCategoryId, setProductCategoryId] = useState<string>("");
 
   const getProductsZ = useGetProducts(params);
   const getProductZ = useGetProduct(productId);
   const createProductZ = useCreateProduct();
   const updateProductZ = useUpdateProduct();
   const deleteProductZ = useDeleteProduct();
+
+
+  const getProductCategoryZ = useGetProductCategories(paramsCategory)
+  const createProductCategoryZ = useCreateProductCategory();
+  const updateProductCategoryZ = useUpdateProductCategory();
+  const deleteProductCategoryZ = useDeleteProductCategory();
+
 
   /**
      * Handle create lead
@@ -115,7 +143,7 @@ const Products = () => {
    * @param data 
    * @returns void
    */
-  const handleShow = (data: ProductRes) => {
+  const handleShow = (data: ProductReq) => {
     // navigate(`/lead/${data.id}`);
   };
 
@@ -144,13 +172,67 @@ const Products = () => {
     }
   }, [createProductZ.isError, createProductZ.error, methods.setError]);
 
+  useEffect(() => {
+    if (updateProductZ.isError) {
+      mapApiErrorsToForm(updateProductZ.error.errors, methods.setError);
+    }
+  }, [updateProductZ.isError, updateProductZ.error, methods.setError]);
+
+
+  // Product Category 
+  const handleCreateCategory = () => {
+    methodCategory.reset(defaultCategoryData);
+    setProductCategoryId("");
+    setModal(prev => ({ ...prev, category: true }));
+  };
+
+  const handleStoreCategory = async (data: ProductCategoryReq) => {
+    try {
+      await createProductCategoryZ.mutateAsync(data);
+      setModal(prev => ({ ...prev, category: false }));
+    } catch (error) {
+      throw new Error("Failed to create product category: " + error);
+    }
+  };
+
+  const handleEditCategory = (data: ProductCategoryReq) => {
+    methodCategory.reset(data);
+    setProductCategoryId(data.id ?? "");
+    setModal(prev => ({ ...prev, category: true }));
+  };
+
+  const handleUpdateCategory = async (data: ProductCategoryReq) => {
+    try {
+      await updateProductCategoryZ.mutateAsync({ id: data.id!, formData: data });
+      setModal(prev => ({ ...prev, category: false }));
+    } catch (error) {
+      throw new Error("Failed to update product category: " + error);
+    }
+  };
+
+  const handleDeleteCategory = (id: string) => {
+    setProductCategoryId(id);
+    setModal(prev => ({ ...prev, deleteCategory: true }));
+  };
+
+  const handleDestroyCategory = async (id: string) => {
+    try {
+      await deleteProductCategoryZ.mutateAsync({
+        ids: [id],
+        force: false
+      });
+      setProductCategoryId("");
+    } catch (error) {
+      throw new Error("Failed to delete product category: " + error);
+    }
+  };
+
 
   return (
     <Layout>
       <div className="container py-6 space-y-6">
         <ProductsHeader
           onNewProduct={handleCreate}
-          onNewCategory={undefined}
         />
 
         {/* <CategoriesOverview
@@ -179,12 +261,33 @@ const Products = () => {
           />
         </FormProvider>
 
-        {/* <CategoryDialog
-          open={categoryDialogOpen}
-          onOpenChange={setCategoryDialogOpen}
-          category={editingCategory}
-          onSave={handleSaveCategory}
-        /> */}
+        <ProductCategoryCanvas
+          handleCreateCategory={handleCreateCategory}
+          handleEditCategory={handleEditCategory}
+          handleDeleteCategory={handleDeleteCategory}
+          getProductCategoryZ={getProductCategoryZ}
+        />
+
+        <FormProvider {...methodCategory}>
+          <CategoryDialog
+            open={modal.category}
+            onOpenChange={(value) => setModal(prev => ({ ...prev, category: value }))}
+            productCategoryId={productCategoryId}
+            onSave={productCategoryId ? handleUpdateCategory : handleStoreCategory}
+          />
+        </FormProvider>
+
+
+        {/* Delete Category */}
+        <ConfirmDialog
+          open={modal.deleteCategory}
+          onCancel={() => setModal(prev => ({ ...prev, deleteCategory: false }))}
+          onConfirm={() => handleDestroyCategory(productCategoryId)}
+          title="Weet je het zeker?"
+          description="Weet je zeker dat je deze categorie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+          loading={deleteProductZ.isPending}
+        />
+
       </div>
     </Layout>
   );

@@ -99,3 +99,13 @@
   border-right: 1px solid #fff;
   animation: typing 1.8s steps(30, end), blink 0.8s step-end infinite;
 }
+
+
+/* Off canvas TW-Elements */
+
+[data-twe-backdrop-show] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  transition: opacity 0.3s ease-in-out !important;
+  z-index: 50 !important;
+}

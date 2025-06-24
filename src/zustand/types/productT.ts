@@ -23,6 +23,7 @@ export type ProductRes = {
 }
 
 export type ProductCategoryReq = {
+    id?: string;
     name: string;
     description: string;
 }
