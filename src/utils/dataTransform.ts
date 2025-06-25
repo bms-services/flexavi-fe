@@ -1,4 +1,4 @@
-import { AddressReq, AddressRes } from "@/zustand/types/address";
+import { AddressReq, AddressRes } from "@/zustand/types/addressT";
 
 export const flattenAddressToObject = (address: AddressReq): AddressReq => {
     const { postal_code, ...rest } = address;

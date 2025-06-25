@@ -4,7 +4,7 @@ import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
-import { AgendaSettingReq, AgendaSettingRes } from "../types/agenda";
+import { AgendaSettingReq, AgendaSettingRes } from "../types/agendaT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {

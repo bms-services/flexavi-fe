@@ -1,4 +1,4 @@
-import { AddressReq, AddressRes } from "./address";
+import { AddressReq, AddressRes } from "./addressT";
 
 export type LeadStatus =
     | "new"

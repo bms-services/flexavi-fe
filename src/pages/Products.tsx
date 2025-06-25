@@ -1,19 +1,15 @@
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { Category } from "@/types/category";
-import { mockProducts } from "@/data/mockProducts";
 import { ProductDialog } from "@/components/products/ProductDialog";
 import { CategoryDialog } from "@/components/products/CategoryDialog";
-import { mockCategories } from "@/data/mockCategories";
 import { ProductsHeader } from "@/components/products/ProductsHeader";
-import { CategoriesOverview } from "@/components/products/CategoriesOverview";
 import { ProductsTable } from "@/components/products/ProductsTable";
 import { useGetProduct, useGetProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProductCategories, useCreateProductCategory, useUpdateProductCategory, useDeleteProductCategory } from "@/zustand/hooks/useProduct";
 import { ParamGlobal } from "@/zustand/types/apiT";
-import { ProductCategoryReq, ProductReq, ProductRes, ProductCategoryRes } from "@/zustand/types/productT";
+import { ProductCategoryReq, ProductReq, ProductRes } from "@/zustand/types/productT";
 import { FormProvider, useForm } from "react-hook-form";
-import { formatCurrency, formatCurrencyToNumber } from "@/utils/format";
+import { formatCurrency } from "@/utils/format";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import ProductCategoryCanvas from "@/components/products/ProductCategoryCanvas";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -23,7 +19,7 @@ const defaultProductData: ProductReq = {
   description: "",
   price: "0",
   category_id: "",
-  unit: 0,
+  unit: "",
   btw_percentage: "0"
 };
 
@@ -166,19 +162,6 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    if (createProductZ.isError) {
-      mapApiErrorsToForm(createProductZ.error.errors, methods.setError);
-    }
-  }, [createProductZ.isError, createProductZ.error, methods.setError]);
-
-  useEffect(() => {
-    if (updateProductZ.isError) {
-      mapApiErrorsToForm(updateProductZ.error.errors, methods.setError);
-    }
-  }, [updateProductZ.isError, updateProductZ.error, methods.setError]);
-
-
   // Product Category 
   const handleCreateCategory = () => {
     methodCategory.reset(defaultCategoryData);
@@ -227,21 +210,37 @@ const Products = () => {
     }
   };
 
+  useEffect(() => {
+    if (createProductZ.isError) {
+      mapApiErrorsToForm(createProductZ.error.errors, methods.setError);
+    }
+  }, [createProductZ.isError, createProductZ.error, methods.setError]);
+
+  useEffect(() => {
+    if (updateProductZ.isError) {
+      mapApiErrorsToForm(updateProductZ.error.errors, methods.setError);
+    }
+  }, [updateProductZ.isError, updateProductZ.error, methods.setError]);
+
+
+  useEffect(() => {
+    if (createProductCategoryZ.isError) {
+      mapApiErrorsToForm(createProductCategoryZ.error.errors, methodCategory.setError);
+    }
+  }, [createProductCategoryZ.isError, createProductCategoryZ.error, methodCategory.setError]);
+
+  useEffect(() => {
+    if (updateProductCategoryZ.isError) {
+      mapApiErrorsToForm(updateProductCategoryZ.error.errors, methodCategory.setError);
+    }
+  }, [updateProductCategoryZ.isError, updateProductCategoryZ.error, methodCategory.setError]);
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <ProductsHeader
           onNewProduct={handleCreate}
         />
-
-        {/* <CategoriesOverview
-          categories={mockCategories}
-          onEditCategory={(category) => {
-            setEditingCategory(category);
-            setCategoryDialogOpen(true);
-          }}
-        /> */}
 
         <ProductsTable
           params={params}

@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ProductReq } from "@/zustand/types/productT";
-import { Option, SelectSearchAsync } from "../ui/select-search-async";
+import { ProductCategoryReq, ProductReq } from "@/zustand/types/productT";
+import { Option, SelectSearchAsync } from "../ui/react-select/select-search-async";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { getProductCategoriesService } from "@/zustand/services/productService";
+import { createProductCategoryService, getProductCategoriesService } from "@/zustand/services/productService";
 import { InputCurrency } from "../ui/input-currency";
+import { SelectSearchAsyncCreatable } from "../ui/react-select/select-search-async-creatable";
 
 interface ProductDialogProps {
   open: boolean;
@@ -36,13 +37,22 @@ export function ProductDialog({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useFormContext<ProductReq>();
 
+
+  const [params, setParams] = useState({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
+
   const loadOptions = async (inputValue: string) => {
     const response = await getProductCategoriesService({
-      page: 1,
-      per_page: 10,
+      ...params,
       search: inputValue,
     });
 
@@ -57,6 +67,22 @@ export function ProductDialog({
       loadOptions("").then(setDefaultOptions);
     }
   }, [open]);
+
+
+  const handleCreateCategory = async (inputValue: string) => {
+    const created = await createProductCategoryService({
+      name: inputValue,
+      description: "-",
+    });
+
+    const newOption: Option = {
+      value: created.result.id,
+      label: created.result.name,
+    };
+
+    setDefaultOptions((prev) => [newOption, ...prev]);
+    setValue("category_id", newOption);
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -74,9 +100,7 @@ export function ProductDialog({
               rules={{
                 register,
                 name: "title",
-                options: {
-                  required: t('product.error.required.name')
-                },
+                options: { required: t('product.error.required.name') },
                 errors,
               }}
             />
@@ -86,40 +110,33 @@ export function ProductDialog({
               rules={{
                 register,
                 name: "description",
-                options: {
-                },
+                options: {},
                 errors,
               }}
             />
-
-            <SelectSearchAsync
+            <SelectSearchAsyncCreatable
               id="category"
               label="Categorie"
               loadOptions={loadOptions}
+              onCreateOption={handleCreateCategory}
               defaultOptions={defaultOptions}
               rules={{
                 name: "category_id",
                 control,
-                options: {
-                  required: t('product.error.required.category')
-                },
+                options: { required: t('product.error.required.category') },
                 errors,
               }}
+
             />
             <div className="grid grid-cols-2 gap-4">
               <Input
                 id="unit"
                 label="Eenheid"
-                type="number"
+                placeholder="bijv. Stuks, Meter, etc."
                 rules={{
                   register,
                   name: "unit",
-                  options: {
-                    required: t('product.error.required.unit'),
-                    validate: {
-                      positive: value => parseFloat(value as string) > 0 || t('product.error.positive.unit'),
-                    }
-                  },
+                  options: { required: t('product.error.required.unit') },
                   errors,
                 }}
               />

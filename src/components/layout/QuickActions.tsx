@@ -10,7 +10,7 @@ const QuickActions = () => {
   return (
     <TooltipProvider>
       <div className="h-16 bg-background/80 backdrop-blur-sm border-b sticky top-0 z-50">
-        <div className="h-full px-4 flex items-center justify-between gap-4 max-w-7xl mx-auto">
+        <div className="h-full px-[24px] flex items-center justify-between gap-4 mx-auto">
           <div className="flex-1 flex items-center gap-1 md:gap-2 overflow-x-auto scrollbar-hide max-w-[60%] sm:max-w-none">
             <QuickActionsList />
           </div>

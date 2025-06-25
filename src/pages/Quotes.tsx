@@ -1,169 +1,161 @@
-
-import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { mockQuotes, mockLeads } from "@/data/mockData";
-import { Quote, QuoteStatus } from "@/types";
-import { QuotesFilterBar } from "@/components/quotes/QuotesFilterBar";
+import { QuotesHeader } from "@/components/quotes/QuotesHeader";
 import { QuotesTable } from "@/components/quotes/QuotesTable";
-import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  useGetQuotation,
+  useGetQuotations,
+  useCreateQuotation,
+  useUpdateQuotation,
+  useDeleteQuotation,
+} from "@/zustand/hooks/useQuotation";
+import { ParamGlobal } from "@/zustand/types/apiT";
+import { QuotationReq, QuotationRes } from "@/zustand/types/quotationT";
+import { FormProvider, useForm } from "react-hook-form";
+import { formatCurrency } from "@/utils/format";
+import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useNavigate } from "react-router-dom";
 
-const getLeadName = (leadId: string) => {
-  const lead = mockLeads.find((l) => l.id === leadId);
-  return lead ? lead.name : "Onbekend";
+const defaultQuotationData: QuotationReq = {
+  leads: [],
+  title: "",
+  description: "",
+  notes: "",
+  planned_start_date: "",
+  status: "",
+  address: {
+    street: "",
+    city: "",
+    postal_code: "",
+    house_number: ""
+  },
+  items: [],
+  sub_total: 0,
+  discount_amount: 0,
+  discount_type: "percentage",
+  total_amount: 0
 };
 
-export const statusOptions: { value: QuoteStatus; label: string }[] = [
-  { value: "draft", label: "Concept" },
-  { value: "sent", label: "Verzonden" },
-  { value: "accepted", label: "Geaccepteerd" },
-  { value: "rejected", label: "Afgewezen" },
-  { value: "revised", label: "Herzien" },
-];
-
-const itemsPerPageOptions = [10, 25, 100];
-
-const Quotes = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const [filters, setFilters] = useState({
-    createdRange: [undefined, undefined] as [Date | undefined, Date | undefined],
-    expireRange: [undefined, undefined] as [Date | undefined, Date | undefined],
-    searchTerm: "",
-    status: "",
+const Quotations = () => {
+  const navigate = useNavigate();
+  const [modal, setModal] = useState({
+    quotation: false,
+    deleteQuotation: false,
   });
 
-  const navigate = useNavigate();
+  const methods = useForm<QuotationReq>({
+    defaultValues: defaultQuotationData,
+  });
 
-  const filteredQuotes = useMemo(() => {
-    return mockQuotes.filter((quote) => {
-      const createdAt = new Date(quote.createdAt);
-      const [createdFrom, createdTo] = filters.createdRange;
-      if (createdFrom && createdAt < createdFrom) return false;
-      if (createdTo && createdAt > createdTo) return false;
+  const [params, setParams] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
 
-      const [expireFrom, expireTo] = filters.expireRange;
-      if (expireFrom || expireTo) {
-        const hasPlanned = !!quote.plannedStartDate;
-        if (expireFrom && (!hasPlanned || new Date(quote.plannedStartDate!) < expireFrom)) return false;
-        if (expireTo && (!hasPlanned || new Date(quote.plannedStartDate!) > expireTo)) return false;
-      }
+  const [quotationId, setQuotationId] = useState<string>("");
 
-      if (filters.status && filters.status !== "all" && quote.status !== filters.status) return false;
+  const getQuotationsZ = useGetQuotations(params);
+  const getQuotationZ = useGetQuotation(quotationId);
+  const createQuotationZ = useCreateQuotation();
+  const updateQuotationZ = useUpdateQuotation();
+  const deleteQuotationZ = useDeleteQuotation();
 
-      if (filters.searchTerm) {
-        const lower = filters.searchTerm.toLowerCase();
-        if (
-          !quote.description.toLowerCase().includes(lower) &&
-          !getLeadName(quote.leadId).toLowerCase().includes(lower) &&
-          !quote.id.toLowerCase().includes(lower)
-        ) return false;
-      }
-      return true;
-    });
-  }, [filters]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredQuotes.length / itemsPerPage));
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const pageQuotes = filteredQuotes.slice(startIndex, startIndex + itemsPerPage);
-
-  const handleChangeFilter = (field: string, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-    if (currentPage !== 1) setCurrentPage(1);
+  const handleCreate = () => {
+    // methods.reset(defaultQuotationData);
+    // setQuotationId("");
+    // setModal(prev => ({ ...prev, quotation: true }));
+    navigate("/quotes/create");
   };
 
-  const handleCreateQuote = () => navigate("/quotes/create");
-  
-  const handleViewQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
-  const handleEditQuote = (quote: Quote) => navigate(`/quotes/edit/${quote.id}`);
-  const handleDeleteQuote = (quote: Quote) => console.log("Delete quote:", quote);
+  // const handleStore = async (data: QuotationReq) => {
+  //   try {
+  //     await createQuotationZ.mutateAsync({
+  //       ...data,
+  //       price: formatCurrency(data.price),
+  //       btw_percentage: formatCurrency(data.btw_percentage)
+  //     });
+  //     setModal(prev => ({ ...prev, quotation: false }));
+  //   } catch (error) {
+  //     throw new Error("Failed to create quotation: " + error);
+  //   }
+  // };
+
+  const handleEdit = (data: QuotationReq) => {
+    // setQuotationId(data.id ?? "");
+    // setModal(prev => ({ ...prev, quotation: true }));
+    navigate(`/quotes/${data.id}/edit`);
+  };
+
+  const handleUpdate = async (data: QuotationReq) => {
+    try {
+      await updateQuotationZ.mutateAsync({ id: data.id!, formData: data });
+      setModal(prev => ({ ...prev, quotation: false }));
+    } catch (error) {
+      throw new Error("Failed to update quotation: " + error);
+    }
+  };
+
+  const handleShow = (data: QuotationReq) => {
+    // navigate(`/quotation/${data.id}`);
+  };
+
+  const handleDelete = async (ids: QuotationRes[]) => {
+    const quotationIds = ids.map(id => id.id).filter((id): id is string => typeof id === "string");
+    try {
+      await deleteQuotationZ.mutateAsync({
+        ids: quotationIds,
+        force: false
+      });
+      setQuotationId("");
+    } catch (error) {
+      throw new Error("Failed to delete quotation: " + error);
+    }
+  };
+
+  useEffect(() => {
+    if (createQuotationZ.isError) {
+      mapApiErrorsToForm(createQuotationZ.error.errors, methods.setError);
+    }
+  }, [createQuotationZ.isError, createQuotationZ.error, methods.setError]);
+
+  useEffect(() => {
+    if (updateQuotationZ.isError) {
+      mapApiErrorsToForm(updateQuotationZ.error.errors, methods.setError);
+    }
+  }, [updateQuotationZ.isError, updateQuotationZ.error, methods.setError]);
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20 py-6 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Offertes</h1>
-            <p className="text-muted-foreground">Beheer al je offertes op één plek</p>
-          </div>
-          <Button onClick={handleCreateQuote}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nieuwe Offerte
-          </Button>
-        </div>
+      <div className="px-[24px] py-6 space-y-6">
+        <QuotesHeader
+          onNewQuotation={handleCreate}
+        />
 
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <CardTitle>Offerteoverzicht</CardTitle>
-                <CardDescription>Een lijst van alle offertes</CardDescription>
-              </div>
-              <div className="relative w-full sm:w-auto sm:max-w-xs">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Zoek offertes..."
-                  className="pl-8"
-                  value={filters.searchTerm}
-                  onChange={(e) => handleChangeFilter("searchTerm", e.target.value)}
-                />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <QuotesFilterBar
-              filters={filters}
-              onChange={handleChangeFilter}
-              totalValue={filteredQuotes.reduce((sum, q) => sum + q.amount, 0)}
-            />
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 px-2">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Offertes per pagina:</span>
-                <Select value={itemsPerPage.toString()} onValueChange={val => { setItemsPerPage(Number(val)); setCurrentPage(1); }}>
-                  <SelectTrigger className="w-20">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="z-50">
-                    {itemsPerPageOptions.map(opt => (
-                      <SelectItem key={opt} value={opt.toString()}>{opt}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center gap-1">
-                <Button size="icon" variant="ghost" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-                  <span className="sr-only">Vorige</span>
-                  <svg width="20" height="20" viewBox="0 0 20 20"><path d="M13 16l-4-4 4-4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
-                </Button>
-                <span className="text-xs mx-2">{currentPage} / {totalPages}</span>
-                <Button size="icon" variant="ghost" disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
-                  <span className="sr-only">Volgende</span>
-                  <svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 4l4 4-4 4" stroke="currentColor" strokeWidth="2" fill="none" /></svg>
-                </Button>
-              </div>
-            </div>
+        <QuotesTable
+          params={params}
+          setParams={setParams}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onShow={handleShow}
+          getQuotationsZ={getQuotationsZ}
+        />
 
-            <QuotesTable
-              quotes={pageQuotes}
-              onView={handleViewQuote}
-              onEdit={handleEditQuote}
-              onDelete={handleDeleteQuote}
-              getLeadName={getLeadName}
-            />
-          </CardContent>
-        </Card>
+        {/* Delete Quotation */}
+        <ConfirmDialog
+          open={modal.deleteQuotation}
+          onCancel={() => setModal(prev => ({ ...prev, deleteQuotation: false }))}
+          onConfirm={() => handleDelete([{ id: quotationId } as QuotationRes])}
+          title="Weet je het zeker?"
+          description="Weet je zeker dat je deze offerte wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+          loading={deleteQuotationZ.isPending}
+        />
       </div>
     </Layout>
   );
 };
 
-export default Quotes;
+export default Quotations;

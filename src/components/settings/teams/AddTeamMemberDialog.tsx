@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Control, FieldValues, FormProvider, useForm } from "react-hook-form";
 
 import { useTranslation } from "react-i18next";
-import { SelectSearchAsync, Option } from "@/components/ui/select-search-async";
+import { SelectSearchAsync, Option } from "@/components/ui/react-select/select-search-async";
 import { TeamMemberReq } from "@/zustand/types/teamT";
 import { getMyEmployeesService } from "@/zustand/services/settingService";
 

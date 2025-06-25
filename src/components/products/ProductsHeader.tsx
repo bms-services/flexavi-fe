@@ -5,7 +5,6 @@ import { FolderIcon, PlusCircle } from "lucide-react";
 
 interface ProductsHeaderProps {
   onNewProduct: () => void;
-  onNewCategory: () => void;
 }
 
 export const ProductsHeader: React.FC<ProductsHeaderProps> = ({

@@ -3,7 +3,7 @@ export type ProductReq = {
     title: string;
     description: string;
     category_id: string | { value: string; label: string };
-    unit: number;
+    unit: string;
     price: string;
     btw_percentage: string;
 }
@@ -15,7 +15,7 @@ export type ProductRes = {
     description: string;
     category_id: string | { value: string; label: string };
     category: ProductCategoryRes;
-    unit: number;
+    unit: string;
     price: string;
     btw_percentage: string;
     created_at: string;

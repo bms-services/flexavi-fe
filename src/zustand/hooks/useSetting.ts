@@ -39,7 +39,7 @@ import {
     updateMyAgendaSettingsService
 } from "../services/settingService";
 import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
-import { AgendaSettingReq, AgendaSettingRes } from "../types/agenda";
+import { AgendaSettingReq, AgendaSettingRes } from "../types/agendaT";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {

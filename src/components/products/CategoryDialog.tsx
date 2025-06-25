@@ -30,7 +30,6 @@ export function CategoryDialog({
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
   } = useFormContext<ProductCategoryReq>();

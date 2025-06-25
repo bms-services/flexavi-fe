@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Plus, Minus } from "lucide-react";
 import { UseQueryResult } from "@tanstack/react-query";
 import { ApiError, ApiSuccessPaginated } from "@/zustand/types/apiT";
-import { AgendaSettingReq, AgendaSettingRes } from "@/zustand/types/agenda";
+import { AgendaSettingReq, AgendaSettingRes } from "@/zustand/types/agendaT";
 import { Input } from "@/components/ui/input";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";

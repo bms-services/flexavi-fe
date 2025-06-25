@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -16,14 +16,12 @@ import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
 
 const QuoteEdit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
-  
+
+
   const {
     quote,
     lineItems,
@@ -47,7 +45,7 @@ const QuoteEdit = () => {
   // Check if the quote is accepted, and redirect if trying to edit an accepted quote
   useEffect(() => {
     if (isEditing && quote.status === "accepted") {
-     
+
       navigate("/quotes");
     }
   }, [isEditing, quote.status, navigate]);
@@ -69,7 +67,7 @@ const QuoteEdit = () => {
               <CardDescription>Vul de details van de offerte in</CardDescription>
             </CardHeader>
             <CardContent>
-              <QuoteDetailsForm 
+              <QuoteDetailsForm
                 description={quote.description}
                 location={quote.location}
                 plannedStartDate={quote.plannedStartDate}
@@ -86,7 +84,7 @@ const QuoteEdit = () => {
               <CardDescription>Voeg producten en diensten toe aan de offerte</CardDescription>
             </CardHeader>
             <CardContent>
-              <LineItemsList 
+              <LineItemsList
                 lineItems={lineItems}
                 onLineItemChange={handleLineItemChange}
                 onAddLineItem={handleAddLineItem}
@@ -94,8 +92,8 @@ const QuoteEdit = () => {
                 productSuggestions={productSuggestions}
                 onProductSearch={getProductSuggestions}
               />
-              <QuoteSummary 
-                subtotal={totalAmount} 
+              <QuoteSummary
+                subtotal={totalAmount}
                 discountType={discountType}
                 discountValue={discountValue}
                 onDiscountTypeChange={setDiscountType}
@@ -103,7 +101,7 @@ const QuoteEdit = () => {
               />
             </CardContent>
           </Card>
-          
+
           {isEditing && (
             <Card className="lg:col-span-3">
               <CardHeader>

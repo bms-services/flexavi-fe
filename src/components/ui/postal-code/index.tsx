@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "../input";
 import { useDebouncedCallback } from "use-debounce";
 import { UseFormRegister, FieldErrors, Control, UseFormWatch, UseFormSetValue, FieldValues, Path } from "react-hook-form";
-import { SelectSearchAsync, Option } from "../select-search-async";
+import { SelectSearchAsync, Option } from "../react-select/select-search-async";
 import { OptionsOrGroups, GroupBase } from "react-select";
 import axios from "axios";
 import { get } from "lodash";

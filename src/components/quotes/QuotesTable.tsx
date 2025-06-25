@@ -1,108 +1,54 @@
-
-import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Eye, Edit, Trash } from "lucide-react";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
-import { Quote } from "@/types";
-import { formatCurrency } from "@/utils/format";
+import React, { useMemo, useCallback } from "react";
+import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
+import { formatEuro, formatIsoToDate, formatPercentage } from "@/utils/format";
+import { ApiError, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
+import { UseQueryResult } from "@tanstack/react-query";
+import { QuotationRes } from "@/zustand/types/quotationT";
 
 interface QuotesTableProps {
-  quotes: Quote[];
-  onView: (quote: Quote) => void;
-  onEdit: (quote: Quote) => void;
-  onDelete: (quote: Quote) => void;
-  getLeadName: (leadId: string) => string;
+  params: ParamGlobal;
+  setParams: React.Dispatch<React.SetStateAction<ParamGlobal>>;
+  onShow?: (row: QuotationRes) => void;
+  onEdit?: (row: QuotationRes) => void;
+  onDelete?: (rows: QuotationRes[]) => void;
+  onArchive?: (rows: QuotationRes[]) => void;
+  getQuotationsZ: UseQueryResult<ApiSuccessPaginated<QuotationRes>, ApiError>
 }
 
-export const QuotesTable: React.FC<QuotesTableProps> = ({
-  quotes,
-  onView,
-  onEdit,
-  onDelete,
-  getLeadName,
-}) => (
-  <div className="overflow-x-auto rounded">
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Acties</TableHead>
-          <TableHead>Nummer</TableHead>
-          <TableHead>Klant</TableHead>
-          <TableHead>Datum</TableHead>
-          <TableHead>Bedrag</TableHead>
-          <TableHead className="hidden md:table-cell">Omschrijving</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {quotes.length === 0 ? (
-          <TableRow>
-            <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
-              Geen offertes gevonden.
-            </TableCell>
-          </TableRow>
-        ) : (
-          quotes.map((quote) => {
-            const statusConfig = useQuoteStatusBadge(quote.status);
-            const isAccepted = quote.status === "accepted";
-            const isDraft = quote.status === "draft";
-            
-            return (
-              <TableRow key={quote.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onView(quote)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onEdit(quote)}
-                      disabled={isAccepted}
-                      title={isAccepted ? "Geaccepteerde offertes kunnen niet bewerkt worden" : "Bewerk offerte"}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onDelete(quote)}
-                      disabled={!isDraft}
-                      title={!isDraft ? "Alleen concepten kunnen verwijderd worden" : "Verwijder offerte"}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-                <TableCell className="font-medium">
-                  {quote.id.replace("quote-", "OF-")}
-                </TableCell>
-                <TableCell>{getLeadName(quote.leadId)}</TableCell>
-                <TableCell>
-                  {format(new Date(quote.createdAt), "dd-MM-yyyy", { locale: nl })}
-                </TableCell>
-                <TableCell>{formatCurrency(quote.amount)}</TableCell>
-                <TableCell className="hidden md:table-cell max-w-xs truncate">{quote.description}</TableCell>
-                <TableCell>
-                  {statusConfig && (
-                    <Badge variant={statusConfig.variant}>
-                      {statusConfig.label}
-                    </Badge>
-                  )}
-                </TableCell>
-              </TableRow>
-            );
-          })
-        )}
-      </TableBody>
-    </Table>
-  </div>
-);
+export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onShow, onEdit, onDelete, onArchive, getQuotationsZ }) => {
+  const data = getQuotationsZ.data?.result.data ?? [];
+  const meta = getQuotationsZ.data?.result.meta;
+
+  const columns = useMemo<CustomColumnDef<QuotationRes>[]>(() => [
+    { accessorKey: "title", header: "Titel", cell: info => info.getValue() },
+    { accessorKey: "unit", header: "Eenheid", cell: info => info.getValue() },
+    { accessorKey: "price", header: "Prijs", cell: info => formatEuro(info.getValue() as string) },
+    { accessorKey: "btw_percentage", header: "BTW", cell: info => formatPercentage(info.getValue() as string) },
+    {
+      accessorKey: "created_at",
+      header: "Aangemaakt",
+      cell: info => formatIsoToDate(info.row.original.created_at),
+    },
+  ], []);
+
+  const handleParamsChange = useCallback(
+    (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
+    [setParams]
+  );
+
+  return (
+    <div className="space-y-4">
+      <TableTanstack
+        columns={columns}
+        data={data}
+        meta={meta}
+        isLoading={getQuotationsZ.isLoading}
+        params={params}
+        onParamsChange={handleParamsChange}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onArchive={onArchive}
+      />
+    </div>
+  );
+};

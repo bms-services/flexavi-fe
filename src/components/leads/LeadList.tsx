@@ -177,11 +177,8 @@ export const LeadList: React.FC = () => {
   }, [updateLeadZ.isError, updateLeadZ.error, methods.setError]);
 
   return (
-    <div className="space-y-2">
-      <div className="flex justify-end">
-        <LeadActions onCreateClick={handleCreate} />
-      </div>
-
+    <div className="px-[24px] py-6 space-y-6">
+      <LeadActions onCreateClick={handleCreate} />
       <LeadTable
         params={params}
         setParams={setParams}
