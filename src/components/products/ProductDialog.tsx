@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ProductCategoryReq, ProductReq } from "@/zustand/types/productT";
-import { Option, SelectSearchAsync } from "../ui/react-select/select-search-async";
+import { ProductReq } from "@/zustand/types/productT";
+import { Option } from "../ui/react-select/select-search-async";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { createProductCategoryService, getProductCategoriesService } from "@/zustand/services/productService";
@@ -126,7 +126,6 @@ export function ProductDialog({
                 options: { required: t('product.error.required.category') },
                 errors,
               }}
-
             />
             <div className="grid grid-cols-2 gap-4">
               <Input

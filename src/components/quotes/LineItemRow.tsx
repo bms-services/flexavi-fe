@@ -1,154 +1,151 @@
-
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
-import { QuoteLineItem } from "@/types";
-import { Product } from "@/types/product";
-import { UnitSelect } from "@/components/quotes/line-items/UnitSelect";
-import { DescriptionCell } from "@/components/quotes/line-items/DescriptionCell";
+import { Trash, X } from "lucide-react";
+import { LineProductCell } from "@/components/quotes/line-items/LineProductCell";
 import { DetailedDescriptionRow } from "@/components/quotes/line-items/DetailedDescriptionRow";
-import { updateLineItem } from "@/components/quotes/line-items/lineItemUtils";
-import { VAT_OPTIONS, COLUMN_CLASSES, INLINE_INPUT_STYLE } from "@/components/quotes/line-items/constants";
+import { COLUMN_CLASSES, INLINE_INPUT_STYLE } from "@/components/quotes/line-items/constants";
+import { useFormContext, useWatch, Controller } from "react-hook-form";
+import { QuotationReq } from "@/zustand/types/quotationT";
+import CurrencyInputCore from "react-currency-input-field";
+import { ProductRes } from "@/zustand/types/productT";
 
 interface LineItemRowProps {
-  item: QuoteLineItem;
   index: number;
   onRemove: () => void;
-  onChange: (updatedItem: QuoteLineItem) => void;
-  productSuggestions?: Product[];
-  onProductSearch: (title: string) => void;
   disabled?: boolean;
 }
 
-export const LineItemRow: React.FC<LineItemRowProps> = ({
-  item,
-  index,
-  onRemove,
-  onChange,
-  productSuggestions,
-  onProductSearch,
-  disabled = false,
-}) => {
-  // Handler for field changes
-  const handleChange = (field: keyof QuoteLineItem, value: any) => {
-    const updatedItem = updateLineItem(item, field, value);
-    onChange(updatedItem);
+export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disabled = false }) => {
+  const { register, control, setValue } = useFormContext<QuotationReq>();
+
+  const productId = useWatch({ control, name: `items.${index}.product_id` });
+  const productTitle = useWatch({ control, name: `items.${index}.product_title` });
+  const quantity = useWatch({ control, name: `items.${index}.quantity` });
+  const pricePerUnit = useWatch({ control, name: `items.${index}.unit_price` });
+  const vatRate = useWatch({ control, name: `items.${index}.vat_amount` });
+
+  const total = ((quantity || 0) * (pricePerUnit || 0));
+
+  useEffect(() => {
+    setValue(`items.${index}.total`, parseFloat(total.toFixed(2)));
+  }, [quantity, pricePerUnit, vatRate, total, index, setValue]);
+
+  const handleProductSelect = (product: ProductRes) => {
+    setValue(`items.${index}.product_id`, product.id);
+    setValue(`items.${index}.product_title`, product.title);
+    setValue(`items.${index}.title`, product.title);
+    setValue(`items.${index}.description`, product.description || "");
+    setValue(`items.${index}.unit`, product.unit);
+    setValue(`items.${index}.unit_price`, parseFloat(product.price));
+    setValue(`items.${index}.vat_amount`, parseFloat(product.btw_percentage));
   };
 
-  // Handler for product selection
-  const handleProductSelect = (product: Product) => {
-    // Update all fields with product data
-    const updatedItem = {
-      ...item,
-      description: product.title,
-      unit: product.unit,
-      pricePerUnit: product.pricePerUnit,
-      vatRate: product.vat,
-      detailedDescription: product.description || item.detailedDescription,
-    };
-
-    // Recalculate the total
-    const totalExVat = updatedItem.pricePerUnit * updatedItem.quantity;
-    updatedItem.total = Math.round((totalExVat + (totalExVat * (updatedItem.vatRate/100))) * 100) / 100;
-
-    // Update the entire item with one call
-    onChange(updatedItem);
+  const handleUnlinkProduct = () => {
+    setValue(`items.${index}.product_id`, "");
   };
 
   return (
     <>
       <tr className="border-b border-[#E1E3E6] hover:bg-muted/70 transition-colors">
-        {/* Aantal */}
+
+        {/* Quantity */}
         <td className={COLUMN_CLASSES[0]}>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={item.quantity}
-            onChange={(e) => handleChange("quantity", parseFloat(e.target.value) || 0)}
-            className={`${INLINE_INPUT_STYLE} text-center`}
-            disabled={disabled}
-          />
+          <input type="number" min="0" className={`${INLINE_INPUT_STYLE} text-center`}
+            {...register(`items.${index}.quantity`, { valueAsNumber: true })} disabled={disabled} />
         </td>
-        {/* Eenheid */}
-        <td className={COLUMN_CLASSES[1]}>
-          <UnitSelect 
-            value={item.unit} 
-            onChange={(value) => handleChange("unit", value)}
-            disabled={disabled}
-          />
+
+        {/* Unit */}
+        <td className={`${COLUMN_CLASSES[1]} ${productId ? "bg-gray-300" : ""}`}>
+          <input type="text" className={`${INLINE_INPUT_STYLE} text-center`}
+            {...register(`items.${index}.unit`)} disabled={disabled || !!productId} />
         </td>
-        {/* Product/Dienst */}
+
+        {/* Title + Product search */}
         <td className={COLUMN_CLASSES[2]}>
-          <DescriptionCell
-            value={item.description}
-            onChange={(value) => handleChange("description", value)}
-            onProductSearch={onProductSearch}
-            productSuggestions={productSuggestions}
-            onProductSelect={handleProductSelect}
-            disabled={disabled}
+          <Controller
+            control={control}
+            name={`items.${index}.title`}
+            render={({ field }) => (
+              <LineProductCell
+                value={field.value}
+                onChange={field.onChange}
+                onProductSelect={handleProductSelect}
+                disabled={disabled}
+              />
+            )}
           />
+          {productId && (
+            <div className="flex justify-between items-center gap-2 mt-1">
+              <div className="font-normal text-[14px]">
+                <span>Linked Product{" "}</span>
+                <span className="text-primary">
+                  "{productTitle}"
+                </span>
+              </div>
+              <X className="w-4 h-4 inline-block hover:text-red-500" onClick={handleUnlinkProduct} role="button" />
+            </div>
+          )}
         </td>
-        {/* Eenheidsprijs */}
+
+        {/* Unit Price */}
         <td className={COLUMN_CLASSES[3]}>
-          <input
-            id={`price-${index}`}
-            type="number"
-            min="0"
-            step="0.01"
-            value={item.pricePerUnit}
-            onChange={(e) => handleChange("pricePerUnit", parseFloat(e.target.value) || 0)}
-            className={`${INLINE_INPUT_STYLE} text-right`}
-            disabled={disabled}
+          <Controller
+            control={control}
+            name={`items.${index}.unit_price`}
+            render={({ field }) => (
+              <CurrencyInputCore
+                value={field.value}
+                onValueChange={field.onChange}
+                prefix="€ "
+                decimalsLimit={2}
+                decimalSeparator=","
+                groupSeparator="."
+                disabled={disabled}
+                className={`${INLINE_INPUT_STYLE} text-center`}
+              />
+            )}
           />
         </td>
-        {/* BTW tarief */}
-        <td className={COLUMN_CLASSES[4]}>
-          <select
-            value={item.vatRate ?? 21}
-            onChange={e => handleChange("vatRate", parseFloat(e.target.value))}
-            className={`${INLINE_INPUT_STYLE} text-center`}
-            disabled={disabled}
-            style={{ minWidth: 45 }}
-          >
-            {VAT_OPTIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+
+        {/* VAT */}
+        <td className={`${COLUMN_CLASSES[4]} ${productId ? "bg-gray-300" : ""}`}>
+          <Controller
+            control={control}
+            name={`items.${index}.vat_amount`}
+            render={({ field }) => (
+              <CurrencyInputCore
+                value={field.value}
+                onValueChange={field.onChange}
+                suffix=" %"
+                decimalsLimit={2}
+                decimalSeparator=","
+                groupSeparator="."
+                disabled={disabled || !!productId}
+                className={`${INLINE_INPUT_STYLE} text-center`}
+              />
+            )}
+          />
         </td>
-        {/* Regel totaal */}
+
+        {/* Total */}
         <td className={COLUMN_CLASSES[5]}>
-          <input
-            id={`total-${index}`}
-            type="number"
-            value={item.total}
-            readOnly
-            className={`${INLINE_INPUT_STYLE} text-right font-medium`}
-            disabled={disabled}
-          />
+          <input type="number" readOnly className={`${INLINE_INPUT_STYLE} text-right font-medium`} value={total.toFixed(2)} disabled />
         </td>
-        {/* Verwijderknop */}
+
+        {/* Remove button */}
         <td className={COLUMN_CLASSES[6]}>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onRemove}
-            className="h-8 w-8"
-            disabled={disabled}
-            tabIndex={-1}
-          >
+          <Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-8 w-8" disabled={disabled}>
             <Trash className="w-4 h-4" />
           </Button>
         </td>
       </tr>
-      <DetailedDescriptionRow
-        value={item.detailedDescription || ""}
-        onChange={(value) => handleChange("detailedDescription", value)}
-        index={index}
-        disabled={disabled}
+
+      <Controller
+        control={control}
+        name={`items.${index}.description`}
+        render={({ field }) => (
+          <DetailedDescriptionRow value={field.value} onChange={field.onChange} index={index} disabled={disabled} />
+        )}
       />
     </>
   );

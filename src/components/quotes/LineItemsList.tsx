@@ -1,37 +1,44 @@
 
 import React from "react";
-import { QuoteLineItem } from "@/types";
-import { Product } from "@/types/product";
 import { LineItemsTable } from "./line-items/LineItemsTable";
 import { AddLineItemButton } from "./line-items/AddLineItemButton";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { QuotationReq } from "@/zustand/types/quotationT";
 
 interface LineItemsListProps {
-  lineItems: QuoteLineItem[];
-  onLineItemChange: (index: number, lineItem: QuoteLineItem) => void;
-  onAddLineItem: () => void;
-  onRemoveLineItem: (index: number) => void;
-  productSuggestions: Record<string, Product[]>;
-  onProductSearch: (term: string, id: string) => void;
   disabled?: boolean;
 }
 
 export const LineItemsList: React.FC<LineItemsListProps> = ({
-  lineItems,
-  onLineItemChange,
-  onAddLineItem,
-  onRemoveLineItem,
-  productSuggestions,
-  onProductSearch,
   disabled = false,
 }) => {
+  const { control } = useFormContext<QuotationReq>();
+  const { fields, append, remove, update } = useFieldArray({
+    control,
+    name: "items"
+  });
+
+  const onAddLineItem = () => {
+    append({
+      quantity: 1,
+      unit: "",
+      title: "",
+      description: "",
+      unit_price: 0,
+      vat_amount: 0,
+      total: 0,
+      product_id: "",
+      product_title: ""
+    });
+  };
+
   return (
     <div className="space-y-4">
       <LineItemsTable
-        lineItems={lineItems}
-        onLineItemChange={onLineItemChange}
-        onRemoveLineItem={onRemoveLineItem}
-        productSuggestions={productSuggestions}
-        onProductSearch={onProductSearch}
+        fields={fields}
+        append={append}
+        remove={remove}
+        update={update}
         disabled={disabled}
       />
       <AddLineItemButton onClick={onAddLineItem} disabled={disabled} />

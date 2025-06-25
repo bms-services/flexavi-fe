@@ -6,10 +6,9 @@ import { ChevronLeft, Save } from "lucide-react";
 
 interface QuoteHeaderProps {
   isEditing: boolean;
-  onSave: () => void;
 }
 
-export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing, onSave }) => {
+export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing }) => {
   const navigate = useNavigate();
 
   return (
@@ -32,7 +31,7 @@ export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing, onSave }) =
               : "Voeg een nieuwe offerte toe"}
           </p>
         </div>
-        <Button onClick={onSave}>
+        <Button type="submit">
           <Save className="mr-2 h-4 w-4" />
           Offerte opslaan
         </Button>

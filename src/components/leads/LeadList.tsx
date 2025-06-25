@@ -5,7 +5,7 @@ import { flattenAddressToObject } from "@/utils/dataTransform";
 import { LeadActions } from "./LeadActions";
 import { LeadTable } from "./LeadTable";
 import { CreateLeadDialog } from "./CreateLeadDialog";
-import { LeadReq, LeadRes } from "@/zustand/types/leadT";
+import { LeadReq } from "@/zustand/types/leadT";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import { useNavigate } from "react-router-dom";
 import { ParamGlobal } from "@/zustand/types/apiT";

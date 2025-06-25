@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Euro, Percent } from "lucide-react";
@@ -34,18 +33,10 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex items-center justify-end gap-2 text-sm">
-        <span className="text-muted-foreground">Subtotaal:</span>
-        <span className="font-medium">
-          {new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(subtotal)}
-        </span>
-      </div>
-      
       <div className="flex items-center justify-end gap-2">
-        <span className="text-sm text-muted-foreground">Korting:</span>
         <div className="flex gap-2 items-center">
           <Select value={discountType} onValueChange={onDiscountTypeChange}>
-            <SelectTrigger className="w-[110px]">
+            <SelectTrigger className="">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -53,7 +44,7 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({
               <SelectItem value="fixed">Vast bedrag</SelectItem>
             </SelectContent>
           </Select>
-          
+
           <div className="relative">
             <Input
               type="number"
@@ -74,15 +65,6 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({
           </div>
         </div>
       </div>
-
-      {discountValue > 0 && (
-        <div className="flex items-center justify-end gap-2 text-sm">
-          <span className="text-muted-foreground">Korting bedrag:</span>
-          <span className="font-medium text-red-600">
-            -{new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(discount)}
-          </span>
-        </div>
-      )}
 
       <div className="flex items-center justify-end gap-2 text-base border-t pt-2 mt-2">
         <span className="font-medium">Totaal:</span>
