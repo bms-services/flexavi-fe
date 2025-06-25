@@ -1,8 +1,7 @@
-
 import React from "react";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Euro, Percent } from "lucide-react";
+import CurrencyInput from "react-currency-input-field";
 
 interface DiscountSectionProps {
   subtotal: number;
@@ -36,8 +35,8 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({
       <div className="flex items-center justify-end gap-2">
         <div className="flex gap-2 items-center">
           <Select value={discountType} onValueChange={onDiscountTypeChange}>
-            <SelectTrigger className="">
-              <SelectValue />
+            <SelectTrigger className="w-[130px]">
+              <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="percentage">Percentage</SelectItem>
@@ -45,29 +44,31 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({
             </SelectContent>
           </Select>
 
-          <div className="relative">
-            <Input
-              type="number"
-              value={discountValue || ""}
-              onChange={(e) => onDiscountValueChange(parseFloat(e.target.value) || 0)}
-              className="w-[100px] pr-8"
-              min={0}
-              max={discountType === "percentage" ? 100 : undefined}
-              step={discountType === "percentage" ? 1 : 0.01}
+          <div className="relative w-[120px]">
+            <CurrencyInput
+              value={discountValue}
+              onValueChange={(value) => onDiscountValueChange(parseFloat(value || "0"))}
+              decimalsLimit={2}
+              decimalSeparator=","
+              groupSeparator="."
+              allowNegativeValue={false}
+              suffix={discountType === "percentage" ? " %" : ""}
+              prefix={discountType === "fixed" ? "€ " : ""}
+              className="w-full text-right border rounded px-2 py-1"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            {/* <div className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">
               {discountType === "percentage" ? (
-                <Percent className="h-4 w-4 text-muted-foreground" />
+                <Percent className="h-4 w-4" />
               ) : (
-                <Euro className="h-4 w-4 text-muted-foreground" />
+                <Euro className="h-4 w-4" />
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       <div className="flex items-center justify-end gap-2 text-base border-t pt-2 mt-2">
-        <span className="font-medium">Totaal:</span>
+        <span className="font-medium">Totaal na korting:</span>
         <span className="font-bold">
           {new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" }).format(finalTotal)}
         </span>
