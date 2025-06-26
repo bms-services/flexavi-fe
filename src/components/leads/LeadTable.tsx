@@ -1,11 +1,10 @@
 import React, { useMemo, useCallback } from "react";
-import { leadStatusMap } from "@/types";
 import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import LeadStatusBadge from "./status/LeadStatusBadge";
-import { LeadRes } from "@/zustand/types/leadT";
+import { LeadRes, leadStatusMap } from "@/zustand/types/leadT";
 import { useDeleteLead } from "@/zustand/hooks/useLead";
-import { ApiError, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
+import { ApiError, ApiSuccessPaginated, FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import { UseQueryResult } from "@tanstack/react-query";
 
 interface LeadTableProps {
@@ -95,8 +94,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ params, setParams, onShow,
         filterOptions={{
           status: {
             label: "Status",
+            type: FilterType.SELECT,
             options: statusFilterOptions,
-          }
+          },
         }}
       />
     </div>

@@ -109,3 +109,9 @@
   transition: opacity 0.3s ease-in-out !important;
   z-index: 50 !important;
 }
+
+
+/* React Date Picker */
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}

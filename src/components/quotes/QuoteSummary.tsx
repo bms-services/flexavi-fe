@@ -35,7 +35,7 @@ export const QuoteSummary = () => {
   const grandTotal = totalWithTax - discountAmount;
 
   useEffect(() => {
-    setValue("sub_total", subtotal);
+    setValue("subtotal", subtotal);
     setValue("total_amount", grandTotal);
   }, [subtotal, grandTotal, setValue]);
 

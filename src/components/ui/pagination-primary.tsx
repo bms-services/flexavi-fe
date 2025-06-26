@@ -1,11 +1,11 @@
-import { PaginationResponse, ParamsAction } from '@/@types/global-type';
 import { SelectPrimary } from './select-primary';
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationEllipsis, PaginationLink, PaginationNext } from './pagination';
+import { Meta, ParamGlobal } from '@/zustand/types/apiT';
 
 
 interface PaginationPrimaryProps {
-    params: Partial<ParamsAction>;
-    meta: Partial<PaginationResponse<unknown>>;
+    params: Partial<ParamGlobal>;
+    meta: Meta;
     onPageChange: (value: number) => void;
     onPerPageChange: (value: number) => void;
 }
@@ -17,8 +17,8 @@ const PaginationPrimary = ({
     params,
     ...props
 }: PaginationPrimaryProps) => {
-    const { last_page, total, from, to } = meta || {};
-    const { page, per_page } = params;
+    const { last_page = 1, total, from, to } = meta || {};
+    const { page = 1, per_page } = params;
 
     const perPageOptions = [
         { value: '6', label: '6' },

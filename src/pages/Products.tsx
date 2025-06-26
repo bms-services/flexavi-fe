@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { ProductDialog } from "@/components/products/ProductDialog";
 import { CategoryDialog } from "@/components/products/CategoryDialog";
@@ -13,7 +13,7 @@ import { formatCurrency } from "@/utils/format";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import ProductCategoryCanvas from "@/components/products/ProductCategoryCanvas";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-
+import { Offcanvas } from "tw-elements";
 const defaultProductData: ProductReq = {
   title: "",
   description: "",
@@ -164,6 +164,7 @@ const Products = () => {
 
   // Product Category 
   const handleCreateCategory = () => {
+    closeProductCategoryCanvas();
     methodCategory.reset(defaultCategoryData);
     setProductCategoryId("");
     setModal(prev => ({ ...prev, category: true }));
@@ -173,12 +174,14 @@ const Products = () => {
     try {
       await createProductCategoryZ.mutateAsync(data);
       setModal(prev => ({ ...prev, category: false }));
+      openProductCategoryCanvas();
     } catch (error) {
       throw new Error("Failed to create product category: " + error);
     }
   };
 
   const handleEditCategory = (data: ProductCategoryReq) => {
+    closeProductCategoryCanvas();
     methodCategory.reset(data);
     setProductCategoryId(data.id ?? "");
     setModal(prev => ({ ...prev, category: true }));
@@ -188,12 +191,14 @@ const Products = () => {
     try {
       await updateProductCategoryZ.mutateAsync({ id: data.id!, formData: data });
       setModal(prev => ({ ...prev, category: false }));
+      openProductCategoryCanvas();
     } catch (error) {
       throw new Error("Failed to update product category: " + error);
     }
   };
 
   const handleDeleteCategory = (id: string) => {
+    closeProductCategoryCanvas();
     setProductCategoryId(id);
     setModal(prev => ({ ...prev, deleteCategory: true }));
   };
@@ -205,9 +210,21 @@ const Products = () => {
         force: false
       });
       setProductCategoryId("");
+      setModal(prev => ({ ...prev, deleteCategory: false }));
+      openProductCategoryCanvas();
     } catch (error) {
       throw new Error("Failed to delete product category: " + error);
     }
+  };
+
+  const closeProductCategoryCanvas = () => {
+    const instance = Offcanvas.getInstance("#productCategoryCanvas");
+    instance?.hide();
+  };
+
+  const openProductCategoryCanvas = () => {
+    const instance = Offcanvas.getInstance("#productCategoryCanvas");
+    instance?.show();
   };
 
   useEffect(() => {
@@ -265,12 +282,17 @@ const Products = () => {
           handleEditCategory={handleEditCategory}
           handleDeleteCategory={handleDeleteCategory}
           getProductCategoryZ={getProductCategoryZ}
+          params={paramsCategory}
+          setParams={setParamsCategory}
         />
 
         <FormProvider {...methodCategory}>
           <CategoryDialog
             open={modal.category}
-            onOpenChange={(value) => setModal(prev => ({ ...prev, category: value }))}
+            onOpenChange={(value) => {
+              setModal(prev => ({ ...prev, category: value }));
+              openProductCategoryCanvas();
+            }}
             productCategoryId={productCategoryId}
             onSave={productCategoryId ? handleUpdateCategory : handleStoreCategory}
           />
@@ -280,7 +302,10 @@ const Products = () => {
         {/* Delete Category */}
         <ConfirmDialog
           open={modal.deleteCategory}
-          onCancel={() => setModal(prev => ({ ...prev, deleteCategory: false }))}
+          onCancel={() => {
+            setModal(prev => ({ ...prev, deleteCategory: false }));
+            openProductCategoryCanvas();
+          }}
           onConfirm={() => handleDestroyCategory(productCategoryId)}
           title="Weet je het zeker?"
           description="Weet je zeker dat je deze categorie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."

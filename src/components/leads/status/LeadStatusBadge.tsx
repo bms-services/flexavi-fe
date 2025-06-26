@@ -1,6 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
-import { LeadStatus, leadStatusMap } from "@/types/leads";
+import { LeadStatus, leadStatusMap } from "@/zustand/types/leadT";
 export default function LeadStatusBadge({ status }: { status?: LeadStatus }) {
     if (!status) return null;
 

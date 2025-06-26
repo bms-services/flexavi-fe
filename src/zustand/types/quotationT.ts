@@ -1,4 +1,5 @@
-import { AddressReq } from "./addressT";
+import { AddressReq, AddressRes } from "./addressT";
+import { LeadRes } from "./leadT";
 import { ProductRes } from "./productT";
 
 export type QuotationReq = {
@@ -11,10 +12,31 @@ export type QuotationReq = {
     status: string;
     address: AddressReq;
     items: QuotationItemReq[];
-    sub_total: number;
+    subtotal: number;
     discount_amount: number;
     discount_type: string;
     total_amount: number;
+};
+
+export type QuotationRes = {
+    id: string;
+    leads: LeadRes[];
+    title: string;
+    description: string;
+    notes: string;
+    planned_start_date: string;
+    status: string | {
+        value: QuotationStatus;
+        label: string;
+    }
+    address: AddressRes;
+    items: QuotationItemRes[];
+    subtotal: number;
+    discount_amount: number;
+    discount_type: string;
+    total_amount: number;
+    created_at: string;
+    updated_at: string;
 };
 
 export type QuotationItemReq = {
@@ -31,24 +53,6 @@ export type QuotationItemReq = {
 };
 
 
-export type QuotationRes = {
-    id: string;
-    leads: string[];
-    title: string;
-    description: string;
-    notes: string;
-    planned_start_date: string;
-    status: string;
-    address: AddressReq;
-    items: QuotationItemRes[];
-    sub_total: number;
-    discount_amount: number;
-    discount_type: string;
-    total_amount: number;
-    created_at: string;
-    updated_at: string;
-};
-
 export type QuotationItemRes = {
     id: string;
     title: string;
@@ -63,20 +67,31 @@ export type QuotationItemRes = {
     created_at: string;
     updated_at: string;
 };
-
-
-
 export type QuotationStatus =
     | "draft"
     | "sent"
+    | "viewed"
     | "accepted"
     | "rejected"
-    | "revised";
+    | "revised"
+    | "expired"
+    | "converted"
+    | "concept";
 
-export const QuotationStatusOptions: { value: QuotationStatus; label: string }[] = [
-    { value: "draft", label: "Concept" },
-    { value: "sent", label: "Verzonden" },
-    { value: "accepted", label: "Geaccepteerd" },
-    { value: "rejected", label: "Afgewezen" },
-    { value: "revised", label: "Herzien" },
-];
+export const quotationStatusMap: Record<
+    QuotationStatus,
+    {
+        label: string;
+        variant: "primary" | "secondary" | "warning" | "danger" | "success";
+    }
+> = {
+    draft: { label: "Concept", variant: "secondary" },
+    sent: { label: "Verzonden", variant: "primary" },
+    viewed: { label: "Bekeken", variant: "primary" },
+    accepted: { label: "Geaccepteerd", variant: "success" },
+    rejected: { label: "Afgewezen", variant: "danger" },
+    revised: { label: "Herzien", variant: "warning" },
+    expired: { label: "Verlopen", variant: "danger" },
+    converted: { label: "Geconverteerd", variant: "success" },
+    concept: { label: "Concept", variant: "secondary" },
+};

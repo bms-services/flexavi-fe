@@ -1,10 +1,11 @@
 import { useGetProductCategories } from "@/zustand/hooks/useProduct";
 import { ProductCategoryRes } from "@/zustand/types/productT";
-import { PlusIcon, XIcon } from "lucide-react";
-import { useEffect } from "react";
+import { PencilIcon, PlusIcon, TrashIcon, XIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Offcanvas, initTWE } from "tw-elements";
 import { Button } from "../ui/button";
-import { indexColor } from "@/utils/generateColor";
+import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
 
 interface ProductCategoryProps {
@@ -12,22 +13,71 @@ interface ProductCategoryProps {
     handleEditCategory: (id: ProductCategoryRes) => void;
     handleDeleteCategory: (id: string) => void;
     getProductCategoryZ: ReturnType<typeof useGetProductCategories>;
+    params: ParamGlobal;
+    setParams: React.Dispatch<React.SetStateAction<ParamGlobal>>;
 }
 
 export default function ProductCategoryCanvas({
     handleCreateCategory,
     handleEditCategory,
     handleDeleteCategory,
-    getProductCategoryZ
+    getProductCategoryZ,
+    params,
+    setParams
 }: ProductCategoryProps) {
 
     useEffect(() => {
         initTWE({ Offcanvas });
     }, []);
 
+    const columns = useMemo<CustomColumnDef<ProductCategoryRes>[]>(() => [
+        { accessorKey: "name", header: "Name", cell: info => info.getValue() },
+        { accessorKey: "description", header: "Description", cell: info => info.getValue() },
+        {
+            accessorKey: "products_count",
+            header: "Product Count",
+        },
+        {
+            id: "actions",
+            meta: { className: "text-center align-middle" },
+            header: "",
+            cell: ({ row }) => (
+                <div className="flex items-center space-x-2">
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={() => handleEditCategory(row.original)}
+                    >
+                        <PencilIcon className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={() => handleDeleteCategory(row.original.id)}
+                    >
+                        <TrashIcon className="h-4 w-4 text-danger" />
+                    </Button>
+                </div>
+            )
+        }
+    ], []);
+
+    const data = useMemo(() => {
+        return getProductCategoryZ.data?.result.data ?? [];
+    }, [getProductCategoryZ.data]);
+
+    const meta = useMemo(() => {
+        return getProductCategoryZ.data?.result.meta;
+    }, [getProductCategoryZ.data]);
+
+    const handleParamsChange = useCallback(
+        (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
+        [setParams]
+    );
+
     return (
         <div
-            className="!my-0 invisible fixed bottom-0 right-0 top-0 z-[1045] flex w-96 max-w-full translate-x-full flex-col border-none bg-white bg-clip-padding text-neutral-700 shadow-sm outline-none transition duration-300 ease-in-out data-[twe-offcanvas-show]:transform-none dark:bg-body-dark dark:text-white"
+            className="!my-0 invisible fixed bottom-0 rounded-[4px] right-0 top-0 z-[1045] flex w-full sm:w-1/2 max-w-full translate-x-full flex-col border-none bg-white bg-clip-padding text-neutral-700 shadow-sm outline-none transition duration-300 ease-in-out data-[twe-offcanvas-show]:transform-none dark:bg-body-dark dark:text-white"
             tabIndex={-1}
             id="productCategoryCanvas"
             aria-labelledby="productCategoryCanvasLabel"
@@ -58,35 +108,14 @@ export default function ProductCategoryCanvas({
                     <span className="ml-2">Nieuwe Categorie</span>
                 </Button>
 
-                {getProductCategoryZ.isSuccess && getProductCategoryZ.data.result.data.length > 0 ? (
-                    <div className="flex flex-wrap gap-3">
-                        {getProductCategoryZ.data.result.data.map((category, index) => {
-                            const colorClass = indexColor[index % indexColor.length];
-                            return (
-                                <div
-                                    key={category.id}
-                                    className={`flex items-center justify-between gap-3 px-2 py-1 rounded-full min-w-1/2 ${colorClass}`}
-                                    onClick={() => handleEditCategory(category)}
-                                    role="button"
-                                >
-                                    <span className="font-normal text-[14px]">{category.name}</span>
-                                    <button
-                                        className="rounded-full p-0.5 bg-red-500 hover:bg-red-600 text-white focus:outline-none"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            e.preventDefault();
-                                            handleDeleteCategory(category.id)
-                                        }}
-                                    >
-                                        <XIcon className="h-3 w-3" />
-                                    </button>
-                                </div>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <p className="text-center text-gray-500">Geen categorieën gevonden.</p>
-                )}
+                <TableTanstack
+                    columns={columns}
+                    data={data}
+                    meta={meta}
+                    isLoading={getProductCategoryZ.isLoading}
+                    params={params}
+                    onParamsChange={handleParamsChange}
+                />
             </div>
         </div>
 

@@ -3,12 +3,11 @@ import { Layout } from "@/components/layout/Layout";
 import { QuotesHeader } from "@/components/quotes/QuotesHeader";
 import { QuotesTable } from "@/components/quotes/QuotesTable";
 import {
-  useGetQuotation,
   useGetQuotations,
   useDeleteQuotation,
 } from "@/zustand/hooks/useQuotation";
 import { ParamGlobal } from "@/zustand/types/apiT";
-import { QuotationReq, QuotationRes } from "@/zustand/types/quotationT";
+import { QuotationRes } from "@/zustand/types/quotationT";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useNavigate } from "react-router-dom";
 
@@ -18,8 +17,6 @@ const Quotations = () => {
     quotation: false,
     deleteQuotation: false,
   });
-
-
 
   const [params, setParams] = useState<ParamGlobal>({
     page: 1,
@@ -32,15 +29,13 @@ const Quotations = () => {
   const [quotationId, setQuotationId] = useState<string>("");
 
   const getQuotationsZ = useGetQuotations(params);
-  // const getQuotationZ = useGetQuotation(quotationId);
-
   const deleteQuotationZ = useDeleteQuotation();
 
   const handleCreate = () => {
     navigate("/quotes/create");
   };
 
-  const handleEdit = (data: QuotationReq) => {
+  const handleEdit = (data: QuotationRes) => {
     navigate(`/quotes/edit/${data.id}`);
   };
 

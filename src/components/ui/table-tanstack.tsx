@@ -14,7 +14,8 @@ import { toastCreate } from "./toast/toast-create";
 import { Input } from "./input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useDebounce } from "use-debounce";
-import { Meta, ParamGlobal } from "@/zustand/types/apiT";
+import { FilterOptionsMap, Meta, ParamGlobal } from "@/zustand/types/apiT";
+import { TableTanstackFilter } from "./table-tanstack-filter";
 
 
 // Constrain TData to have an 'id' field
@@ -25,12 +26,7 @@ type DataTableProps<TData> = {
   isLoading: boolean;
   isLoadingAction?: boolean;
   params: ParamGlobal;
-  filterOptions?: {
-    [key: string]: {
-      label: string;
-      options: { value: string; label: string }[];
-    };
-  };
+  filterOptions?: FilterOptionsMap;
   onParamsChange: (p: Partial<ParamGlobal>) => void;
   onShow?: (row: TData) => void;
   onEdit?: (row: TData) => void;
@@ -270,7 +266,7 @@ export default function TableTanstack<TData>({
         </div>
 
         {/* Status filter (as example) */}
-        {filterOptions?.status && (
+        {/* {filterOptions?.status && (
           <div className="w-full sm:w-1/6">
             <Select
               value={typeof filters.status === "string" ? filters.status : undefined}
@@ -294,7 +290,23 @@ export default function TableTanstack<TData>({
               </SelectContent>
             </Select>
           </div>
-        )}
+        )} */}
+
+        {Object.entries(filterOptions ?? {}).map(([key, config]) => (
+          <div key={key} className="w-full sm:w-1/6">
+            <TableTanstackFilter
+              keyName={key}
+              config={config}
+              value={filters?.[key]}
+              onChange={(key, val) => {
+                const next = { ...filters };
+                if (val === undefined || val === null) delete next[key];
+                else next[key] = val;
+                onParamsChange({ filters: next, page: 1 });
+              }}
+            />
+          </div>
+        ))}
 
       </div>
       <div className="overflow-x-auto overflow-y-auto max-h-[350px]">

@@ -1,22 +1,5 @@
 import { AddressReq, AddressRes } from "./addressT";
 
-export type LeadStatus =
-    | "new"
-    | "in_progress"
-    | "converted"
-    | "lost"
-    | "archived"
-    | "follow_up"
-    | "not_interested"
-    | "contacted"
-    | "qualified"
-    | "unqualified"
-    | "pending"
-    | "closed"
-    | "accepted"
-    | "rejected";
-
-
 
 export type LeadReq = {
     id?: string;
@@ -39,10 +22,29 @@ export type LeadRes = {
     updated_at: string;
 }
 
+export type LeadStatus =
+    | "new"
+    | "in_progress"
+    | "converted"
+    | "lost"
+    | "archived"
+    | "follow_up"
+    | "not_interested"
+    | "contacted"
+    | "qualified"
+    | "unqualified"
+    | "pending"
+    | "closed"
+    | "accepted"
+    | "rejected";
+
 
 export const leadStatusMap: Record<
     LeadStatus,
-    { label: string; variant: "primary" | "secondary" | "warning" | "danger" | "success" }
+    {
+        label: string;
+        variant: "primary" | "secondary" | "warning" | "danger" | "success"
+    }
 > = {
     new: { label: "New", variant: "primary" },
     in_progress: { label: "In Progress", variant: "secondary" },

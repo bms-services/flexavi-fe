@@ -1,16 +1,13 @@
 
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Quote } from "@/types";
-import { useQuoteStatusBadge } from "@/hooks/useStatusBadge";
+import { QuotationStatus, quotationStatusMap } from "@/zustand/types/quotationT";
+export default function QuoteStatusBadge({ status }: { status?: QuotationStatus }) {
+  if (!status) return null;
 
-interface QuoteStatusBadgeProps {
-  status?: Quote['status'];
+  const { label, variant } = quotationStatusMap[status];
+  return (
+    <Badge variant={variant} className="capitalize">
+      {label}
+    </Badge>
+  );
 }
-
-export const QuoteStatusBadge: React.FC<QuoteStatusBadgeProps> = ({ status }) => {
-  const statusConfig = useQuoteStatusBadge(status);
-  if (!statusConfig) return null;
-  
-  return <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>;
-};

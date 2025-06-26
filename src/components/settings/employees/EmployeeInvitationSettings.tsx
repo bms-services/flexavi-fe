@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, User, DotSquareIcon, XIcon, MailIcon } from "lucide-react";
 import { useGetInvitedEmployees, useInviteEmployee, useResendInviteEmployee, useCancelInvitedEmployee } from "@/zustand/hooks/useSetting";
 import { EmployeeInvitationStatus, EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes } from "@/zustand/types/employeeT";
-import { ParamGlobal } from "@/zustand/types/apiT";
+import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
 import { formatIsoToDate } from "@/utils/format";
 import { InviteEmployee } from "./InviteEmployee";
@@ -184,6 +184,7 @@ export const EmployeeInvitationSettings: React.FC = () => {
             filterOptions={{
               status: {
                 label: "Status",
+                type: FilterType.SELECT,
                 options: statusFilterOptions,
               },
             }}

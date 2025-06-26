@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { QuotationReq, QuotationStatusOptions } from "@/zustand/types/quotationT";
+import { QuotationReq, quotationStatusMap } from "@/zustand/types/quotationT";
 import PostalCode from "@/components/ui/postal-code";
 
 export const QuoteDetailsForm: React.FC = () => {
@@ -71,8 +71,8 @@ export const QuoteDetailsForm: React.FC = () => {
                   <SelectValue placeholder="Selecteer een status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {QuotationStatusOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
+                  {Object.entries(quotationStatusMap).map(([value, option]) => (
+                    <SelectItem key={value} value={value}>
                       {option.label}
                     </SelectItem>
                   ))}

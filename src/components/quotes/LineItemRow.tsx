@@ -96,7 +96,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
             render={({ field }) => (
               <CurrencyInputCore
                 value={field.value}
-                onValueChange={field.onChange}
+                onValueChange={(value) => field.onChange(parseFloat(value || "0"))}
                 prefix="€ "
                 decimalsLimit={2}
                 decimalSeparator=","
@@ -116,7 +116,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
             render={({ field }) => (
               <CurrencyInputCore
                 value={field.value}
-                onValueChange={field.onChange}
+                onValueChange={(value) => field.onChange(parseFloat(value || "0"))}
                 suffix=" %"
                 decimalsLimit={2}
                 decimalSeparator=","

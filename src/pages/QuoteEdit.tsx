@@ -13,12 +13,12 @@ import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { QuoteHeader } from "@/components/quotes/header/QuoteHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
-import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
 import { FormProvider, useForm } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
-import { useCreateQuotation, useUpdateQuotation } from "@/zustand/hooks/useQuotation";
+import { useCreateQuotation, useGetQuotation, useUpdateQuotation } from "@/zustand/hooks/useQuotation";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { flattenAddressToObject } from "@/utils/dataTransform";
 
 const defaultQuotationData: QuotationReq = {
   leads: [],
@@ -34,7 +34,7 @@ const defaultQuotationData: QuotationReq = {
     house_number: ""
   },
   items: [],
-  sub_total: 0,
+  subtotal: 0,
   discount_amount: 0,
   discount_type: "percentage",
   total_amount: 0
@@ -46,49 +46,56 @@ const QuoteEdit = () => {
 
   const createQuotationZ = useCreateQuotation();
   const updateQuotationZ = useUpdateQuotation();
-
-  const {
-    isEditing,
-    discountType,
-    discountValue,
-    setDiscountType,
-    setDiscountValue,
-  } = useQuoteForm(id);
-
-  // Check if the quote is accepted, and redirect if trying to edit an accepted quote
-  // useEffect(() => {
-  //   if (isEditing && quote.status === "accepted") {
-
-  //     navigate("/quotes");
-  //   }
-  // }, [isEditing, quote.status, navigate]);
+  const getQuotationZ = useGetQuotation(id || "");
 
   const methods = useForm<QuotationReq>({
     defaultValues: defaultQuotationData,
   });
 
   const handleStore = async (data: QuotationReq) => {
-    try {
-      const formattedData: QuotationReq = {
-        ...data,
-        leads: data.leads.map((lead) =>
-          typeof lead === "string" ? lead : lead.value
-        ),
-      };
-
-      await createQuotationZ.mutateAsync(formattedData);
-    } catch (error) {
-      throw new Error("Failed to create quotation");
-    }
+    const formattedData: QuotationReq = {
+      ...data,
+      // title: "Custom Title", // TODO: Delete this line when not needed
+      address: flattenAddressToObject(data.address),
+      leads: data.leads.map((lead) =>
+        typeof lead === "string" ? lead : lead.value
+      ),
+      items: data.items.map((item) => ({
+        ...item,
+        quantity: Number(item.quantity),
+        unit_price: Number(item.unit_price),
+        vat_amount: Number(item.vat_amount),
+        total: Number(item.total),
+      })),
+      subtotal: Number(data.subtotal),
+      discount_amount: Number(data.discount_amount),
+      total_amount: Number(data.total_amount),
+    };
+    await createQuotationZ.mutateAsync(formattedData);
   };
 
   const handleUpdate = async (data: QuotationReq) => {
-    try {
-      await updateQuotationZ.mutateAsync({ id: data.id!, formData: data });
-    } catch (error) {
-      throw new Error("Failed to update quotation");
-    }
-  };
+    const formattedData: QuotationReq = {
+      ...data,
+      // title: "Custom Title", // TODO: Delete this line when not needed
+      address: flattenAddressToObject(data.address),
+      leads: data.leads.map((lead) =>
+        typeof lead === "string" ? lead : lead.value
+      ),
+      items: data.items.map((item) => ({
+        ...item,
+        quantity: Number(item.quantity),
+        unit_price: Number(item.unit_price),
+        vat_amount: Number(item.vat_amount),
+        total: Number(item.total),
+      })),
+      subtotal: Number(data.subtotal),
+      discount_amount: Number(data.discount_amount),
+      total_amount: Number(data.total_amount),
+    };
+
+    await updateQuotationZ.mutateAsync({ id: id || "", formData: formattedData });
+  }
 
   useEffect(() => {
     if (createQuotationZ.isError) {
@@ -102,13 +109,48 @@ const QuoteEdit = () => {
     }
   }, [updateQuotationZ.isError, updateQuotationZ.error, methods.setError]);
 
+  useEffect(() => {
+    if (getQuotationZ.isSuccess) {
+      const quotationData = getQuotationZ.data.result;
+      methods.reset({
+        ...quotationData,
+        status: typeof quotationData.status === "string"
+          ? quotationData.status
+          : quotationData.status.value,
+        leads: quotationData.leads.map((lead) =>
+          typeof lead === "string" ? lead : { value: lead.id, label: lead.name }
+        ),
+        address: {
+          ...quotationData.address,
+          postal_code: typeof quotationData.address.postal_code === "string"
+            ? {
+              label: quotationData.address.postal_code,
+              value: quotationData.address.postal_code,
+            }
+            : quotationData.address.postal_code,
+        },
+        items: quotationData.items.map((item) => ({
+          ...item,
+          quantity: Number(item.quantity),
+          unit_price: Number(item.unit_price),
+          vat_amount: Number(item.vat_amount),
+          total: Number(item.total),
+        })),
+        subtotal: Number(quotationData.subtotal),
+        discount_amount: Number(quotationData.discount_amount),
+        total_amount: Number(quotationData.total_amount),
+      });
+    }
+  }, [getQuotationZ.isSuccess, getQuotationZ.data, methods]);
 
   return (
     <Layout>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(id ? handleUpdate : handleStore)}>
           <div className="container py-6 space-y-6">
-            <QuoteHeader isEditing={isEditing} />
+            <QuoteHeader isEditing={!!id}
+              loadingSubmit={createQuotationZ.isPending || updateQuotationZ.isPending}
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <CustomerCard />
@@ -134,7 +176,7 @@ const QuoteEdit = () => {
                 </CardContent>
               </Card>
 
-              {isEditing && (
+              {id && (
                 <Card className="lg:col-span-3">
                   <CardHeader>
                     <CardTitle>Offerte statistieken</CardTitle>
