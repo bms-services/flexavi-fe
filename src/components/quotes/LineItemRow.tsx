@@ -8,6 +8,7 @@ import { useFormContext, useWatch, Controller } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
 import CurrencyInputCore from "react-currency-input-field";
 import { ProductRes } from "@/zustand/types/productT";
+import { formatEuro } from "@/utils/format";
 
 interface LineItemRowProps {
   index: number;
@@ -129,7 +130,9 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
 
         {/* Total */}
         <td className={COLUMN_CLASSES[5]}>
-          <input type="number" readOnly className={`${INLINE_INPUT_STYLE} text-right font-medium`} value={total.toFixed(2)} disabled />
+          <span className="text-center">
+            {formatEuro(total)}
+          </span>
         </td>
 
         {/* Remove button */}

@@ -3,7 +3,7 @@ import { ProductRes } from "./productT";
 
 export type QuotationReq = {
     id?: string;
-    leads: string[];
+    leads: string[] | { value: string; label: string }[];
     title: string;
     description: string;
     notes: string;

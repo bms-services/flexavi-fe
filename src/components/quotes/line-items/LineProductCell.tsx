@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { ProductSuggestionDropdown } from './ProductSuggestionDropdown';
 import { useGetProducts } from '@/zustand/hooks/useProduct';
 import { ParamGlobal } from '@/zustand/types/apiT';
@@ -11,9 +11,11 @@ interface LineProductCellProps {
   disabled?: boolean;
 }
 
+
 export const LineProductCell: React.FC<LineProductCellProps> = ({
   value, onChange, onProductSelect, disabled = false,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -40,6 +42,7 @@ export const LineProductCell: React.FC<LineProductCellProps> = ({
   return (
     <div className="relative">
       <input
+        ref={inputRef}
         type="text"
         value={value}
         onChange={handleInputChange}
@@ -55,6 +58,7 @@ export const LineProductCell: React.FC<LineProductCellProps> = ({
         products={productSuggestions}
         onSelect={handleSelectProduct}
         loading={isLoading}
+        anchorRef={inputRef}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import {
     getQuotationService,
     updateQuotationService
 } from "../services/quotationService";
+import { useNavigate } from "react-router-dom";
 
 export const useGetQuotations = (params: ParamGlobal) => {
     return useQuery<ApiSuccessPaginated<QuotationRes>, ApiError>({
@@ -26,10 +27,12 @@ export const useGetQuotation = (id: string) => {
 
 export const useCreateQuotation = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
     return useMutation<ApiSuccess<QuotationRes>, ApiError, QuotationReq>({
         mutationFn: createQuotationService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['quotations'] });
+            navigate('/quotes');
         },
     });
 };

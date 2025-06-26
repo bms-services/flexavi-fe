@@ -15,7 +15,7 @@ import { QuoteHeader } from "@/components/quotes/header/QuoteHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { useQuoteForm } from "@/hooks/useQuoteForm";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
-import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
 import { useCreateQuotation, useUpdateQuotation } from "@/zustand/hooks/useQuotation";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
@@ -44,21 +44,13 @@ const defaultQuotationData: QuotationReq = {
 const QuoteEdit = () => {
   const { id } = useParams<{ id: string }>();
 
-
   const createQuotationZ = useCreateQuotation();
   const updateQuotationZ = useUpdateQuotation();
 
   const {
-    lineItems,
-    productSuggestions,
-    totalAmount,
     isEditing,
     discountType,
     discountValue,
-    handleLineItemChange,
-    handleAddLineItem,
-    handleRemoveLineItem,
-    getProductSuggestions,
     setDiscountType,
     setDiscountValue,
   } = useQuoteForm(id);
@@ -75,23 +67,26 @@ const QuoteEdit = () => {
     defaultValues: defaultQuotationData,
   });
 
-
-
   const handleStore = async (data: QuotationReq) => {
-    console.log(data);
+    try {
+      const formattedData: QuotationReq = {
+        ...data,
+        leads: data.leads.map((lead) =>
+          typeof lead === "string" ? lead : lead.value
+        ),
+      };
 
-    // try {
-    //   await createQuotationZ.mutateAsync(data);
-    // } catch (error) {
-    //   throw new Error("Failed to create quotation: " + error);
-    // }
+      await createQuotationZ.mutateAsync(formattedData);
+    } catch (error) {
+      throw new Error("Failed to create quotation");
+    }
   };
 
   const handleUpdate = async (data: QuotationReq) => {
     try {
       await updateQuotationZ.mutateAsync({ id: data.id!, formData: data });
     } catch (error) {
-      throw new Error("Failed to update quotation: " + error);
+      throw new Error("Failed to update quotation");
     }
   };
 
@@ -135,12 +130,7 @@ const QuoteEdit = () => {
                 </CardHeader>
                 <CardContent>
                   <LineItemsList />
-                  <QuoteSummary
-                    discountType={discountType}
-                    discountValue={discountValue}
-                    onDiscountTypeChange={setDiscountType}
-                    onDiscountValueChange={setDiscountValue}
-                  />
+                  <QuoteSummary />
                 </CardContent>
               </Card>
 

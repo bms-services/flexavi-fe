@@ -46,7 +46,7 @@ export const useQuoteForm = (quoteId?: string) => {
   useEffect(() => {
     if (isEditing && quoteId) {
       const foundQuote = mockQuotes.find(q => q.id === quoteId);
-      
+
       if (foundQuote) {
         setQuote({
           leadId: foundQuote.leadId,
@@ -58,17 +58,17 @@ export const useQuoteForm = (quoteId?: string) => {
           notes: foundQuote.notes || "",
           lineItems: Array.isArray(foundQuote.lineItems) ? foundQuote.lineItems : [],
         });
-        
-        setLineItems(Array.isArray(foundQuote.lineItems) && foundQuote.lineItems.length > 0 
-          ? foundQuote.lineItems 
+
+        setLineItems(Array.isArray(foundQuote.lineItems) && foundQuote.lineItems.length > 0
+          ? foundQuote.lineItems
           : [createEmptyLineItem()]);
-        
+
         const customer = mockLeads.find(l => l.id === foundQuote.leadId);
         if (customer) {
           setSelectedCustomer(customer);
         }
       } else {
-        
+
         navigate("/quotes");
       }
     }
@@ -80,12 +80,12 @@ export const useQuoteForm = (quoteId?: string) => {
   // Calculate final amount including discount
   useEffect(() => {
     const subtotal = lineItems.reduce((sum, item) => sum + (parseFloat(String(item.total)) || 0), 0);
-    const discountAmount = discountType === "percentage" 
-      ? (subtotal * discountValue) / 100 
+    const discountAmount = discountType === "percentage"
+      ? (subtotal * discountValue) / 100
       : discountValue;
-    
-    setQuote(prev => ({ 
-      ...prev, 
+
+    setQuote(prev => ({
+      ...prev,
       amount: Math.max(0, subtotal - discountAmount),
       discount: { type: discountType, value: discountValue }
     }));
@@ -93,7 +93,7 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const handleLineItemChange = (index: number, updatedItem: QuoteLineItem) => {
     const newLineItems = [...lineItems];
-    
+
     // Ensure the index is valid
     if (index >= 0 && index < newLineItems.length) {
       newLineItems[index] = updatedItem;
@@ -131,13 +131,13 @@ export const useQuoteForm = (quoteId?: string) => {
     if (!title || typeof title !== 'string' || title.trim().length <= 1 || !index) {
       return;
     }
-    
+
     // Get suggestions from the product hook
     const results = searchProducts(title);
-    
+
     // Ensure we have a valid array
     const safeResults = Array.isArray(results) ? results : [];
-    
+
     // Update suggestions state with the results
     setProductSuggestions(prev => ({
       ...prev,
@@ -147,12 +147,12 @@ export const useQuoteForm = (quoteId?: string) => {
 
   const handleSaveQuote = () => {
     if (!selectedCustomer) {
-      
+
       return;
     }
 
     if (lineItems.some(item => !item.description || item.quantity <= 0)) {
-      
+
       return;
     }
 
@@ -168,7 +168,7 @@ export const useQuoteForm = (quoteId?: string) => {
     } else {
       console.log('Creating new quote');
     }
-    
+
     console.log("Saving quote:", finalQuote);
     navigate("/quotes");
   };

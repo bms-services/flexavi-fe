@@ -1,6 +1,5 @@
 
 import React from "react";
-import { COLUMN_CLASSES } from "./constants";
 
 export const LineItemsTableHeader: React.FC = () => {
   return (

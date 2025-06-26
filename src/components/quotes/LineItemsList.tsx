@@ -13,7 +13,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
   disabled = false,
 }) => {
   const { control } = useFormContext<QuotationReq>();
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "items"
   });
@@ -36,9 +36,7 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
     <div className="space-y-4">
       <LineItemsTable
         fields={fields}
-        append={append}
         remove={remove}
-        update={update}
         disabled={disabled}
       />
       <AddLineItemButton onClick={onAddLineItem} disabled={disabled} />
