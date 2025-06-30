@@ -9,30 +9,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Invoice } from "@/types";
+import { InvoiceRes } from "@/zustand/types/invoiceT";
 
 interface CreditInvoiceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedInvoice: Invoice | null;
-  onCredit: (type: "full" | "partial") => void;
+  invoice: InvoiceRes;
+  onSubmit: (type: "full" | "partial") => void;
 }
 
 export const CreditInvoiceDialog: React.FC<CreditInvoiceDialogProps> = ({
   open,
   onOpenChange,
-  selectedInvoice,
-  onCredit,
+  invoice,
+  onSubmit,
 }) => {
-  if (!selectedInvoice) return null;
+  if (!invoice) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Factuur crediteren</DialogTitle>
+          <DialogTitle>Factuur crediteren - {invoice.invoice_number}</DialogTitle>
           <DialogDescription>
-            Kies het type creditering voor factuur {selectedInvoice.id.replace("inv-", "FACT-")}
+            Kies of u de factuur volledig of gedeeltelijk wilt crediteren.
+            <br />
+            <strong>
+              Let op: Een volledige creditering maakt de factuur volledig
+              ongedaan.
+            </strong>
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
@@ -43,12 +48,12 @@ export const CreditInvoiceDialog: React.FC<CreditInvoiceDialogProps> = ({
         <DialogFooter className="flex-col sm:flex-row sm:justify-between sm:space-x-2">
           <Button
             variant="outline"
-            onClick={() => onCredit("partial")}
+            onClick={() => onSubmit("partial")}
             className="mt-2 sm:mt-0"
           >
             Gedeeltelijke creditering
           </Button>
-          <Button onClick={() => onCredit("full")}>
+          <Button onClick={() => onSubmit("full")}>
             Volledige creditering
           </Button>
         </DialogFooter>

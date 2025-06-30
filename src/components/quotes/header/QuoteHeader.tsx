@@ -7,9 +7,10 @@ import { ChevronLeft, Save } from "lucide-react";
 interface QuoteHeaderProps {
   isEditing: boolean;
   loadingSubmit?: boolean;
+  quotationNumber?: string;
 }
 
-export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing, loadingSubmit }) => {
+export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing, loadingSubmit, quotationNumber }) => {
   const navigate = useNavigate();
 
   return (
@@ -24,7 +25,9 @@ export const QuoteHeader: React.FC<QuoteHeaderProps> = ({ isEditing, loadingSubm
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? "Offerte bewerken" : "Nieuwe offerte"}
+            {isEditing
+              ? `Offerte bewerken - ${quotationNumber}`
+              : "Nieuwe offerte"}
           </h1>
           <p className="text-muted-foreground">
             {isEditing

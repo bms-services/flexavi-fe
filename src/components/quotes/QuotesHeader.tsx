@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FolderIcon, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 interface QuotesHeaderProps {
   onNewQuotation: () => void;

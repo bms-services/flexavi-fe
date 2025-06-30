@@ -161,8 +161,10 @@ const QuoteEdit = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(id ? handleUpdate : handleStore)}>
           <div className="px-[24px] py-6 space-y-6">
-            <QuoteHeader isEditing={!!id}
+            <QuoteHeader
+              isEditing={!!id}
               loadingSubmit={createQuotationZ.isPending || updateQuotationZ.isPending}
+              quotationNumber={getQuotationZ.isSuccess ? getQuotationZ.data.result.quote_number : ""}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

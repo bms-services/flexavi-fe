@@ -3,65 +3,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Save, RefreshCcw, Send } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 interface InvoiceHeaderProps {
   isEditing: boolean;
-  onSave: () => void;
-  status: string;
+  loadingSubmit?: boolean;
   invoiceNumber?: string;
+  handleOpenCreditDialog?: () => void;
+  handleOpenSendDialog?: () => void;
 }
 
-export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, onSave, status, invoiceNumber }) => {
+export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, loadingSubmit, invoiceNumber, handleOpenCreditDialog, handleOpenSendDialog }) => {
   const navigate = useNavigate();
-  const [creditDialogOpen, setCreditDialogOpen] = useState(false);
-  const [sendDialogOpen, setSendDialogOpen] = useState(false);
-  const [emailData, setEmailData] = useState({
-    to: "",
-    subject: "",
-    message: ""
-  });
-
-  const handleCreditInvoice = () => {
-    // In a real implementation, this would create a credit invoice in the database
-  
-    setCreditDialogOpen(false);
-  };
-
-  const handleSendInvoice = () => {
-    // In a real implementation, this would send the invoice
-   
-    setSendDialogOpen(false);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setEmailData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   return (
     <>
@@ -85,87 +38,24 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, onSave,
         <div className="flex flex-wrap gap-2">
           {isEditing && (
             <>
-              <Button variant="outline" onClick={() => setCreditDialogOpen(true)}>
+              <Button variant="outline" onClick={handleOpenCreditDialog}>
                 <RefreshCcw className="mr-2 h-4 w-4" />
                 Crediteer factuur
               </Button>
-              <Button variant="outline" onClick={() => setSendDialogOpen(true)}>
+              <Button variant="outline" onClick={handleOpenSendDialog}>
                 <Send className="mr-2 h-4 w-4" />
                 Verzend factuur
               </Button>
             </>
           )}
-          <Button onClick={onSave}>
+          <Button type="submit" loading={loadingSubmit}>
             <Save className="mr-2 h-4 w-4" />
             Factuur opslaan
           </Button>
         </div>
       </div>
 
-      {/* Credit Invoice Confirmation Dialog */}
-      <AlertDialog open={creditDialogOpen} onOpenChange={setCreditDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Factuur crediteren</AlertDialogTitle>
-            <AlertDialogDescription>
-              Weet je zeker dat je deze factuur wilt crediteren? Er wordt een nieuwe creditfactuur aangemaakt.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuleren</AlertDialogCancel>
-            <AlertDialogAction onClick={handleCreditInvoice}>Ja, crediteer factuur</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
-      {/* Send Invoice Dialog */}
-      <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Factuur verzenden</DialogTitle>
-            <DialogDescription>
-              Vul de e-mailgegevens in om de factuur te verzenden
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="to">Aan</Label>
-              <Input
-                id="to"
-                name="to"
-                value={emailData.to}
-                onChange={handleEmailChange}
-                placeholder="email@voorbeeld.nl"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="subject">Onderwerp</Label>
-              <Input
-                id="subject"
-                name="subject"
-                value={emailData.subject}
-                onChange={handleEmailChange}
-                placeholder={`Factuur ${invoiceNumber?.replace("inv-", "FACT-")}`}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="message">Bericht</Label>
-              <Textarea
-                id="message"
-                name="message"
-                value={emailData.message}
-                onChange={handleEmailChange}
-                placeholder="Geachte heer/mevrouw, Hierbij sturen wij u de factuur..."
-                rows={5}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSendDialogOpen(false)}>Annuleren</Button>
-            <Button onClick={handleSendInvoice}>Verzenden</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
