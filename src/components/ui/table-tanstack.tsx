@@ -265,33 +265,6 @@ export default function TableTanstack<TData>({
           />
         </div>
 
-        {/* Status filter (as example) */}
-        {/* {filterOptions?.status && (
-          <div className="w-full sm:w-1/6">
-            <Select
-              value={typeof filters.status === "string" ? filters.status : undefined}
-              onValueChange={(value) => {
-                const next = { ...filters };
-                if (value) next.status = value;
-                else delete next.status;
-                onParamsChange({ filters: next, page: 1 });
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Filter op status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Alle statussen</SelectItem>
-                {filterOptions.status.options.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )} */}
-
         {Object.entries(filterOptions ?? {}).map(([key, config]) => (
           <div key={key} className="w-full sm:w-1/6">
             <TableTanstackFilter

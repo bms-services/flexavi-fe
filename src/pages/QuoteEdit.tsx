@@ -55,7 +55,6 @@ const QuoteEdit = () => {
   const handleStore = async (data: QuotationReq) => {
     const formattedData: QuotationReq = {
       ...data,
-      // title: "Custom Title", // TODO: Delete this line when not needed
       address: flattenAddressToObject(data.address),
       leads: data.leads.map((lead) =>
         typeof lead === "string" ? lead : lead.value
@@ -75,9 +74,23 @@ const QuoteEdit = () => {
   };
 
   const handleUpdate = async (data: QuotationReq) => {
-    const formattedData: QuotationReq = {
-      ...data,
-      // title: "Custom Title", // TODO: Delete this line when not needed
+    const {
+      title,
+      description,
+      notes,
+      planned_start_date,
+      status,
+      discount_type,
+    } = data;
+
+
+    const formattedData: Partial<QuotationReq> = {
+      title,
+      description,
+      notes,
+      planned_start_date,
+      status,
+      discount_type,
       address: flattenAddressToObject(data.address),
       leads: data.leads.map((lead) =>
         typeof lead === "string" ? lead : lead.value
@@ -147,7 +160,7 @@ const QuoteEdit = () => {
     <Layout>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(id ? handleUpdate : handleStore)}>
-          <div className="container py-6 space-y-6">
+          <div className="px-[24px] py-6 space-y-6">
             <QuoteHeader isEditing={!!id}
               loadingSubmit={createQuotationZ.isPending || updateQuotationZ.isPending}
             />

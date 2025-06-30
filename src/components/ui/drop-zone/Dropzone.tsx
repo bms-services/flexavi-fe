@@ -33,7 +33,7 @@ interface DropProps<T extends FieldValues> {
     }
     isCircle?: boolean
     previewUrl?: string
-    onChange: (value: File | File[]) => void
+    onChange?: (value: File | File[]) => void
 }
 
 export function Dropzone<T extends FieldValues>({
@@ -89,7 +89,7 @@ export function Dropzone<T extends FieldValues>({
                     className={className}
                     onDrop={onDrop}
                     isCircle={isCircle}
-                    onChange={onChange}
+                    onChange={onChange ?? (() => { })}
                     {...props}
                 />
             )}

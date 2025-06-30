@@ -20,6 +20,7 @@ export type QuotationReq = {
 
 export type QuotationRes = {
     id: string;
+    quote_number: string;
     leads: LeadRes[];
     title: string;
     description: string;

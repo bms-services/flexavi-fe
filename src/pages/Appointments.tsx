@@ -48,11 +48,11 @@ const Appointments = () => {
   };
 
   const handleNewAppointment = () => {
-  
+
   };
 
   const handleTeamUpdate = (updatedTeam: TeamDetails) => {
-    setTeams(teams.map(team => 
+    setTeams(teams.map(team =>
       team.id === updatedTeam.id ? updatedTeam : team
     ));
   };
@@ -73,12 +73,12 @@ const Appointments = () => {
 
   const handleTeamDelete = (teamId: string) => {
     setTeams(teams.filter(team => team.id !== teamId));
-    
+
     const updatedUnavailableDates = { ...unavailableDates };
     delete updatedUnavailableDates[teamId];
     setUnavailableDates(updatedUnavailableDates);
-    
-   
+
+
   };
 
   const handleTeamNameEdit = (team: TeamDetails) => {
@@ -86,25 +86,25 @@ const Appointments = () => {
     if (newName && newName.trim() && newName !== team.name) {
       const updatedTeam = { ...team, name: newName.trim() };
       handleTeamUpdate(updatedTeam);
-     
+
     }
   };
 
   const handleAppointmentAssign = (appointmentId: string, teamId: string) => {
-    setAppointments(appointments.map(app => 
+    setAppointments(appointments.map(app =>
       app.id === appointmentId ? { ...app, teamId } : app
     ));
   };
 
   const handleSettingsOpen = () => {
-   
+
   };
 
   return (
     <Layout>
       <TooltipProvider>
-        <div className="container py-6 space-y-6">
-          <AppointmentsHeader 
+        <div className="px-[24px] py-6 space-y-6">
+          <AppointmentsHeader
             onNewAppointment={handleNewAppointment}
             onSettingsOpen={handleSettingsOpen}
             teams={teams}  // Added teams prop here
@@ -112,7 +112,7 @@ const Appointments = () => {
 
           <AppointmentsTabs
             activeTab="planning"
-            setActiveTab={() => {}}
+            setActiveTab={() => { }}
             selectedDate={selectedDate}
             appointments={appointments}
             teams={teams}

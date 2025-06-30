@@ -1,181 +1,157 @@
 
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Eye, PlusCircle, Edit2, Trash2 } from "lucide-react";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { mockWorkAgreements } from "@/data/mockWorkAgreements";
-import { mockLeads } from "@/data/mockData";
-import { WorkAgreement } from "@/types";
-import { useWorkAgreementStatusBadge } from "@/hooks/useWorkAgreementStatusBadge";
-import { WorkAgreementFilters } from "@/components/workagreements/filters/WorkAgreementFilters";
-import { LeadTablePagination } from "@/components/leads/LeadTablePagination";
+import { PlusCircle } from "lucide-react";
+import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
+import { useDeleteWorkAgreement, useGetWorkAgreements } from "@/zustand/hooks/useWorkAgreement";
+import { useCallback, useMemo, useState } from "react";
+import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
+import { formatEuro, formatIsoToDate } from "@/utils/format";
+import { WorkAgreementRes, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 
 const WorkAgreements = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
   const navigate = useNavigate();
 
-  const getLeadName = (leadId: string) => {
-    const lead = mockLeads.find((l) => l.id === leadId);
-    return lead ? lead.name : "Onbekend";
-  };
+  const columns = useMemo<CustomColumnDef<WorkAgreementRes>[]>(() => [
+    { accessorKey: "quote_number", header: "Nummer", cell: info => info.getValue() },
+    {
+      accessorKey: "leads",
+      header: "Klant",
+      cell: info => {
+        const leads = info.row.original.leads;
+        if (Array.isArray(leads) && leads.length > 0) {
+          return (
+            <div className="flex flex-col">
+              {leads.map(lead => (
+                <span key={lead.id} className="text-sm text-gray-700">
+                  {lead.name} ({lead.email})
+                </span>
+              ))}
+            </div>
+          )
+        }
+        return "-";
+      }
+    },
+    {
+      accessorKey: "planned_start_date",
+      header: "Datum",
+      cell: info => formatIsoToDate(info.row.original.created_at),
+    },
+    { accessorKey: "total_amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
+    { accessorKey: "description", header: "Omschrijving", cell: info => info.getValue() },
+    // {
+    //   accessorKey: "status", header: "Status", cell: info =>
+    //   (
+    //     <QuoteStatusBadge
+    //       status={
+    //         typeof info.row.original.status === 'object'
+    //           ? info.row.original.status.value as QuotationStatus
+    //           : info.row.original.status as QuotationStatus
+    //       }
+    //     />
+    //   )
+    // },
+  ], []);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
-  // Filter work agreements
-  const filteredAgreements = mockWorkAgreements.filter((wa) => {
-    const lead = mockLeads.find((l) => l.id === wa.leadId);
-    const searchMatch = 
-      lead?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead?.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      wa.id.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const statusMatch = statusFilter === "all" || wa.status === statusFilter;
-    
-    return searchMatch && statusMatch;
+  const [params, setParams] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
   });
 
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredAgreements.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedAgreements = filteredAgreements.slice(startIndex, startIndex + itemsPerPage);
+  const getWorkAgreementsZ = useGetWorkAgreements(params);
+  const deleteWorkAgreementZ = useDeleteWorkAgreement();
 
-  const handleViewAgreement = (agreement: WorkAgreement) => {
-    navigate(`/workagreements/${agreement.id}`);
+  const data = getWorkAgreementsZ.data?.result.data ?? [];
+  const meta = getWorkAgreementsZ.data?.result.meta;
+
+  const handleShow = (data: WorkAgreementRes) => {
+    navigate(`/workagreements/${data.id}`);
   };
 
-  const handleEditAgreement = (agreement: WorkAgreement) => {
-    navigate(`/workagreements/edit/${agreement.id}`);
+  const handleEdit = (data: WorkAgreementRes) => {
+    navigate(`/workagreements/edit/${data.id}`);
   };
 
-  const handleCreateAgreement = () => {
+  const handleCreate = () => {
     navigate("/workagreements/create");
   };
 
+  const handleDelete = async (ids: WorkAgreementRes[]) => {
+    const workAgreementIds = ids.map(id => id.id).filter((id): id is string => typeof id === "string");
+    await deleteWorkAgreementZ.mutateAsync({
+      ids: workAgreementIds,
+      force: false
+    });
+  };
+
+  /**
+    * Handles changes to the table parameters such as pagination, sorting, and filtering.
+    * 
+    * @param changed - Partial object containing the parameters that have changed.
+    * This function merges the new parameters with the existing ones in the state.
+    */
+  const handleParamsChange = useCallback(
+    (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
+    [setParams]
+  );
+
+  /**
+    * Maps the quotation status to filter options for the table.
+    * 
+    * @returns An array of objects containing value and label for each quotation status.
+    */
+  const statusFilterOptions = Object.entries(WorkAgreementStatusMap).map(
+    ([value, { label }]) => ({ value, label })
+  );
+
+
+
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Werkovereenkomsten</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Offertes</h1>
             <p className="text-muted-foreground">
               Beheer alle werkovereenkomsten op één plek
             </p>
           </div>
-          <Button onClick={handleCreateAgreement}>
+          <Button onClick={handleCreate}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Nieuwe Werkovereenkomst
           </Button>
         </div>
 
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <CardTitle>Werkovereenkomsten overzicht</CardTitle>
-                <CardDescription>
-                  Een lijst van alle werkovereenkomsten
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <WorkAgreementFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              status={statusFilter}
-              onStatusChange={setStatusFilter}
-            />
-            
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Acties</TableHead>
-                  <TableHead>Nummer</TableHead>
-                  <TableHead>Klant</TableHead>
-                  <TableHead>Datum</TableHead>
-                  <TableHead>Bedrag</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Omschrijving
-                  </TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedAgreements.map((agreement) => {
-                  const statusConfig = useWorkAgreementStatusBadge(agreement.status);
-                  return (
-                    <TableRow key={agreement.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleViewAgreement(agreement)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEditAgreement(agreement)}
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {agreement.id.replace("wa-", "WO-")}
-                      </TableCell>
-                      <TableCell>{getLeadName(agreement.leadId)}</TableCell>
-                      <TableCell>
-                        {format(new Date(agreement.createdAt), "dd-MM-yyyy", {
-                          locale: nl,
-                        })}
-                      </TableCell>
-                      <TableCell>{formatCurrency(agreement.totalAmount)}</TableCell>
-                      <TableCell className="hidden md:table-cell max-w-xs truncate">
-                        {agreement.description}
-                      </TableCell>
-                      <TableCell>
-                        {statusConfig && (
-                          <Badge variant={statusConfig.variant}>
-                            {statusConfig.label}
-                          </Badge>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-
-            <LeadTablePagination 
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          <TableTanstack
+            columns={columns}
+            data={data}
+            meta={meta}
+            isLoading={getWorkAgreementsZ.isLoading}
+            params={params}
+            onParamsChange={handleParamsChange}
+            onEdit={handleEdit}
+            onShow={handleShow}
+            onDelete={handleDelete}
+            // onArchive={onArchive}
+            filterOptions={{
+              status: {
+                label: "Status",
+                type: FilterType.SELECT,
+                options: statusFilterOptions,
+              },
+              planned_start_date: {
+                placeholder: "Planed Start Date",
+                type: FilterType.DATE
+              }
+            }}
+          />
+        </div>
       </div>
     </Layout>
   );

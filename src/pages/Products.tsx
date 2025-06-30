@@ -1,11 +1,11 @@
 
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { ProductDialog } from "@/components/products/ProductDialog";
 import { CategoryDialog } from "@/components/products/CategoryDialog";
 import { ProductsHeader } from "@/components/products/ProductsHeader";
 import { ProductsTable } from "@/components/products/ProductsTable";
-import { useGetProduct, useGetProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProductCategories, useCreateProductCategory, useUpdateProductCategory, useDeleteProductCategory } from "@/zustand/hooks/useProduct";
+import { useGetProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useGetProductCategories, useCreateProductCategory, useUpdateProductCategory, useDeleteProductCategory } from "@/zustand/hooks/useProduct";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { ProductCategoryReq, ProductReq, ProductRes } from "@/zustand/types/productT";
 import { FormProvider, useForm } from "react-hook-form";
@@ -64,7 +64,6 @@ const Products = () => {
   const [productCategoryId, setProductCategoryId] = useState<string>("");
 
   const getProductsZ = useGetProducts(params);
-  const getProductZ = useGetProduct(productId);
   const createProductZ = useCreateProduct();
   const updateProductZ = useUpdateProduct();
   const deleteProductZ = useDeleteProduct();

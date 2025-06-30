@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
+import { WorkAgreementDueTypeMap } from "@/zustand/types/workAgreementT";
 
 interface PaymentInstallmentItemProps {
   installment: {
@@ -51,10 +52,11 @@ export const PaymentInstallmentItem: React.FC<PaymentInstallmentItemProps> = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="upfront">Bij opdracht</SelectItem>
-            <SelectItem value="start">Bij aanvang</SelectItem>
-            <SelectItem value="during">Tijdens werk</SelectItem>
-            <SelectItem value="completion">Bij oplevering</SelectItem>
+            {Object.values(WorkAgreementDueTypeMap).map((type) => (
+              <SelectItem key={type.value} value={type.value}>
+                {type.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

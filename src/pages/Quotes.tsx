@@ -8,15 +8,10 @@ import {
 } from "@/zustand/hooks/useQuotation";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { QuotationRes } from "@/zustand/types/quotationT";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useNavigate } from "react-router-dom";
 
 const Quotations = () => {
   const navigate = useNavigate();
-  const [modal, setModal] = useState({
-    quotation: false,
-    deleteQuotation: false,
-  });
 
   const [params, setParams] = useState<ParamGlobal>({
     page: 1,
@@ -25,8 +20,6 @@ const Quotations = () => {
     filters: {},
     sorts: {},
   });
-
-  const [quotationId, setQuotationId] = useState<string>("");
 
   const getQuotationsZ = useGetQuotations(params);
   const deleteQuotationZ = useDeleteQuotation();
@@ -41,17 +34,11 @@ const Quotations = () => {
 
   const handleDelete = async (ids: QuotationRes[]) => {
     const quotationIds = ids.map(id => id.id).filter((id): id is string => typeof id === "string");
-    try {
-      await deleteQuotationZ.mutateAsync({
-        ids: quotationIds,
-        force: false
-      });
-      setQuotationId("");
-    } catch (error) {
-      throw new Error("Failed to delete quotation: " + error);
-    }
+    await deleteQuotationZ.mutateAsync({
+      ids: quotationIds,
+      force: false
+    });
   };
-
 
   return (
     <Layout>
@@ -66,16 +53,6 @@ const Quotations = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           getQuotationsZ={getQuotationsZ}
-        />
-
-        {/* Delete Quotation */}
-        <ConfirmDialog
-          open={modal.deleteQuotation}
-          onCancel={() => setModal(prev => ({ ...prev, deleteQuotation: false }))}
-          onConfirm={() => handleDelete([{ id: quotationId } as QuotationRes])}
-          title="Weet je het zeker?"
-          description="Weet je zeker dat je deze offerte wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
-          loading={deleteQuotationZ.isPending}
         />
       </div>
     </Layout>

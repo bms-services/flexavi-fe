@@ -1,71 +1,88 @@
-
 import React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useGetMyAgendaColorSettings, useUpdateMyAgendaColorSettings } from "@/zustand/hooks/useSetting";
+import { AgendaSettingColorReq } from "@/zustand/types/agendaT";
 
-interface CalendarColorSettingsProps {
-  colors: {
-    emptyBorder: string;
-    fullBorder: string;
+
+export const CalendarColorSettings: React.FC = () => {
+  const { t } = useTranslation();
+
+  const getMyAgendaColorSettingsZ = useGetMyAgendaColorSettings({
+    page: 1,
+    per_page: 10,
+    search: "",
+  });
+
+  const updateMyAgendaColorSettingsZ = useUpdateMyAgendaColorSettings();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AgendaSettingColorReq>();
+
+  const onSubmit = async (data: AgendaSettingColorReq) => {
+    const payload = Object.entries(data.color).map(([id, color]) => ({
+      id,
+      color,
+    }));
+    await updateMyAgendaColorSettingsZ.mutateAsync(payload);
   };
-  onColorsChange: (colors: { emptyBorder: string; fullBorder: string }) => void;
-  onSave: () => void;
-}
 
-export const CalendarColorSettings: React.FC<CalendarColorSettingsProps> = ({
-  colors,
-  onColorsChange,
-  onSave,
-}) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Agenda weergave</CardTitle>
-        <CardDescription>
-          Pas de kleuren aan voor verschillende agenda statussen.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid gap-4">
-          <div className="space-y-2">
-            <Label>Kleur voor lege agenda</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="color"
-                value={colors.emptyBorder}
-                onChange={(e) =>
-                  onColorsChange({ ...colors, emptyBorder: e.target.value })
-                }
-              />
-              <span className="text-sm text-muted-foreground">
-                {colors.emptyBorder}
-              </span>
-            </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Agenda weergave</CardTitle>
+          <CardDescription>
+            Pas de kleuren aan voor verschillende agenda statussen.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4">
+            {getMyAgendaColorSettingsZ.isSuccess &&
+              getMyAgendaColorSettingsZ.data.result.data.map((colorSetting) => (
+                <div key={colorSetting.id} className="space-y-2">
+                  <Label>Status kleur</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="color"
+                      defaultValue={colorSetting.color}
+                      rules={{
+                        register,
+                        name: `color[${colorSetting.id}]`,
+                        options: {
+                          required: "Kleur is verplicht",
+                        },
+                        errors,
+                      }}
+                    />
+                    <span className="text-sm text-muted-foreground">
+                      {colorSetting.color}
+                    </span>
+                  </div>
+                </div>
+              ))}
           </div>
-          <div className="space-y-2">
-            <Label>Kleur voor volle agenda</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="color"
-                value={colors.fullBorder}
-                onChange={(e) =>
-                  onColorsChange({ ...colors, fullBorder: e.target.value })
-                }
-              />
-              <span className="text-sm text-muted-foreground">
-                {colors.fullBorder}
-              </span>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button onClick={onSave} className="ml-auto">
-          Kleuren opslaan
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" className="ml-auto">
+            Kleuren opslaan
+          </Button>
+        </CardFooter>
+      </Card>
+    </form>
   );
 };

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import CurrencyInputCore from "react-currency-input-field";
 
 interface CashPaymentInputProps {
   value: number;
@@ -22,12 +22,15 @@ export const CashPaymentInput: React.FC<CashPaymentInputProps> = ({
   return (
     <div>
       <Label>Contant te betalen bij oplevering (€)</Label>
-      <Input
-        type="number"
-        value={value || ''}
-        onChange={handleChange}
-        placeholder="Bedrag"
+      <CurrencyInputCore
+        value={value}
+        onValueChange={(value) => onChange(parseFloat(value || "0"))}
+        prefix="€ "
+        decimalsLimit={2}
+        decimalSeparator=","
+        groupSeparator="."
         disabled={disabled}
+        className={`text-center`}
       />
     </div>
   );

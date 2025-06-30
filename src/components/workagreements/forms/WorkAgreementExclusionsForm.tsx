@@ -1,36 +1,41 @@
-
-import React, { useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Trash2, Plus } from "lucide-react";
+import { useState } from "react";
+import { WorkAgreementReq } from "@/zustand/types/workAgreementT";
 
 interface WorkAgreementExclusionsFormProps {
-  exclusions: string[];
-  onChange: (exclusions: string[]) => void;
+  disabled?: boolean;
 }
 
 export const WorkAgreementExclusionsForm: React.FC<WorkAgreementExclusionsFormProps> = ({
-  exclusions,
-  onChange,
+  disabled = false
 }) => {
   const [newExclusion, setNewExclusion] = useState("");
 
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<WorkAgreementReq>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "exclusions"
+  });
+
   const handleAddExclusion = () => {
-    if (newExclusion.trim()) {
-      const updatedExclusions = [...exclusions, newExclusion.trim()];
-      onChange(updatedExclusions);
+    const trimmed = newExclusion.trim();
+    if (trimmed) {
+      append(trimmed);
       setNewExclusion("");
     }
   };
 
-  const handleRemoveExclusion = (index: number) => {
-    const updatedExclusions = exclusions.filter((_, i) => i !== index);
-    onChange(updatedExclusions);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleAddExclusion();
     }
@@ -47,30 +52,50 @@ export const WorkAgreementExclusionsForm: React.FC<WorkAgreementExclusionsFormPr
             onChange={(e) => setNewExclusion(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Voeg een nieuwe uitsluiting toe"
+            disabled={disabled}
           />
         </div>
-        <Button type="button" onClick={handleAddExclusion}>
+        <Button type="button" onClick={handleAddExclusion} disabled={disabled || !newExclusion.trim()}>
           <Plus className="h-4 w-4 mr-2" />
           Toevoegen
         </Button>
       </div>
 
       <div className="border rounded-md divide-y">
-        {exclusions.length === 0 ? (
+        {fields.length === 0 ? (
           <div className="p-4 text-center text-muted-foreground">
             Geen uitsluitingen toegevoegd
           </div>
         ) : (
-          exclusions.map((exclusion, index) => (
-            <div key={index} className="p-3 flex justify-between items-center">
-              <span>{exclusion}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleRemoveExclusion(index)}
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
+          fields.map((field, index) => (
+            <div
+              key={field.id}
+              className="p-3 flex justify-between items-center"
+            >
+              <div className="w-full">
+                <Input
+                  defaultValue={field as unknown as string}
+                  className="w-full"
+                  disabled={disabled}
+                  rules={{
+                    register,
+                    name: `exclusions.${index}`,
+                    options: {
+                      required: "Uitsluiting is verplicht",
+                    },
+                    errors,
+                  }}
+                />
+              </div>
+              {!disabled && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                >
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              )}
             </div>
           ))
         )}

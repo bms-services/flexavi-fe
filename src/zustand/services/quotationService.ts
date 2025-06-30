@@ -21,7 +21,7 @@ export const createQuotationService = async (formData: QuotationReq): Promise<Ap
 };
 
 export const updateQuotationService = async ({ id, formData }: { id: string, formData: Partial<QuotationReq> }): Promise<ApiSuccess<QuotationRes>> => {
-    const { data } = await mainApi.put(`/quotes/${id}`, formData);
+    const { data } = await mainApi.patch(`/quotes/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

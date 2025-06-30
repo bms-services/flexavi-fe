@@ -43,8 +43,8 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onE
     },
     {
       accessorKey: "planned_start_date",
-      header: "Datum",
-      cell: info => formatIsoToDate(info.row.original.created_at),
+      header: "Datum Start Planning",
+      cell: info => formatIsoToDate(info.row.original.planned_start_date),
     },
     { accessorKey: "total_amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
     { accessorKey: "description", header: "Omschrijving", cell: info => info.getValue() },

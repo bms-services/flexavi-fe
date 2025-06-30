@@ -1,17 +1,16 @@
 import "./style.css"
 import AsyncCreatableSelect, { AsyncCreatableProps } from "react-select/async-creatable";
-import { GroupBase, SingleValue, MultiValue, ActionMeta } from "react-select";
+import { GroupBase, SingleValue, MultiValue, ActionMeta, OptionsOrGroups } from "react-select";
 import { Path, Control, Controller, FieldValues, FieldErrors, RegisterOptions } from "react-hook-form";
 import { Label } from "../label";
 import { selectStyles } from "./style";
-
-// Option type
+import { useEffect, useRef } from "react";
 export interface Option {
     readonly label: string;
     readonly value: string;
 }
 
-interface SelectCreateAsyncProps<T extends FieldValues>
+interface SelectSearchAsyncCreatableProps<T extends FieldValues>
     extends Omit<AsyncCreatableProps<Option, boolean, GroupBase<Option>>, 'name' | 'value' | 'onChange'> {
     id?: string;
     label?: string;
@@ -28,6 +27,7 @@ interface SelectCreateAsyncProps<T extends FieldValues>
         actionMeta: ActionMeta<Option>
     ) => void;
     onCreateOption?: (inputValue: string) => void;
+    debounceTime?: number;
 }
 
 const SelectSearchAsyncCreatable = <T extends FieldValues>({
@@ -38,8 +38,50 @@ const SelectSearchAsyncCreatable = <T extends FieldValues>({
     isDisabled = false,
     onChange,
     onCreateOption,
+    loadOptions,
+    debounceTime = 500,
     ...props
-}: SelectCreateAsyncProps<T>) => {
+}: SelectSearchAsyncCreatableProps<T>) => {
+    const originalLoadOptions = useRef(loadOptions);
+    const timeoutRef = useRef<NodeJS.Timeout>();
+
+    useEffect(() => {
+        originalLoadOptions.current = loadOptions;
+    }, [loadOptions]);
+
+    const debouncedLoadOptions = (
+        inputValue: string,
+        callback: (options: OptionsOrGroups<Option, GroupBase<Option>>) => void
+    ) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(async () => {
+            try {
+                if (originalLoadOptions.current) {
+                    const result = await originalLoadOptions.current(inputValue, callback);
+                    if (Array.isArray(result)) {
+                        callback(result as Option[]);
+                    } else if (result && typeof result === "object" && "options" in result) {
+                        const optionsOrGroups = result as unknown as { options: Option[] }[];
+                        const options: Option[] = optionsOrGroups.flatMap(group =>
+                            Array.isArray(group.options) ? group.options : []
+                        );
+                        callback(options);
+                    } else {
+                        callback([]);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Failed to load options", error);
+                callback([]);
+            }
+
+        }, debounceTime);
+    };
+
     return (
         <div className="relative space-y-1">
             {label && (
@@ -72,6 +114,7 @@ const SelectSearchAsyncCreatable = <T extends FieldValues>({
                                     onCreateOption(inputValue);
                                 }
                             }}
+                            loadOptions={debouncedLoadOptions}
                             {...props}
                         />
                     )}
@@ -86,6 +129,7 @@ const SelectSearchAsyncCreatable = <T extends FieldValues>({
                     styles={selectStyles}
                     onChange={onChange}
                     onCreateOption={onCreateOption}
+                    loadOptions={debouncedLoadOptions}
                     {...props}
                 />
             )}

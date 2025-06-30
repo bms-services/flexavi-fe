@@ -76,12 +76,12 @@ const InvoicesMain = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <InvoicesHeader onCreateNewInvoice={handleCreateNewInvoice} />
-        <InvoiceKPIs 
-          total={kpis.total} 
-          paid={kpis.paid} 
-          outstanding={kpis.outstanding} 
+        <InvoiceKPIs
+          total={kpis.total}
+          paid={kpis.paid}
+          outstanding={kpis.outstanding}
         />
         <Card>
           <CardHeader>

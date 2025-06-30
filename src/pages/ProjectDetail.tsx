@@ -16,7 +16,7 @@ const ProjectDetail = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <ProjectDetailContent project={project} />
       </div>
     </Layout>

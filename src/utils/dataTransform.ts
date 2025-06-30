@@ -1,7 +1,7 @@
-import { AddressReq, AddressRes } from "@/zustand/types/addressT";
+import { AddressReq } from "@/zustand/types/addressT";
 
 export const flattenAddressToObject = (address: AddressReq): AddressReq => {
-    const { postal_code, ...rest } = address;
+    const { postal_code, street, house_number, house_number_addition } = address;
 
     const postalCodeValue =
         typeof postal_code === 'object' && postal_code !== null && 'value' in postal_code
@@ -9,8 +9,11 @@ export const flattenAddressToObject = (address: AddressReq): AddressReq => {
             : '';
 
     return {
-        ...rest,
         postal_code: postalCodeValue,
+        street: street || '',
+        house_number: house_number || '',
+        house_number_addition: house_number_addition || '',
+        city: address.city || '',
     };
 };
 

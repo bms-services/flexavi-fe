@@ -13,7 +13,7 @@ const LeadDetails = () => {
 
   if (getLeadZ.isError) {
     return (
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <Button variant="ghost" onClick={() => navigate("/leads")}>
           <ChevronLeft className="mr-2 h-4 w-4" />
           Terug naar leads
@@ -31,7 +31,7 @@ const LeadDetails = () => {
     console.log("Lead Detail:", leadDetailZ);
 
     return (
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <div className="flex items-center space-x-4">
           <Button variant="ghost" onClick={() => navigate("/leads")}>
             <ChevronLeft className="mr-2 h-4 w-4" />

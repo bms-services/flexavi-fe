@@ -16,7 +16,7 @@ const Expenses = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <ExpensesHeader onFiltersChange={handleFiltersChange} />
         <ExpensesFilters onFiltersChange={handleFiltersChange} />
         <ExpensesTable expenses={mockExpenses} filters={filters} />

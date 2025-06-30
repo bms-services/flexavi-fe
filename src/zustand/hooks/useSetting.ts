@@ -2,6 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
+import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
+import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
+
 import {
     PaymentReq,
     PaymentRes,
@@ -36,10 +39,10 @@ import {
     addMemberMyTeamService,
     getMyWorkDaysService,
     getMyAgendaSettingsService,
-    updateMyAgendaSettingsService
+    updateMyAgendaSettingsService,
+    getMyAgendaColorSettingsService,
+    updateMyAgendaColorSettingsService
 } from "../services/settingService";
-import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
-import { AgendaSettingReq, AgendaSettingRes } from "../types/agendaT";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -234,6 +237,28 @@ export const useGetMyAgendaSettings = (params: ParamGlobal) => {
 export const useUpdateMyAgendaSettings = () => {
     return useMutation<ApiSuccess<AgendaSettingRes>, ApiError, AgendaSettingReq[]>({
         mutationFn: updateMyAgendaSettingsService,
+    });
+};
+
+
+// ------ Agenda Color ------ \\
+export const useGetMyAgendaColorSettings = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<AgendaSettingColorRes>, ApiError>({
+        queryKey: ['my-agenda-color-settings', params],
+        queryFn: () => getMyAgendaColorSettingsService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+}
+
+export const useUpdateMyAgendaColorSettings = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation<ApiSuccess<AgendaSettingColorRes>, ApiError, AgendaSettingColorReq[]>({
+        mutationFn: updateMyAgendaColorSettingsService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['my-agenda-color-settings'] });
+        }
     });
 };
 

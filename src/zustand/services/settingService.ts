@@ -1,10 +1,10 @@
 import { mainApi } from "@/utils/axios";
-import { CompanyReq, CompanyRes, CompanyRoleRes } from "../types/companyT";
+import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
-import { AgendaSettingReq, AgendaSettingRes } from "../types/agendaT";
+import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -170,3 +170,16 @@ export const updateMyAgendaSettingsService = async (formData: AgendaSettingReq[]
     if (!data.success) throw data;
     return data;
 }
+
+// Agenda Color
+export const getMyAgendaColorSettingsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<AgendaSettingColorRes>> => {
+    const { data } = await mainApi.get("/setting/agenda/color/list", { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const updateMyAgendaColorSettingsService = async (formData: AgendaSettingColorReq[]): Promise<ApiSuccess<AgendaSettingColorRes>> => {
+    const { data } = await mainApi.put("/setting/agenda/color/update", formData);
+    if (!data.success) throw data;
+    return data;
+};  

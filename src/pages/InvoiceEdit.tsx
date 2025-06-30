@@ -48,8 +48,8 @@ const InvoiceEdit = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
-        <InvoiceHeader 
+      <div className="px-[24px] py-6 space-y-6">
+        <InvoiceHeader
           isEditing={isEditing}
           onSave={handleSaveInvoice}
           status={invoice.status}
@@ -66,7 +66,7 @@ const InvoiceEdit = () => {
               <CardDescription>Vul de details van de factuur in</CardDescription>
             </CardHeader>
             <CardContent>
-              <InvoiceDetailsForm 
+              <InvoiceDetailsForm
                 description={invoice.description}
                 location={invoice.location}
                 dueDate={invoice.dueDate}
@@ -83,7 +83,7 @@ const InvoiceEdit = () => {
               <CardDescription>Voeg producten en diensten toe aan de factuur</CardDescription>
             </CardHeader>
             <CardContent>
-              <LineItemsList 
+              <LineItemsList
                 lineItems={lineItems}
                 onLineItemChange={handleLineItemChange}
                 onAddLineItem={handleAddLineItem}
@@ -91,8 +91,8 @@ const InvoiceEdit = () => {
                 productSuggestions={productSuggestions}
                 onProductSearch={getProductSuggestions}
               />
-              <InvoiceSummary 
-                subtotal={totalAmount} 
+              <InvoiceSummary
+                subtotal={totalAmount}
                 vatRate={calculateAverageVatRate()}
                 discountType={discountType}
                 discountValue={discountValue}

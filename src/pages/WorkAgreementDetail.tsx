@@ -32,7 +32,7 @@ const WorkAgreementDetail = () => {
       const foundAgreement = mockWorkAgreements.find(wa => wa.id === id);
       if (foundAgreement) {
         setWorkAgreement(foundAgreement);
-        
+
         const foundCustomer = mockLeads.find(l => l.id === foundAgreement.leadId);
         if (foundCustomer) {
           setCustomer(foundCustomer);
@@ -77,7 +77,7 @@ const WorkAgreementDetail = () => {
 
   return (
     <Layout>
-      <div className="container py-6 space-y-6">
+      <div className="px-[24px] py-6 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button

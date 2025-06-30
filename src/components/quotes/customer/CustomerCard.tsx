@@ -6,6 +6,7 @@ import { LeadRes } from "@/zustand/types/leadT";
 import { getLeadsService } from "@/zustand/services/leadService"; // pastikan endpoint service kamu
 import { useFormContext } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
+import { useDebounce } from "use-debounce";
 
 interface CustomerCardProps {
   disabled?: boolean;
@@ -55,8 +56,6 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
             isClearable
             defaultOptions={defaultOptions}
             loadOptions={loadOptions}
-            // value={selectedOptions}
-            // onChange={(value) => handleChange(value as Option[])}
             isDisabled={disabled}
             rules={{
               name: "leads",
