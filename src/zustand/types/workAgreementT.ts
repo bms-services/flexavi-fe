@@ -46,8 +46,6 @@ export type WorkAgreementRes = {
 
 export type WorkAgreementPaymentReq = {
     payment_method: WorkAgreementPaymentMethod;
-    // total_percentage: number;
-    // total_amount: number;
     total_cash: number;
     terms: WorkAgreementPaymentTermReq[];
 };
@@ -61,10 +59,8 @@ export type WorkAgreementPaymentRes = {
 
 export type WorkAgreementPaymentTermReq = {
     description: string;
-    // status: string;
-    // quantity: number;
     percentage: number;
-    due_type: WorkAgreementDueType;
+    status: WorkAgreementDueType;
     total_price: number;
 };
 

@@ -27,11 +27,7 @@ export const CalendarColorSettings: React.FC = () => {
 
   const updateMyAgendaColorSettingsZ = useUpdateMyAgendaColorSettings();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<AgendaSettingColorReq>();
+  const { register, handleSubmit, formState: { errors } } = useForm<AgendaSettingColorReq>();
 
   const onSubmit = async (data: AgendaSettingColorReq) => {
     const payload = Object.entries(data.color).map(([id, color]) => ({
@@ -60,14 +56,9 @@ export const CalendarColorSettings: React.FC = () => {
                     <Input
                       type="color"
                       defaultValue={colorSetting.color}
-                      rules={{
-                        register,
-                        name: `color[${colorSetting.id}]`,
-                        options: {
-                          required: "Kleur is verplicht",
-                        },
-                        errors,
-                      }}
+                      {...register(`color.${colorSetting.id}`, {
+                        required: t("common.required_field"),
+                      })}
                     />
                     <span className="text-sm text-muted-foreground">
                       {colorSetting.color}

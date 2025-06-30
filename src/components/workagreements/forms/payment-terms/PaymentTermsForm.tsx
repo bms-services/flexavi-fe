@@ -59,7 +59,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     append({
       percentage: 0,
       description: "Betaling",
-      due_type: "upfront",
+      status: "upfront",
       total_price: 0,
     });
   };
@@ -168,7 +168,7 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
                 <div className="col-span-3">
                   <Controller
                     control={control}
-                    name={`payment.terms.${index}.due_type`}
+                    name={`payment.terms.${index}.status`}
                     render={({ field }) => (
                       <Select
                         value={field.value}

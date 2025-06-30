@@ -23,7 +23,7 @@ export const WorkAgreementExclusionsForm: React.FC<WorkAgreementExclusionsFormPr
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "exclusions"
+    name: "exclusions",
   });
 
   const handleAddExclusion = () => {

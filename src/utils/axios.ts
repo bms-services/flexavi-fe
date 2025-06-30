@@ -1,4 +1,8 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+} from "axios";
 import Cookies from "js-cookie";
 import errorHandler from "./errorHandler";
 import successHandler from "./successHandler";
@@ -9,20 +13,17 @@ const tokenName = import.meta.env.VITE_TOKEN_NAME;
 
 const getAuthToken = (): string | null => {
   const token = Cookies.get(tokenName);
-
-  if (token && token !== "null") {
-    return token;
-  } else {
-    Cookies.remove(tokenName);
-    return null;
-  }
+  if (token && token !== "null") return token;
+  Cookies.remove(tokenName);
+  return null;
 };
 
-const getLangCookie = (): string | undefined => {
-  const lang =
-    Cookies.get("local") || import.meta.env.VITE_I18N_DEFAULT_LOCALE || "nl";
-  return lang;
-};
+const getLangCookie = (): string | undefined =>
+  Cookies.get("local") || import.meta.env.VITE_I18N_DEFAULT_LOCALE || "nl";
+
+export interface AxiosCustomRequestConfig extends AxiosRequestConfig {
+  silentToast?: boolean;
+}
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   const instance = axios.create({
@@ -57,10 +58,12 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
   );
 
   instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-      const exclude = ['GET'];
+    (response) => {
+      const config = response.config as AxiosCustomRequestConfig;
+      const method = config.method?.toUpperCase() || "";
+      const isSilent = config.silentToast;
 
-      if (!exclude.includes(response.config.method?.toUpperCase() || '')) {
+      if (method !== "GET" && !isSilent) {
         successHandler(response.data.message);
       }
 
@@ -69,7 +72,7 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
     (error: AxiosError<ApiError>) => {
       const status = error.response?.status;
       const token = getAuthToken();
-      if (token && (status === 401)) {
+      if (token && status === 401) {
         Cookies.remove(tokenName);
         window.location.href = "/login";
       }

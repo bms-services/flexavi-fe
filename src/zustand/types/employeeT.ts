@@ -7,6 +7,7 @@ export type EmployeeReq = {
     work_days: string[]
     start_time: string;
     end_time: string;
+    status?: EmployeeStatus;
 };
 
 export type EmployeeRes = {
@@ -19,7 +20,7 @@ export type EmployeeRes = {
     start_time: string;
     end_time: string;
     created_at: string;
-    status: EmployeeInvitationStatus;
+    status: EmployeeStatus;
     updated_at: string;
     company_user_role: {
         id: string;
@@ -76,3 +77,10 @@ export const EmployeeInvitationStatusMap = {
 } as const;
 
 export type EmployeeInvitationStatus = "invited" | "accepted" | "cancelled" | "rejected" | "resent";
+
+export const EmployeeStatusMap = {
+    active: { label: "Active", variant: "success" },
+    inactive: { label: "Inactive", variant: "secondary" },
+} as const;
+
+export type EmployeeStatus = "active" | "inactive";

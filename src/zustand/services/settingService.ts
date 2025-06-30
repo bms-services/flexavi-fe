@@ -1,4 +1,4 @@
-import { mainApi } from "@/utils/axios";
+import { AxiosCustomRequestConfig, mainApi } from "@/utils/axios";
 import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
@@ -139,10 +139,14 @@ export const updateMyPaymentService = async (formData: PaymentReq): Promise<ApiS
 
 // Intent
 export const createMyIntentService = async (): Promise<ApiSuccess<IntentRes>> => {
-    const { data } = await mainApi.post("/setting/intent");
+    const config: AxiosCustomRequestConfig = {
+        silentToast: true,
+    };
+
+    const { data } = await mainApi.post("/setting/intent", null, config);
     if (!data.success) throw data;
     return data;
-}
+};
 
 // Trial
 export const createMyTrialService = async (): Promise<ApiSuccess<TrialRes>> => {

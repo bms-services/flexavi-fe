@@ -254,11 +254,14 @@ export const useGetMyAgendaColorSettings = (params: ParamGlobal) => {
 export const useUpdateMyAgendaColorSettings = () => {
     const queryClient = useQueryClient();
 
-    return useMutation<ApiSuccess<AgendaSettingColorRes>, ApiError, AgendaSettingColorReq[]>({
+    return useMutation<
+        ApiSuccess<AgendaSettingColorRes>,
+        ApiError,
+        AgendaSettingColorReq[]
+    >({
         mutationFn: updateMyAgendaColorSettingsService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['my-agenda-color-settings'] });
-        }
+        },
     });
 };
-

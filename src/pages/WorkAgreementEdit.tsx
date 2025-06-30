@@ -85,22 +85,60 @@ const WorkAgreementEdit = () => {
   const handleStore = async (data: WorkAgreementReq) => {
     const formData = new FormData();
 
-    formData.append("leads", JSON.stringify(data.leads.map(lead => typeof lead === "string" ? lead : lead.value)));
-    formData.append("quotes", JSON.stringify(data.quotes));
+    // leads[]
+    data.leads.forEach(lead => {
+      formData.append("leads[]", typeof lead === "string" ? lead : lead.value);
+    });
+
+    // quotes[]
+    data.quotes.forEach(quote => {
+      formData.append("quotes[]", quote);
+    });
+
     formData.append("description", data.description);
     formData.append("description_work", data.description_work);
     formData.append("warranty", String(data.warranty));
     formData.append("start_date", data.start_date);
     formData.append("status", data.status);
     formData.append("general_term_conditions", data.general_term_conditions);
-    formData.append("items", JSON.stringify(data.items));
+
+    // items[n][field]
+    data.items.forEach((item, idx) => {
+      formData.append(`items[${idx}][product_id]`, item.product_id ?? "");
+      formData.append(`items[${idx}][quantity]`, String(item.quantity));
+      formData.append(`items[${idx}][unit]`, item.unit);
+      formData.append(`items[${idx}][title]`, item.title);
+      formData.append(`items[${idx}][description]`, item.description);
+      formData.append(`items[${idx}][unit_price]`, String(item.unit_price));
+      formData.append(`items[${idx}][vat_amount]`, String(item.vat_amount));
+      formData.append(`items[${idx}][total]`, String(item.total));
+    });
+
     formData.append("subtotal", String(data.subtotal));
     formData.append("discount_amount", String(data.discount_amount));
     formData.append("discount_type", data.discount_type);
     formData.append("total_amount", String(data.total_amount));
-    formData.append("payment", JSON.stringify(data.payment));
-    formData.append("exclusions", JSON.stringify(data.exclusions));
 
+    // payment fields
+    if (data.payment) {
+      formData.append("payment[payment_method]", data.payment.payment_method);
+      formData.append("payment[total_cash]", String(data.payment.total_cash));
+      if (Array.isArray(data.payment.terms)) {
+        data.payment.terms.forEach((term, idx) => {
+          formData.append(`payment[terms][${idx}][description]`, term.description);
+          formData.append(`payment[terms][${idx}][status]`, term.status);
+          formData.append(`payment[terms][${idx}][percentage]`, String(term.percentage));
+          formData.append(`payment[terms][${idx}][total_price]`, String(term.total_price));
+        });
+      }
+    }
+
+    // exclusions[]
+    data.exclusions.forEach(exclusion => {
+      formData.append("exclusions[]", exclusion);
+    });
+
+    // attachments[]
     data.attachments.forEach((file) => {
       if (file instanceof File) {
         formData.append("attachments[]", file);
@@ -113,22 +151,60 @@ const WorkAgreementEdit = () => {
   const handleUpdate = async (data: WorkAgreementReq) => {
     const formData = new FormData();
 
-    formData.append("leads", JSON.stringify(data.leads.map(lead => typeof lead === "string" ? lead : lead.value)));
-    formData.append("quotes", JSON.stringify(data.quotes));
+    // leads[]
+    data.leads.forEach(lead => {
+      formData.append("leads[]", typeof lead === "string" ? lead : lead.value);
+    });
+
+    // quotes[]
+    data.quotes.forEach(quote => {
+      formData.append("quotes[]", quote);
+    });
+
     formData.append("description", data.description);
     formData.append("description_work", data.description_work);
     formData.append("warranty", String(data.warranty));
     formData.append("start_date", data.start_date);
     formData.append("status", data.status);
     formData.append("general_term_conditions", data.general_term_conditions);
-    formData.append("items", JSON.stringify(data.items));
+
+    // items[n][field]
+    data.items.forEach((item, idx) => {
+      formData.append(`items[${idx}][product_id]`, item.product_id ?? "");
+      formData.append(`items[${idx}][quantity]`, String(item.quantity));
+      formData.append(`items[${idx}][unit]`, item.unit);
+      formData.append(`items[${idx}][title]`, item.title);
+      formData.append(`items[${idx}][description]`, item.description);
+      formData.append(`items[${idx}][unit_price]`, String(item.unit_price));
+      formData.append(`items[${idx}][vat_amount]`, String(item.vat_amount));
+      formData.append(`items[${idx}][total]`, String(item.total));
+    });
+
     formData.append("subtotal", String(data.subtotal));
     formData.append("discount_amount", String(data.discount_amount));
     formData.append("discount_type", data.discount_type);
     formData.append("total_amount", String(data.total_amount));
-    formData.append("payment", JSON.stringify(data.payment));
-    formData.append("exclusions", JSON.stringify(data.exclusions));
 
+    // payment fields
+    if (data.payment) {
+      formData.append("payment[payment_method]", data.payment.payment_method);
+      formData.append("payment[total_cash]", String(data.payment.total_cash));
+      if (Array.isArray(data.payment.terms)) {
+        data.payment.terms.forEach((term, idx) => {
+          formData.append(`payment[terms][${idx}][description]`, term.description);
+          formData.append(`payment[terms][${idx}][status]`, term.status);
+          formData.append(`payment[terms][${idx}][percentage]`, String(term.percentage));
+          formData.append(`payment[terms][${idx}][total_price]`, String(term.total_price));
+        });
+      }
+    }
+
+    // exclusions[]
+    data.exclusions.forEach(exclusion => {
+      formData.append("exclusions[]", exclusion);
+    });
+
+    // attachments[]
     data.attachments.forEach((file) => {
       if (file instanceof File) {
         formData.append("attachments[]", file);
@@ -139,12 +215,12 @@ const WorkAgreementEdit = () => {
   };
 
 
-  useEffect(() => {
-    if (getWorkAgreementZ.isSuccess) {
-      const workAgreementData = getWorkAgreementZ.data.result;
-      methods.reset(workAgreementData);
-    }
-  }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data, methods]);
+  // useEffect(() => {
+  //   if (getWorkAgreementZ.isSuccess) {
+  //     const workAgreementData = getWorkAgreementZ.data.result;
+  //     methods.reset(workAgreementData);
+  //   }
+  // }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data, methods]);
 
 
   return (

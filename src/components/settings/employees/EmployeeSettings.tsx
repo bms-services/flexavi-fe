@@ -2,24 +2,27 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { UserPlus, User, DotSquareIcon, XIcon, MailIcon } from "lucide-react";
-import { useGetInvitedEmployees, useInviteEmployee, useResendInviteEmployee, useCancelInvitedEmployee, useGetMyEmployees } from "@/zustand/hooks/useSetting";
-import { EmployeeInvitationStatus, EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes } from "@/zustand/types/employeeT";
+import { User, EllipsisVerticalIcon, MoreHorizontal } from "lucide-react";
+import { EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes, EmployeeStatus, EmployeeStatusMap } from "@/zustand/types/employeeT";
 import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
-import { formatIsoToDate } from "@/utils/format";
-import { InviteEmployee } from "./InviteEmployee";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import EmployeeInvitationStatusBadge from "./EmployeeInvitationStatusBadge";
-
+import { useGetMyEmployees, useUpdateMyEmployee } from "@/zustand/hooks/useSetting";
+import EmployeeUserStatusBadge from "./EmployeeUserStatusBadge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 export const EmployeeSettings: React.FC = () => {
   const [modal, setModal] = useState({
-    member: false,
-    resend: false,
-    cancel: false,
+    activate: false,
+    inactivate: false,
   });
 
-  const [employeeId, setEmployeeId] = useState<string>("");
+  const [employee, setEmployee] = useState<EmployeeRes | null>(null);
+
   const [params, setParams] = useState<ParamGlobal>({
     page: 1,
     per_page: 10,
@@ -28,62 +31,47 @@ export const EmployeeSettings: React.FC = () => {
     sorts: {},
   });
 
-  // const getInvitedEmployeesZ = useGetInvitedEmployees(params);
-  // const inviteEmployeeZ = useInviteEmployee();
-  // const resendInviteEmployeeZ = useResendInviteEmployee();
-  // const cancelInvitedEmployeeZ = useCancelInvitedEmployee();
-
   const getMyEmployeesZ = useGetMyEmployees(params);
+  const updateMyEmployeeZ = useUpdateMyEmployee();
 
   const columns = useMemo<CustomColumnDef<EmployeeRes>[]>(() => [
-    { accessorKey: "name", header: "Name", cell: info => info.getValue() },
-    { accessorKey: "email", header: "Email", cell: info => info.getValue() },
-    { accessorKey: "phone", header: "Phone", cell: info => info.getValue() },
+    { accessorKey: "user.name", header: "Name", cell: info => info.getValue() },
+    { accessorKey: "user.email", header: "Email", cell: info => info.getValue() },
+    { accessorKey: "user.phone", header: "Phone", cell: info => info.getValue() },
     {
       accessorKey: "status", header: "Status",
       meta: { className: "text-center align-middle" },
       cell: info =>
       (
-        <EmployeeInvitationStatusBadge
+        <EmployeeUserStatusBadge
           status={info.row.original.status}
         />
       )
     },
     {
-      accessorKey: "created_at",
-      header: "Invited At",
+      accessorKey: "joined_at",
+      header: "Joined At",
       meta: { className: "text-center align-middle" },
-      cell: info => formatIsoToDate(info.row.original.created_at),
     },
     {
       id: "actions",
       header: "Actions",
       meta: { className: "text-center align-middle" },
       cell: ({ row }) => {
-        const { id, status } = row.original;
-        const allowedStatuses: EmployeeInvitationStatus[] = ["invited", "resent"];
-
-        if (!allowedStatuses.includes(status)) {
-          return null;
-        }
-
         return (
-          <div className="flex justify-center items-center gap-2">
-            <Button
-              variant="link"
-              onClick={() => handleOpenModalResend(id)}
-              className="py-0 px-1 text-black hover:text-blue-500"
-            >
-              <MailIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="link"
-              onClick={() => handleOpenModalCancel(id)}
-              className="py-0 px-1 text-black hover:text-red-500"
-            >
-              <XIcon className="h-4 w-4" />
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-7 w-7">
+                <MoreHorizontal className="h-3.5 w-3.5" />
+                <span className="sr-only">Menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleOpenModalStatus(row.original)}>
+                {row.original.status === "active" ? "Deactivate" : "Activate"} Employee
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -101,55 +89,31 @@ export const EmployeeSettings: React.FC = () => {
     [setParams]
   );
 
-
-  /**
-   * Function for open modal create employee.
-   * 
-   * @returns {void}
-   * 
-   */
-  const handleOpenModalCreate = () => {
-    setModal((prev) => ({ ...prev, member: true }));
-  };
-
-  const handleOpenModalResend = (id: string) => {
-    setEmployeeId(id);
-    setModal((prev) => ({ ...prev, resend: true }));
-  };
-
-  const handleOpenModalCancel = (id: string) => {
-    setEmployeeId(id);
-    setModal((prev) => ({ ...prev, cancel: true }));
-  };
-
-  const handleInviteEmployee = async (data: EmployeeReq) => {
-    try {
-      // await inviteEmployeeZ.mutateAsync(data);
-      setModal((prev) => ({ ...prev, member: false }));
-    } catch (error) {
-      console.error("Failed to invite employee:", error);
+  const handleOpenModalStatus = (data: EmployeeRes) => {
+    setEmployee(data);
+    if (data.status === "active") {
+      setModal((prev) => ({ ...prev, inactivate: true }));
+    } else {
+      setModal((prev) => ({ ...prev, activate: true }));
     }
   };
 
 
-  const handleResendEmployeeInvite = async (id: string) => {
-    try {
-      // await resendInviteEmployeeZ.mutateAsync(id);
-      setModal((prev) => ({ ...prev, resend: false }));
-    } catch (error) {
-      console.error("Failed to resend employee invite:", error);
-    }
-  };
+  const handleUpdateEmployeeStatus = async (employee: EmployeeRes | null) => {
+    if (!employee) return;
 
-  const handleCancelEmployeeInvite = async (id: string) => {
     try {
-      // await cancelInvitedEmployeeZ.mutateAsync(id);
-      setModal((prev) => ({ ...prev, cancel: false }));
+      await updateMyEmployeeZ.mutateAsync({
+        id: employee.id,
+        formData: { ...employee, status: employee.status === "active" ? "inactive" : "active" },
+      });
+      setModal((prev) => ({ ...prev, activate: false, inactivate: false }));
+      getMyEmployeesZ.refetch();
     } catch (error) {
-      console.error("Failed to cancel employee invite:", error);
+      console.error("Failed to update employee status:", error);
     }
-  };
 
+  }
 
   const statusFilterOptions = Object.entries(EmployeeInvitationStatusMap).map(
     ([value, { label }]) => ({ value, label })
@@ -171,13 +135,6 @@ export const EmployeeSettings: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Button
-            onClick={handleOpenModalCreate}
-            className="mb-4">
-            <UserPlus className="h-4 w-4 mr-2" />
-            Nieuwe medewerker toevoegen
-          </Button>
-
           <TableTanstack
             columns={columns}
             data={data}
@@ -194,33 +151,24 @@ export const EmployeeSettings: React.FC = () => {
             }}
           />
         </div>
-        <InviteEmployee
-          open={modal.member}
-          onOpenChange={(open) => {
-            if (!open) {
-              setModal((prev) => ({ ...prev, member: false }));
-            }
-          }}
-          onSubmit={handleInviteEmployee}
-        />
 
         <ConfirmDialog
-          open={modal.resend}
-          onCancel={() => setModal((prev) => ({ ...prev, resend: false }))}
-          onConfirm={() => handleResendEmployeeInvite(employeeId)}
-          title="Weet je het zeker?"
-          description="Weet je zeker dat je de uitnodiging opnieuw wilt verzenden?"
+          open={modal.activate}
+          onCancel={() => setModal((prev) => ({ ...prev, activate: false }))}
+          onConfirm={() => handleUpdateEmployeeStatus(employee)}
+          title="Activate Employee"
           isConfirm
-        // loading={resendInviteEmployeeZ.isPending}
+          description={`Are you sure you want to activate ${employee?.name}? This will allow them to access the system and perform their duties.`}
+          loading={updateMyEmployeeZ.isPending}
         />
 
         <ConfirmDialog
-          open={modal.cancel}
-          onCancel={() => setModal((prev) => ({ ...prev, cancel: false }))}
-          onConfirm={() => handleCancelEmployeeInvite(employeeId)}
-          title="Weet je het zeker?"
-          description="Weet je zeker dat je de uitnodiging wilt annuleren?"
-        // loading={cancelInvitedEmployeeZ.isPending}
+          open={modal.inactivate}
+          onCancel={() => setModal((prev) => ({ ...prev, inactivate: false }))}
+          onConfirm={() => handleUpdateEmployeeStatus(employee)}
+          title="Inactivate Employee"
+          description={`Are you sure you want to inactivate ${employee?.name}? This will prevent them from accessing the system until reactivated.`}
+          loading={updateMyEmployeeZ.isPending}
         />
       </CardContent>
     </Card>

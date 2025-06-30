@@ -18,10 +18,7 @@ export type AgendaSettingRes = {
     executor_appointment: number;
 }
 
-export type AgendaSettingColorReq = {
-    id: string;
-    color: string;
-}
+export type AgendaSettingColorReq = Record<string, string>;
 
 export type AgendaSettingColorRes = {
     id: string;
