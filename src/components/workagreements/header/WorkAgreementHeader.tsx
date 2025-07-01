@@ -7,25 +7,16 @@ import { useNavigate } from "react-router-dom";
 
 interface WorkAgreementHeaderProps {
   isEditing: boolean;
-  onSave: () => void;
-  canDelete: boolean;
   isReadOnly: boolean;
+  handleDelete?: () => void;
 }
 
 export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
   isEditing,
-  onSave,
-  canDelete,
-  isReadOnly
+  isReadOnly,
+  handleDelete,
 }) => {
   const navigate = useNavigate();
-
-  const handleDelete = () => {
-    if (window.confirm("Weet je zeker dat je deze werkovereenkomst wilt verwijderen?")) {
-      // In a real app, you would call an API here
-      navigate("/workagreements");
-    }
-  };
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -35,7 +26,7 @@ export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
           {isEditing ? "Werkovereenkomst bewerken" : "Nieuwe werkovereenkomst"}
         </h1>
         <p className="text-muted-foreground">
-          {isReadOnly 
+          {isReadOnly
             ? "Deze werkovereenkomst is ondertekend en kan niet meer worden bewerkt"
             : isEditing
               ? "Bewerk de details van deze werkovereenkomst"
@@ -47,20 +38,18 @@ export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
           <ArrowLeft className="mr-2 h-4 w-4" />
           Terug
         </Button>
-        
-        {canDelete && (
+
+        {handleDelete && (
           <Button variant="destructive" onClick={handleDelete}>
             <Trash2 className="mr-2 h-4 w-4" />
             Verwijderen
           </Button>
         )}
 
-        {!isReadOnly && (
-          <Button onClick={onSave}>
-            <Save className="mr-2 h-4 w-4" />
-            Opslaan
-          </Button>
-        )}
+        <Button type="submit">
+          <Save className="mr-2 h-4 w-4" />
+          Opslaan
+        </Button>
       </div>
     </div>
   );

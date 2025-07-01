@@ -26,10 +26,7 @@ export type QuotationRes = {
     description: string;
     notes: string;
     planned_start_date: string;
-    status: string | {
-        value: QuotationStatus;
-        label: string;
-    }
+    status: QuotationStatus;
     address: AddressRes;
     items: QuotationItemRes[];
     subtotal: number;

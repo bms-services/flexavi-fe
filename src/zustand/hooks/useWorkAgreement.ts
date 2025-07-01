@@ -32,7 +32,7 @@ export const useCreateWorkAgreement = () => {
         mutationFn: createWorkAgreementService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['workAgreements'] });
-            navigate('/quotes');
+            navigate('/workagreements');
         },
     });
 };

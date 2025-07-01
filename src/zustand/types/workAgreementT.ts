@@ -1,5 +1,6 @@
+import { AddressReq, AddressRes } from "./addressT";
 import { LeadRes } from "./leadT";
-import { QuotationItemReq } from "./quotationT";
+import { QuotationItemReq, QuotationItemRes, QuotationRes } from "./quotationT";
 
 export type WorkAgreementReq = {
     leads: string[] | { value: string; label: string }[];
@@ -10,50 +11,77 @@ export type WorkAgreementReq = {
     start_date: string;
     status: WorkAgreementStatus;
     general_term_conditions: string;
-    items: QuotationItemReq[];
+    items: WorkAgreementItemReq[];
+    address: AddressReq;
     subtotal: number;
+    vat_amount: number;
     discount_amount: number;
-    discount_type: string;
+    discount_type: WorkAgreementDiscountType;
     total_amount: number;
     payment: WorkAgreementPaymentReq;
-    exclusions: string[];
-    attachments: File[];
+    exclusions?: string[];
+    attachments?: File[];
 };
-
 export type WorkAgreementRes = {
     id: string;
     leads: LeadRes[];
-    quotes: string[];
+    quotes: QuotationRes[];
     description: string;
     description_work: string;
     warranty: number;
     start_date: string;
-    status: string | {
-        value: WorkAgreementStatus;
-        label: string;
-    };
+    status: WorkAgreementStatus;
     general_term_conditions: string;
-    sub_total: number;
+    items: QuotationItemRes[];
+    address: AddressRes;
+    subtotal: number;
+    vat_amount: number;
     discount_amount: number;
-    discount_type: string;
+    discount_type: WorkAgreementDiscountType;
     total_amount: number;
     payment: WorkAgreementPaymentRes;
-    exclusions: string[];
-    attachments: File[];
+    exclusions: WorkContractExclusionsRes[];
+    attachments: WorkAgreementAttachmentsRes[];
     created_at: string;
     updated_at: string;
+};
+
+export type WorkAgreementItemReq = {
+    id?: string;
+    percentage: number;
+    product_id?: string;
+    unit?: string;
+    title: string;
+    description?: string;
+    unit_price: number;
+    vat_amount?: number;
+    total: number;
 };
 
 export type WorkAgreementPaymentReq = {
     payment_method: WorkAgreementPaymentMethod;
     total_cash: number;
-    terms: WorkAgreementPaymentTermReq[];
+    terms?: WorkAgreementPaymentTermReq[];
+};
+
+export type WorkContractExclusionsRes = {
+    id: string;
+    description: string;
+};
+
+export type WorkAgreementAttachmentsRes = {
+    id: string;
+    name: string;
+    agreement_id: string;
+    url: string;
+    path: string;
+    created_at: string;
+    updated_at: string;
 };
 
 export type WorkAgreementPaymentRes = {
     payment_method: string;
-    total_percentage: number;
-    total_amount: number;
+    total_cash: number;
     terms: WorkAgreementPaymentTermRes[];
 };
 
@@ -70,16 +98,16 @@ export type WorkAgreementPaymentTermRes = WorkAgreementPaymentTermReq & {
     updated_at: string;
 };
 
+
 export type WorkAgreementStatus =
-    | "draft"
+    | "concept"
     | "sent"
-    | "viewed"
-    | "accepted"
-    | "rejected"
-    | "revised"
+    | "revision"
+    | "signed"
+    | "refused"
     | "expired"
-    | "converted"
-    | "concept";
+    | "completed"
+    | "cancelled";
 
 export const WorkAgreementStatusMap: Record<
     WorkAgreementStatus,
@@ -88,19 +116,18 @@ export const WorkAgreementStatusMap: Record<
         variant: "primary" | "secondary" | "warning" | "danger" | "success";
     }
 > = {
-    draft: { label: "Concept", variant: "secondary" },
-    sent: { label: "Verzonden", variant: "primary" },
-    viewed: { label: "Bekeken", variant: "primary" },
-    accepted: { label: "Geaccepteerd", variant: "success" },
-    rejected: { label: "Afgewezen", variant: "danger" },
-    revised: { label: "Herzien", variant: "warning" },
-    expired: { label: "Verlopen", variant: "danger" },
-    converted: { label: "Geconverteerd", variant: "success" },
     concept: { label: "Concept", variant: "secondary" },
+    sent: { label: "Verzonden", variant: "primary" },
+    revision: { label: "Herzien", variant: "warning" },
+    signed: { label: "Getekend", variant: "success" },
+    refused: { label: "Geweigerd", variant: "danger" },
+    expired: { label: "Verlopen", variant: "danger" },
+    completed: { label: "Voltooid", variant: "success" },
+    cancelled: { label: "Geannuleerd", variant: "danger" },
 };
 
 
-export type WorkAgreementPaymentMethod = "bank" | "cash" | "both";
+export type WorkAgreementPaymentMethod = "bank" | "cash" | "bank_cash";
 export const WorkAgreementPaymentMethodMap: Record<
     WorkAgreementPaymentMethod,
     {
@@ -110,15 +137,14 @@ export const WorkAgreementPaymentMethodMap: Record<
 > = {
     bank: { label: "Bankoverschrijving", value: "bank" },
     cash: { label: "Contant", value: "cash" },
-    both: { label: "Bank en contant", value: "both" },
+    bank_cash: { label: "Bank en contant", value: "bank_cash" },
 };
 
 export type WorkAgreementDueType =
-    | "upfront"
-    | "start"
-    | "during"
-    | "completion"
-    | "milestone";
+    | "by_order"
+    | "at_the_start"
+    | "during_work"
+    | "upon_delivery"
 
 export const WorkAgreementDueTypeMap: Record<
     WorkAgreementDueType,
@@ -127,9 +153,10 @@ export const WorkAgreementDueTypeMap: Record<
         value: WorkAgreementDueType;
     }
 > = {
-    upfront: { label: "Bij opdracht", value: "upfront" },
-    start: { label: "Bij aanvang", value: "start" },
-    during: { label: "Tijdens werk", value: "during" },
-    completion: { label: "Bij oplevering", value: "completion" },
-    milestone: { label: "Mijlpaal", value: "milestone" },
+    by_order: { label: "Bij opdracht", value: "by_order" },
+    at_the_start: { label: "Bij aanvang", value: "at_the_start" },
+    during_work: { label: "Tijdens werk", value: "during_work" },
+    upon_delivery: { label: "Bij oplevering", value: "upon_delivery" },
 };
+
+export type WorkAgreementDiscountType = "percentage" | "fixed";

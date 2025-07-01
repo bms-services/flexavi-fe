@@ -15,7 +15,7 @@ import { QuoteHeader } from "@/components/quotes/header/QuoteHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
 import { FormProvider, useForm } from "react-hook-form";
-import { QuotationReq } from "@/zustand/types/quotationT";
+import { QuotationReq, quotationStatusMap } from "@/zustand/types/quotationT";
 import { useCreateQuotation, useGetQuotation, useUpdateQuotation } from "@/zustand/hooks/useQuotation";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import { flattenAddressToObject } from "@/utils/dataTransform";
@@ -26,7 +26,7 @@ const defaultQuotationData: QuotationReq = {
   description: "",
   notes: "",
   planned_start_date: "",
-  status: "",
+  status: Object.keys(quotationStatusMap)[0] as keyof typeof quotationStatusMap,
   address: {
     street: "",
     city: "",
@@ -39,6 +39,26 @@ const defaultQuotationData: QuotationReq = {
   discount_type: "percentage",
   total_amount: 0
 };
+
+const handleFormatData = (data: QuotationReq) => {
+  return {
+    ...data,
+    address: flattenAddressToObject(data.address),
+    leads: data.leads.map((lead) =>
+      typeof lead === "string" ? lead : lead.value
+    ),
+    items: data.items.map((item) => ({
+      ...item,
+      quantity: Number(item.quantity),
+      unit_price: Number(item.unit_price),
+      vat_amount: Number(item.vat_amount),
+      total: Number(item.total),
+    })),
+    subtotal: Number(data.subtotal),
+    discount_amount: Number(data.discount_amount),
+    total_amount: Number(data.total_amount),
+  };
+}
 
 
 const QuoteEdit = () => {
@@ -53,61 +73,11 @@ const QuoteEdit = () => {
   });
 
   const handleStore = async (data: QuotationReq) => {
-    const formattedData: QuotationReq = {
-      ...data,
-      address: flattenAddressToObject(data.address),
-      leads: data.leads.map((lead) =>
-        typeof lead === "string" ? lead : lead.value
-      ),
-      items: data.items.map((item) => ({
-        ...item,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        vat_amount: Number(item.vat_amount),
-        total: Number(item.total),
-      })),
-      subtotal: Number(data.subtotal),
-      discount_amount: Number(data.discount_amount),
-      total_amount: Number(data.total_amount),
-    };
-    await createQuotationZ.mutateAsync(formattedData);
+    await createQuotationZ.mutateAsync(handleFormatData(data));
   };
 
   const handleUpdate = async (data: QuotationReq) => {
-    const {
-      title,
-      description,
-      notes,
-      planned_start_date,
-      status,
-      discount_type,
-    } = data;
-
-
-    const formattedData: Partial<QuotationReq> = {
-      title,
-      description,
-      notes,
-      planned_start_date,
-      status,
-      discount_type,
-      address: flattenAddressToObject(data.address),
-      leads: data.leads.map((lead) =>
-        typeof lead === "string" ? lead : lead.value
-      ),
-      items: data.items.map((item) => ({
-        ...item,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        vat_amount: Number(item.vat_amount),
-        total: Number(item.total),
-      })),
-      subtotal: Number(data.subtotal),
-      discount_amount: Number(data.discount_amount),
-      total_amount: Number(data.total_amount),
-    };
-
-    await updateQuotationZ.mutateAsync({ id: id || "", formData: formattedData });
+    await updateQuotationZ.mutateAsync({ id: id || "", formData: handleFormatData(data) });
   }
 
   useEffect(() => {
@@ -123,35 +93,33 @@ const QuoteEdit = () => {
   }, [updateQuotationZ.isError, updateQuotationZ.error, methods.setError]);
 
   useEffect(() => {
-    if (getQuotationZ.isSuccess) {
-      const quotationData = getQuotationZ.data.result;
+    if (getQuotationZ.isSuccess && getQuotationZ.data.result) {
+      const data = getQuotationZ.data.result;
       methods.reset({
-        ...quotationData,
-        status: typeof quotationData.status === "string"
-          ? quotationData.status
-          : quotationData.status.value,
-        leads: quotationData.leads.map((lead) =>
+        ...data,
+        status: data.status,
+        leads: data.leads.map((lead) =>
           typeof lead === "string" ? lead : { value: lead.id, label: lead.name }
         ),
         address: {
-          ...quotationData.address,
-          postal_code: typeof quotationData.address.postal_code === "string"
+          ...data.address,
+          postal_code: typeof data.address.postal_code === "string"
             ? {
-              label: quotationData.address.postal_code,
-              value: quotationData.address.postal_code,
+              label: data.address.postal_code,
+              value: data.address.postal_code,
             }
-            : quotationData.address.postal_code,
+            : data.address.postal_code,
         },
-        items: quotationData.items.map((item) => ({
+        items: data.items.map((item) => ({
           ...item,
           quantity: Number(item.quantity),
           unit_price: Number(item.unit_price),
           vat_amount: Number(item.vat_amount),
           total: Number(item.total),
         })),
-        subtotal: Number(quotationData.subtotal),
-        discount_amount: Number(quotationData.discount_amount),
-        total_amount: Number(quotationData.total_amount),
+        subtotal: Number(data.subtotal),
+        discount_amount: Number(data.discount_amount),
+        total_amount: Number(data.total_amount),
       });
     }
   }, [getQuotationZ.isSuccess, getQuotationZ.data, methods]);

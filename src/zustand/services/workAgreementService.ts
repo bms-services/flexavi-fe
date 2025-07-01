@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { WorkAgreementReq, WorkAgreementRes } from "../types/workAgreementT";
+import { WorkAgreementRes } from "../types/workAgreementT";
 
 export const getWorkAgreementsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<WorkAgreementRes>> => {
     const { data } = await mainApi.get("/agreements", { params });
@@ -21,7 +21,7 @@ export const createWorkAgreementService = async (formData: FormData): Promise<Ap
 };
 
 export const updateWorkAgreementService = async ({ id, formData }: { id: string, formData: Partial<FormData> }): Promise<ApiSuccess<WorkAgreementRes>> => {
-    const { data } = await mainApi.put(`/agreements/${id}`, formData);
+    const { data } = await mainApi.patch(`/agreements/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

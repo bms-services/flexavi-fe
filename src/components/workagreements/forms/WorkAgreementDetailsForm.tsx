@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, ErrorOption, FieldArray, FieldArrayPath, FieldError, FieldErrors, FieldName, FieldValues, FormState, InternalFieldName, ReadFormState, RegisterOptions, SubmitErrorHandler, SubmitHandler, useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useGetQuotations } from "@/zustand/hooks/useQuotation";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { useDebounce } from "use-debounce";
+import PostalCode from "@/components/ui/postal-code";
 
 
 export const WorkAgreementDetailsForm: React.FC = () => {
@@ -156,6 +157,14 @@ export const WorkAgreementDetailsForm: React.FC = () => {
         </div>
       </div>
 
+      <PostalCode
+        register={register}
+        fieldPrefix="address"
+        errors={errors}
+        control={control}
+        watch={watch}
+        setValue={setValue}
+      />
       <div>
         <Label htmlFor="status">Status</Label>
         <Controller

@@ -14,6 +14,7 @@ export const flattenAddressToObject = (address: AddressReq): AddressReq => {
         house_number: house_number || '',
         house_number_addition: house_number_addition || '',
         city: address.city || '',
+        province: address.province || '',
     };
 };
 
@@ -52,4 +53,11 @@ export const objectToFormData = (obj: Record<string, unknown>, form: FormData = 
         }
     }
     return form;
+};
+
+
+export const appendIfExists = (formData: FormData, key: string, value: string | number | undefined) => {
+    if (value !== undefined && value !== null && value !== '') {
+        formData.append(key, String(value));
+    }
 };
