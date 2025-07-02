@@ -59,6 +59,7 @@ import RegisterEmployee from '@/pages/auth/RegisterEmployee';
 import ForgotPasswordSuccessfully from '@/pages/auth/ForgotPasswordSuccessfully';
 import ResetPassword from '@/pages/auth/ResetPassword';
 import ResetPasswordSuccessfully from '@/pages/auth/ResetPasswordSuccessfully';
+import QuoteDetail from '@/pages/QuoteDetail';
 
 const baseRouter = createBrowserRouter([
     {
@@ -148,6 +149,7 @@ const baseRouter = createBrowserRouter([
             { path: "quotes", element: <Quotes />, handle: { title: "Quotes" } },
             { path: "quotes/create", element: <QuoteEdit />, handle: { title: "Create Quote" } },
             { path: "quotes/edit/:id", element: <QuoteEdit />, handle: { title: "Edit Quote" } },
+            { path: "quotes/:id", element: <QuoteDetail />, handle: { title: "Quote Detail" } },
             { path: "workagreements", element: <WorkAgreements />, handle: { title: "Work Agreements" } },
             { path: "workagreements/create", element: <WorkAgreementEdit />, handle: { title: "Create Work Agreement" } },
             { path: "workagreements/edit/:id", element: <WorkAgreementEdit />, handle: { title: "Edit Work Agreement" } },

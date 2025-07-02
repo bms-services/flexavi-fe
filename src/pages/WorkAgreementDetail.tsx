@@ -1,5 +1,4 @@
 
-import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import {
@@ -7,69 +6,28 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Pencil, FileCog, Download, Share } from "lucide-react";
-import { WorkAgreement } from "@/types";
-import { mockWorkAgreements } from "@/data/mockWorkAgreements";
-import { mockLeads } from "@/data/mockLeads";
-import { useWorkAgreementStatusBadge } from "@/hooks/useWorkAgreementStatusBadge";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import { ArrowLeft, Pencil, Download, Share } from "lucide-react";
+import { useGetWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
+import WorkAgreementStatusBadge from "@/components/workagreements/WorkAgreementStatusBadge";
 
 const WorkAgreementDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [workAgreement, setWorkAgreement] = useState<WorkAgreement | null>(null);
-  const [customer, setCustomer] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (id) {
-      const foundAgreement = mockWorkAgreements.find(wa => wa.id === id);
-      if (foundAgreement) {
-        setWorkAgreement(foundAgreement);
-
-        const foundCustomer = mockLeads.find(l => l.id === foundAgreement.leadId);
-        if (foundCustomer) {
-          setCustomer(foundCustomer);
-        }
-      }
-    }
-    setLoading(false);
-  }, [id]);
-
-  const statusBadge = useWorkAgreementStatusBadge(workAgreement?.status);
+  const getWorkAgreementZ = useGetWorkAgreement(id || "");
+  const agreement = getWorkAgreementZ.data?.result;
 
   const handleEdit = () => {
     navigate(`/workagreements/edit/${id}`);
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("nl-NL", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
-  if (loading) {
+  if (getWorkAgreementZ.isPending) {
     return (
       <Layout>
         <div className="container py-6">
           <p>Laden...</p>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (!workAgreement || !customer) {
-    return (
-      <Layout>
-        <div className="container py-6">
-          <p>Werkovereenkomst niet gevonden.</p>
         </div>
       </Layout>
     );
@@ -89,10 +47,10 @@ const WorkAgreementDetail = () => {
             </Button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">
-                Werkovereenkomst {workAgreement.id.replace("wa-", "WO-")}
+                Werkovereenkomst {agreement?.id}
               </h1>
               <p className="text-muted-foreground">
-                Gemaakt op {format(new Date(workAgreement.createdAt), "d MMMM yyyy", { locale: nl })}
+                Gemaakt op {agreement?.created_at}
               </p>
             </div>
           </div>
@@ -119,32 +77,36 @@ const WorkAgreementDetail = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Status</p>
                     <p>
-                      {statusBadge && (
-                        <Badge variant={statusBadge.variant} className="mt-1">
-                          {statusBadge.label}
-                        </Badge>
+                      {agreement?.status && (
+                        <WorkAgreementStatusBadge
+                          status={agreement.status}
+                        />
                       )}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Bedrag</p>
-                    <p className="font-medium">{formatCurrency(workAgreement.totalAmount)}</p>
+                    <p className="font-medium">{agreement?.total_amount}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Startdatum</p>
                     <p className="font-medium">
-                      {format(new Date(workAgreement.startDate), "d MMMM yyyy", { locale: nl })}
+                      {agreement?.start_date}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Offerte</p>
-                    <p className="font-medium">{workAgreement.quoteId.replace("quote-", "OFF-")}</p>
+                    <p className="font-medium">
+                      {agreement?.quotes && agreement.quotes.length > 0
+                        ? agreement.quotes.map((q) => q.id).join(", ")
+                        : "Geen offertes"}
+                    </p>
                   </div>
                 </div>
 
                 <div>
                   <p className="text-sm text-muted-foreground">Omschrijving</p>
-                  <p className="mt-1">{workAgreement.description}</p>
+                  <p className="mt-1">{agreement?.description}</p>
                 </div>
               </CardContent>
             </Card>
@@ -154,7 +116,7 @@ const WorkAgreementDetail = () => {
                 <CardTitle>Werkbeschrijving</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{workAgreement.workDescription}</p>
+                <p>{agreement?.description_work}</p>
               </CardContent>
             </Card>
 
@@ -163,19 +125,19 @@ const WorkAgreementDetail = () => {
                 <CardTitle>Garantie</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{workAgreement.warranty}</p>
+                <p>{agreement?.warranty}</p>
               </CardContent>
             </Card>
 
-            {workAgreement.exclusions && workAgreement.exclusions.length > 0 && (
+            {agreement?.exclusions && agreement.exclusions.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Uitsluitingen</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="list-disc pl-5 space-y-1">
-                    {workAgreement.exclusions.map((exclusion, index) => (
-                      <li key={index}>{exclusion}</li>
+                    {agreement.exclusions.map((exclusion, index) => (
+                      <li key={index}>{exclusion.description}</li>
                     ))}
                   </ul>
                 </CardContent>
@@ -188,24 +150,26 @@ const WorkAgreementDetail = () => {
               <CardHeader>
                 <CardTitle>Klantgegevens</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Naam</p>
-                  <p className="font-medium">{customer.name}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{customer.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Telefoon</p>
-                  <p className="font-medium">{customer.phone}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Adres</p>
-                  <p className="font-medium">{customer.address}</p>
-                </div>
-              </CardContent>
+              {agreement?.leads.map((lead) => (
+                <CardContent key={lead.id} className="space-y-4 border-b">
+                  <div className="mt-4">
+                    <p className="text-sm text-muted-foreground">Naam</p>
+                    <p className="font-medium">{lead.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-medium">{lead.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Telefoon</p>
+                    <p className="font-medium">{lead.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Adres</p>
+                    <p className="font-medium">{lead.address.city}</p>
+                  </div>
+                </CardContent>
+              ))}
             </Card>
 
             <Card>
@@ -216,18 +180,18 @@ const WorkAgreementDetail = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Betaalmethode</p>
                   <p className="font-medium">
-                    {workAgreement.paymentMethod === "bank" && "Bankoverschrijving"}
-                    {workAgreement.paymentMethod === "cash" && "Contant"}
-                    {workAgreement.paymentMethod === "both" && "Bankoversch./Contant"}
-                    {!workAgreement.paymentMethod && "Bankoverschrijving"}
+                    {agreement?.payment.payment_method === "bank" && "Bankoverschrijving"}
+                    {agreement?.payment.payment_method === "cash" && "Contant"}
+                    {agreement?.payment.payment_method === "both" && "Bankoversch./Contant"}
+                    {!agreement?.payment.payment_method && "Bankoverschrijving"}
                   </p>
                 </div>
 
-                {workAgreement.paymentInstallments && workAgreement.paymentInstallments.length > 0 && (
+                {agreement?.payment.terms && agreement?.payment.terms.length > 0 && (
                   <div>
                     <p className="text-sm text-muted-foreground mb-2">Termijnen</p>
                     <div className="space-y-2">
-                      {workAgreement.paymentInstallments.map((installment, index) => (
+                      {agreement.payment.terms.map((installment, index) => (
                         <div key={index} className="flex justify-between items-center border-b pb-2">
                           <span>{installment.description}</span>
                           <span className="font-medium">{installment.percentage}%</span>
@@ -245,12 +209,12 @@ const WorkAgreementDetail = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {workAgreement.defaultAttachments ? (
-                    workAgreement.defaultAttachments.map((attachment, index) => (
+                  {agreement?.attachments ? (
+                    agreement.attachments.map((attachment, index) => (
                       <div key={index} className="flex justify-between items-center p-2 border rounded-md">
                         <span>{attachment.name}</span>
                         <Button variant="ghost" size="sm" asChild>
-                          <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                          <a href={attachment.name} target="_blank" rel="noopener noreferrer">
                             <Download className="h-4 w-4" />
                           </a>
                         </Button>

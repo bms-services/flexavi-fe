@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseTypeIcon, getTypeLabel } from "./ExpenseTypeIcon";
-import { ExpenseStatusBadge } from "./ExpenseStatusBadge";
 import { Button } from "@/components/ui/button";
 import { Edit, Link, Receipt, Download, FileText, ArrowLeft, Check } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -14,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { ExpenseForm } from "./ExpenseForm";
 
 import { Badge } from "@/components/ui/badge";
+import ExpenseStatusBadge from "./ExpenseStatusBadge";
 
 interface ExpenseDetailProps {
   expense: Expense;
@@ -26,8 +26,8 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
   const [currentExpense, setCurrentExpense] = useState(expense);
 
   // Find linked project if any
-  const linkedProject = currentExpense.projectId 
-    ? mockProjects.find(p => p.id === currentExpense.projectId) 
+  const linkedProject = currentExpense.projectId
+    ? mockProjects.find(p => p.id === currentExpense.projectId)
     : undefined;
 
   const formatCurrency = (amount: number) => {
@@ -42,22 +42,22 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
     const updated = { ...currentExpense, ...updatedExpense };
     setCurrentExpense(updated);
     setIsEditing(false);
-   
+
   };
 
   const handleStatus = (newStatus: Expense["status"]) => {
     const updated = { ...currentExpense, status: newStatus };
     setCurrentExpense(updated);
-    
+
   };
 
   if (isEditing) {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setIsEditing(false)}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -65,10 +65,10 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
           </Button>
         </div>
         <h2 className="text-2xl font-bold tracking-tight">Uitgave bewerken</h2>
-        <ExpenseForm 
-          expense={currentExpense} 
-          onSave={handleSave} 
-          onCancel={() => setIsEditing(false)} 
+        <ExpenseForm
+          expense={currentExpense}
+          onSave={handleSave}
+          onCancel={() => setIsEditing(false)}
         />
       </div>
     );
@@ -106,7 +106,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
             <TabsTrigger value="project">Project</TabsTrigger>
           )}
         </TabsList>
-        
+
         <TabsContent value="details" className="space-y-6 pt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
@@ -137,7 +137,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     <ExpenseStatusBadge status={currentExpense.status} />
                   </div>
                 </div>
-                
+
                 {currentExpense.tags && currentExpense.tags.length > 0 && (
                   <div>
                     <p className="text-sm text-muted-foreground mb-1">Tags</p>
@@ -150,7 +150,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     </div>
                   </div>
                 )}
-                
+
                 {currentExpense.notes && (
                   <div>
                     <p className="text-sm text-muted-foreground">Notities</p>
@@ -159,7 +159,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                 )}
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Financiële details</CardTitle>
@@ -188,7 +188,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
               </CardContent>
             </Card>
           </div>
-          
+
           {/* Status change actions */}
           <Card>
             <CardHeader>
@@ -198,26 +198,26 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
               <div className="flex flex-wrap gap-2">
                 {currentExpense.status === "draft" && (
                   <>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => handleStatus("pending")}
                     >
                       Ter goedkeuring indienen
                     </Button>
                   </>
                 )}
-                
+
                 {currentExpense.status === "pending" && (
                   <>
-                    <Button 
+                    <Button
                       variant="default"
-                      className="bg-green-600 hover:bg-green-700" 
+                      className="bg-green-600 hover:bg-green-700"
                       onClick={() => handleStatus("approved")}
                     >
                       <Check className="h-4 w-4 mr-2" />
                       Goedkeuren
                     </Button>
-                    <Button 
+                    <Button
                       variant="destructive"
                       onClick={() => handleStatus("rejected")}
                     >
@@ -225,7 +225,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     </Button>
                   </>
                 )}
-                
+
                 {currentExpense.status === "approved" && (
                   <Button
                     variant="outline"
@@ -234,7 +234,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     Markeren als verwerkt
                   </Button>
                 )}
-                
+
                 {currentExpense.status === "rejected" && (
                   <Button
                     variant="outline"
@@ -243,10 +243,10 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     Opnieuw bewerken
                   </Button>
                 )}
-                
+
                 <Button
                   variant="outline"
-               
+
                 >
                   <FileText className="h-4 w-4 mr-2" />
                   Exporteren als PDF
@@ -255,7 +255,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="receipt" className="space-y-6 pt-4">
           {currentExpense.receiptUrl ? (
             <Card>
@@ -264,9 +264,9 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border rounded-md p-4 flex flex-col items-center">
-                  <img 
-                    src={currentExpense.receiptUrl} 
-                    alt="Receipt" 
+                  <img
+                    src={currentExpense.receiptUrl}
+                    alt="Receipt"
                     className="max-w-full max-h-96 object-contain mb-4"
                   />
                   <div className="flex space-x-2">
@@ -276,7 +276,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="text-sm text-center text-muted-foreground">
                   Ontvangstbewijs geüpload op {format(new Date(currentExpense.createdAt), 'dd MMMM yyyy', { locale: nl })}
                 </div>
@@ -302,7 +302,7 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
             </Card>
           )}
         </TabsContent>
-        
+
         {currentExpense.projectId && (
           <TabsContent value="project" className="space-y-6 pt-4">
             <Card>
@@ -317,15 +317,15 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                         <h3 className="text-xl font-semibold">{linkedProject.name}</h3>
                         <p className="text-muted-foreground">{linkedProject.description}</p>
                       </div>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={() => navigate(`/projects/${linkedProject.id}`)}
                       >
                         <Link className="h-4 w-4 mr-2" />
                         Project openen
                       </Button>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
                         <p className="text-sm text-muted-foreground">Startdatum</p>
@@ -350,10 +350,10 @@ export const ExpenseDetail: React.FC<ExpenseDetailProps> = ({ expense, onEdit = 
                 ) : (
                   <div className="text-center text-muted-foreground">
                     <p>Project niet gevonden of is verwijderd.</p>
-                    <Button 
-                      variant="link" 
+                    <Button
+                      variant="link"
                       className="mt-2"
-                      onClick={() => setCurrentExpense({...currentExpense, projectId: undefined})}
+                      onClick={() => setCurrentExpense({ ...currentExpense, projectId: undefined })}
                     >
                       Koppeling verwijderen
                     </Button>

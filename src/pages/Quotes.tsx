@@ -32,6 +32,10 @@ const Quotations = () => {
     navigate(`/quotes/edit/${data.id}`);
   };
 
+  const handleShow = (data: QuotationRes) => {
+    navigate(`/quotes/${data.id}`);
+  };
+
   const handleDelete = async (ids: QuotationRes[]) => {
     const quotationIds = ids.map(id => id.id).filter((id): id is string => typeof id === "string");
     await deleteQuotationZ.mutateAsync({
@@ -51,6 +55,7 @@ const Quotations = () => {
           params={params}
           setParams={setParams}
           onEdit={handleEdit}
+          onShow={handleShow}
           onDelete={handleDelete}
           getQuotationsZ={getQuotationsZ}
         />

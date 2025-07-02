@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { WorkAgreementRes } from "../types/workAgreementT";
+import { WorkAgreementRes, WorkAgreementTemplateReq, WorkAgreementTemplateRes } from "../types/workAgreementT";
 
 export const getWorkAgreementsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<WorkAgreementRes>> => {
     const { data } = await mainApi.get("/agreements", { params });
@@ -31,6 +31,19 @@ export const deleteWorkAgreementService = async (ids: string[], force: boolean):
         params: { force },
         data: { ids }
     });
+    if (!data.success) throw data;
+    return data;
+};
+
+
+export const getWorkAgreementTemplateService = async (): Promise<ApiSuccess<WorkAgreementTemplateRes>> => {
+    const { data } = await mainApi.get('/setting/work-agreement');
+    if (!data.success) throw data;
+    return data;
+};
+
+export const updateWorkAgreementTemplateService = async (formData: Partial<WorkAgreementTemplateReq>): Promise<ApiSuccess<WorkAgreementTemplateRes>> => {
+    const { data } = await mainApi.post('/setting/work-agreement/', formData);
     if (!data.success) throw data;
     return data;
 };

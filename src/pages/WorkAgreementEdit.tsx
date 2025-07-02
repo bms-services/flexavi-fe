@@ -22,7 +22,7 @@ import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } f
 import { useEffect } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
 
-const defaultQuotationData: WorkAgreementReq = {
+const defaultWorkAgreement: WorkAgreementReq = {
   leads: [],
   description: "",
   status: "concept",
@@ -133,8 +133,6 @@ const buildFormData = (data: WorkAgreementReq): FormData => {
   return formData;
 };
 
-
-
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
   const createWorkAgreementZ = useCreateWorkAgreement();
@@ -142,7 +140,7 @@ const WorkAgreementEdit = () => {
   const getWorkAgreementZ = useGetWorkAgreement(id || "");
 
   const methods = useForm<WorkAgreementReq>({
-    defaultValues: defaultQuotationData,
+    defaultValues: defaultWorkAgreement,
   });
 
   const handleStore = async (data: WorkAgreementReq) => {

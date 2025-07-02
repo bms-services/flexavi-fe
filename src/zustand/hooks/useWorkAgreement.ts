@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { WorkAgreementReq, WorkAgreementRes } from "../types/workAgreementT";
+import { WorkAgreementRes, WorkAgreementTemplateReq, WorkAgreementTemplateRes } from "../types/workAgreementT";
 import {
     createWorkAgreementService,
     deleteWorkAgreementService,
     getWorkAgreementsService,
     getWorkAgreementService,
-    updateWorkAgreementService
+    updateWorkAgreementService,
+    getWorkAgreementTemplateService,
+    updateWorkAgreementTemplateService
 } from "../services/workAgreementService";
 import { useNavigate } from "react-router-dom";
 
@@ -56,3 +58,23 @@ export const useDeleteWorkAgreement = () => {
         },
     });
 };
+
+
+export const useGetWorkAgreementTemplate = () => {
+    return useQuery<ApiSuccess<WorkAgreementTemplateRes>, ApiError>({
+        queryKey: ['workAgreementTemplate'],
+        queryFn: getWorkAgreementTemplateService,
+    });
+};
+
+export const useUpdateWorkAgreementTemplate = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<WorkAgreementTemplateRes>, ApiError, Partial<WorkAgreementTemplateReq>>({
+        mutationFn: updateWorkAgreementTemplateService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['workAgreementTemplate'] });
+        },
+    });
+};
+
+

@@ -16,7 +16,7 @@ interface QuotesTableProps {
   getQuotationsZ: UseQueryResult<ApiSuccessPaginated<QuotationRes>, ApiError>
 }
 
-export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onEdit, onDelete, onArchive, getQuotationsZ }) => {
+export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onEdit, onDelete, onArchive, onShow, getQuotationsZ }) => {
   const data = getQuotationsZ.data?.result.data ?? [];
   const meta = getQuotationsZ.data?.result.meta;
 
@@ -52,11 +52,7 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onE
       accessorKey: "status", header: "Status", cell: info =>
       (
         <QuoteStatusBadge
-          status={
-            typeof info.row.original.status === 'object'
-              ? info.row.original.status.value as QuotationStatus
-              : info.row.original.status as QuotationStatus
-          }
+          status={info.row.original.status}
         />
       )
     },
@@ -93,6 +89,7 @@ export const QuotesTable: React.FC<QuotesTableProps> = ({ params, setParams, onE
         params={params}
         onParamsChange={handleParamsChange}
         onEdit={onEdit}
+        onShow={onShow}
         onDelete={onDelete}
         onArchive={onArchive}
         filterOptions={{

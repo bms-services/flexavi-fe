@@ -51,21 +51,21 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
     if (filters.type && expense.type !== filters.type) return false;
     if (filters.projectId && expense.projectId !== filters.projectId) return false;
     if (filters.invoiceId && expense.invoiceId !== filters.invoiceId) return false;
-    
+
     if (advancedFilters.company && !expense.company.toLowerCase().includes(advancedFilters.company.toLowerCase())) return false;
     if (advancedFilters.description && !expense.description.toLowerCase().includes(advancedFilters.description.toLowerCase())) return false;
     if (advancedFilters.type && expense.type !== advancedFilters.type) return false;
     if (advancedFilters.status && expense.status !== advancedFilters.status) return false;
     if (advancedFilters.minAmount && expense.amount < advancedFilters.minAmount) return false;
     if (advancedFilters.maxAmount && expense.amount > advancedFilters.maxAmount) return false;
-    
+
     if (filters.dateRange && filters.dateRange[0] && filters.dateRange[1]) {
       const expenseDate = new Date(expense.date);
       const fromDate = filters.dateRange[0];
       const toDate = filters.dateRange[1];
       if (expenseDate < fromDate || expenseDate > toDate) return false;
     }
-    
+
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
       return (
@@ -74,7 +74,7 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
         (expense.notes && expense.notes.toLowerCase().includes(searchTerm))
       );
     }
-    
+
     return true;
   });
 
@@ -88,16 +88,16 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
 
   const handleDelete = () => {
     if (expenseToDelete) {
-      
+
       setExpenseToDelete(null);
     }
   };
 
   const handleBulkAction = (action: string) => {
     if (selectedExpenses.length === 0) return;
-    
-  
-    
+
+
+
     setSelectedExpenses([]);
   };
 
@@ -109,11 +109,6 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses, filters 
 
   return (
     <>
-      <ExpensesAdvancedFilters
-        filters={advancedFilters}
-        onFilterChange={handleFilterChange}
-      />
-      
       <div className="rounded-md border">
         <Table>
           <TableHeader>

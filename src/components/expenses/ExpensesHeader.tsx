@@ -8,31 +8,18 @@ import { useNavigate } from "react-router-dom";
 import { ExpenseFilters } from "@/types/expenses";
 
 interface ExpensesHeaderProps {
-  onFiltersChange: (filters: ExpenseFilters) => void;
+
+  handleCreateExpense: () => void;
+  handleOpenModalReceipt: () => void;
+  handleExportExpenses: () => void;
 }
 
-export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({ onFiltersChange }) => {
-  const [openUploadDialog, setOpenUploadDialog] = React.useState(false);
+export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({
+  handleCreateExpense,
+  handleOpenModalReceipt,
+  handleExportExpenses,
+}) => {
   const navigate = useNavigate();
-
-  const handleUploadResult = (data: any) => {
-   
-    
-    // Refresh the expenses list after a successful upload
-    // In a real app, you'd add the new expense to the state
-  };
-
-  const handleCreateExpense = () => {
-    // In a real app, we would navigate to a new expense form
-    // For demo purposes, we'll just create a draft expense and navigate to it
-    const newId = `exp-new-${Date.now()}`;
-    navigate(`/expenses/${newId}`);
-  };
-
-  const handleExportExpenses = () => {
-   
-    // In a real app, this would trigger an API call to export expenses to Excel
-  };
 
   return (
     <div className="flex flex-col space-y-4">
@@ -44,7 +31,7 @@ export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({ onFiltersChange 
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setOpenUploadDialog(true)}>
+          <Button variant="outline" size="sm" onClick={handleOpenModalReceipt}>
             <Upload className="mr-2 h-4 w-4" />
             Bon uploaden
           </Button>
@@ -58,12 +45,6 @@ export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({ onFiltersChange 
           </Button>
         </div>
       </div>
-
-      <ReceiptUploadDialog 
-        open={openUploadDialog} 
-        onOpenChange={setOpenUploadDialog}
-        onResult={handleUploadResult}
-      />
     </div>
   );
 };

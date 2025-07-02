@@ -1,6 +1,6 @@
 import { AddressReq, AddressRes } from "./addressT";
 import { LeadRes } from "./leadT";
-import { QuotationItemReq, QuotationItemRes, QuotationRes } from "./quotationT";
+import { QuotationItemRes, QuotationRes } from "./quotationT";
 
 export type WorkAgreementReq = {
     leads: string[] | { value: string; label: string }[];
@@ -45,6 +45,21 @@ export type WorkAgreementRes = {
     created_at: string;
     updated_at: string;
 };
+
+export type WorkAgreementTemplateReq = {
+    warranty: number;
+    payment: WorkAgreementPaymentReq;
+    exclusions?: string[];
+}
+
+export type WorkAgreementTemplateRes = {
+    id: string;
+    warranty: number;
+    payment: WorkAgreementPaymentRes;
+    exclusions: WorkContractExclusionsRes[];
+    created_at: string;
+    updated_at: string;
+}
 
 export type WorkAgreementItemReq = {
     id?: string;
