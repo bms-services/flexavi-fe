@@ -7,24 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { WorkAgreementDetailsForm } from "@/components/workagreements/forms/WorkAgreementDetailsForm";
 import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { WorkAgreementHeader } from "@/components/workagreements/header/WorkAgreementHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
-import { useWorkAgreementForm } from "@/hooks/useWorkAgreementForm";
 import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/WorkAgreementExclusionsForm";
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WorkAgreementAttachments } from "@/components/workagreements/forms/attachments/WorkAgreementAttachments";
-import { Save } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { WorkAgreementPaymentMethod, WorkAgreementReq } from "@/zustand/types/workAgreementT";
 import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
 import { useEffect } from "react";
-import { LeadRes } from "@/zustand/types/leadT";
-import { QuotationItemReq } from "@/zustand/types/quotationT";
 import { appendIfExists } from "@/utils/dataTransform";
 
 const defaultQuotationData: WorkAgreementReq = {
@@ -40,6 +35,7 @@ const defaultQuotationData: WorkAgreementReq = {
     payment_method: "bank",
     total_cash: 0,
     terms: [],
+    total_percentage: 0
   },
   address: {
     street: "",
@@ -129,6 +125,8 @@ const buildFormData = (data: WorkAgreementReq): FormData => {
   (data.attachments ?? []).forEach((file) => {
     if (file instanceof File) {
       formData.append("attachments[]", file);
+    } else if (typeof file === "object" && file !== null) {
+      formData.append("attachments[]", file.url || "");
     }
   });
 
@@ -154,6 +152,7 @@ const WorkAgreementEdit = () => {
 
   const handleUpdate = async (data: WorkAgreementReq) => {
     const formData = buildFormData(data);
+    formData.append("_method", "PATCH");
     await updateWorkAgreementZ.mutateAsync({ id: id || "", formData });
   };
 
@@ -199,12 +198,13 @@ const WorkAgreementEdit = () => {
         exclusions: data.exclusions.map((e) => e.description),
         attachments: data.attachments.map((file) =>
           file instanceof File
-            ? file
-            : new File([], file.name || "attachment.pdf", { type: "application/pdf" })
+            ? new File([], file.name || "attachment.pdf", { type: "application/pdf" })
+            : file
         ),
       });
     }
   }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data, methods]);
+
   return (
     <Layout>
       <FormProvider {...methods}>

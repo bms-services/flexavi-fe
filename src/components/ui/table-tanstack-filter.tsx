@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FilterOption, FilterType } from "@/zustand/types/apiT";
 import { DateSinglePicker } from "./date-single-picker";
 import { DateRangePicker } from "./date-range-picker";
+import { Input } from "./input";
 
 type FilterValue = string | number | [string, string];
 
@@ -41,15 +42,11 @@ export function TableTanstackFilter({
 
         case FilterType.DATE:
             return (
-                <DateSinglePicker
-                    // label={config.label}
-                    value={value ? new Date(value as string) : null}
-                    onChange={(val) => {
-                        if (val) {
-                            onChange(keyName, val.toISOString());
-                        } else {
-                            onChange(keyName, undefined);
-                        }
+                <Input type="date"
+                    value={value}
+                    onChange={(e) => {
+                        const dateValue = e.target.value ? e.target.value : undefined;
+                        onChange(keyName, dateValue);
                     }}
                     placeholder={config.placeholder}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"

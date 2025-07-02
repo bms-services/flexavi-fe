@@ -282,7 +282,7 @@ export default function TableTanstack<TData>({
         ))}
 
       </div>
-      <div className="overflow-x-auto overflow-y-auto max-h-[350px]">
+      <div className="overflow-x-auto overflow-y-auto h-[calc(100vh-350px)]">
         <table className="min-w-full text-left text-sm">
           <thead className="text-muted-foreground bg-[#eee]">
             {table.getHeaderGroups().map((hg) => (

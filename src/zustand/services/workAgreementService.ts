@@ -21,7 +21,7 @@ export const createWorkAgreementService = async (formData: FormData): Promise<Ap
 };
 
 export const updateWorkAgreementService = async ({ id, formData }: { id: string, formData: Partial<FormData> }): Promise<ApiSuccess<WorkAgreementRes>> => {
-    const { data } = await mainApi.patch(`/agreements/${id}`, formData);
+    const { data } = await mainApi.post(`/agreements/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

@@ -9,12 +9,13 @@ import { useCallback, useMemo, useState } from "react";
 import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import { formatEuro, formatIsoToDate } from "@/utils/format";
 import { WorkAgreementRes, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
+import WorkAgreementStatusBadge from "@/components/workagreements/WorkAgreementStatusBadge";
 
 const WorkAgreements = () => {
   const navigate = useNavigate();
 
   const columns = useMemo<CustomColumnDef<WorkAgreementRes>[]>(() => [
-    { accessorKey: "quote_number", header: "Nummer", cell: info => info.getValue() },
+    { accessorKey: "agreement_number", header: "Nummer", cell: info => info.getValue() },
     {
       accessorKey: "leads",
       header: "Klant",
@@ -39,20 +40,15 @@ const WorkAgreements = () => {
       header: "Datum",
       cell: info => formatIsoToDate(info.row.original.created_at),
     },
-    { accessorKey: "total_amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
-    { accessorKey: "description", header: "Omschrijving", cell: info => info.getValue() },
-    // {
-    //   accessorKey: "status", header: "Status", cell: info =>
-    //   (
-    //     <QuoteStatusBadge
-    //       status={
-    //         typeof info.row.original.status === 'object'
-    //           ? info.row.original.status.value as QuotationStatus
-    //           : info.row.original.status as QuotationStatus
-    //       }
-    //     />
-    //   )
-    // },
+    { accessorKey: "amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
+    {
+      accessorKey: "status", header: "Status", cell: info =>
+      (
+        <WorkAgreementStatusBadge
+          status={info.row.original.status}
+        />
+      )
+    },
   ], []);
 
   const [params, setParams] = useState<ParamGlobal>({
@@ -116,7 +112,7 @@ const WorkAgreements = () => {
       <div className="px-[24px] py-6 space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Offertes</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Werkovereenkomsten</h1>
             <p className="text-muted-foreground">
               Beheer alle werkovereenkomsten op één plek
             </p>
@@ -145,8 +141,8 @@ const WorkAgreements = () => {
                 type: FilterType.SELECT,
                 options: statusFilterOptions,
               },
-              planned_start_date: {
-                placeholder: "Planed Start Date",
+              created_at: {
+                placeholder: "Van",
                 type: FilterType.DATE
               }
             }}

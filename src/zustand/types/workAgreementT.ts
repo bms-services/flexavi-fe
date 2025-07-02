@@ -20,7 +20,7 @@ export type WorkAgreementReq = {
     total_amount: number;
     payment: WorkAgreementPaymentReq;
     exclusions?: string[];
-    attachments?: File[];
+    attachments?: WorkAgreementAttachmentsRes[] | File[];
 };
 export type WorkAgreementRes = {
     id: string;
@@ -41,7 +41,7 @@ export type WorkAgreementRes = {
     total_amount: number;
     payment: WorkAgreementPaymentRes;
     exclusions: WorkContractExclusionsRes[];
-    attachments: WorkAgreementAttachmentsRes[];
+    attachments: WorkAgreementAttachmentsRes[] | File[];
     created_at: string;
     updated_at: string;
 };
@@ -62,6 +62,7 @@ export type WorkAgreementPaymentReq = {
     payment_method: WorkAgreementPaymentMethod;
     total_cash: number;
     terms?: WorkAgreementPaymentTermReq[];
+    total_percentage: number;
 };
 
 export type WorkContractExclusionsRes = {
