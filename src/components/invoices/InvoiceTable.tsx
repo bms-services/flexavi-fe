@@ -5,6 +5,7 @@ import { ApiError, ApiSuccessPaginated, FilterType, ParamGlobal } from "@/zustan
 import { UseQueryResult } from "@tanstack/react-query";
 import QuoteStatusBadge from "../leads/badges/QuoteStatusBadge";
 import { InvoiceRes, InvoiceStatus, InvoiceStatusMap } from "@/zustand/types/invoiceT";
+import InvoiceStatusBadge from "../leads/badges/InvoiceStatusBadge";
 
 interface InvoiceTableProps {
     params: ParamGlobal;
@@ -44,19 +45,15 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({ params, setParams, o
         {
             accessorKey: "planned_start_date",
             header: "Datum Start Planning",
-            cell: info => formatIsoToDate(info.row.original.planned_start_date),
+            cell: info => formatIsoToDate(info.row.original.expiration_date),
         },
-        { accessorKey: "total_amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
+        { accessorKey: "subtotal", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
         { accessorKey: "description", header: "Omschrijving", cell: info => info.getValue() },
         {
             accessorKey: "status", header: "Status", cell: info =>
             (
-                <QuoteStatusBadge
-                    status={
-                        typeof info.row.original.status === 'object'
-                            ? info.row.original.status.value as InvoiceStatus
-                            : info.row.original.status as InvoiceStatus
-                    }
+                <InvoiceStatusBadge
+                    status={info.row.original.status}
                 />
             )
         },

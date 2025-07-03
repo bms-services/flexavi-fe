@@ -1,16 +1,13 @@
-
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Invoice } from "@/types";
-import { useInvoiceStatusBadge } from "@/hooks/useStatusBadge";
+import { InvoiceStatusMap, InvoiceStatus } from "@/zustand/types/invoiceT";
 
-interface InvoiceStatusBadgeProps {
-  status?: Invoice['status'];
+export default function InvoiceStatusBadge({ status }: { status?: InvoiceStatus }) {
+  if (!status) return null;
+
+  const { label, variant } = InvoiceStatusMap[status];
+  return (
+    <Badge variant={variant} className="capitalize">
+      {label}
+    </Badge>
+  );
 }
-
-export const InvoiceStatusBadge: React.FC<InvoiceStatusBadgeProps> = ({ status }) => {
-  const statusConfig = useInvoiceStatusBadge(status);
-  if (!statusConfig) return null;
-  
-  return <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>;
-};

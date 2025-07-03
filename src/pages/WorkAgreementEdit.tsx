@@ -32,7 +32,7 @@ const defaultWorkAgreement: WorkAgreementReq = {
   vat_amount: 0,
   total_amount: 0,
   payment: {
-    payment_method: "bank",
+    payment_method: "bank_transfer",
     total_cash: 0,
     terms: [],
     total_percentage: 0

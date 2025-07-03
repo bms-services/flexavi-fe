@@ -8,9 +8,9 @@ export type InvoiceReq = {
     title: string;
     description: string;
     notes: string;
-    due_date: string;
-    paid_at: string;
-    status: string;
+    expiration_date: string;
+    payment_date: string;
+    status: InvoiceStatus;
     address: AddressReq;
     items: InvoiceItemReq[];
     subtotal: number;
@@ -26,11 +26,8 @@ export type InvoiceRes = {
     title: string;
     description: string;
     notes: string;
-    planned_start_date: string;
-    status: string | {
-        value: InvoiceStatus;
-        label: string;
-    }
+    expiration_date: string;
+    status: InvoiceStatus;
     address: AddressRes;
     items: InvoiceItemRes[];
     subtotal: number;
@@ -69,31 +66,17 @@ export type InvoiceItemRes = {
     created_at: string;
     updated_at: string;
 };
-export type InvoiceStatus =
-    | "draft"
-    | "sent"
-    | "viewed"
-    | "accepted"
-    | "rejected"
-    | "revised"
-    | "expired"
-    | "converted"
-    | "concept";
+export type InvoiceStatus = "concept" | "sent" | "paid" | "expired" | "cancelled" | "with_bailiff" | "lawsuit";
 
 export const InvoiceStatusMap: Record<
     InvoiceStatus,
-    {
-        label: string;
-        variant: "primary" | "secondary" | "warning" | "danger" | "success";
-    }
+    { label: string; variant: "primary" | "default" | "success" | "destructive" | "secondary" | "warning" }
 > = {
-    draft: { label: "Concept", variant: "secondary" },
-    sent: { label: "Verzonden", variant: "primary" },
-    viewed: { label: "Bekeken", variant: "primary" },
-    accepted: { label: "Geaccepteerd", variant: "success" },
-    rejected: { label: "Afgewezen", variant: "danger" },
-    revised: { label: "Herzien", variant: "warning" },
-    expired: { label: "Verlopen", variant: "danger" },
-    converted: { label: "Geconverteerd", variant: "success" },
-    concept: { label: "Concept", variant: "secondary" },
-};
+    concept: { label: "Concept", variant: "primary" },
+    sent: { label: "Verzonden", variant: "default" },
+    paid: { label: "Betaald", variant: "success" },
+    expired: { label: "Verlopen", variant: "destructive" },
+    cancelled: { label: "Geannuleerd", variant: "secondary" },
+    with_bailiff: { label: "Bij deurwaarder", variant: "warning" },
+    lawsuit: { label: "Rechtszaak", variant: "destructive" },
+};  

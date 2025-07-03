@@ -47,7 +47,7 @@ export const InvoiceDetailsForm: React.FC = () => {
           label="Vervaldatum"
           rules={{
             register,
-            name: "due_date",
+            name: "expiration_date",
             options: {
               required: t("invoice.error.required.dueDate"),
             },
@@ -60,8 +60,10 @@ export const InvoiceDetailsForm: React.FC = () => {
           label="Betaaldatum"
           rules={{
             register,
-            name: "paid_at",
-            options: {},
+            name: "payment_date",
+            options: {
+              required: t("invoice.error.required.paymentDate"),
+            },
             errors,
           }}
         />

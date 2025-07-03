@@ -48,6 +48,7 @@ export type WorkAgreementRes = {
 
 export type WorkAgreementTemplateReq = {
     warranty: number;
+    total_amount: number;
     payment: WorkAgreementPaymentReq;
     exclusions?: string[];
 }
@@ -143,7 +144,7 @@ export const WorkAgreementStatusMap: Record<
 };
 
 
-export type WorkAgreementPaymentMethod = "bank" | "cash" | "bank_cash";
+export type WorkAgreementPaymentMethod = "bank_transfer" | "cash" | "bank_cash";
 export const WorkAgreementPaymentMethodMap: Record<
     WorkAgreementPaymentMethod,
     {
@@ -151,7 +152,7 @@ export const WorkAgreementPaymentMethodMap: Record<
         value: WorkAgreementPaymentMethod;
     }
 > = {
-    bank: { label: "Bankoverschrijving", value: "bank" },
+    bank_transfer: { label: "Bankoverschrijving", value: "bank_transfer" },
     cash: { label: "Contant", value: "cash" },
     bank_cash: { label: "Bank en contant", value: "bank_cash" },
 };

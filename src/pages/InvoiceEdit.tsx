@@ -13,7 +13,7 @@ import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { InvoiceHeader } from "@/components/invoices/header/InvoiceHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { FormProvider, useForm } from "react-hook-form";
-import { InvoiceReq } from "@/zustand/types/invoiceT";
+import { InvoiceReq, InvoiceStatusMap } from "@/zustand/types/invoiceT";
 import { flattenAddressToObject } from "@/utils/dataTransform";
 import { useCreateInvoice, useGetInvoice, useUpdateInvoice } from "@/zustand/hooks/useInvoice";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
@@ -26,9 +26,9 @@ const defaultInvoiceData: InvoiceReq = {
   title: "",
   description: "",
   notes: "",
-  paid_at: "",
-  due_date: "",
-  status: "",
+  payment_date: "",
+  expiration_date: "",
+  status: Object.keys(InvoiceStatusMap)[0] as keyof typeof InvoiceStatusMap,
   address: {
     street: "",
     city: "",
@@ -85,8 +85,8 @@ const InvoiceEdit = () => {
       title,
       description,
       notes,
-      due_date,
-      paid_at,
+      expiration_date,
+      payment_date,
       status,
       discount_type,
     } = data;
@@ -96,8 +96,8 @@ const InvoiceEdit = () => {
       title,
       description,
       notes,
-      due_date,
-      paid_at,
+      expiration_date,
+      payment_date,
       status,
       discount_type,
       address: flattenAddressToObject(data.address),
@@ -167,17 +167,21 @@ const InvoiceEdit = () => {
         </form>
       </FormProvider>
 
-      <SendInvoiceDialog
-        open={modal.send}
-        onOpenChange={(open) => setModal((prev) => ({ ...prev, send: open }))}
-        invoice={getInvoiceZ.data?.result}
-        onSubmit={handleSendInvoice}
-      />
-      <CreditInvoiceDialog open={false}
-        onOpenChange={(open) => setModal((prev) => ({ ...prev, credit: open }))}
-        invoice={getInvoiceZ.data?.result}
-        onSubmit={handleCreditInvoice}
-      />
+      {getInvoiceZ.isSuccess && getInvoiceZ.data.result && (
+        <SendInvoiceDialog
+          open={modal.send}
+          onOpenChange={(open) => setModal((prev) => ({ ...prev, send: open }))}
+          invoice={getInvoiceZ.data.result}
+          onSubmit={handleSendInvoice}
+        />
+      )}
+      {getInvoiceZ.isSuccess && getInvoiceZ.data.result && (
+        <CreditInvoiceDialog open={false}
+          onOpenChange={(open) => setModal((prev) => ({ ...prev, credit: open }))}
+          invoice={getInvoiceZ.data?.result}
+          onSubmit={handleCreditInvoice}
+        />
+      )}
     </Layout>
   );
 };

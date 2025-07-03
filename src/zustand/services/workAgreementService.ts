@@ -43,7 +43,7 @@ export const getWorkAgreementTemplateService = async (): Promise<ApiSuccess<Work
 };
 
 export const updateWorkAgreementTemplateService = async (formData: Partial<WorkAgreementTemplateReq>): Promise<ApiSuccess<WorkAgreementTemplateRes>> => {
-    const { data } = await mainApi.post('/setting/work-agreement/', formData);
+    const { data } = await mainApi.patch('/setting/work-agreement', formData);
     if (!data.success) throw data;
     return data;
 };

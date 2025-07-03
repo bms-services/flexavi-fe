@@ -15,8 +15,9 @@ import { useGetWorkAgreementTemplate, useUpdateWorkAgreementTemplate } from "@/z
 
 const defaultWorkAgreement: WorkAgreementTemplateReq = {
   warranty: 0,
+  total_amount: 0,
   payment: {
-    payment_method: "bank",
+    payment_method: "bank_transfer",
     total_cash: 0,
     terms: [],
     total_percentage: 0
@@ -36,6 +37,8 @@ export const WorkAgreementSettingsForm = () => {
 
   const onSubmit = (data: WorkAgreementTemplateReq) => {
     updateWorkAgreementTemplateZ.mutateAsync(data);
+    // console.log(data);
+
   };
 
   useEffect(() => {
@@ -44,6 +47,7 @@ export const WorkAgreementSettingsForm = () => {
 
       methods.reset({
         ...data,
+        total_amount: 100,
         warranty: Number(data.warranty ?? 0),
         exclusions: data.exclusions.map((e) => e.description),
         payment: {
@@ -57,7 +61,7 @@ export const WorkAgreementSettingsForm = () => {
         },
       });
     }
-  }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data]);
+  }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data, methods]);
 
   return (
     <FormProvider {...methods}>
