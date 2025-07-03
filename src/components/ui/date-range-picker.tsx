@@ -22,6 +22,7 @@ interface DateRangePickerProps<T extends FieldValues> {
     dateFormat?: string;
     value?: [Date | null, Date | null];
     onChange?: (range: [Date | null, Date | null]) => void;
+    containerClassName?: string;
     rules?: {
         name: FieldPath<T>;
         control: Control<T>;
@@ -42,9 +43,11 @@ export const DateRangePicker = <T extends FieldValues>({
     value,
     onChange,
     rules,
+    containerClassName,
+    ...props
 }: DateRangePickerProps<T>) => {
     return (
-        <div className="relative space-y-1">
+        <div className={cn("relative space-y-1", containerClassName)}>
             {label && (
                 <Label htmlFor={id} className="text-right">
                     {label}
@@ -65,7 +68,7 @@ export const DateRangePicker = <T extends FieldValues>({
                             disabled={disabled}
                             minDate={minDate}
                             maxDate={maxDate}
-                            dateFormat={dateFormat}
+                            dateFormat={dateFormat ?? "dd/MM/yyyy"}
                             className={cn("w-full px-3 py-2 border rounded text-sm", className)}
                             placeholderText={`${placeholder[0]} - ${placeholder[1]}`}
                             isClearable
@@ -78,14 +81,16 @@ export const DateRangePicker = <T extends FieldValues>({
                     selectsRange
                     startDate={value?.[0] || null}
                     endDate={value?.[1] || null}
-                    onChange={(range) => onChange?.(range as [Date | null, Date | null])}
+                    onChange={onChange}
                     disabled={disabled}
                     minDate={minDate}
                     maxDate={maxDate}
-                    dateFormat={dateFormat}
-                    className={cn("w-full px-3 py-2 border rounded text-sm", className)}
+                    dateFormat={dateFormat ?? "dd/MM/yyyy"}
+                    className={cn("w-full min-h-[40px] rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className)}
+                    wrapperClassName="w-full"
                     placeholderText={`${placeholder[0]} - ${placeholder[1]}`}
                     isClearable
+                    {...props}
                 />
             )}
             {rules?.errors?.[rules.name] && (

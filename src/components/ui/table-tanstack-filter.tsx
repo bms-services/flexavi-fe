@@ -1,16 +1,17 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FilterOption, FilterType } from "@/zustand/types/apiT";
-import { DateSinglePicker } from "./date-single-picker";
 import { DateRangePicker } from "./date-range-picker";
 import { Input } from "./input";
+import { format } from "date-fns";
 
 type FilterValue = string | number | [string, string];
+type DateRangeValue = [Date | null, Date | null] | null;
 
 interface TableTanstackFilterProps {
     keyName: string;
     config: FilterOption;
-    value?: FilterValue;
-    onChange: (key: string, value: FilterValue | undefined) => void;
+    value?: FilterValue | DateRangeValue;
+    onChange: (key: string, value: FilterValue | DateRangeValue | undefined) => void;
 }
 
 export function TableTanstackFilter({
@@ -23,7 +24,7 @@ export function TableTanstackFilter({
         case FilterType.SELECT:
             return (
                 <Select
-                    value={typeof value === "string" || typeof value === "number" ? String(value) : ""}
+                    value={value !== undefined ? String(value) : "all"}
                     onValueChange={(val) => onChange(keyName, val === "all" ? undefined : val)}
                 >
                     <SelectTrigger>
@@ -32,7 +33,7 @@ export function TableTanstackFilter({
                     <SelectContent>
                         <SelectItem value="all">All</SelectItem>
                         {config.options.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
+                            <SelectItem key={opt.value} value={String(opt.value)}>
                                 {opt.label}
                             </SelectItem>
                         ))}
@@ -42,37 +43,39 @@ export function TableTanstackFilter({
 
         case FilterType.DATE:
             return (
-                <Input type="date"
-                    value={value}
+                <Input
+                    type="date"
+                    value={typeof value === "string" ? value : ""}
                     onChange={(e) => {
-                        const dateValue = e.target.value ? e.target.value : undefined;
+                        const dateValue = e.target.value || undefined;
                         onChange(keyName, dateValue);
                     }}
                     placeholder={config.placeholder}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                 />
             );
 
         case FilterType.DATE_RANGE:
-            {
-                const [startStr, endStr] = (value ?? []) as [string?, string?];
-                return (
-                    <DateRangePicker
-                        label={config.label}
-                        value={[
-                            startStr ? new Date(startStr) : null,
-                            endStr ? new Date(endStr) : null
-                        ]}
-                        onChange={(range) => {
-                            if (range && range[0] && range[1]) {
-                                onChange(keyName, [range[0].toISOString(), range[1].toISOString()]);
-                            } else {
-                                onChange(keyName, undefined);
-                            }
-                        }}
-                    />
-                );
-            }
+            return (
+                <DateRangePicker
+                    label={config.label}
+                    containerClassName="w-full"
+                    value={
+                        Array.isArray(value) && value.length === 2
+                            ? [value[0] ? new Date(value[0]) : null, value[1] ? new Date(value[1]) : null]
+                            : [null, null]
+                    }
+                    dateFormat="dd/MM/yyyy"
+                    onChange={(range) => {
+                        if (!range || (range[0] === null && range[1] === null)) {
+                            onChange(keyName, undefined);
+                        } else {
+                            const startDate = range[0] ? format(range[0], "yyyy-MM-dd") : "";
+                            const endDate = range[1] ? format(range[1], "yyyy-MM-dd") : "";
+                            onChange(keyName, [startDate, endDate]);
+                        }
+                    }}
+                />
+            );
 
         default:
             return null;

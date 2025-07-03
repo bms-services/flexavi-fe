@@ -1,27 +1,12 @@
 
 import { Layout } from "@/components/layout/Layout";
 import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
-import { InvoiceKPIs } from "@/components/invoices/InvoiceKPIs";
-import { useInvoiceFilters } from "@/hooks/useInvoiceFilters";
-import { useInvoiceActions } from "@/hooks/useInvoiceActions";
-import { calculateInvoiceKPIs } from "@/components/invoices/InvoiceKPICalculator";
 import { InvoiceTable } from "@/components/invoices/InvoiceTable";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { useState } from "react";
 import { useDeleteInvoice, useGetInvoices } from "@/zustand/hooks/useInvoice";
 import { InvoiceRes } from "@/zustand/types/invoiceT";
 import { useNavigate } from "react-router-dom";
-
-export const statusOptions = [
-  { value: "draft", label: "Concept" },
-  { value: "sent", label: "Verzonden" },
-  { value: "paid", label: "Betaald" },
-  { value: "overdue", label: "Te laat" },
-  { value: "canceled", label: "Geannuleerd" },
-  { value: "collection", label: "Incasso" },
-  { value: "legal", label: "Juridisch" },
-];
-
 
 const InvoicesMain = () => {
   const navigate = useNavigate();

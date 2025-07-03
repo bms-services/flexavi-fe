@@ -7,7 +7,7 @@ import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
 import { useDeleteWorkAgreement, useGetWorkAgreements } from "@/zustand/hooks/useWorkAgreement";
 import { useCallback, useMemo, useState } from "react";
 import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
-import { formatEuro, formatIsoToDate } from "@/utils/format";
+import { formatEuro } from "@/utils/format";
 import { WorkAgreementRes, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import WorkAgreementStatusBadge from "@/components/workagreements/WorkAgreementStatusBadge";
 
@@ -36,9 +36,8 @@ const WorkAgreements = () => {
       }
     },
     {
-      accessorKey: "planned_start_date",
+      accessorKey: "start_date",
       header: "Datum",
-      cell: info => formatIsoToDate(info.row.original.created_at),
     },
     { accessorKey: "amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
     {
@@ -141,7 +140,7 @@ const WorkAgreements = () => {
                 type: FilterType.SELECT,
                 options: statusFilterOptions,
               },
-              created_at: {
+              start_date: {
                 placeholder: "Van",
                 type: FilterType.DATE
               }

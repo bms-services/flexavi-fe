@@ -18,7 +18,7 @@ import { GeneralTerms } from "@/components/workagreements/customer-portal/compon
 import { WorkAgreementAttachments } from "@/components/workagreements/forms/attachments/WorkAgreementAttachments";
 import { FormProvider, useForm } from "react-hook-form";
 import { WorkAgreementPaymentMethod, WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
-import { useCreateWorkAgreement, useGetWorkAgreement, useGetWorkAgreementTemplate, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
+import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
 import { useEffect } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
 
@@ -201,7 +201,7 @@ const WorkAgreementEdit = () => {
         ),
       });
     }
-  }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data, methods]);
+  }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data]);
 
   return (
     <Layout>

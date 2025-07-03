@@ -114,4 +114,10 @@
 /* React Date Picker */
 .react-datepicker-popper {
   z-index: 9999 !important;
+ 
+}
+
+.react-datepicker__tab-loop {
+  position: absolute !important;
+  top: 0 !important;
 }

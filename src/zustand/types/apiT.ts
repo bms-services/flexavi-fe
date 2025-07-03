@@ -56,29 +56,32 @@ export type ParamGlobal = {
     sorts?: SortsGlobal;
 };
 
-export type FiltersGlobal = Record<string, string | number | [string, string]>;
+// string | number | [string, string] | [Date | null, Date | null]
+export type FiltersGlobal = Record<string, string | number | [string, string] | [Date | null, Date | null]>;
 export type SortsGlobal = Record<string, "asc" | "desc">;
 
 export type FilterOption =
     | {
-        label: string;
+        label?: string;
         type: FilterType.SELECT;
         options: { value: string; label: string }[];
     }
     | {
-        placeholder: string;
+        placeholder?: string;
         type: FilterType.DATE;
     }
     | {
-        label: string;
+        label?: string;
         type: FilterType.DATE_RANGE;
     };
+
 
 export type FilterOptionsMap = Record<string, FilterOption>;
 
 export type FilterDefinition = {
     label: string;
     type: FilterType;
+    placeholder?: string;
     options?: FilterOption[];
 };
 
@@ -87,3 +90,5 @@ export enum FilterType {
     DATE = "date",
     DATE_RANGE = "date-range",
 }
+
+export type Filters = Record<string, string | number | [string, string]>;

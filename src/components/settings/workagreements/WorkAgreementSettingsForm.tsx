@@ -15,7 +15,7 @@ import { useGetWorkAgreementTemplate, useUpdateWorkAgreementTemplate } from "@/z
 
 const defaultWorkAgreement: WorkAgreementTemplateReq = {
   warranty: 0,
-  total_amount: 0,
+  total_amount: 1000,
   payment: {
     payment_method: "bank_transfer",
     total_cash: 0,
@@ -54,7 +54,7 @@ export const WorkAgreementSettingsForm = () => {
       methods.setValue("payment.total_percentage", 0);
 
     }
-  }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data, methods]);
+  }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data]);
 
   return (
     <FormProvider {...methods}>

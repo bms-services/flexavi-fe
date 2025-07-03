@@ -42,12 +42,20 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({ params, setParams, o
             }
         },
         {
-            accessorKey: "planned_start_date",
-            header: "Datum Start Planning",
-            cell: info => formatIsoToDate(info.row.original.expiration_date),
+            accessorKey: "payment_date",
+            header: "Datum",
+            cell: info => formatIsoToDate(info.getValue() as string)
         },
-        { accessorKey: "subtotal", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
-        { accessorKey: "description", header: "Omschrijving", cell: info => info.getValue() },
+        {
+            accessorKey: "expiration_date",
+            header: "Vervaldatum",
+            cell: info => formatIsoToDate(info.getValue() as string)
+        },
+        {
+            accessorKey: "total_amount",
+            header: "Bedrag",
+            cell: info => formatEuro(info.getValue() as string)
+        },
         {
             accessorKey: "status", header: "Status", cell: info =>
             (
@@ -97,10 +105,12 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({ params, setParams, o
                         type: FilterType.SELECT,
                         options: statusFilterOptions,
                     },
-                    planned_start_date: {
-                        placeholder: "Planed Start Date",
+                    start_date: {
+                        type: FilterType.DATE_RANGE
+                    },
+                    created_at: {
                         type: FilterType.DATE
-                    }
+                    },
                 }}
             />
         </div>

@@ -38,11 +38,11 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, loading
         <div className="flex flex-wrap gap-2">
           {isEditing && (
             <>
-              <Button variant="outline" onClick={handleOpenCreditDialog}>
+              <Button type="button" variant="outline" onClick={handleOpenCreditDialog}>
                 <RefreshCcw className="mr-2 h-4 w-4" />
                 Crediteer factuur
               </Button>
-              <Button variant="outline" onClick={handleOpenSendDialog}>
+              <Button type="button" variant="outline" onClick={handleOpenSendDialog}>
                 <Send className="mr-2 h-4 w-4" />
                 Verzend factuur
               </Button>
