@@ -3,8 +3,7 @@ import TableTanstack, { CustomColumnDef } from "../ui/table-tanstack";
 import { formatEuro, formatIsoToDate } from "@/utils/format";
 import { ApiError, ApiSuccessPaginated, FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import { UseQueryResult } from "@tanstack/react-query";
-import QuoteStatusBadge from "../leads/badges/QuoteStatusBadge";
-import { InvoiceRes, InvoiceStatus, InvoiceStatusMap } from "@/zustand/types/invoiceT";
+import { InvoiceRes, InvoiceStatusMap } from "@/zustand/types/invoiceT";
 import InvoiceStatusBadge from "../leads/badges/InvoiceStatusBadge";
 
 interface InvoiceTableProps {

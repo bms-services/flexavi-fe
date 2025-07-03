@@ -20,6 +20,7 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({ subtotal, clas
       : discountValue;
   };
 
+
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex items-center justify-end gap-2">

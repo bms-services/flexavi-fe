@@ -29,7 +29,7 @@ export const WorkAgreementExclusionsForm: React.FC<WorkAgreementExclusionsFormPr
   const handleAddExclusion = () => {
     const trimmed = newExclusion.trim();
     if (trimmed) {
-      append(trimmed);
+      append({ description: trimmed });
       setNewExclusion("");
     }
   };
@@ -74,12 +74,12 @@ export const WorkAgreementExclusionsForm: React.FC<WorkAgreementExclusionsFormPr
             >
               <div className="w-full">
                 <Input
-                  defaultValue={field as unknown as string}
+                  defaultValue={field.description}
                   className="w-full"
                   disabled={disabled}
                   rules={{
                     register,
-                    name: `exclusions.${index}`,
+                    name: `exclusions.${index}.description`,
                     options: {
                       required: "Uitsluiting is verplicht",
                     },

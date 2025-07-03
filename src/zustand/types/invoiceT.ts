@@ -5,7 +5,6 @@ import { ProductRes } from "./productT";
 export type InvoiceReq = {
     id?: string;
     leads: string[] | { value: string; label: string }[];
-    title: string;
     description: string;
     notes: string;
     expiration_date: string;
@@ -23,7 +22,6 @@ export type InvoiceRes = {
     id: string;
     invoice_number: string;
     leads: LeadRes[];
-    title: string;
     description: string;
     notes: string;
     expiration_date: string;

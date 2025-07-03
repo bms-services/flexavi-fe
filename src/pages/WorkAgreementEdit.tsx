@@ -17,15 +17,15 @@ import { PaymentTermsForm } from "@/components/workagreements/forms/payment-term
 import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 import { WorkAgreementAttachments } from "@/components/workagreements/forms/attachments/WorkAgreementAttachments";
 import { FormProvider, useForm } from "react-hook-form";
-import { WorkAgreementPaymentMethod, WorkAgreementReq } from "@/zustand/types/workAgreementT";
-import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
+import { WorkAgreementPaymentMethod, WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
+import { useCreateWorkAgreement, useGetWorkAgreement, useGetWorkAgreementTemplate, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
 import { useEffect } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
 
 const defaultWorkAgreement: WorkAgreementReq = {
   leads: [],
   description: "",
-  status: "concept",
+  status: Object.keys(WorkAgreementStatusMap)[0] as keyof typeof WorkAgreementStatusMap,
   subtotal: 0,
   discount_amount: 0,
   discount_type: "percentage",
@@ -118,7 +118,7 @@ const buildFormData = (data: WorkAgreementReq): FormData => {
 
   // exclusions[]
   (data.exclusions ?? []).forEach((exclusion) => {
-    formData.append("exclusions[]", exclusion);
+    formData.append("exclusions[]", exclusion.description);
   });
 
   // attachments[]
@@ -193,7 +193,7 @@ const WorkAgreementEdit = () => {
             total_price: Number(term.total_price),
           })) ?? [],
         },
-        exclusions: data.exclusions.map((e) => e.description),
+        exclusions: data.exclusions.map((e) => ({ description: e.description })),
         attachments: data.attachments.map((file) =>
           file instanceof File
             ? new File([], file.name || "attachment.pdf", { type: "application/pdf" })
@@ -210,7 +210,7 @@ const WorkAgreementEdit = () => {
           <div className="px-[24px] py-6 space-y-6">
             <WorkAgreementHeader
               isEditing={!!id}
-              isReadOnly={!id}
+              isReadOnly={!!id}
             // handleDelete={}
 
             />
@@ -247,7 +247,7 @@ const WorkAgreementEdit = () => {
                   <CardDescription>Specificeer betaalmethode en betaaltermijnen</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <PaymentTermsForm />
+                  <PaymentTermsForm isWorkContractCreate={!id} />
                 </CardContent>
               </Card>
 

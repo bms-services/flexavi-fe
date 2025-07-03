@@ -8,7 +8,7 @@ import { WorkAgreementExclusionsForm } from "@/components/workagreements/forms/W
 import { PaymentTermsForm } from "@/components/workagreements/forms/payment-terms/PaymentTermsForm";
 import { Settings } from "lucide-react";
 
-import { WorkAgreementPaymentMethod, WorkAgreementTemplateReq } from "@/zustand/types/workAgreementT";
+import { WorkAgreementPaymentMethod, WorkAgreementsExclusionsReq, WorkAgreementTemplateReq } from "@/zustand/types/workAgreementT";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useGetWorkAgreementTemplate, useUpdateWorkAgreementTemplate } from "@/zustand/hooks/useWorkAgreement";
@@ -32,34 +32,27 @@ export const WorkAgreementSettingsForm = () => {
     defaultValues: defaultWorkAgreement,
   });
 
-  const getWorkAgreementTemplateZ = useGetWorkAgreementTemplate();
+  const getWorkAgreementTemplateZ = useGetWorkAgreementTemplate(true);
   const updateWorkAgreementTemplateZ = useUpdateWorkAgreementTemplate();
 
   const onSubmit = (data: WorkAgreementTemplateReq) => {
-    updateWorkAgreementTemplateZ.mutateAsync(data);
-    // console.log(data);
-
+    const newData = {
+      ...data,
+      exclusions: data.exclusions?.map((e) => e.description) as unknown as WorkAgreementsExclusionsReq[],
+    };
+    updateWorkAgreementTemplateZ.mutateAsync(newData);
   };
 
   useEffect(() => {
     if (getWorkAgreementTemplateZ.isSuccess && getWorkAgreementTemplateZ.data?.result) {
       const data = getWorkAgreementTemplateZ.data.result;
 
-      methods.reset({
-        ...data,
-        total_amount: 100,
-        warranty: Number(data.warranty ?? 0),
-        exclusions: data.exclusions.map((e) => e.description),
-        payment: {
-          payment_method: data.payment.payment_method as WorkAgreementPaymentMethod,
-          total_cash: Number(data.payment.total_cash ?? 0),
-          terms: data.payment.terms?.map((term) => ({
-            ...term,
-            percentage: Number(term.percentage),
-            total_price: Number(term.total_price),
-          })) ?? [],
-        },
-      });
+      methods.setValue("warranty", Number(data.warranty ?? 0));
+      methods.setValue("exclusions", data.exclusions.map((e) => ({ description: e.description })));
+      methods.setValue("payment.payment_method", data.payment.payment_method as WorkAgreementPaymentMethod);
+      methods.setValue("payment.total_cash", Number(data.payment.total_cash ?? 0));
+      methods.setValue("payment.total_percentage", 0);
+
     }
   }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data, methods]);
 

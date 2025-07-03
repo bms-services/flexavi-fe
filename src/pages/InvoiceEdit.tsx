@@ -17,13 +17,12 @@ import { InvoiceReq, InvoiceStatusMap } from "@/zustand/types/invoiceT";
 import { flattenAddressToObject } from "@/utils/dataTransform";
 import { useCreateInvoice, useGetInvoice, useUpdateInvoice } from "@/zustand/hooks/useInvoice";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SendInvoiceDialog } from "@/components/invoices/SendInvoiceDialog";
 import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
 
 const defaultInvoiceData: InvoiceReq = {
   leads: [],
-  title: "",
   description: "",
   notes: "",
   payment_date: "",
@@ -82,7 +81,6 @@ const InvoiceEdit = () => {
 
   const handleUpdate = async (data: InvoiceReq) => {
     const {
-      title,
       description,
       notes,
       expiration_date,
@@ -93,7 +91,6 @@ const InvoiceEdit = () => {
 
 
     const formattedData: Partial<InvoiceReq> = {
-      title,
       description,
       notes,
       expiration_date,
@@ -130,6 +127,36 @@ const InvoiceEdit = () => {
   };
 
 
+  useEffect(() => {
+    if (getInvoiceZ.isSuccess && getInvoiceZ.data.result) {
+      const data = getInvoiceZ.data.result;
+      methods.reset({
+        ...data,
+        leads: data.leads.map((lead) =>
+          typeof lead === "string" ? lead : { value: lead.id, label: lead.name }
+        ),
+        address: {
+          ...data.address,
+          postal_code: typeof data.address.postal_code === "string"
+            ? {
+              label: data.address.postal_code,
+              value: data.address.postal_code,
+            }
+            : data.address.postal_code,
+        },
+        items: data.items.map((item) => ({
+          ...item,
+          quantity: Number(item.quantity),
+          unit_price: Number(item.unit_price),
+          vat_amount: Number(item.vat_amount),
+          total: Number(item.total),
+        })),
+        subtotal: Number(data.subtotal),
+        discount_amount: Number(data.discount_amount),
+        total_amount: Number(data.total_amount),
+      });
+    }
+  }, [getInvoiceZ.isSuccess, getInvoiceZ.data, methods]);
 
   return (
     <Layout>

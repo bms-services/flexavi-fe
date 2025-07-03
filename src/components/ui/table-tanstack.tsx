@@ -377,28 +377,30 @@ export default function TableTanstack<TData>({
           </button>
         </div>
 
-        <div className="flex items-center w-fit gap-4">
+        <div className="flex items-center justify-end w-full gap-4">
           <div className="text-muted-foreground w-fit">
             {from ?? 0} - {to ?? 0} of {total} items
           </div>
-          <Select
-            value={(per_page ?? 10).toString()}
-            onValueChange={(value) => {
-              const size = Number(value);
-              onParamsChange({ per_page: size, page: 1 });
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Items per page" />
-            </SelectTrigger>
-            <SelectContent>
-              {pageSize.map((size) => (
-                <SelectItem key={size} value={size.toString()}>
-                  {size} items
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div>
+            <Select
+              value={(per_page ?? 10).toString()}
+              onValueChange={(value) => {
+                const size = Number(value);
+                onParamsChange({ per_page: size, page: 1 });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Items per page" />
+              </SelectTrigger>
+              <SelectContent>
+                {pageSize.map((size) => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size} items
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

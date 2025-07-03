@@ -20,13 +20,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { formatEuro } from "@/utils/format";
 import { useTranslation } from "react-i18next";
+import { useGetWorkAgreementTemplate } from "@/zustand/hooks/useWorkAgreement";
 
 interface PaymentTermsFormProps {
   disabled?: boolean;
+  isWorkContractCreate?: boolean;
 }
 
 export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
   disabled = false,
+  isWorkContractCreate = false,
 }) => {
   const { t } = useTranslation();
   const {
@@ -37,11 +40,13 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     formState: { errors },
   } = useFormContext<WorkAgreementReq>();
 
+  const getWorkAgreementTemplateZ = useGetWorkAgreementTemplate(isWorkContractCreate);
+
   const paymentMethod = watch("payment.payment_method");
   const totalAmount = watch("total_amount");
   const terms = watch("payment.terms") || [];
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "payment.terms",
   });
@@ -80,6 +85,28 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
       shouldValidate: true,
     });
   }, [fields, totalAmount, totalPercentage, setValue, watch]);
+
+
+  useEffect(() => {
+    if (getWorkAgreementTemplateZ.isSuccess && getWorkAgreementTemplateZ.data?.result) {
+      const data = getWorkAgreementTemplateZ.data.result;
+
+      setValue("warranty", Number(data.warranty ?? 0));
+      setValue("exclusions", data.exclusions.map((e) => ({ description: e.description })));
+      setValue("payment.payment_method", data.payment.payment_method as WorkAgreementPaymentMethod);
+      setValue("payment.total_cash", Number(data.payment.total_cash ?? 0));
+      setValue("payment.total_percentage", 0);
+
+      replace(
+        (data.payment.terms ?? []).map((term) => ({
+          ...term,
+          id: term.id || `${Date.now()}-${Math.random()}`, // fallback id
+          percentage: Number(term.percentage),
+          total_price: Number(term.total_price),
+        }))
+      );
+    }
+  }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data, setValue, replace]);
 
   return (
     <div className="space-y-4">

@@ -19,9 +19,10 @@ export type WorkAgreementReq = {
     discount_type: WorkAgreementDiscountType;
     total_amount: number;
     payment: WorkAgreementPaymentReq;
-    exclusions?: string[];
-    attachments?: WorkAgreementAttachmentsRes[] | File[];
+    exclusions: WorkAgreementsExclusionsReq[];
+    attachments: WorkAgreementAttachmentsRes[] | File[];
 };
+
 export type WorkAgreementRes = {
     id: string;
     leads: LeadRes[];
@@ -50,7 +51,7 @@ export type WorkAgreementTemplateReq = {
     warranty: number;
     total_amount: number;
     payment: WorkAgreementPaymentReq;
-    exclusions?: string[];
+    exclusions?: WorkAgreementsExclusionsReq[];
 }
 
 export type WorkAgreementTemplateRes = {
@@ -61,6 +62,19 @@ export type WorkAgreementTemplateRes = {
     created_at: string;
     updated_at: string;
 }
+
+
+export type WorkAgreementsExclusionsReq = {
+    description: string;
+};
+
+export type WorkContractExclusionsRes = {
+    id: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+};
+
 
 export type WorkAgreementItemReq = {
     id?: string;
@@ -81,10 +95,6 @@ export type WorkAgreementPaymentReq = {
     total_percentage: number;
 };
 
-export type WorkContractExclusionsRes = {
-    id: string;
-    description: string;
-};
 
 export type WorkAgreementAttachmentsRes = {
     id: string;

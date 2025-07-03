@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { WorkAgreementRes, WorkAgreementTemplateReq, WorkAgreementTemplateRes } from "../types/workAgreementT";
 import {
@@ -60,10 +60,11 @@ export const useDeleteWorkAgreement = () => {
 };
 
 
-export const useGetWorkAgreementTemplate = () => {
+export const useGetWorkAgreementTemplate = (enabled: boolean) => {
     return useQuery<ApiSuccess<WorkAgreementTemplateRes>, ApiError>({
         queryKey: ['workAgreementTemplate'],
         queryFn: getWorkAgreementTemplateService,
+        enabled,
     });
 };
 
