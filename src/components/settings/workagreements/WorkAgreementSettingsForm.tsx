@@ -12,9 +12,11 @@ import { WorkAgreementPaymentMethod, WorkAgreementsExclusionsReq, WorkAgreementT
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useGetWorkAgreementTemplate, useUpdateWorkAgreementTemplate } from "@/zustand/hooks/useWorkAgreement";
+import { GeneralTerms } from "@/components/workagreements/customer-portal/components/GeneralTerms";
 
 const defaultWorkAgreement: WorkAgreementTemplateReq = {
   warranty: 0,
+  general_term_conditions: "",
   total_amount: 1000,
   payment: {
     payment_method: "bank_transfer",
@@ -52,6 +54,7 @@ export const WorkAgreementSettingsForm = () => {
       methods.setValue("payment.payment_method", data.payment.payment_method as WorkAgreementPaymentMethod);
       methods.setValue("payment.total_cash", Number(data.payment.total_cash ?? 0));
       methods.setValue("payment.total_percentage", 0);
+      methods.setValue("general_term_conditions", data.general_term_conditions ?? "");
 
     }
   }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data]);
@@ -87,7 +90,6 @@ export const WorkAgreementSettingsForm = () => {
                 errors: methods.formState.errors,
               }}
             />
-
             <div>
               <Label>Standaard betaalvoorwaarden</Label>
               <div className="mt-2">
@@ -101,6 +103,7 @@ export const WorkAgreementSettingsForm = () => {
                 <WorkAgreementExclusionsForm />
               </div>
             </div>
+            <GeneralTerms />
             <Button type="submit" className="w-full">
               Instellingen opslaan
             </Button>

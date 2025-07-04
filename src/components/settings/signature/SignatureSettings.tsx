@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import Signature from "@/components/customer/Signature";
 
 import { Upload, Mail } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { SignatureReq } from "@/zustand/types/signatureT";
+import { useUpdateSignatureTemplate } from "@/zustand/hooks/useSignature";
+
+const defaultWorkAgreement: SignatureReq = {
+  document_signature: null,
+  company_logo: null,
+};
 
 export const SignatureSettings = () => {
-  
-  const [documentSignature, setDocumentSignature] = useState<string | null>(null);
+  const methods = useForm<SignatureReq>({
+    defaultValues: defaultWorkAgreement,
+  });
+
+  const updateSignatureTemplate = useUpdateSignatureTemplate();
+
   const [companyLogo, setCompanyLogo] = useState<string | null>(null);
 
   const defaultEmailSignature = `
@@ -46,80 +57,98 @@ export const SignatureSettings = () => {
     </table>
   `;
 
-  const handleDocumentSignatureChange = (signatureData: string | null) => {
-    setDocumentSignature(signatureData);
-    if (signatureData) {
-     
-    }
-  };
+  const documentSignature = methods.watch("document_signature");
 
-  const saveEmailSignature = () => {
- 
-  };
+
+  /**
+   * Function to handle form submission
+   * 
+   * @param data 
+   * @returns {Promise<void>}
+   */
+  const onSubmit = async (data: SignatureReq) => {
+    if (data.document_signature) {
+      const formData = new FormData();
+      formData.append("document_signature", data.document_signature);
+      return updateSignatureTemplate.mutateAsync({ formData })
+    }
+
+    console.error("No document signature provided");
+  }
+
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Upload className="h-5 w-5 text-muted-foreground" />
-            <div>
-              <CardTitle>Document Handtekening</CardTitle>
-              <CardDescription>
-                Upload je handtekening voor gebruik op offertes, facturen en werkovereenkomsten
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <Signature onSignatureChange={handleDocumentSignatureChange} />
-            {documentSignature && (
-              <div className="mt-4">
-                <p className="text-sm text-muted-foreground mb-2">Voorbeeld van je handtekening:</p>
-                <img 
-                  src={documentSignature} 
-                  alt="Handtekening voorbeeld" 
-                  className="border rounded-md p-2 max-w-[200px]"
-                />
+    <form onSubmit={methods.handleSubmit(onSubmit)}>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Upload className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <CardTitle>Document Handtekening</CardTitle>
+                <CardDescription>
+                  Upload je handtekening voor gebruik op offertes, facturen en werkovereenkomsten
+                </CardDescription>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Controller
+                name="document_signature"
+                control={methods.control}
+                render={({ field }) => (
+                  <Signature onSignatureChange={field.onChange} />
+                )}
+              />
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Mail className="h-5 w-5 text-muted-foreground" />
-            <div>
-              <CardTitle>E-mail Handtekening</CardTitle>
-              <CardDescription>
-                Professionele e-mail handtekening met bedrijfslogo
-              </CardDescription>
+              {documentSignature && (
+                <div className="mt-4">
+                  <p className="text-sm text-muted-foreground mb-2">Voorbeeld van je handtekening:</p>
+                  <img
+                    src={documentSignature}
+                    alt="Handtekening voorbeeld"
+                    className="border rounded-md p-2 max-w-[200px]"
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="border rounded-lg p-4 bg-white">
-              <div dangerouslySetInnerHTML={{ __html: defaultEmailSignature }} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <CardTitle>E-mail Handtekening</CardTitle>
+                <CardDescription>
+                  Professionele e-mail handtekening met bedrijfslogo
+                </CardDescription>
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground">
-              <p>Beschikbare variabelen:</p>
-              <ul className="list-disc list-inside">
-                <li>[Naam] - Je volledige naam</li>
-                <li>[Functie] - Je functietitel</li>
-                <li>[Bedrijfsnaam] - Naam van je bedrijf</li>
-                <li>[Telefoonnummer] - Je telefoonnummer</li>
-                <li>[E-mailadres] - Je e-mailadres</li>
-                <li>[Website] - Je website URL</li>
-              </ul>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="border rounded-lg p-4 bg-white">
+                <div dangerouslySetInnerHTML={{ __html: defaultEmailSignature }} />
+              </div>
+              <div className="text-sm text-muted-foreground">
+                <p>Beschikbare variabelen:</p>
+                <ul className="list-disc list-inside">
+                  <li>[Naam] - Je volledige naam</li>
+                  <li>[Functie] - Je functietitel</li>
+                  <li>[Bedrijfsnaam] - Naam van je bedrijf</li>
+                  <li>[Telefoonnummer] - Je telefoonnummer</li>
+                  <li>[E-mailadres] - Je e-mailadres</li>
+                  <li>[Website] - Je website URL</li>
+                </ul>
+              </div>
+              <Button type="submit">Handtekening opslaan</Button>
             </div>
-            <Button onClick={saveEmailSignature}>Handtekening opslaan</Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </form>
   );
 };

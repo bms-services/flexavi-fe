@@ -162,11 +162,9 @@ const DashboardLayout: React.FC = () => {
                         <PaymentMethodCardDialog open={modal.paymentMethod} onOpenChange={() => setModal((modal) => ({ ...modal, paymentMethod: false }))} onBack={handleOpenSubscription} />
                     </div>
                 )}
-
                 <QuickActions />
                 <main className="flex-1 overflow-y-auto overflow-x-hidden">
-                    <div>
-                    </div>
+
                     <Outlet />
                     <Loader />
                 </main>

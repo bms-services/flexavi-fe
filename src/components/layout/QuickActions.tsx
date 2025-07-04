@@ -1,6 +1,6 @@
 
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { SearchBox } from './quick-actions/SearchBox';
+// import { SearchBox } from './quick-actions/SearchBox';
 import { QuickActionsList } from './quick-actions/QuickActionsList';
 import { NotificationsPopover } from './quick-actions/NotificationsPopover';
 import { UserMenu } from './quick-actions/UserMenu';
@@ -16,7 +16,7 @@ const QuickActions = () => {
           </div>
 
           <div className="flex items-center gap-1 md:gap-3">
-            <SearchBox />
+            {/* <SearchBox /> */}
             <LocalizationToggle isDashboard />
             <NotificationsPopover />
             <UserMenu />

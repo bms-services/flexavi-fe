@@ -31,7 +31,7 @@ export const UserMenu = () => {
           className="rounded-full hover:bg-accent h-9 md:h-10 px-2 md:px-3"
         >
           <User className="h-4 w-4 md:h-5 md:w-5" />
-          <span className="hidden md:inline-block ml-2 text-sm">John Doe</span>
+          {/* <span className="hidden md:inline-block ml-2 text-sm">John Doe</span> */}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

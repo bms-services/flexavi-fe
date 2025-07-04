@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Paperclip, FileText, X, Eye } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 import FilePreview from "reactjs-file-preview";
@@ -15,6 +15,32 @@ interface WorkAgreementAttachmentsProps {
   disabled?: boolean;
 }
 
+const getFileType = (url: string): string => {
+  const extension = url.split(".").pop()?.toLowerCase();
+  switch (extension) {
+    case "pdf":
+      return "application/pdf";
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "png":
+      return "image/png";
+    case "doc":
+    case "docx":
+      return "application/msword";
+    case "xls":
+    case "xlsx":
+      return "application/vnd.ms-excel";
+    case "csv":
+      return "text/csv";
+    case "txt":
+      return "text/plain";
+    default:
+      return "";
+  }
+};
+
+
 export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> = ({
   defaultAttachments = [],
   disabled = false,
@@ -27,6 +53,7 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
 
   const rawAttachments = useWatch<WorkAgreementReq>({ name: "attachments" });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
 
   const attachments = useMemo(() => {
     return Array.isArray(rawAttachments) ? rawAttachments : [];
@@ -127,7 +154,6 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
         />
       </div>
 
-      {/* Daftar File */}
       {(defaultAttachments.length > 0 || attachments.length > 0) && (
         <div className="space-y-2">
           {/* Default (static) */}
@@ -160,18 +186,29 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
               <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-md">
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 <span className="flex-1 text-sm text-blue-600 truncate">{filename}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    if (file instanceof File || (file && typeof file === "object" && "name" in file && "url" in file)) {
-                      handlePreview(file as File | WorkAgreementAttachmentsRes, href);
-                    }
-                  }}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
+                {isFile ? (
+                  // Preview only images before upload
+                  /\.(jpe?g|png|gif|bmp|webp)$/i.test(filename) && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handlePreview(file as File, href)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  )
+                ) : (
+                  // After upload, allow preview for all file types
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handlePreview(file as WorkAgreementAttachmentsRes, href)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
                 {!disabled && (
                   <Button
                     type="button"
@@ -197,8 +234,11 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
 
       {/* Preview dialog (only backend URL) */}
       <Dialog open={!!previewUrl} onOpenChange={() => setPreviewUrl(null)}>
+        <DialogTitle className="text-lg font-semibold">
+          Voorbeeld
+        </DialogTitle>
         <DialogContent className="h-[90vh] overflow-auto">
-          {previewUrl && <FilePreview preview={previewUrl} />}
+          {previewUrl && <FilePreview preview={"https://pdfobject.com/pdf/sample.pdf"} />}
         </DialogContent>
       </Dialog>
     </div>
