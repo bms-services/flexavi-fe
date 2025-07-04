@@ -1,51 +1,35 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LockIcon, UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
 import { useRegisterEmployee, useVerifyRegisterEmployee } from "@/zustand/hooks/useAuth";
-import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
-import { useRegisterStore } from "@/zustand/stores/authStore";
 import { useSearchParams } from "react-router-dom";
 import { RegisterEmployeeReq } from "@/zustand/types/authT";
 import PhoneNumber from "@/components/ui/phone-number";
 
 const RegisterEmployee = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get("token") || "";
 
-  const { setEmail } = useRegisterStore();
-  const registerEmployeeZ = useRegisterEmployee();
-  const verifyRegisterEmployeeZ = useVerifyRegisterEmployee(token || "");
-
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    setError,
-    setValue,
-    formState: { errors },
-  } = useForm<RegisterEmployeeReq>({
+  const methods = useForm<RegisterEmployeeReq>({
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       password: "",
       password_confirmation: "",
-      token: token || "",
+      token,
     },
   });
 
-
+  const registerEmployeeZ = useRegisterEmployee(methods);
+  const verifyRegisterEmployeeZ = useVerifyRegisterEmployee(token, methods);
 
   /**
    * Function to handle form submission
@@ -54,55 +38,23 @@ const RegisterEmployee = () => {
    * @returns {Promise<void>}
    */
   const onSubmit = async (data: RegisterEmployeeReq): Promise<void> => {
-    try {
-      const newData = {
-        ...data,
-        language: currentLocal,
-      };
-
-      const res = await registerEmployeeZ.mutateAsync(newData);
-      setEmail(res.result.email);
-      navigate("/register/success");
-    } catch (error) {
-      throw new Error("Registration failed");
-    }
+    const newData = {
+      ...data,
+      language: currentLocal,
+    };
+    await registerEmployeeZ.mutateAsync(newData);
   };
 
-  /**
-   * Effect to handle registration errors
-   * 
-   * If there are errors during registration, set the appropriate error messages.
-   */
-  useEffect(() => {
-    if (registerEmployeeZ.error?.errors) {
-      mapApiErrorsToForm(registerEmployeeZ.error.errors, setError);
-    }
-  }, [registerEmployeeZ.error, setError]);
-
-
-  useEffect(() => {
-    if (verifyRegisterEmployeeZ.isSuccess) {
-      const { name, email, phone } = verifyRegisterEmployeeZ.data.result;
-      setValue("name", name);
-      setValue("email", email);
-      setValue("phone", phone);
-    }
-
-    if (verifyRegisterEmployeeZ.error) {
-      navigate("/login");
-    }
-  }, [verifyRegisterEmployeeZ.isSuccess, verifyRegisterEmployeeZ.error, setValue]);
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={methods.handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         {verifyRegisterEmployeeZ.isSuccess && (
           <div>
             <p className="text-[14px]">
               Hii <b>{verifyRegisterEmployeeZ.data.result.name}</b>,
-              {t('registerEmployee.text.subDescription')}
+              {t('registerEmployee.text.subDescription')}{" "}
               <span className="text-primary font-semibold">
-                {verifyRegisterEmployeeZ.data.result.company_name}
+                {verifyRegisterEmployeeZ.data.result.company_name}.
               </span>
             </p>
 
@@ -119,12 +71,12 @@ const RegisterEmployee = () => {
           icon={<LockIcon className="h-5 w-5 " />}
           disabled
           rules={{
-            register,
+            register: methods.register,
             name: "name",
             options: {
               required: t('registerEmployee.error.required.name')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <Input
@@ -135,24 +87,24 @@ const RegisterEmployee = () => {
           icon={<LockIcon className="h-5 w-5 " />}
           disabled
           rules={{
-            register,
+            register: methods.register,
             name: "email",
             options: {
               required: t('registerEmployee.error.required.email')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <PhoneNumber
           label={t('registerEmployee.label.phone')}
           disabled
           rules={{
-            control,
+            control: methods.control,
             name: "phone",
             options: {
               required: t('registerEmployee.error.required.phone')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
 
@@ -163,12 +115,12 @@ const RegisterEmployee = () => {
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
           rules={{
-            register,
+            register: methods.register,
             name: "password",
             options: {
               required: t('registerEmployee.error.required.password')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <Input
@@ -178,17 +130,17 @@ const RegisterEmployee = () => {
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
           rules={{
-            register,
-            name: "password-confirmation",
+            register: methods.register,
+            name: "password_confirmation",
             options: {
               required: t('registerEmployee.error.required.passwordConfirmation'),
               validate: (value) => {
-                if (value !== watch("password")) {
+                if (value !== methods.watch("password")) {
                   return t('registerEmployee.error.required.passwordConfirmationMismatch')
                 }
               },
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
       </CardContent>

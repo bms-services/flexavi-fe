@@ -1,12 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { InvoiceReq, InvoiceRes } from "../types/invoiceT";
+import { InvoiceReq, InvoiceRes, InvoiceSummaryRes, InvoiceSendRes, InvoiceCreditRes } from "../types/invoiceT";
 import {
     createInvoiceService,
     deleteInvoiceService,
     getInvoicesService,
     getInvoiceService,
-    updateInvoiceService
+    updateInvoiceService,
+    getInvoiceSummaryService,
+    creditInvoiceService,
+    sendInvoiceService
 } from "../services/invoiceService";
 import { useNavigate } from "react-router-dom";
 
@@ -56,3 +59,32 @@ export const useDeleteInvoice = () => {
         },
     });
 };
+
+export const useGetInvoiceSummary = () => {
+    return useQuery<ApiSuccess<InvoiceSummaryRes>, ApiError>({
+        queryKey: ['invoiceSummary'],
+        queryFn: getInvoiceSummaryService,
+    });
+};
+
+export const useCreditInvoice = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<InvoiceCreditRes>, ApiError, { id: string; type: "full" | "partial" }>({
+        mutationFn: creditInvoiceService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        },
+    });
+};
+
+export const useSendInvoice = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<InvoiceSendRes>, ApiError, { id: string; email: string; subject: string; message: string }>({
+        mutationFn: sendInvoiceService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        },
+    });
+};
+
+

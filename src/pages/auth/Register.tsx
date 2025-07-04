@@ -1,33 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { LockIcon, Mail, UserIcon, UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 import { useLocalization } from "@/hooks/useLocalization";
 import PhoneNumber from "@/components/ui/phone-number";
 import { useRegister } from "@/zustand/hooks/useAuth";
 import { RegisterReq } from "@/zustand/types/authT";
-import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
-import { useRegisterStore } from "@/zustand/stores/authStore";
 const Register = () => {
-  const registerZ = useRegister();
-  const { setEmail } = useRegisterStore();
-
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { currentLocal } = useLocalization();
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    watch,
-    setError,
-    formState: { errors },
-  } = useForm<RegisterReq>({
+  const methods = useForm<RegisterReq>({
     defaultValues: {
       name: "",
       email: "",
@@ -37,39 +23,25 @@ const Register = () => {
     },
   });
 
+  const registerZ = useRegister(methods);
+
   /**
    * Function to handle form submission
    * 
    * @param data - Form data containing user registration information
    * @returns {Promise<void>}
-   */
+  */
   const onSubmit = async (data: RegisterReq): Promise<void> => {
     const newData = {
       ...data,
       language: currentLocal,
     };
 
-    registerZ.mutate(newData, {
-      onSuccess: (res) => {
-        setEmail(res.result.email);
-        navigate("/register/success",);
-      }
-    });
+    registerZ.mutateAsync(newData);
   };
 
-  /**
-   * Effect to handle registration errors
-   * 
-   * If there are errors during registration, set the appropriate error messages.
-   */
-  useEffect(() => {
-    if (registerZ.error?.errors) {
-      mapApiErrorsToForm(registerZ.error.errors, setError);
-    }
-  }, [registerZ.error, setError]);
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={methods.handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         <Input
           label={t('register.label.name')}
@@ -78,12 +50,12 @@ const Register = () => {
           type="text"
           icon={<UserIcon className="h-5 w-5 " />}
           rules={{
-            register,
+            register: methods.register,
             name: "name",
             options: {
               required: t('register.error.required.name')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <Input
@@ -93,23 +65,23 @@ const Register = () => {
           type="email"
           icon={<Mail className="h-5 w-5 " />}
           rules={{
-            register,
+            register: methods.register,
             name: "email",
             options: {
               required: t('register.error.required.email')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <PhoneNumber
           label={t('register.label.phone')}
           rules={{
-            control,
+            control: methods.control,
             name: "phone",
             options: {
               required: t('register.error.required.phone')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <Input
@@ -119,12 +91,12 @@ const Register = () => {
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
           rules={{
-            register,
+            register: methods.register,
             name: "password",
             options: {
               required: t('register.error.required.password')
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
         <Input
@@ -134,17 +106,17 @@ const Register = () => {
           type="password"
           icon={<LockIcon className="h-5 w-5 " />}
           rules={{
-            register,
+            register: methods.register,
             name: "password_confirmation",
             options: {
               required: t('register.error.required.passwordConfirmation'),
               validate: (value) => {
-                if (value !== watch("password")) {
+                if (value !== methods.watch("password")) {
                   return t('register.error.required.passwordConfirmationMismatch')
                 }
               },
             },
-            errors,
+            errors: methods.formState.errors,
           }}
         />
       </CardContent>

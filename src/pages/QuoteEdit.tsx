@@ -40,7 +40,7 @@ const defaultQuotationData: QuotationReq = {
   total_amount: 0
 };
 
-const handleFormatData = (data: QuotationReq) => {
+const appendQuotation = (data: QuotationReq) => {
   return {
     ...data,
     address: flattenAddressToObject(data.address),
@@ -73,11 +73,11 @@ const QuoteEdit = () => {
   });
 
   const handleStore = async (data: QuotationReq) => {
-    await createQuotationZ.mutateAsync(handleFormatData(data));
+    await createQuotationZ.mutateAsync(appendQuotation(data));
   };
 
   const handleUpdate = async (data: QuotationReq) => {
-    await updateQuotationZ.mutateAsync({ id: id || "", formData: handleFormatData(data) });
+    await updateQuotationZ.mutateAsync({ id: id || "", formData: appendQuotation(data) });
   }
 
   useEffect(() => {

@@ -77,4 +77,60 @@ export const InvoiceStatusMap: Record<
     cancelled: { label: "Geannuleerd", variant: "secondary" },
     with_bailiff: { label: "Bij deurwaarder", variant: "warning" },
     lawsuit: { label: "Rechtszaak", variant: "destructive" },
-};  
+};
+
+
+export type InvoiceCreditType = "full" | "partial";
+
+export type InvoiceSendReq = {
+    id: string;
+    email: string;
+    subject: string;
+    message: string;
+    cc?: string;
+}
+export type InvoiceSendRes = {
+    id: string;
+    invoice_number: string;
+    leads: LeadRes[];
+    description: string;
+    notes: string;
+    expiration_date: string;
+    status: InvoiceStatus;
+    address: AddressRes;
+    items: InvoiceItemRes[];
+    subtotal: number;
+    discount_amount: number;
+    discount_type: string;
+    total_amount: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export type InvoiceCreditReq = {
+    id: string;
+    type: InvoiceCreditType;
+}
+export type InvoiceCreditRes = {
+    id: string;
+    invoice_number: string;
+    leads: LeadRes[];
+    description: string;
+    notes: string;
+    expiration_date: string;
+    status: InvoiceStatus;
+    address: AddressRes;
+    items: InvoiceItemRes[];
+    subtotal: number;
+    discount_amount: number;
+    discount_type: string;
+    total_amount: number;
+    created_at: string;
+    updated_at: string;
+}
+
+
+export type InvoiceSummaryRes = {
+    total_amount: 0.00;
+    total_paid: 0.00;
+}

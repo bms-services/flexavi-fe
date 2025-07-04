@@ -9,13 +9,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { InvoiceRes } from "@/zustand/types/invoiceT";
+import { InvoiceCreditType, InvoiceRes } from "@/zustand/types/invoiceT";
 
 interface CreditInvoiceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   invoice: InvoiceRes;
-  onSubmit: (type: "full" | "partial") => void;
+  onSubmit: (type: InvoiceCreditType) => void;
 }
 
 export const CreditInvoiceDialog: React.FC<CreditInvoiceDialogProps> = ({

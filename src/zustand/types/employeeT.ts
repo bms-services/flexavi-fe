@@ -29,6 +29,26 @@ export type EmployeeRes = {
 }
 
 
+export type EmployeeInvitationRes = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    company_user_role_id: string;
+    work_days: string[];
+    start_time: string;
+    end_time: string;
+    created_at: string;
+    status: EmployeeInvitationStatus;
+    updated_at: string;
+    company_user_role: {
+        id: string;
+        name: string;
+    }
+}
+
+
+
 export type EmployeeRate = {
     hourly_rate: number;
     daily_rate: number;

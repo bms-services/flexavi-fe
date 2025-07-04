@@ -11,21 +11,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
-import { InvoiceRes } from "@/zustand/types/invoiceT";
+import { InvoiceRes, InvoiceSendReq } from "@/zustand/types/invoiceT";
+import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface SendInvoiceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   invoice: InvoiceRes;
-  onSubmit: () => void;
 }
 
 export const SendInvoiceDialog: React.FC<SendInvoiceDialogProps> = ({
   open,
   onOpenChange,
   invoice,
-  onSubmit,
 }) => {
+  const { t } = useTranslation();
+
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<InvoiceSendReq>();
+
   if (!invoice) return null;
 
   return (
@@ -43,27 +50,65 @@ export const SendInvoiceDialog: React.FC<SendInvoiceDialogProps> = ({
             name="to"
             label="E-mailadres"
             placeholder="email@voorbeeld.nl"
+            rules={{
+              register,
+              name: "email",
+              options: {
+                required: t('invoice.error.required.email'),
+              },
+              errors,
+            }}
+          />
+          <Input
+            id="cc"
+            name="cc"
+            label="CC E-mailadres (optioneel)"
+            placeholder="email@voorbeeld.nl"
+            rules={{
+              register,
+              name: "cc",
+              options: {
+                required: t('invoice.error.required.cc'),
+              },
+              errors,
+            }}
           />
           <Input
             id="subject"
             name="subject"
             label="Onderwerp"
             placeholder={`Factuur ${invoice.invoice_number} verzenden`}
+            rules={{
+              register,
+              name: "subject",
+              options: {
+                required: t('invoice.error.required.subject'),
+              },
+              errors,
+            }}
           />
           <Textarea
             id="message"
             name="message"
             label="Bericht"
-
             placeholder="Geachte heer/mevrouw, Hierbij sturen wij u de factuur..."
             rows={5}
+            rules={{
+              register,
+              name: "message",
+              options: {
+                required: t('invoice.error.required.message'),
+              },
+              errors,
+            }}
           />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Annuleren
           </Button>
-          <Button onClick={onSubmit}>Verzenden</Button>
+          <Button type="submit">
+            Verzenden</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

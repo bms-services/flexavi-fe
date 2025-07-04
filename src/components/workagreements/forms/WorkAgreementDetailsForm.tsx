@@ -41,12 +41,16 @@ export const WorkAgreementDetailsForm: React.FC = () => {
     }));
   }, [debouncedSearch]);
   const handleSelectQuotation = (quotationId: string) => {
-    const currentQuotes = watch("quotes") || [];
-    if (currentQuotes.includes(quotationId)) {
-      setValue("quotes", currentQuotes.filter((id) => id !== quotationId));
-    } else {
-      setValue("quotes", [...currentQuotes, quotationId]);
-    }
+    // TODO: Implement for multiple 
+    // const currentQuotes = watch("quotes") || [];
+    // if (currentQuotes.includes(quotationId)) {
+    //   setValue("quotes", currentQuotes.filter((id) => id !== quotationId));
+    // } else {
+    //   setValue("quotes", [...currentQuotes, quotationId]);
+    // }
+
+    // For now, only allow one quotation to be selected
+    setValue("quotes", [quotationId]);
   };
 
   return (

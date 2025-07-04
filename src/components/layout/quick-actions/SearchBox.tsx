@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 
 export const SearchBox = () => {
   return (
-    <div className="relative hidden md:block w-48 lg:w-64">
+    <div className="relative md:block w-48 lg:w-64">
       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
       <Input
         type="search"

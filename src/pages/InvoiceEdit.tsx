@@ -13,9 +13,9 @@ import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { InvoiceHeader } from "@/components/invoices/header/InvoiceHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { FormProvider, useForm } from "react-hook-form";
-import { InvoiceReq, InvoiceStatusMap } from "@/zustand/types/invoiceT";
+import { InvoiceCreditReq, InvoiceCreditType, InvoiceReq, InvoiceSendReq, InvoiceStatusMap } from "@/zustand/types/invoiceT";
 import { flattenAddressToObject } from "@/utils/dataTransform";
-import { useCreateInvoice, useGetInvoice, useUpdateInvoice } from "@/zustand/hooks/useInvoice";
+import { useCreateInvoice, useCreditInvoice, useGetInvoice, useSendInvoice, useUpdateInvoice } from "@/zustand/hooks/useInvoice";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { useEffect, useState } from "react";
 import { SendInvoiceDialog } from "@/components/invoices/SendInvoiceDialog";
@@ -41,12 +41,21 @@ const defaultInvoiceData: InvoiceReq = {
   total_amount: 0
 };
 
+const defaultInvoiceSendData: InvoiceSendReq = {
+  id: "",
+  subject: "",
+  message: "",
+  email: "",
+};
+
 const InvoiceEdit = () => {
   const { id } = useParams<{ id: string }>();
 
   const createInvoiceZ = useCreateInvoice();
   const updateInvoiceZ = useUpdateInvoice();
   const getInvoiceZ = useGetInvoice(id || "");
+  const creditInvoiceZ = useCreditInvoice();
+  const sendInvoiceZ = useSendInvoice();
 
   const [modal, setModal] = useState({
     credit: false,
@@ -56,6 +65,10 @@ const InvoiceEdit = () => {
 
   const methods = useForm<InvoiceReq>({
     defaultValues: defaultInvoiceData,
+  });
+
+  const methodsSend = useForm<InvoiceSendReq>({
+    defaultValues: defaultInvoiceSendData,
   });
 
   const handleStore = async (data: InvoiceReq) => {
@@ -116,14 +129,18 @@ const InvoiceEdit = () => {
     await updateInvoiceZ.mutateAsync({ id: id || "", formData: formattedData });
   }
 
-  const handleSendInvoice = async (data) => {
-    if (!id) return;
-    await createInvoiceZ.mutateAsync(data);
+  const handleOpenModal = (type: "send" | "credit") => {
+    setModal((prev) => ({ ...prev, [type]: true }));
   };
 
-  const handleCreditInvoice = async (type: "full" | "partial") => {
+  const handleSendInvoice = async (data: InvoiceSendReq) => {
     if (!id) return;
-    await createInvoiceZ.mutateAsync({ id, type });
+    await sendInvoiceZ.mutateAsync(data);
+  };
+
+  const handleCreditInvoice = async (type: InvoiceCreditType) => {
+    if (!id) return;
+    await creditInvoiceZ.mutateAsync({ id, type });
   };
 
 
@@ -166,7 +183,7 @@ const InvoiceEdit = () => {
             <InvoiceHeader
               isEditing={!!id}
               loadingSubmit={createInvoiceZ.isPending || updateInvoiceZ.isPending}
-
+              handleOpenModal={handleOpenModal}
             />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <CustomerCard />
@@ -195,15 +212,20 @@ const InvoiceEdit = () => {
       </FormProvider>
 
       {getInvoiceZ.isSuccess && getInvoiceZ.data.result && (
-        <SendInvoiceDialog
-          open={modal.send}
-          onOpenChange={(open) => setModal((prev) => ({ ...prev, send: open }))}
-          invoice={getInvoiceZ.data.result}
-          onSubmit={handleSendInvoice}
-        />
+        <FormProvider {...methods}>
+          <form onSubmit={methodsSend.handleSubmit(handleSendInvoice)}>
+            <SendInvoiceDialog
+              open={modal.send}
+              onOpenChange={(open) => setModal((prev) => ({ ...prev, send: open }))}
+              invoice={getInvoiceZ.data.result}
+            />
+          </form>
+        </FormProvider>
       )}
+
       {getInvoiceZ.isSuccess && getInvoiceZ.data.result && (
-        <CreditInvoiceDialog open={false}
+        <CreditInvoiceDialog
+          open={modal.credit}
           onOpenChange={(open) => setModal((prev) => ({ ...prev, credit: open }))}
           invoice={getInvoiceZ.data?.result}
           onSubmit={handleCreditInvoice}

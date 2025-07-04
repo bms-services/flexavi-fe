@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import { useRegister } from "@/zustand/hooks/useAuth";
 import { useRegisterStore } from "@/zustand/stores/authStore";
 import { useEffect } from "react";
 

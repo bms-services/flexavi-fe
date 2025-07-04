@@ -4,9 +4,10 @@ import { InvoicesHeader } from "@/components/invoices/InvoicesHeader";
 import { InvoiceTable } from "@/components/invoices/InvoiceTable";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { useState } from "react";
-import { useDeleteInvoice, useGetInvoices } from "@/zustand/hooks/useInvoice";
+import { useDeleteInvoice, useGetInvoices, useGetInvoiceSummary } from "@/zustand/hooks/useInvoice";
 import { InvoiceRes } from "@/zustand/types/invoiceT";
 import { useNavigate } from "react-router-dom";
+import { InvoiceKPIs } from "@/components/invoices/InvoiceKPIs";
 
 const InvoicesMain = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const InvoicesMain = () => {
 
   const getInvoicesZ = useGetInvoices(params);
   const deleteInvoiceZ = useDeleteInvoice();
+  const getInvoiceSummaryZ = useGetInvoiceSummary();
 
   const handleCreate = () => {
     navigate("/invoices/create");
@@ -43,11 +45,9 @@ const InvoicesMain = () => {
     <Layout>
       <div className="px-[24px] py-6 space-y-6">
         <InvoicesHeader onCreateNewInvoice={handleCreate} />
-        {/* <InvoiceKPIs
-          total={kpis.total}
-          paid={kpis.paid}
-          outstanding={kpis.outstanding}
-        /> */}
+        <InvoiceKPIs
+          getInvoiceSummaryZ={getInvoiceSummaryZ}
+        />
 
         <InvoiceTable
           params={params}

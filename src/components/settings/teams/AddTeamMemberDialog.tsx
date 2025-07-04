@@ -57,9 +57,11 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nieuwe medewerker toevoegen</DialogTitle>
+          <DialogTitle>
+            {t("settings.teams.add_member")}
+          </DialogTitle>
           <DialogDescription>
-            Vul de gegevens van de nieuwe medewerker in.
+            {t("settings.teams.add_member_description")}
           </DialogDescription>
         </DialogHeader>
 

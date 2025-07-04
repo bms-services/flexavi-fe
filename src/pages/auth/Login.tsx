@@ -32,7 +32,7 @@ const Login = () => {
    * @returns {Promise<void>}
    */
   const onSubmit = async (data: LoginReq): Promise<void> => {
-    loginZ.mutate(data);
+    loginZ.mutateAsync(data);
   };
 
   return (

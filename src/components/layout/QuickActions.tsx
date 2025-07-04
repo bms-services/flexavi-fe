@@ -1,10 +1,10 @@
 
-import React from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { SearchBox } from './quick-actions/SearchBox';
 import { QuickActionsList } from './quick-actions/QuickActionsList';
 import { NotificationsPopover } from './quick-actions/NotificationsPopover';
 import { UserMenu } from './quick-actions/UserMenu';
+import LocalizationToggle from '../ui/localization-toggle';
 
 const QuickActions = () => {
   return (
@@ -17,8 +17,10 @@ const QuickActions = () => {
 
           <div className="flex items-center gap-1 md:gap-3">
             <SearchBox />
+            <LocalizationToggle isDashboard />
             <NotificationsPopover />
             <UserMenu />
+
           </div>
         </div>
       </div>

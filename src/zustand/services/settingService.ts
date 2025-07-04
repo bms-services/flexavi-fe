@@ -3,7 +3,7 @@ import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
-import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
+import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
 
 // Company
@@ -95,7 +95,7 @@ export const deleteMyEmployeeService = async (id: string): Promise<ApiSuccess<Em
 }
 
 // Employee Invitation
-export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
+export const getInvitedEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeInvitationRes>> => {
     const { data } = await mainApi.get("/setting/company/invitation/employee", { params });
     if (!data.success) throw data;
     return data;

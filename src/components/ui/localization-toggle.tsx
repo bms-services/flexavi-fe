@@ -2,7 +2,7 @@ import { Toggle } from "./toggle";
 import { useLocalization } from "@/hooks/useLocalization";
 import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 
-export default function LocalizationToggle() {
+export default function LocalizationToggle({ isDashboard = false }: { isDashboard?: boolean }) {
     const { currentLocal, onChangeLocal } = useLocalization();
 
     enum LocalE {
@@ -12,7 +12,7 @@ export default function LocalizationToggle() {
 
     return (
         <Toggle
-            className="absolute top-4 right-4"
+            className={isDashboard ? "" : "absolute top-4 right-4 $"}
             onPressedChange={onChangeLocal}
             pressed={currentLocal === LocalE.EN}
             aria-label="Toggle language"

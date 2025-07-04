@@ -19,8 +19,9 @@ import { WorkAgreementAttachments } from "@/components/workagreements/forms/atta
 import { FormProvider, useForm } from "react-hook-form";
 import { WorkAgreementPaymentMethod, WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
+import { useGetQuotation } from "@/zustand/hooks/useQuotation";
 
 const defaultWorkAgreement: WorkAgreementReq = {
   leads: [],
@@ -55,7 +56,7 @@ const defaultWorkAgreement: WorkAgreementReq = {
   attachments: []
 };
 
-const buildFormData = (data: WorkAgreementReq): FormData => {
+const appendWorkContract = (data: WorkAgreementReq): FormData => {
   const formData = new FormData();
 
   // leads[]
@@ -135,21 +136,26 @@ const buildFormData = (data: WorkAgreementReq): FormData => {
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
-  const createWorkAgreementZ = useCreateWorkAgreement();
-  const updateWorkAgreementZ = useUpdateWorkAgreement();
-  const getWorkAgreementZ = useGetWorkAgreement(id || "");
 
   const methods = useForm<WorkAgreementReq>({
     defaultValues: defaultWorkAgreement,
   });
 
+  const quotes = methods.watch("quotes");
+
+  const createWorkAgreementZ = useCreateWorkAgreement();
+  const updateWorkAgreementZ = useUpdateWorkAgreement();
+  const getWorkAgreementZ = useGetWorkAgreement(id || "");
+  const getQuotationZ = useGetQuotation(quotes && quotes.length > 0 ? quotes[0] : "");
+
+
   const handleStore = async (data: WorkAgreementReq) => {
-    const formData = buildFormData(data);
+    const formData = appendWorkContract(data);
     await createWorkAgreementZ.mutateAsync(formData);
   };
 
   const handleUpdate = async (data: WorkAgreementReq) => {
-    const formData = buildFormData(data);
+    const formData = appendWorkContract(data);
     formData.append("_method", "PATCH");
     await updateWorkAgreementZ.mutateAsync({ id: id || "", formData });
   };
@@ -202,6 +208,22 @@ const WorkAgreementEdit = () => {
       });
     }
   }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data]);
+
+
+  // load if quotation is selected
+  useEffect(() => {
+    if (getQuotationZ.isSuccess && getQuotationZ.data.result) {
+      const data = getQuotationZ.data.result;
+      methods.setValue("items", data.items.map(item => ({
+        ...item,
+        quantity: Number(item.quantity),
+        unit_price: Number(item.unit_price),
+        vat_amount: Number(item.vat_amount),
+        total: Number(item.total),
+      })));
+    }
+  }, [getQuotationZ.isSuccess, getQuotationZ.data, methods]);
+
 
   return (
     <Layout>

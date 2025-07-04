@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
 import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
-import { EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
+import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
 
 import {
@@ -43,6 +43,8 @@ import {
     getMyAgendaColorSettingsService,
     updateMyAgendaColorSettingsService
 } from "../services/settingService";
+import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { UseFormReturn } from "react-hook-form";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -141,20 +143,26 @@ export const useDeleteMyEmployee = () => {
 
 // ------ Employee Invitation ------ \\
 export const useGetInvitedEmployees = (params: ParamGlobal) => {
-    return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
+    return useQuery<ApiSuccessPaginated<EmployeeInvitationRes>, ApiError>({
         queryKey: ['invited-employees', params],
         queryFn: () => getInvitedEmployeesService(params),
     });
 };
-export const useInviteEmployee = () => {
+
+export const useInviteEmployee = (methods: UseFormReturn<EmployeeReq, ApiError, EmployeeReq>) => {
     const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, EmployeeReq>({
         mutationFn: inviteEmployeeService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['invited-employees'] });
+            methods.reset();
         },
+        onError: (error) => {
+            mapApiErrorsToForm(error.errors, methods.setError);
+        }
     });
 };
+
 export const useResendInviteEmployee = () => {
     const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
@@ -164,6 +172,7 @@ export const useResendInviteEmployee = () => {
         },
     });
 };
+
 export const useCancelInvitedEmployee = () => {
     const queryClient = useQueryClient();
     return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({

@@ -1,49 +1,91 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { forgotPasswordService, loginService, logoutService, registerService, registerEmployeeService, verifyRegisterEmployeeService, resetPasswordService, verifyResetPasswordService } from "@/zustand/services/authService";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { ForgotPasswordReq, ForgotPasswordRes, LoginReq, LoginRes, LogoutRes, RegisterEmployeeReq, RegisterEmployeeRes, RegisterReq, RegisterRes, ResetPasswordReq, ResetPasswordRes, VerifyRegisterEmployeeRes, VerifyRegisterEmployeeReq, VerifyResetPasswordReq, VerifyResetPasswordRes } from "@/zustand/types/authT";
+import { ForgotPasswordReq, ForgotPasswordRes, LoginReq, LoginRes, LogoutRes, RegisterEmployeeReq, RegisterEmployeeRes, RegisterReq, RegisterRes, ResetPasswordReq, ResetPasswordRes, VerifyRegisterEmployeeRes, VerifyResetPasswordReq, VerifyResetPasswordRes } from "@/zustand/types/authT";
 import { ApiError, ApiSuccess } from "@/zustand/types/apiT";
+import { useAuthStore, useRegisterStore } from "../stores/authStore";
+import { useNavigate } from "react-router-dom";
+import { UseFormReturn } from "react-hook-form";
+import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
+import { useEffect } from "react";
 
 export const useLogin = () => {
-    const login = useAuthStore((s) => s.login);
+    const { setLogin } = useAuthStore();
+
     return useMutation<ApiSuccess<LoginRes>, ApiError, LoginReq>({
         mutationFn: loginService,
         onSuccess: (res) => {
-            login(res);
+            setLogin(res);
         },
     });
 };
 
-export const useRegister = () => {
+export const useRegister = (methods: UseFormReturn<RegisterReq, ApiError, RegisterReq>) => {
+    const navigate = useNavigate();
+    const { setEmail } = useRegisterStore();
+
     return useMutation<ApiSuccess<RegisterRes>, ApiError, RegisterReq>({
         mutationFn: registerService,
+        onSuccess: (res) => {
+            setEmail(res.result.email);
+            navigate("/register/success",);
+        },
+        onError: (error) => {
+            mapApiErrorsToForm(error.errors, methods.setError);
+        }
     });
 };
 
-export const useRegisterEmployee = () => {
+export const useRegisterEmployee = (methods: UseFormReturn<RegisterEmployeeReq, ApiError, RegisterEmployeeReq>
+) => {
+    const navigate = useNavigate();
+    const { setEmail } = useRegisterStore();
+
     return useMutation<ApiSuccess<RegisterEmployeeRes>, ApiError, RegisterEmployeeReq>({
         mutationFn: registerEmployeeService,
+        onSuccess: (res) => {
+            setEmail(res.result.email);
+            navigate("/register/success");
+        },
+        onError: (error) => {
+            mapApiErrorsToForm(error.errors, methods.setError);
+        }
     });
 };
 
-export const useVerifyRegisterEmployee = (token: string) => {
-    return useQuery<ApiSuccess<VerifyRegisterEmployeeRes>, ApiError>({
+export const useVerifyRegisterEmployee = (token: string, methods: UseFormReturn<RegisterEmployeeReq, ApiError, RegisterEmployeeReq>) => {
+    const navigate = useNavigate();
+    const query = useQuery<ApiSuccess<VerifyRegisterEmployeeRes>, ApiError>({
         queryKey: ['verify-register-employee', token],
         queryFn: () => verifyRegisterEmployeeService(token),
         enabled: (token) => !!token,
         retry: false,
     });
+
+    useEffect(() => {
+        if (query.isSuccess && query.data) {
+            const { name, email, phone } = query.data.result;
+            methods.setValue("name", name);
+            methods.setValue("email", email);
+            methods.setValue("phone", phone);
+        }
+
+        if (query.isError) {
+            navigate("/login");
+        }
+    }, [query.isSuccess, query.isError, query.data, methods, navigate]);
+    return query;
 };
 
 export const useLogout = () => {
-    const logout = useAuthStore((s) => s.logout);
+    const { setLogout } = useAuthStore();
+
     return useMutation<ApiSuccess<LogoutRes>, ApiError>({
         mutationFn: logoutService,
         onSuccess: () => {
-            logout();
+            setLogout();
         },
-        onError: (error) => {
-            logout();
+        onError: () => {
+            setLogout();
         }
     });
 };

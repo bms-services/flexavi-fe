@@ -4,6 +4,7 @@ import { requestEmailVerificationMyProfileService, showMyProfileService, updateM
 import { ProfileReq, ProfileRes } from "../types/profileT";
 
 export const useShowMyProfile = () => {
+    // const profile = 
     return useQuery<ApiSuccess<ProfileRes>, ApiError>({
         queryKey: ['my-profile'],
         queryFn: showMyProfileService,

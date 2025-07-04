@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Save, RefreshCcw, Send } from "lucide-react";
@@ -9,13 +9,11 @@ interface InvoiceHeaderProps {
   isEditing: boolean;
   loadingSubmit?: boolean;
   invoiceNumber?: string;
-  handleOpenCreditDialog?: () => void;
-  handleOpenSendDialog?: () => void;
+  handleOpenModal: (type: "send" | "credit") => void;
 }
 
-export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, loadingSubmit, invoiceNumber, handleOpenCreditDialog, handleOpenSendDialog }) => {
+export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, loadingSubmit, invoiceNumber, handleOpenModal }) => {
   const navigate = useNavigate();
-
   return (
     <>
       <div className="flex items-center mb-3">
@@ -38,11 +36,11 @@ export const InvoiceHeader: React.FC<InvoiceHeaderProps> = ({ isEditing, loading
         <div className="flex flex-wrap gap-2">
           {isEditing && (
             <>
-              <Button type="button" variant="outline" onClick={handleOpenCreditDialog}>
+              <Button type="button" variant="outline" onClick={() => handleOpenModal("credit")}>
                 <RefreshCcw className="mr-2 h-4 w-4" />
                 Crediteer factuur
               </Button>
-              <Button type="button" variant="outline" onClick={handleOpenSendDialog}>
+              <Button type="button" variant="outline" onClick={() => handleOpenModal("send")}>
                 <Send className="mr-2 h-4 w-4" />
                 Verzend factuur
               </Button>

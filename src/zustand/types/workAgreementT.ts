@@ -78,7 +78,6 @@ export type WorkContractExclusionsRes = {
 
 export type WorkAgreementItemReq = {
     id?: string;
-    percentage: number;
     product_id?: string;
     unit?: string;
     title: string;

@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { EmployeeReq, EmployeeRole, EmployeeRoleEnum, EmployeeRoleMap } from "@/zustand/types/employeeT";
+import { EmployeeReq, EmployeeRole, EmployeeRoleMap } from "@/zustand/types/employeeT";
 import { UserIcon, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PhoneNumber from "@/components/ui/phone-number";
@@ -27,40 +27,30 @@ import {
   useGetCompanyRoles,
   useGetMyWorkDays,
 } from "@/zustand/hooks/useSetting";
+import { ApiError } from "@/zustand/types/apiT";
 
 interface InviteEmployeeProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (employee: EmployeeReq) => void;
+  methods: UseFormReturn<EmployeeReq, ApiError, EmployeeReq>
+
 }
 
-const defaultValues: EmployeeReq = {
-  email: "",
-  name: "",
-  phone: "",
-  company_user_role_id: "",
-  work_days: [],
-  start_time: "09:00",
-  end_time: "17:00",
-};
 
 export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
   open,
   onOpenChange,
   onSubmit,
+  methods,
 }) => {
   const { t } = useTranslation("dashboard");
 
   const getCompanyRolesZ = useGetCompanyRoles({ page: 1, per_page: 100 });
   const getMyWorkDaysZ = useGetMyWorkDays({ page: 1, per_page: 100 });
 
-  const form = useForm<EmployeeReq>({
-    defaultValues,
-    mode: "onSubmit",
-  });
-
-  const watchStart = form.watch("start_time");
-  const watchEnd = form.watch("end_time");
+  const watchStart = methods.watch("start_time");
+  const watchEnd = methods.watch("end_time");
 
   const handleRoleName = (role: EmployeeRole) => {
     if (EmployeeRoleMap[role]) {
@@ -79,8 +69,8 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
             <Input
               label={t("settings.teamMember.label.name")}
               placeholder={t("settings.teamMember.placeholder.name")}
@@ -88,12 +78,12 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               type="text"
               icon={<UserIcon className="h-5 w-5" />}
               rules={{
-                register: form.register,
+                register: methods.register,
                 name: "name",
                 options: {
                   required: t("settings.teamMember.error.required.name"),
                 },
-                errors: form.formState.errors,
+                errors: methods.formState.errors,
               }}
             />
 
@@ -104,29 +94,29 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               type="email"
               icon={<Mail className="h-5 w-5" />}
               rules={{
-                register: form.register,
+                register: methods.register,
                 name: "email",
                 options: {
                   required: t("settings.teamMember.error.required.email"),
                 },
-                errors: form.formState.errors,
+                errors: methods.formState.errors,
               }}
             />
 
             <PhoneNumber
               label={t("settings.teamMember.label.phone")}
               rules={{
-                control: form.control,
+                control: methods.control,
                 name: "phone",
                 options: {
                   required: t("settings.teamMember.error.required.phone"),
                 },
-                errors: form.formState.errors,
+                errors: methods.formState.errors,
               }}
             />
 
             <FormField
-              control={form.control}
+              control={methods.control}
               name="company_user_role_id"
               rules={{
                 required: t("settings.teamMember.error.required.role"),
@@ -162,7 +152,7 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
             />
 
             <FormField
-              control={form.control}
+              control={methods.control}
               name="work_days"
               rules={{
                 required: t("settings.teamMember.error.required.workingDays"),
@@ -210,7 +200,7 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
-                control={form.control}
+                control={methods.control}
                 name="start_time"
                 rules={{
                   required: t("settings.teamMember.error.required.startTime"),
@@ -230,7 +220,7 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
               />
 
               <FormField
-                control={form.control}
+                control={methods.control}
                 name="end_time"
                 rules={{
                   required: t("settings.teamMember.error.required.endTime"),
