@@ -1,12 +1,10 @@
 import React, { } from "react";
-import { Button } from "@/components/ui/button";
-import { Save, XCircle } from "lucide-react";
 
 import { ReceiptSection } from "./form-sections/ReceiptSection";
-import { ExpenseReq, ExpenseRes, ExpenseStatusMap } from "@/zustand/types/expenseT";
+import { ExpenseReq, ExpenseStatusMap } from "@/zustand/types/expenseT";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
+import { ErrorOption, FieldArray, FieldArrayPath, FieldError, FieldErrors, FieldName, FieldValues, FormState, InternalFieldName, ReadFormState, RegisterOptions, SubmitErrorHandler, SubmitHandler, useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -18,6 +16,8 @@ import {
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { InputCurrency } from "../ui/input-currency";
+import { Dropzone } from "../ui/drop-zone/Dropzone";
+import { DropZoneAlpha } from "../ui/drop-zone-alpha/DropzoneAlpha";
 
 interface ExpenseFormProps {
   isEditing?: boolean;
@@ -195,7 +195,25 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
           </div>
         </CardContent>
       </Card>
-      <ReceiptSection isEditing={isEditing} />
+      {/* <ReceiptSection isEditing={isEditing} /> */}
+
+      <DropZoneAlpha
+        name="attachments"
+        label="Upload Files"
+        multiple={true}
+        accept={{
+          "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+          "application/pdf": [".pdf"],
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+          "application/vnd.ms-excel": [".xls", ".xlsx"],
+          "text/plain": [".txt"],
+        }}
+        rules={{
+          required: "Wajib upload minimal 1 file",
+          validate: (files: File[]) =>
+            files.length <= 5 || "Maksimal 5 file",
+        }}
+      />
     </div>
   );
 };
