@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
 import { useNavigate } from "react-router-dom";
-import { Expense } from "@/types/expenses";
 import { FormProvider, useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseReq } from "@/zustand/types/expenseT";
@@ -79,13 +78,6 @@ const ExpenseDetailPage = () => {
   //   return <NotFound />;
   // }
 
-  const handleSave = (expenseData: Partial<Expense>) => {
-    // In a real app, we would make an API call to update the expense
-    // const updated = { ...currentExpense, ...updatedExpense };
-    // setCurrentExpense(updated);
-    // setIsEditing(false);
-  };
-
   const handleStore = async (data: ExpenseReq) => {
     await createExpenseZ.mutateAsync(data);
   };
@@ -93,7 +85,6 @@ const ExpenseDetailPage = () => {
   const handleUpdate = async (data: ExpenseReq) => {
     await updateExpenseZ.mutateAsync({ id: id || "", formData: data });
   };
-
 
   const handleStatus = (newStatus: ExpenseRes["status"]) => {
     const updated = { ...currentExpense, status: newStatus };

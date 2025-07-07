@@ -5,6 +5,7 @@ import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
+import { AttachmentRes } from "../types/attachmentT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -186,4 +187,26 @@ export const updateMyAgendaColorSettingsService = async (formData: AgendaSetting
     const { data } = await mainApi.put("/setting/agenda/color/update", formData);
     if (!data.success) throw data;
     return data;
-};  
+};
+
+// Attachment
+export const getMyAttachmentsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<AttachmentRes>> => {
+    const { data } = await mainApi.get("/setting/attachments", { params });
+    if (!data.success) throw data;
+    return data;
+};
+
+export const createMyAttachmentsService = async (formData: FormData): Promise<ApiSuccess<AttachmentRes>> => {
+    const { data } = await mainApi.post("/setting/attachments", formData);
+    if (!data.success) throw data;
+    return data;
+};
+
+export const deleteMyAttachmentsService = async (ids: string[], force: boolean): Promise<ApiSuccess<AttachmentRes[]>> => {
+    const { data } = await mainApi.delete(`/setting/attachments`, {
+        params: { force },
+        data: { ids }
+    });
+    if (!data.success) throw data;
+    return data;
+};

@@ -1,10 +1,9 @@
-import React, { } from "react";
+import React, { useEffect, useState } from "react";
 
-import { ReceiptSection } from "./form-sections/ReceiptSection";
 import { ExpenseReq, ExpenseStatusMap } from "@/zustand/types/expenseT";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useTranslation } from "react-i18next";
-import { ErrorOption, FieldArray, FieldArrayPath, FieldError, FieldErrors, FieldName, FieldValues, FormState, InternalFieldName, ReadFormState, RegisterOptions, SubmitErrorHandler, SubmitHandler, useFormContext, UseFormRegisterReturn } from "react-hook-form";
+import { Control, Controller, FieldErrors, FieldValues, useFormContext, useWatch } from "react-hook-form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -16,8 +15,7 @@ import {
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { InputCurrency } from "../ui/input-currency";
-import { Dropzone } from "../ui/drop-zone/Dropzone";
-import { DropZoneAlpha } from "../ui/drop-zone-alpha/DropzoneAlpha";
+import { DropZoneAlpha } from "../ui/drop-zone-alpha/DropZoneAlpha";
 
 interface ExpenseFormProps {
   isEditing?: boolean;
@@ -34,6 +32,22 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     setValue,
     formState: { errors },
   } = useFormContext<ExpenseReq>();
+
+  const watchedAmount = useWatch({ name: "amount", control });
+  const watchedPercentage = useWatch({ name: "percentage", control });
+
+  useEffect(() => {
+    const amount = parseFloat(String(watchedAmount));
+    const percentage = parseFloat(String(watchedPercentage));
+
+    if (!isNaN(amount) && !isNaN(percentage)) {
+      const vat = (amount * percentage) / 100;
+      const total = amount + vat;
+
+      setValue("vat_amount", parseFloat(vat.toFixed(2)));
+      setValue("total_amount", parseFloat(total.toFixed(2)));
+    }
+  }, [watchedAmount, watchedPercentage, setValue]);
 
   return (
     <div className="space-y-6">
@@ -134,7 +148,19 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 }}
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="">
+                <Label htmlFor="projectId">Project (optioneel)</Label>
+                <Select
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Koppel aan project" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Geen project</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="">
                 <Label htmlFor="type">Type uitgave</Label>
                 <Select
@@ -151,17 +177,37 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="">
-                <Label htmlFor="projectId">Project (optioneel)</Label>
-                <Select
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Koppel aan project" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Geen project</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Controller
+                  control={control}
+                  name="status"
+                  rules={{ required: t('quotation.error.required.status') }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecteer een status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ExpenseStatusMap).map(([value, option]) => (
+                          <SelectItem key={value} value={value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
+                {errors.status && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -192,28 +238,38 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 }}
               />
             </div>
+
+            <DropZoneAlpha
+              label="Upload Files"
+              multiple={true}
+              accept={{
+                "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+                "application/pdf": [".pdf"],
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+                "application/vnd.ms-excel": [".xls", ".xlsx"],
+                "text/plain": [".txt"],
+              }}
+              maxFiles={2}
+              maxSize={2 * 1024 * 1024}
+              rules={{
+                name: "attachments",
+                control: control as unknown as Control<FieldValues>,
+                options: {
+                  required: t('expense.error.required.attachments'),
+                  validate: {
+                    maxFiles: (value) => {
+                      const files = value as File[];
+                      return files.length <= 2 || t('expense.error.maxFiles.attachments');
+                    },
+                  },
+                },
+                errors: errors as FieldErrors<FieldValues>,
+              }}
+            />
           </div>
         </CardContent>
       </Card>
       {/* <ReceiptSection isEditing={isEditing} /> */}
-
-      <DropZoneAlpha
-        name="attachments"
-        label="Upload Files"
-        multiple={true}
-        accept={{
-          "image/*": [".jpg", ".jpeg", ".png", ".webp"],
-          "application/pdf": [".pdf"],
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-          "application/vnd.ms-excel": [".xls", ".xlsx"],
-          "text/plain": [".txt"],
-        }}
-        rules={{
-          required: "Wajib upload minimal 1 file",
-          validate: (files: File[]) =>
-            files.length <= 5 || "Maksimal 5 file",
-        }}
-      />
     </div>
   );
 };

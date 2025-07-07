@@ -4,6 +4,8 @@ import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
+import { AttachmentReq, AttachmentRes } from "../types/attachmentT";
+
 
 import {
     PaymentReq,
@@ -41,7 +43,10 @@ import {
     getMyAgendaSettingsService,
     updateMyAgendaSettingsService,
     getMyAgendaColorSettingsService,
-    updateMyAgendaColorSettingsService
+    updateMyAgendaColorSettingsService,
+    getMyAttachmentsService,
+    createMyAttachmentsService,
+    deleteMyAttachmentsService
 } from "../services/settingService";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import { UseFormReturn } from "react-hook-form";
@@ -271,6 +276,36 @@ export const useUpdateMyAgendaColorSettings = () => {
         mutationFn: updateMyAgendaColorSettingsService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['my-agenda-color-settings'] });
+        },
+    });
+};
+
+export const useGetMyAttachments = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<AttachmentRes>, ApiError>({
+        queryKey: ['my-attachments', params],
+        queryFn: () => getMyAttachmentsService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+};
+
+export const useCreateMyAttachments = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation<ApiSuccess<AttachmentRes>, ApiError, FormData>({
+        mutationFn: createMyAttachmentsService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['my-attachments'] });
+        },
+    });
+};
+
+export const useDeleteMyAttachment = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<AttachmentRes[]>, ApiError, { ids: string[]; force: boolean }>({
+        mutationFn: ({ ids, force }) => deleteMyAttachmentsService(ids, force),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['my-attachments'] });
         },
     });
 };

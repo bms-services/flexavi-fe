@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
 import { useNavigate } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { ExpenseReq } from "@/zustand/types/expenseT";
 import { useCreateExpense, useGetExpense, useUpdateExpense } from "@/zustand/hooks/useExpense";
 
 import { ExpenseForm } from "@/components/expenses/ExpenseForm";
 import { ExpenseHeader } from "@/components/expenses/ExpenseHeader";
+import { useEffect } from "react";
 
 const defaultExpenseData: ExpenseReq = {
   company: "",
@@ -37,12 +38,31 @@ const ExpenseEdit = () => {
   const navigate = useNavigate();
 
   const handleStore = async (data: ExpenseReq) => {
-    await createExpenseZ.mutateAsync(data);
+    await createExpenseZ.mutateAsync({
+      ...data,
+      voucher: "no_voucher",
+    });
   };
 
   const handleUpdate = async (data: ExpenseReq) => {
     await updateExpenseZ.mutateAsync({ id: id || "", formData: data });
   };
+
+
+  // useEffect(() => {
+  //   if (getExpenseZ.isSuccess && getExpenseZ.data.result) {
+  //     const data = getExpenseZ.data.result;
+  //     methods.reset({
+  //       ...data,
+  //       company: data.company.id,
+  //       due_date: data.due_date || "",
+  //       amount: Number(data.amount),
+  //       percentage: Number(data.percentage),
+  //       vat_amount: Number(data.vat_amount),
+  //       total_amount: Number(data.total_amount),
+  //     });
+  //   }
+  // }, [getExpenseZ.isSuccess, getExpenseZ.data, methods]);
 
   return (
     <Layout>
