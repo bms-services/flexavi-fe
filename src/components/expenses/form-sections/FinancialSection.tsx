@@ -10,23 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface FinancialSectionProps {
-  amount: number;
-  vatRate: number;
-  vatAmount: number;
-  totalAmount: number;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSelectChange: (name: string, value: string) => void;
-}
 
-export const FinancialSection: React.FC<FinancialSectionProps> = ({
-  amount,
-  vatRate,
-  vatAmount,
-  totalAmount,
-  onInputChange,
-  onSelectChange,
-}) => {
+export const FinancialSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -39,8 +24,6 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
             name="amount"
             type="number"
             step="0.01"
-            value={amount || ""}
-            onChange={onInputChange}
             required
           />
         </div>
@@ -48,8 +31,6 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
         <div className="space-y-2">
           <Label htmlFor="vatRate">BTW percentage</Label>
           <Select
-            value={vatRate?.toString() || "21"}
-            onValueChange={(value) => onSelectChange("vatRate", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecteer BTW" />
@@ -71,7 +52,7 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
             name="vatAmount"
             type="number"
             step="0.01"
-            value={vatAmount || ""}
+
             readOnly
             className="bg-gray-50"
           />
@@ -84,7 +65,6 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({
             name="totalAmount"
             type="number"
             step="0.01"
-            value={totalAmount || ""}
             readOnly
             className="bg-gray-50"
           />

@@ -109,9 +109,11 @@ const WorkAgreements = () => {
   return (
     <Layout>
       <div className="px-[24px] py-6 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Werkovereenkomsten</h1>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+              Werkovereenkomsten
+            </h1>
             <p className="text-muted-foreground">
               Beheer alle werkovereenkomsten op één plek
             </p>

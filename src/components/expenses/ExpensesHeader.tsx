@@ -22,28 +22,27 @@ export const ExpensesHeader: React.FC<ExpensesHeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Kosten Administratie</h1>
-          <p className="text-muted-foreground">
-            Beheer al uw uitgaven en bonnen op één plek
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleOpenModalReceipt}>
-            <Upload className="mr-2 h-4 w-4" />
-            Bon uploaden
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExportExpenses}>
-            <Download className="mr-2 h-4 w-4" />
-            Exporteren
-          </Button>
-          <Button size="sm" onClick={handleCreateExpense}>
-            <Plus className="mr-2 h-4 w-4" />
-            Nieuwe uitgave
-          </Button>
-        </div>
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex-1">
+        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+          Kosten Administratie</h1>
+        <p className="text-muted-foreground">
+          Beheer al uw uitgaven en bonnen op één plek
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" onClick={handleOpenModalReceipt}>
+          <Upload className="mr-2 h-4 w-4" />
+          Bon uploaden
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleExportExpenses}>
+          <Download className="mr-2 h-4 w-4" />
+          Exporteren
+        </Button>
+        <Button size="sm" onClick={handleCreateExpense}>
+          <Plus className="mr-2 h-4 w-4" />
+          Nieuwe uitgave
+        </Button>
       </div>
     </div>
   );

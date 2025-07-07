@@ -3,17 +3,8 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface BasicInfoSectionProps {
-  company: string;
-  description: string;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-}
 
-export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
-  company,
-  description,
-  onInputChange,
-}) => {
+export const BasicInfoSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -23,8 +14,6 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <Input
           id="company"
           name="company"
-          value={company}
-          onChange={onInputChange}
           required
         />
       </div>
@@ -36,8 +25,6 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <Input
           id="description"
           name="description"
-          value={description}
-          onChange={onInputChange}
           required
         />
       </div>

@@ -1,5 +1,4 @@
-
-import { ExpenseType } from "@/types/expenses";
+import { ExpenseType } from "@/zustand/types/expenseT";
 
 /**
  * Returns the icon name for a given expense type
@@ -8,7 +7,7 @@ export const getTypeIconName = (type: ExpenseType): string => {
   switch (type) {
     case "material": return "Box";
     case "transport": return "ShoppingCart";
-    case "equipment": return "Wrench";
+    case "tools": return "Wrench";
     case "subcontractor": return "Users";
     case "office": return "Briefcase";
     case "software": return "Menu";
@@ -29,7 +28,7 @@ export const getTypeLabel = (type: ExpenseType): string => {
   switch (type) {
     case "material": return "Materiaal";
     case "transport": return "Transport";
-    case "equipment": return "Gereedschap";
+    case "tools": return "Gereedschap";
     case "subcontractor": return "Onderaannemer";
     case "office": return "Kantoor";
     case "software": return "Software";
@@ -50,7 +49,7 @@ export const getTypeColor = (type: ExpenseType): string => {
   switch (type) {
     case "material": return "text-green-500";
     case "transport": return "text-blue-500";
-    case "equipment": return "text-yellow-500";
+    case "tools": return "text-yellow-500";
     case "subcontractor": return "text-purple-500";
     case "office": return "text-pink-500";
     case "software": return "text-indigo-500";
@@ -71,7 +70,7 @@ export const getTypeBgColor = (type: ExpenseType): string => {
   switch (type) {
     case "material": return "bg-green-100";
     case "transport": return "bg-blue-100";
-    case "equipment": return "bg-yellow-100";
+    case "tools": return "bg-yellow-100";
     case "subcontractor": return "bg-purple-100";
     case "office": return "bg-pink-100";
     case "software": return "bg-indigo-100";

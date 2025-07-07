@@ -19,7 +19,7 @@ import { WorkAgreementAttachments } from "@/components/workagreements/forms/atta
 import { FormProvider, useForm } from "react-hook-form";
 import { WorkAgreementPaymentMethod, WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
 import { useGetQuotation } from "@/zustand/hooks/useQuotation";
 
@@ -234,9 +234,7 @@ const WorkAgreementEdit = () => {
               isEditing={!!id}
               isReadOnly={!!id}
             // handleDelete={}
-
             />
-
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <CustomerCard />

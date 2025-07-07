@@ -1,156 +1,201 @@
-import React, { useState, useEffect } from "react";
+import React, { } from "react";
 import { Button } from "@/components/ui/button";
 import { Save, XCircle } from "lucide-react";
-import { ExpenseType, ExpenseStatus, Expense } from "@/types/expenses";
 
-import { BasicInfoSection } from "./form-sections/BasicInfoSection";
-import { FinancialSection } from "./form-sections/FinancialSection";
-import { MetadataSection } from "./form-sections/MetadataSection";
 import { ReceiptSection } from "./form-sections/ReceiptSection";
+import { ExpenseReq, ExpenseRes, ExpenseStatusMap } from "@/zustand/types/expenseT";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { useTranslation } from "react-i18next";
+import { useFormContext } from "react-hook-form";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { InputCurrency } from "../ui/input-currency";
 
 interface ExpenseFormProps {
-  expense?: Expense;
-  onSave: (expense: Partial<Expense>) => void;
-  onCancel: () => void;
+  isEditing?: boolean;
 }
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({
-  expense,
-  onSave,
-  onCancel,
+  isEditing = false,
 }) => {
-  const isEditing = !!expense;
-  
-  const [formData, setFormData] = useState<Partial<Expense>>({
-    company: "",
-    description: "",
-    amount: 0,
-    vatRate: 21,
-    vatAmount: 0,
-    totalAmount: 0,
-    date: new Date().toISOString().split("T")[0],
-    type: "material" as ExpenseType,
-    status: "draft" as ExpenseStatus,
-    notes: "",
-  });
-
-  useEffect(() => {
-    if (expense) {
-      setFormData({
-        ...expense,
-      });
-    }
-  }, [expense]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    
-    if (name === "amount") {
-      const amount = parseFloat(value) || 0;
-      const vatAmount = Math.round((amount * (formData.vatRate || 21)) / 100 * 100) / 100;
-      const totalAmount = amount + vatAmount;
-      
-      setFormData({
-        ...formData,
-        amount,
-        vatAmount,
-        totalAmount,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    if (name === "vatRate") {
-      const vatRate = parseInt(value) || 0;
-      const amount = formData.amount || 0;
-      const vatAmount = Math.round((amount * vatRate) / 100 * 100) / 100;
-      const totalAmount = amount + vatAmount;
-      
-      setFormData({
-        ...formData,
-        vatRate,
-        vatAmount,
-        totalAmount,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleDateSelect = (date: Date | undefined) => {
-    if (date) {
-      setFormData({
-        ...formData,
-        date: date.toISOString().split("T")[0],
-      });
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.company || !formData.description || !formData.amount) {
-      
-      return;
-    }
-    
-    onSave(formData);
-  };
+  const { t } = useTranslation();
+  const {
+    register,
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<ExpenseReq>();
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <BasicInfoSection
-            company={formData.company || ""}
-            description={formData.description || ""}
-            onInputChange={handleInputChange}
-          />
-          <FinancialSection
-            amount={formData.amount || 0}
-            vatRate={formData.vatRate || 21}
-            vatAmount={formData.vatAmount || 0}
-            totalAmount={formData.totalAmount || 0}
-            onInputChange={handleInputChange}
-            onSelectChange={handleSelectChange}
-          />
-        </div>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            {isEditing ? "Uitgave bewerken" : "Nieuwe uitgave toevoegen"}
+          </CardTitle>
+          <CardDescription>
+            {isEditing ? "Wijzig uitgave" : "Nieuwe uitgave toevoegen"}
+            <span className="text-sm text-muted-foreground">
+              Vul de details van de uitgave in om deze toe te voegen of te bewerken.
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Bedrijf"
+                id="company"
+                name="company"
+                rules={{
+                  register,
+                  name: "company",
+                  options: {
+                    required: t('expense.error.required.company'),
+                  },
+                  errors,
+                }}
+              />
+              <Input
+                id="due_date"
+                label="Geplande startdatum"
+                type="date"
+                rules={{
+                  register,
+                  name: "due_date",
+                  options: {
+                    required: t('expense.error.required.dueDate'),
+                  },
+                  errors,
+                }}
+              />
+            </div>
 
-        <div className="space-y-4">
-          <MetadataSection
-            date={formData.date || ""}
-            type={formData.type || "material"}
-            projectId={formData.projectId}
-            notes={formData.notes}
-            onDateSelect={handleDateSelect}
-            onSelectChange={handleSelectChange}
-            onInputChange={handleInputChange}
-          />
-        </div>
-      </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
+              <InputCurrency
+                id="amount"
+                label="Bedrag (excl. BTW)"
+                rules={{
+                  control,
+                  name: "amount",
+                  options: { required: t('expense.error.required.amount') },
+                  errors,
+                }}
+              />
+              <InputCurrency
+                id="percentage"
+                label="BTW percentage"
+                isPercent
+                rules={{
+                  control,
+                  name: "percentage",
+                  options: {
+                    required: t('expense.error.required.vatPercentage'),
+                    validate: {
+                      range: value => {
+                        const numValue = parseFloat(value as string);
+                        return (numValue >= 0 && numValue <= 100) || t('expense.error.range.vat');
+                      }
+                    }
+                  },
+                  errors,
+                }}
+              />
+              <InputCurrency
+                id="vat_amount"
+                label="BTW bedrag"
+                disabled={true}
+                rules={{
+                  control,
+                  name: "vat_amount",
+                  options: { required: t('expense.error.required.vat') },
+                  errors,
+                }}
+              />
+              <InputCurrency
+                id="total_amount"
+                label="Totaalbedrag (incl. BTW)"
+                disabled={true}
+                rules={{
+                  control,
+                  name: "total_amount",
+                  options: { required: t('expense.error.required.total') },
+                  errors,
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="">
+                <Label htmlFor="type">Type uitgave</Label>
+                <Select
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecteer type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(ExpenseStatusMap).map(([value, option]) => (
+                      <SelectItem key={value} value={value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="">
+                <Label htmlFor="projectId">Project (optioneel)</Label>
+                <Select
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Koppel aan project" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Geen project</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Textarea
+                label="Omschrijving"
+                id="description"
+                name="description"
+                rules={{
+                  register,
+                  name: "description",
+                  options: {
+                  },
+                  errors,
+                }}
+              />
+
+              <Textarea
+                label="Notities"
+                id="notes"
+                name="notes"
+                rows={3}
+                placeholder="Aanvullende notities voor deze uitgave..."
+                rules={{
+                  register,
+                  name: "notes",
+                  options: {},
+                  errors,
+                }}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       <ReceiptSection isEditing={isEditing} />
-
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          <XCircle className="h-4 w-4 mr-2" />
-          Annuleren
-        </Button>
-        <Button type="submit">
-          <Save className="h-4 w-4 mr-2" />
-          {isEditing ? "Wijzigingen opslaan" : "Uitgave toevoegen"}
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };

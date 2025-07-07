@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { ExpenseStatusMap, ExpenseStatus } from "@/zustand/types/expenseT";
+import { ExpenseStatus, ExpenseStatusMap } from "@/zustand/types/expenseT";
 
 export default function ExpenseStatusBadge({ status }: { status?: ExpenseStatus }) {
   if (!status) return null;

@@ -1,17 +1,15 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
-interface WorkAgreementHeaderProps {
+interface ExpenseHeaderProps {
   isEditing: boolean;
   isReadOnly: boolean;
   handleDelete?: () => void;
 }
 
-export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
+export const ExpenseHeader: React.FC<ExpenseHeaderProps> = ({
   isEditing,
   isReadOnly,
   handleDelete,
@@ -22,18 +20,18 @@ export const WorkAgreementHeader: React.FC<WorkAgreementHeaderProps> = ({
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div className="flex-1">
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          {isEditing ? "Werkovereenkomst bewerken" : "Nieuwe werkovereenkomst"}
+          {isEditing ? "Uitgave bewerken" : "Nieuwe uitgave"}
         </h1>
         <p className="text-muted-foreground">
           {isReadOnly
-            ? "Deze werkovereenkomst is ondertekend en kan niet meer worden bewerkt"
+            ? "Deze uitgave is definitief en kan niet meer worden bewerkt"
             : isEditing
-              ? "Bewerk de details van deze werkovereenkomst"
-              : "Maak een nieuwe werkovereenkomst aan na acceptatie van een offerte"}
+              ? "Bewerk de details van deze uitgave"
+              : "Maak een nieuwe uitgave aan"}
         </p>
       </div>
       <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-        <Button variant="outline" onClick={() => navigate("/workagreements")}>
+        <Button variant="outline" onClick={() => navigate("/expenses")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Terug
         </Button>

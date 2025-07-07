@@ -1,17 +1,17 @@
 
 import React from "react";
-import { 
-  Box, FileText, Wrench, Users, 
-  Receipt, ShoppingCart, Briefcase, 
-  DollarSign, Menu, CreditCard, Euro 
+import {
+  Box, FileText, Wrench, Users,
+  Receipt, ShoppingCart, Briefcase,
+  DollarSign, Menu, CreditCard, Euro
 } from "lucide-react";
-import { ExpenseType } from "@/types/expenses";
-import { 
-  getTypeIconName, 
-  getTypeLabel, 
-  getTypeColor, 
-  getTypeBgColor 
+import {
+  getTypeIconName,
+  getTypeLabel,
+  getTypeColor,
+  getTypeBgColor
 } from "@/utils/expenseUtils";
+import { ExpenseType } from "@/zustand/types/expenseT";
 
 interface ExpenseTypeIconProps {
   type: ExpenseType;
@@ -19,15 +19,15 @@ interface ExpenseTypeIconProps {
   size?: number;
 }
 
-export const ExpenseTypeIcon: React.FC<ExpenseTypeIconProps> = ({ 
-  type, 
+export const ExpenseTypeIcon: React.FC<ExpenseTypeIconProps> = ({
+  type,
   className = "",
   size = 16
 }) => {
   // Render the appropriate icon based on the type
   const renderIcon = () => {
     const iconName = getTypeIconName(type);
-    
+
     switch (iconName) {
       case "Box":
         return <Box size={size} className={className} />;

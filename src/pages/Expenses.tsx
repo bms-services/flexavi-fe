@@ -93,11 +93,11 @@ const Expenses = () => {
   }
 
   /**
-      * Handles changes to the table parameters such as pagination, sorting, and filtering.
-      * 
-      * @param changed - Partial object containing the parameters that have changed.
-      * This function merges the new parameters with the existing ones in the state.
-      */
+    * Handles changes to the table parameters such as pagination, sorting, and filtering.
+    * 
+    * @param changed - Partial object containing the parameters that have changed.
+    * This function merges the new parameters with the existing ones in the state.
+    */
   const handleParamsChange = useCallback(
     (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
     [setParams]

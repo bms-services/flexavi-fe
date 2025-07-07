@@ -60,6 +60,7 @@ import ForgotPasswordSuccessfully from '@/pages/auth/ForgotPasswordSuccessfully'
 import ResetPassword from '@/pages/auth/ResetPassword';
 import ResetPasswordSuccessfully from '@/pages/auth/ResetPasswordSuccessfully';
 import QuoteDetail from '@/pages/QuoteDetail';
+import ExpenseEdit from '@/pages/ExpenseEdit';
 
 const baseRouter = createBrowserRouter([
     {
@@ -159,6 +160,8 @@ const baseRouter = createBrowserRouter([
             { path: "invoices/edit/:id", element: <InvoiceEdit />, handle: { title: "Edit Invoice" } },
             { path: "expenses", element: <Expenses />, handle: { title: "Expenses" } },
             { path: "expenses/:id", element: <ExpenseDetail />, handle: { title: "Expense Detail" } },
+            { path: "expenses/create", element: <ExpenseEdit />, handle: { title: "Expense Detail" } },
+            { path: "expenses/edit/:id", element: <ExpenseEdit />, handle: { title: "Expense Detail" } },
             { path: "products", element: <Products />, handle: { title: "Products" } },
             { path: "partners", element: <Partners />, handle: { title: "Partners" } },
             { path: "settings", element: <Settings />, handle: { title: "Settings" } },
