@@ -22,6 +22,7 @@ import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } f
 import { useEffect } from "react";
 import { appendIfExists } from "@/utils/dataTransform";
 import { useGetQuotation } from "@/zustand/hooks/useQuotation";
+import { useGetMyAttachments } from "@/zustand/hooks/useSetting";
 
 const defaultWorkAgreement: WorkAgreementReq = {
   leads: [],
@@ -136,12 +137,18 @@ const appendWorkContract = (data: WorkAgreementReq): FormData => {
 
 const WorkAgreementEdit = () => {
   const { id } = useParams<{ id: string }>();
-
   const methods = useForm<WorkAgreementReq>({
     defaultValues: defaultWorkAgreement,
   });
 
   const quotes = methods.watch("quotes");
+
+  const getMyAttachmentsZ = useGetMyAttachments({
+    page: 1,
+    per_page: 10,
+    search: "",
+    type: "agreement",
+  });
 
   const createWorkAgreementZ = useCreateWorkAgreement();
   const updateWorkAgreementZ = useUpdateWorkAgreement();

@@ -16,7 +16,7 @@ import { GeneralTerms } from "@/components/workagreements/customer-portal/compon
 
 const defaultWorkAgreement: WorkAgreementTemplateReq = {
   warranty: 0,
-  general_term_conditions: "",
+  terms_and_conditions: "",
   total_amount: 1000,
   payment: {
     payment_method: "bank_transfer",
@@ -54,7 +54,7 @@ export const WorkAgreementSettingsForm = () => {
       methods.setValue("payment.payment_method", data.payment.payment_method as WorkAgreementPaymentMethod);
       methods.setValue("payment.total_cash", Number(data.payment.total_cash ?? 0));
       methods.setValue("payment.total_percentage", 0);
-      methods.setValue("general_term_conditions", data.general_term_conditions ?? "");
+      methods.setValue("terms_and_conditions", data.terms_and_conditions ?? "");
 
     }
   }, [getWorkAgreementTemplateZ.isSuccess, getWorkAgreementTemplateZ.data]);
@@ -103,7 +103,7 @@ export const WorkAgreementSettingsForm = () => {
                 <WorkAgreementExclusionsForm />
               </div>
             </div>
-            <GeneralTerms />
+            <GeneralTerms name="terms_and_conditions" />
             <Button type="submit" className="w-full">
               Instellingen opslaan
             </Button>

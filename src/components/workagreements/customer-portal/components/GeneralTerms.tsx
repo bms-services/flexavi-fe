@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { WorkAgreementReq } from "@/zustand/types/workAgreementT";
 import { useFormContext } from "react-hook-form";
 
-export const GeneralTerms: React.FC = () => {
+export const GeneralTerms = ({ name = "general_term_conditions" }: { name?: string }) => {
   const {
     formState: { errors },
     register
@@ -20,7 +20,7 @@ export const GeneralTerms: React.FC = () => {
         rows={8}
         rules={{
           register,
-          name: "general_term_conditions",
+          name: name as keyof WorkAgreementReq,
           options: {
             required: "Dit veld is verplicht",
             maxLength: {

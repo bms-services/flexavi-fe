@@ -49,7 +49,7 @@ export type WorkAgreementRes = {
 
 export type WorkAgreementTemplateReq = {
     warranty: number;
-    general_term_conditions: string;
+    terms_and_conditions: string;
     total_amount: number;
     payment: WorkAgreementPaymentReq;
     exclusions?: WorkAgreementsExclusionsReq[];
@@ -58,7 +58,7 @@ export type WorkAgreementTemplateReq = {
 export type WorkAgreementTemplateRes = {
     id: string;
     warranty: number;
-    general_term_conditions: string;
+    terms_and_conditions: string;
     payment: WorkAgreementPaymentRes;
     exclusions: WorkContractExclusionsRes[];
     created_at: string;

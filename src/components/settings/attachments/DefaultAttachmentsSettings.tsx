@@ -12,9 +12,6 @@ import { useCreateMyAttachments, useDeleteMyAttachment, useGetMyAttachments } fr
 import { AttachmentReq, AttachmentType, AttachmentTypesMap } from "@/zustand/types/attachmentT";
 import { ParamGlobal } from "@/zustand/types/apiT";
 
-interface ExtendParams extends ParamGlobal {
-  type: AttachmentType;
-}
 
 const defaultType: AttachmentType = "agreement";
 
@@ -25,7 +22,7 @@ const defaultAttachment: AttachmentReq = {
 
 export const DefaultAttachmentsSettings = () => {
   const { t } = useTranslation();
-  const [params, setParams] = useState<ExtendParams>({
+  const [params, setParams] = useState<ParamGlobal>({
     page: 1,
     per_page: 10,
     search: "",
@@ -40,7 +37,9 @@ export const DefaultAttachmentsSettings = () => {
 
   // sync active type from tab to form
   useEffect(() => {
-    methods.setValue("type", params.type);
+    if (params.type) {
+      methods.setValue("type", params.type as AttachmentType);
+    }
   }, [params.type, methods]);
 
   const handleTabChange = (value: string) => {
@@ -56,11 +55,11 @@ export const DefaultAttachmentsSettings = () => {
     data.attachments.forEach(file => {
       formData.append("attachments[]", file);
     });
-    formData.append("type", params.type);
+    formData.append("type", params.type as AttachmentType);
 
     try {
       await createMyAttachmentsZ.mutateAsync(formData);
-      methods.reset({ ...defaultAttachment, type: params.type });
+      methods.reset({ ...defaultAttachment, type: params.type as AttachmentType });
     } catch (err) {
       console.error("Error uploading attachments:", err);
     }

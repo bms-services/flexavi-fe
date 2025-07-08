@@ -54,6 +54,7 @@ export type ParamGlobal = {
     search?: string;
     filters?: FiltersGlobal;
     sorts?: SortsGlobal;
+    type?: string;
 };
 
 // string | number | [string, string] | [Date | null, Date | null]
