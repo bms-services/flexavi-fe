@@ -21,7 +21,7 @@ export default function FileViewer(props: FileViewerProps) {
                     </DialogTitle>
                 </DialogHeader>
                 <div className={cn("flex flex-col items-center justify-center", props.containerClassName)}>
-                    <div className="text-center w-full">
+                    <div className="text-center w-full h-full">
                         <DocViewer
                             config={{
                                 header: {
@@ -43,7 +43,7 @@ export default function FileViewer(props: FileViewerProps) {
                                 TIFFRenderer,
                                 TXTRenderer,
                             ]}
-                            className="!bg-white rounded-lg w-full h-full"
+                            className="!bg-white h-[80vh] w-[800px]"
                             {...props}
                         />
                     </div>

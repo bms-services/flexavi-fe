@@ -28,7 +28,7 @@ export const useGetExpense = (id: string) => {
 export const useCreateExpense = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    return useMutation<ApiSuccess<ExpenseRes>, ApiError, ExpenseReq>({
+    return useMutation<ApiSuccess<ExpenseRes>, ApiError, FormData>({
         mutationFn: createExpenseService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['expenses'] });
@@ -39,7 +39,7 @@ export const useCreateExpense = () => {
 
 export const useUpdateExpense = () => {
     const queryClient = useQueryClient();
-    return useMutation<ApiSuccess<ExpenseRes>, ApiError, { id: string; formData: Partial<ExpenseReq> }>({
+    return useMutation<ApiSuccess<ExpenseRes>, ApiError, { id: string; formData: Partial<FormData> }>({
         mutationFn: updateExpenseService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['expenses'] });

@@ -22,11 +22,48 @@ const defaultExpenseData: ExpenseReq = {
   total_amount: 0,
   notes: "",
   voucher: "",
-  status: "concept"
+  status: "concept",
+  tags: [],
+};
+
+const convertToFormData = (data: ExpenseReq) => {
+  const formData = new FormData();
+
+  // Field biasa
+  formData.append('company', data.company);
+  formData.append('due_date', data.due_date);
+  formData.append('description', data.description);
+  formData.append('type', data.type);
+  formData.append('amount', String(data.amount));
+  formData.append('percentage', String(data.percentage));
+  formData.append('vat_amount', String(data.vat_amount));
+  formData.append('total_amount', String(data.total_amount));
+  formData.append('notes', data.notes || '');
+  formData.append('voucher', data.voucher || 'no_voucher');
+  formData.append('status', data.status);
+
+  data.tags?.forEach((tag) => {
+    if (typeof tag === 'string') {
+      formData.append('tags[]', tag);
+    } else if (typeof tag === 'object' && tag.text) {
+      formData.append('tags[]', tag.text);
+    }
+  });
+
+  data.attachments?.forEach((file) => {
+    formData.append('attachments[]', file);
+    // if (file instanceof File) {
+    // } else {
+    //   formData.append('attachments[]', file);
+    // }
+  });
+
+  return formData;
 };
 
 const ExpenseEdit = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const methods = useForm<ExpenseReq>({
     defaultValues: defaultExpenseData,
   });
@@ -35,34 +72,34 @@ const ExpenseEdit = () => {
   const updateExpenseZ = useUpdateExpense();
   const getExpenseZ = useGetExpense(id || "");
 
-  const navigate = useNavigate();
 
   const handleStore = async (data: ExpenseReq) => {
-    await createExpenseZ.mutateAsync({
+    const formData = convertToFormData({
       ...data,
       voucher: "no_voucher",
     });
+
+    await createExpenseZ.mutateAsync(formData);
   };
 
   const handleUpdate = async (data: ExpenseReq) => {
-    await updateExpenseZ.mutateAsync({ id: id || "", formData: data });
+    const formData = convertToFormData(data);
+    await updateExpenseZ.mutateAsync({ id: id || "", formData });
   };
 
-
-  // useEffect(() => {
-  //   if (getExpenseZ.isSuccess && getExpenseZ.data.result) {
-  //     const data = getExpenseZ.data.result;
-  //     methods.reset({
-  //       ...data,
-  //       company: data.company.id,
-  //       due_date: data.due_date || "",
-  //       amount: Number(data.amount),
-  //       percentage: Number(data.percentage),
-  //       vat_amount: Number(data.vat_amount),
-  //       total_amount: Number(data.total_amount),
-  //     });
-  //   }
-  // }, [getExpenseZ.isSuccess, getExpenseZ.data, methods]);
+  useEffect(() => {
+    if (getExpenseZ.isSuccess && getExpenseZ.data.result) {
+      const data = getExpenseZ.data.result;
+      methods.reset({
+        ...data,
+        amount: Number(data.amount),
+        percentage: Number(data.percentage),
+        vat_amount: Number(data.vat_amount),
+        total_amount: Number(data.total_amount),
+        status: data.status || undefined,
+      });
+    }
+  }, [getExpenseZ.isSuccess, getExpenseZ.data, methods]);
 
   return (
     <Layout>

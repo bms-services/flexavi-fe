@@ -243,7 +243,7 @@ export const DropZoneAlpha = <T extends FieldValues>({
                     }}
                 />
             )) : (
-                <p className="text-sm text-muted-foreground">No files uploaded yet.</p>
+                null
             )}
 
             <FileViewer documents={previewFiles}

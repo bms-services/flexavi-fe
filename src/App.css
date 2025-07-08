@@ -121,3 +121,59 @@
   position: absolute !important;
   top: 0 !important;
 }
+
+
+/* React Tag Input */
+.tagInputFieldClass {
+ @apply w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-4;
+}
+
+
+/* Container for tags */
+.tagsClass {
+  @apply flex flex-wrap gap-2 p-2 border border-border rounded-md bg-background;
+}
+
+/* Container for the input field */
+.tagInputClass {
+  @apply flex-1 min-w-[200px];
+}
+
+/* Individual tag item */
+.tagClass {
+  @apply inline-flex items-center gap-1 rounded-full bg-primary text-white px-3 py-1 text-xs font-medium;
+}
+
+/* Remove (×) button inside tag */
+.removeClass {
+  @apply cursor-pointer text-white hover:text-red-200;
+}
+
+/* Suggestion dropdown container */
+.suggestionsClass {
+  @apply mt-2 w-full max-h-48 overflow-y-auto rounded-md border border-input bg-popover text-sm shadow-md z-50;
+}
+
+/* Suggestion item when focused */
+.activeSuggestionClass {
+  @apply bg-accent text-accent-foreground cursor-pointer px-3 py-2;
+}
+
+/* Input while editing tag */
+.editTagInputClass {
+  @apply mt-1;
+}
+
+/* Field inside editing tag */
+.editTagInputField {
+  @apply w-full rounded-md border border-border px-2 py-1 text-sm;
+}
+
+/* Optional: clear all button style */
+.clearAllClass {
+  @apply mt-2 inline-block text-xs text-muted-foreground hover:underline cursor-pointer;
+}
+
+.selectedClass {
+  @apply flex items-center gap-2 flex-wrap;
+}

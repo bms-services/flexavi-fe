@@ -27,7 +27,7 @@ export const CalendarColorSettings: React.FC = () => {
 
   const updateMyAgendaColorSettingsZ = useUpdateMyAgendaColorSettings();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<AgendaSettingColorReq>();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<AgendaSettingColorReq>();
 
   const onSubmit = async (data: AgendaSettingColorReq) => {
     const payload = Object.entries(data.color).map(([id, color]) => ({
@@ -61,7 +61,7 @@ export const CalendarColorSettings: React.FC = () => {
                       })}
                     />
                     <span className="text-sm text-muted-foreground">
-                      {colorSetting.color}
+                      {watch(`color.${colorSetting.id}`) || colorSetting.color}
                     </span>
                   </div>
                 </div>

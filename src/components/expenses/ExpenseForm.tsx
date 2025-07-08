@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { ExpenseReq, ExpenseStatusMap } from "@/zustand/types/expenseT";
+import { ExpenseReq, ExpenseStatusMap, ExpenseTypeMap } from "@/zustand/types/expenseT";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useTranslation } from "react-i18next";
 import { Control, Controller, FieldErrors, FieldValues, useFormContext, useWatch } from "react-hook-form";
@@ -16,6 +16,7 @@ import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { InputCurrency } from "../ui/input-currency";
 import { DropZoneAlpha } from "../ui/drop-zone-alpha/DropZoneAlpha";
+import { InputTags } from "../ui/input-tags";
 
 interface ExpenseFormProps {
   isEditing?: boolean;
@@ -161,7 +162,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="">
+              <div>
                 <Label htmlFor="type">Type uitgave</Label>
                 <Select
                 >
@@ -169,7 +170,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                     <SelectValue placeholder="Selecteer type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(ExpenseStatusMap).map(([value, option]) => (
+                    {Object.entries(ExpenseTypeMap).map(([value, option]) => (
                       <SelectItem key={value} value={value}>
                         {option.label}
                       </SelectItem>
@@ -238,6 +239,12 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 }}
               />
             </div>
+
+            <InputTags
+              label="Tags"
+              name="tags"
+              control={control}
+            />
 
             <DropZoneAlpha
               label="Upload Files"

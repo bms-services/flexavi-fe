@@ -14,13 +14,13 @@ export const getExpenseService = async (id: string): Promise<ApiSuccess<ExpenseR
     return data;
 };
 
-export const createExpenseService = async (formData: ExpenseReq): Promise<ApiSuccess<ExpenseRes>> => {
+export const createExpenseService = async (formData: FormData): Promise<ApiSuccess<ExpenseRes>> => {
     const { data } = await mainApi.post("/costs", formData);
     if (!data.success) throw data;
     return data;
 };
 
-export const updateExpenseService = async ({ id, formData }: { id: string, formData: Partial<ExpenseReq> }): Promise<ApiSuccess<ExpenseRes>> => {
+export const updateExpenseService = async ({ id, formData }: { id: string, formData: Partial<FormData> }): Promise<ApiSuccess<ExpenseRes>> => {
     const { data } = await mainApi.patch(`/costs/${id}`, formData);
     if (!data.success) throw data;
     return data;

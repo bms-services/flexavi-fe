@@ -11,6 +11,10 @@ export type ExpenseReq = {
     voucher: string;
     type: ExpenseType;
     status: ExpenseStatus;
+    tags: string[] | {
+        text: string;
+    }[];
+    attachments?: File[] | string[]; // File or string paths
 };
 
 export type ExpenseRes = {
@@ -24,7 +28,7 @@ export type ExpenseRes = {
     percentage: number;
     vat_amount: number;
     total_amount: number;
-    status: ExpenseStatus | null;
+    status: ExpenseStatus;
     notes: string;
     receipt_url: string | null;
     created_at: string;
