@@ -11,7 +11,7 @@ interface InvoiceKPIsProps {
 }
 
 export const InvoiceKPIs: React.FC<InvoiceKPIsProps> = ({ getInvoiceSummaryZ }) => {
-  const { data, isLoading, isError } = getInvoiceSummaryZ;
+  const { isLoading, isError, data } = getInvoiceSummaryZ;
 
   if (isLoading) return (
     // card
@@ -42,7 +42,7 @@ export const InvoiceKPIs: React.FC<InvoiceKPIsProps> = ({ getInvoiceSummaryZ }) 
 
   if (isError || !data) return <div></div>;
 
-  const { total_amount, total_paid } = data.result;
+  const { total_amount, total_paid, total_open } = data.result;
 
   return (
     <div className="pb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -63,7 +63,7 @@ export const InvoiceKPIs: React.FC<InvoiceKPIsProps> = ({ getInvoiceSummaryZ }) 
       <Card>
         <CardContent className="py-4 flex flex-col items-center">
           <CardTitle className="text-lg">Nog te ontvangen</CardTitle>
-          <span className="text-2xl font-bold">{formatEuro(20)}</span>
+          <span className="text-2xl font-bold">{formatEuro(total_open)}</span>
           <CardDescription>Openstaand & te laat</CardDescription>
         </CardContent>
       </Card>

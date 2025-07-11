@@ -7,12 +7,12 @@ import { UserX } from "lucide-react";
 interface FileViewerProps extends DocViewerProps {
     containerClassName?: string;
     open: boolean;
-    onOpenChange: (open: boolean) => void;
+    onOpen: (open: boolean) => void;
 }
 
-export default function FileViewer(props: FileViewerProps) {
+export default function FileViewer({ open, onOpen, containerClassName, ...props }: FileViewerProps) {
     return (
-        <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+        <Dialog open={open} onOpenChange={onOpen}>
             <DialogContent className="">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -20,7 +20,7 @@ export default function FileViewer(props: FileViewerProps) {
                         Geblokkeerde gebruiker details
                     </DialogTitle>
                 </DialogHeader>
-                <div className={cn("flex flex-col items-center justify-center", props.containerClassName)}>
+                <div className={cn("flex flex-col items-center justify-center", containerClassName)}>
                     <div className="text-center w-full h-full">
                         <DocViewer
                             config={{

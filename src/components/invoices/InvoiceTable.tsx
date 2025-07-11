@@ -105,7 +105,7 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({ params, setParams, o
                         type: FilterType.SELECT,
                         options: statusFilterOptions,
                     },
-                    start_date: {
+                    expiration_date: {
                         type: FilterType.DATE_RANGE
                     },
                     created_at: {

@@ -131,6 +131,7 @@ export type InvoiceCreditRes = {
 
 
 export type InvoiceSummaryRes = {
-    total_amount: 0.00;
-    total_paid: 0.00;
+    total_amount: 0;
+    total_paid: 0;
+    total_open: 0;
 }

@@ -12,9 +12,7 @@ import { useCreateMyAttachments, useDeleteMyAttachment, useGetMyAttachments } fr
 import { AttachmentReq, AttachmentType, AttachmentTypesMap } from "@/zustand/types/attachmentT";
 import { ParamGlobal } from "@/zustand/types/apiT";
 
-
 const defaultType: AttachmentType = "agreement";
-
 const defaultAttachment: AttachmentReq = {
   attachments: [],
   type: defaultType,
@@ -46,9 +44,9 @@ export const DefaultAttachmentsSettings = () => {
     setParams(prev => ({ ...prev, type: value as AttachmentType }));
   };
 
-  const handleRemoveAttachment = async (id: string) => {
-    await deleteMyAttachmentsZ.mutateAsync({ ids: [id], force: false });
-  };
+  // const handleRemoveAttachment = async (id: string) => {
+  //   await deleteMyAttachmentsZ.mutateAsync({ ids: [id], force: false, type: params.type as AttachmentType });
+  // };
 
   const onSubmit = async (data: AttachmentReq) => {
     const formData = new FormData();
@@ -102,8 +100,8 @@ export const DefaultAttachmentsSettings = () => {
                   type={key as AttachmentType}
                   isActive={params.type === key}
                   formMethods={methods}
-                  uploadedData={params.type === key ? getMyAttachmentsZ : undefined}
-                  onRemoveUploaded={params.type === key ? handleRemoveAttachment : undefined}
+                  uploadedData={getMyAttachmentsZ}
+                  deleteUploaded={deleteMyAttachmentsZ}
                   isSubmitting={createMyAttachmentsZ.isPending || methods.formState.isSubmitting}
                   t={t}
                 />
@@ -122,7 +120,7 @@ interface AttachmentTabPanelProps {
   isActive: boolean;
   formMethods: ReturnType<typeof useForm<AttachmentReq>>;
   uploadedData?: ReturnType<typeof useGetMyAttachments>;
-  onRemoveUploaded?: (id: string) => void;
+  deleteUploaded: ReturnType<typeof useDeleteMyAttachment>;
   isSubmitting: boolean;
   t: ReturnType<typeof useTranslation>["t"];
 }
@@ -132,7 +130,7 @@ const AttachmentTabPanel: React.FC<AttachmentTabPanelProps> = ({
   isActive,
   formMethods,
   uploadedData,
-  onRemoveUploaded,
+  deleteUploaded,
   isSubmitting,
   t,
 }) => {
@@ -167,7 +165,9 @@ const AttachmentTabPanel: React.FC<AttachmentTabPanelProps> = ({
           errors: formMethods.formState.errors as FieldErrors<FieldValues>,
         }}
         listUploaded={uploadedData}
-        onRemoveUploaded={onRemoveUploaded}
+        deleteUploaded={deleteUploaded}
+        type={type}
+        isTemplate
       />
 
       <div className="flex justify-end items-center">

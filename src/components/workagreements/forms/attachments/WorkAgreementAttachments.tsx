@@ -1,246 +1,84 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Paperclip, FileText, X, Eye } from "lucide-react";
-import { useFormContext, useWatch } from "react-hook-form";
-import FilePreview from "reactjs-file-preview";
+import { Control, FieldValues, useFormContext } from "react-hook-form";
 import {
-  WorkAgreementAttachmentsRes,
   WorkAgreementReq,
 } from "@/zustand/types/workAgreementT";
+import { DropZoneAlpha } from "@/components/ui/drop-zone-alpha/DropZoneAlpha";
+import { useGetMyAttachments } from "@/zustand/hooks/useSetting";
+import { useTranslation } from "react-i18next";
 
 interface WorkAgreementAttachmentsProps {
-  defaultAttachments?: { name: string; url: string }[];
+  defaultAttachments?: ReturnType<typeof useGetMyAttachments>;
   disabled?: boolean;
 }
 
-const getFileType = (url: string): string => {
-  const extension = url.split(".").pop()?.toLowerCase();
-  switch (extension) {
-    case "pdf":
-      return "application/pdf";
-    case "jpg":
-    case "jpeg":
-      return "image/jpeg";
-    case "png":
-      return "image/png";
-    case "doc":
-    case "docx":
-      return "application/msword";
-    case "xls":
-    case "xlsx":
-      return "application/vnd.ms-excel";
-    case "csv":
-      return "text/csv";
-    case "txt":
-      return "text/plain";
-    default:
-      return "";
-  }
-};
+// const getFileType = (url: string): string => {
+//   const extension = url.split(".").pop()?.toLowerCase();
+//   switch (extension) {
+//     case "pdf":
+//       return "application/pdf";
+//     case "jpg":
+//     case "jpeg":
+//       return "image/jpeg";
+//     case "png":
+//       return "image/png";
+//     case "doc":
+//     case "docx":
+//       return "application/msword";
+//     case "xls":
+//     case "xlsx":
+//       return "application/vnd.ms-excel";
+//     case "csv":
+//       return "text/csv";
+//     case "txt":
+//       return "text/plain";
+//     default:
+//       return "";
+//   }
+// };
 
 
 export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> = ({
-  defaultAttachments = [],
+  defaultAttachments,
   disabled = false,
 }) => {
+  const { t } = useTranslation();
   const {
-    setValue,
-    trigger,
+    control,
     formState: { errors },
   } = useFormContext<WorkAgreementReq>();
 
-  const rawAttachments = useWatch<WorkAgreementReq>({ name: "attachments" });
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-
-  const attachments = useMemo(() => {
-    return Array.isArray(rawAttachments) ? rawAttachments : [];
-  }, [rawAttachments]);
-
-  const blobURLs = useMemo(() => {
-    return attachments
-      .map((file) => (file instanceof File ? URL.createObjectURL(file) : null))
-      .filter(Boolean) as string[];
-  }, [attachments]);
-
-  useEffect(() => {
-    return () => {
-      blobURLs.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [blobURLs]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const validFiles = files.filter((file) => file instanceof File);
-
-    if (validFiles.length > 0) {
-      const existingFromBackend = attachments.filter(
-        (item) => !(item instanceof File)
-      );
-      const existingFromFrontend = attachments.filter(
-        (item) => item instanceof File
-      );
-
-      const newFiles = [
-        ...existingFromBackend,
-        ...existingFromFrontend,
-        ...validFiles,
-      ];
-
-      if (newFiles.every((item) => item instanceof File)) {
-        setValue("attachments", newFiles as File[], { shouldValidate: true });
-      } else {
-        setValue("attachments", newFiles as WorkAgreementAttachmentsRes[], {
-          shouldValidate: true,
-        });
-      }
-      trigger("attachments");
-    }
-  };
-
-  const removeAttachment = (index: number) => {
-    const newAttachments = [...attachments];
-    newAttachments.splice(index, 1);
-
-    if (newAttachments.every((item) => item instanceof File)) {
-      setValue("attachments", newAttachments as File[], {
-        shouldValidate: true,
-      });
-    } else {
-      setValue("attachments", newAttachments as WorkAgreementAttachmentsRes[], {
-        shouldValidate: true,
-      });
-    }
-    trigger("attachments");
-  };
-
-  const handlePreview = (
-    file: File | WorkAgreementAttachmentsRes,
-    blobUrl?: string
-  ) => {
-    if (file instanceof File && blobUrl) {
-      setPreviewUrl(blobUrl);
-    } else if ("url" in file) {
-      setPreviewUrl(file.url);
-    }
-  };
-
-  let blobIndex = 0;
-
   return (
     <div className="space-y-4">
-      {/* Upload */}
-      <div className="flex items-center gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => document.getElementById("file-upload")?.click()}
-          className="gap-2"
-          disabled={disabled}
-        >
-          <Paperclip className="h-4 w-4" />
-          Bestand toevoegen
-        </Button>
-        <Input
-          id="file-upload"
-          type="file"
-          multiple
-          className="hidden"
-          onChange={handleFileChange}
-          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.csv,.txt"
-          disabled={disabled}
-        />
-      </div>
-
-      {(defaultAttachments.length > 0 || attachments.length > 0) && (
-        <div className="space-y-2">
-          {/* Default (static) */}
-          {defaultAttachments.map((attachment, index) => (
-            <div
-              key={`default-${index}`}
-              className="flex items-center gap-2 p-2 bg-muted rounded-md"
-            >
-              <FileText className="h-4 w-4 text-muted-foreground" />
-              <span className="flex-1 text-sm text-blue-600">{attachment.name}</span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setPreviewUrl(attachment.url)}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
-              <span className="text-xs text-muted-foreground">Standaard bijlage</span>
-            </div>
-          ))}
-
-          {/* Attachments */}
-          {attachments.map((file, index) => {
-            const isFile = file instanceof File;
-            const href = isFile ? blobURLs[blobIndex++] : (file as WorkAgreementAttachmentsRes).url;
-            const filename = isFile ? file.name : (file as WorkAgreementAttachmentsRes).name;
-
-            return (
-              <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-md">
-                <FileText className="h-4 w-4 text-muted-foreground" />
-                <span className="flex-1 text-sm text-blue-600 truncate">{filename}</span>
-                {isFile ? (
-                  // Preview only images before upload
-                  /\.(jpe?g|png|gif|bmp|webp)$/i.test(filename) && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handlePreview(file as File, href)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  )
-                ) : (
-                  // After upload, allow preview for all file types
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handlePreview(file as WorkAgreementAttachmentsRes, href)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                )}
-                {!disabled && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeAttachment(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Error */}
-      {errors.attachments && (
-        <p className="text-sm text-red-500 mt-1">
-          {errors.attachments?.message}
-        </p>
-      )}
-
-      {/* Preview dialog (only backend URL) */}
-      <Dialog open={!!previewUrl} onOpenChange={() => setPreviewUrl(null)}>
-        <DialogTitle className="text-lg font-semibold">
-          Voorbeeld
-        </DialogTitle>
-        <DialogContent className="h-[90vh] overflow-auto">
-          {previewUrl && <FilePreview preview={"https://pdfobject.com/pdf/sample.pdf"} />}
-        </DialogContent>
-      </Dialog>
+      <DropZoneAlpha
+        label={t("settings.attachment.label.upload")}
+        multiple={true}
+        accept={{
+          "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+          "application/pdf": [".pdf"],
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+          "application/vnd.ms-excel": [".xls", ".xlsx"],
+          "text/plain": [".txt"],
+        }}
+        maxFiles={5}
+        maxSize={2 * 1024 * 1024}
+        rules={{
+          name: "attachments",
+          control: control as unknown as Control<FieldValues>,
+          options: {
+            // required: t("settings.attachment.error.required.files"),
+            // validate: {
+            //   maxFiles: (value) => {
+            //     const files = value as File[];
+            //     return files.length <= 5 || t("settings.attachment.error.maxFiles.files");
+            //   },
+            // },
+          },
+          errors: errors as FieldValues,
+        }}
+        listUploaded={defaultAttachments}
+        deleteUploaded={undefined}
+        type={"agreement"}
+      />
     </div>
   );
 };

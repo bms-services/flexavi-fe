@@ -4,7 +4,7 @@ import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
-import { AttachmentReq, AttachmentRes } from "../types/attachmentT";
+import { AttachmentReq, AttachmentRes, AttachmentType } from "../types/attachmentT";
 
 
 import {
@@ -302,8 +302,8 @@ export const useCreateMyAttachments = () => {
 
 export const useDeleteMyAttachment = () => {
     const queryClient = useQueryClient();
-    return useMutation<ApiSuccess<AttachmentRes[]>, ApiError, { ids: string[]; force: boolean }>({
-        mutationFn: ({ ids, force }) => deleteMyAttachmentsService(ids, force),
+    return useMutation<ApiSuccess<AttachmentRes[]>, ApiError, { ids: string[]; force: boolean; type: AttachmentType }>({
+        mutationFn: ({ ids, force, type }) => deleteMyAttachmentsService(ids, force, type),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['my-attachments'] });
         },

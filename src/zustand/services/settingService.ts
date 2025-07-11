@@ -5,7 +5,7 @@ import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
-import { AttachmentRes } from "../types/attachmentT";
+import { AttachmentRes, AttachmentType } from "../types/attachmentT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -202,10 +202,10 @@ export const createMyAttachmentsService = async (formData: FormData): Promise<Ap
     return data;
 };
 
-export const deleteMyAttachmentsService = async (ids: string[], force: boolean): Promise<ApiSuccess<AttachmentRes[]>> => {
+export const deleteMyAttachmentsService = async (ids: string[], force: boolean, type: AttachmentType): Promise<ApiSuccess<AttachmentRes[]>> => {
     const { data } = await mainApi.delete(`/setting/attachments`, {
-        params: { force },
-        data: { ids }
+        params: { force, type },
+        data: { ids },
     });
     if (!data.success) throw data;
     return data;

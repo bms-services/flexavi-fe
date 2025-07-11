@@ -304,7 +304,7 @@ const WorkAgreementEdit = () => {
                   <CardDescription>Voeg bestanden toe aan de werkovereenkomst</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <WorkAgreementAttachments />
+                  <WorkAgreementAttachments defaultAttachments={getMyAttachmentsZ} />
                 </CardContent>
               </Card>
             </div>
