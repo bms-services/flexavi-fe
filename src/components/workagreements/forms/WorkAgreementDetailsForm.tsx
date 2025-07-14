@@ -75,7 +75,6 @@ export const WorkAgreementDetailsForm: React.FC = () => {
             setSearchInput(e.target.value);
           }}
           value={searchInput}
-
         />
         <div className="h-96 overflow-y-auto space-y-2 p-2 bg-muted rounded-md border">
           {getQuotationsZ.data?.result.data.length === 0 ? (

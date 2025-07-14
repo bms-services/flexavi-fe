@@ -2,30 +2,21 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { WizardData } from './useProjectWizard';
 
 interface ProjectWizardNavProps {
-  currentStep: number;
   onNext: () => void;
   onPrevious: () => void;
   canGoNext: boolean;
   canGoPrevious: boolean;
   isLastStep: boolean;
-  onFinish: () => void;
-  wizardData: WizardData;
-  setWizardData: (data: WizardData) => void;
 }
 
 export const ProjectWizardNav: React.FC<ProjectWizardNavProps> = ({
-  currentStep,
   onNext,
   onPrevious,
   canGoNext,
   canGoPrevious,
   isLastStep,
-  onFinish,
-  wizardData,
-  setWizardData,
 }) => {
   return (
     <div className="flex justify-between mt-6">
@@ -39,7 +30,7 @@ export const ProjectWizardNav: React.FC<ProjectWizardNavProps> = ({
       </Button>
 
       {isLastStep ? (
-        <Button onClick={onFinish}>
+        <Button type='submit'>
           Project aanmaken
         </Button>
       ) : (

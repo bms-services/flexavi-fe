@@ -1,46 +1,13 @@
-
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { ProjectStatus } from "@/types/project";
+import { ProjectStatus, projectStatusMap } from "@/zustand/types/projectT";
 
-interface ProjectStatusBadgeProps {
-  status: ProjectStatus;
-}
+export default function ProjectStatusBadge({ status }: { status?: ProjectStatus }) {
+  if (!status) return null;
 
-export const ProjectStatusBadge: React.FC<ProjectStatusBadgeProps> = ({ status }) => {
-  const getVariant = () => {
-    switch (status) {
-      case "active":
-        return "bg-green-500 hover:bg-green-600";
-      case "completed":
-        return "bg-blue-500 hover:bg-blue-600";
-      case "on-hold":
-        return "bg-yellow-500 hover:bg-yellow-600";
-      case "cancelled":
-        return "bg-red-500 hover:bg-red-600";
-      default:
-        return "";
-    }
-  };
-
-  const getLabel = () => {
-    switch (status) {
-      case "active":
-        return "Actief";
-      case "completed":
-        return "Afgerond";
-      case "on-hold":
-        return "On hold";
-      case "cancelled":
-        return "Geannuleerd";
-      default:
-        return status;
-    }
-  };
-
+  const { label, variant } = projectStatusMap[status];
   return (
-    <Badge className={getVariant()}>
-      {getLabel()}
+    <Badge variant={variant} className="capitalize">
+      {label}
     </Badge>
   );
-};
+}

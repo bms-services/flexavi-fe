@@ -1,5 +1,5 @@
 import { AddressReq, AddressRes } from "./addressT";
-import { EmployeeRole } from "./employeeT";
+import { EmployeeRes, EmployeeRole, EmployeeStatus, EmployeeWorkdaysRes } from "./employeeT";
 
 export type CompanyReq = {
     name: string;
@@ -46,3 +46,27 @@ export type CompanyRoleRes = {
     created_at: string;
     updated_at: string;
 };
+
+export type CompanyEmployeeReq = {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company_user_role_id?: string;
+    work_days?: string[];
+    start_time?: string;
+    end_time?: string;
+    status?: EmployeeStatus;
+};
+
+export type CompanyEmployeeRes = {
+    id: string;
+    joined_at: string;
+    is_owner: boolean;
+    is_main: boolean;
+    status: EmployeeStatus;
+    user: EmployeeRes;
+    company: CompanyRes;
+    workdays: EmployeeWorkdaysRes;
+    created_at: string;
+    updated_at: string;
+}

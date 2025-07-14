@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, EllipsisVerticalIcon, MoreHorizontal } from "lucide-react";
-import { EmployeeInvitationStatusMap, EmployeeReq, EmployeeRes, EmployeeStatus, EmployeeStatusMap } from "@/zustand/types/employeeT";
+import { EmployeeInvitationStatusMap, EmployeeReq, EmployeeStatus, EmployeeStatusMap } from "@/zustand/types/employeeT";
 import { FilterType, ParamGlobal } from "@/zustand/types/apiT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -15,13 +15,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { CompanyEmployeeRes } from "@/zustand/types/companyT";
 export const EmployeeSettings: React.FC = () => {
   const [modal, setModal] = useState({
     activate: false,
     inactivate: false,
   });
 
-  const [employee, setEmployee] = useState<EmployeeRes | null>(null);
+  const [employee, setEmployee] = useState<CompanyEmployeeRes | null>(null);
 
   const [params, setParams] = useState<ParamGlobal>({
     page: 1,
@@ -34,7 +35,7 @@ export const EmployeeSettings: React.FC = () => {
   const getMyEmployeesZ = useGetMyEmployees(params);
   const updateMyEmployeeZ = useUpdateMyEmployee();
 
-  const columns = useMemo<CustomColumnDef<EmployeeRes>[]>(() => [
+  const columns = useMemo<CustomColumnDef<CompanyEmployeeRes>[]>(() => [
     { accessorKey: "user.name", header: "Name", cell: info => info.getValue() },
     { accessorKey: "user.email", header: "Email", cell: info => info.getValue() },
     { accessorKey: "user.phone", header: "Phone", cell: info => info.getValue() },
@@ -89,7 +90,7 @@ export const EmployeeSettings: React.FC = () => {
     [setParams]
   );
 
-  const handleOpenModalStatus = (data: EmployeeRes) => {
+  const handleOpenModalStatus = (data: CompanyEmployeeRes) => {
     setEmployee(data);
     if (data.status === "active") {
       setModal((prev) => ({ ...prev, inactivate: true }));
@@ -99,14 +100,24 @@ export const EmployeeSettings: React.FC = () => {
   };
 
 
-  const handleUpdateEmployeeStatus = async (employee: EmployeeRes | null) => {
+  const handleUpdateEmployeeStatus = async (employee: CompanyEmployeeRes | null) => {
     if (!employee) return;
 
     try {
       await updateMyEmployeeZ.mutateAsync({
         id: employee.id,
-        formData: { ...employee, status: employee.status === "active" ? "inactive" : "active" },
+        formData: {
+          ...employee, status: employee.status === "active" ? "inactive" : "active",
+          name: "",
+          email: "",
+          phone: "",
+          company_user_role_id: "",
+          work_days: [],
+          start_time: "",
+          end_time: ""
+        },
       });
+
       setModal((prev) => ({ ...prev, activate: false, inactivate: false }));
       getMyEmployeesZ.refetch();
     } catch (error) {
@@ -158,7 +169,7 @@ export const EmployeeSettings: React.FC = () => {
           onConfirm={() => handleUpdateEmployeeStatus(employee)}
           title="Activate Employee"
           isConfirm
-          description={`Are you sure you want to activate ${employee?.name}? This will allow them to access the system and perform their duties.`}
+          description={`Are you sure you want to activate ${employee?.user.name}? This will allow them to access the system and perform their duties.`}
           loading={updateMyEmployeeZ.isPending}
         />
 
@@ -167,7 +178,7 @@ export const EmployeeSettings: React.FC = () => {
           onCancel={() => setModal((prev) => ({ ...prev, inactivate: false }))}
           onConfirm={() => handleUpdateEmployeeStatus(employee)}
           title="Inactivate Employee"
-          description={`Are you sure you want to inactivate ${employee?.name}? This will prevent them from accessing the system until reactivated.`}
+          description={`Are you sure you want to inactivate ${employee?.user.name}? This will prevent them from accessing the system until reactivated.`}
           loading={updateMyEmployeeZ.isPending}
         />
       </CardContent>

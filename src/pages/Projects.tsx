@@ -1,16 +1,8 @@
 
-import { Layout } from "@/components/layout/Layout";
 import { ProjectsList } from "@/components/projects/ProjectsList";
-import { mockProjects } from "@/data/mockData";
 
 const Projects = () => {
-  return (
-    <Layout>
-      <div className="container py-6">
-        <ProjectsList projects={mockProjects} />
-      </div>
-    </Layout>
-  );
+  return <ProjectsList />;
 };
 
 export default Projects;

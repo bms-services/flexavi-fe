@@ -1,5 +1,5 @@
 import { AxiosCustomRequestConfig, mainApi } from "@/utils/axios";
-import { CompanyRes, CompanyRoleRes } from "../types/companyT";
+import { CompanyEmployeeReq, CompanyEmployeeRes, CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } from "../types/stripeT";
@@ -73,25 +73,25 @@ export const addMemberMyTeamService = async (id: string, formData: TeamMemberReq
 };
 
 // Employee
-export const getMyEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<EmployeeRes>> => {
+export const getMyEmployeesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<CompanyEmployeeRes>> => {
     const { data } = await mainApi.get("/setting/company/employee", { params });
     if (!data.success) throw data;
     return data;
 }
 
-export const getMyEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+export const getMyEmployeeService = async (id: string): Promise<ApiSuccess<CompanyEmployeeRes>> => {
     const { data } = await mainApi.get(`/setting/company/employee/${id}`);
     if (!data.success) throw data;
     return data;
 }
 
-export const updateMyEmployeeService = async (id: string, formData: EmployeeReq): Promise<ApiSuccess<EmployeeRes>> => {
+export const updateMyEmployeeService = async (id: string, formData: CompanyEmployeeReq): Promise<ApiSuccess<CompanyEmployeeRes>> => {
     const { data } = await mainApi.put(`/setting/company/employee/${id}`, formData);
     if (!data.success) throw data;
     return data;
 }
 
-export const deleteMyEmployeeService = async (id: string): Promise<ApiSuccess<EmployeeRes>> => {
+export const deleteMyEmployeeService = async (id: string): Promise<ApiSuccess<CompanyEmployeeRes>> => {
     const { data } = await mainApi.delete(`/setting/company/employee/${id}`);
     if (!data.success) throw data;
     return data;

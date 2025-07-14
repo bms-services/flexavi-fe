@@ -1,67 +1,25 @@
+import { SelectList } from "@/components/ui/select-list";
+import { useGetLeads } from "@/zustand/hooks/useLead";
+import { ParamGlobal } from "@/zustand/types/apiT";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
-import React, { useState, useEffect } from 'react';
-import { Lead } from '@/types';
-import { Button } from '@/components/ui/button';
-import { WizardData } from '../useProjectWizard';
-import { mockLeads } from '@/data/mockData';
-import { CreateLeadDialog } from '@/components/leads/CreateLeadDialog';
-import { CreateLeadFormData } from '@/utils/validations';
+export const WizardLeadStep: React.FC = () => {
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch] = useDebounce(searchInput, 500);
+  const [params, setParams] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
 
-
-interface WizardLeadStepProps {
-  wizardData: WizardData;
-  setWizardData: (data: WizardData) => void;
-}
-
-export const WizardLeadStep: React.FC<WizardLeadStepProps> = ({ 
-  wizardData, 
-  setWizardData 
-}) => {
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [isCreateLeadOpen, setIsCreateLeadOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [leads, setLeads] = useState<Lead[]>(mockLeads);
-  
-  // Load selected lead if exists
   useEffect(() => {
-    if (wizardData.leadId) {
-      const lead = mockLeads.find(l => l.id === wizardData.leadId);
-      if (lead) setSelectedLead(lead);
-    }
-  }, [wizardData.leadId]);
+    setParams(prev => ({ ...prev, search: debouncedSearch }));
+  }, [debouncedSearch]);
 
-  const handleLeadSelect = (lead: Lead) => {
-    setSelectedLead(lead);
-    setWizardData({
-      ...wizardData,
-      leadId: lead.id
-    });
-  };
-
-  const handleCreateLead = (data: CreateLeadFormData) => {
-    // Simulate creating a new lead
-    const newLead: Lead = {
-      id: `lead-${Date.now()}`,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      address: `${data.postcode} ${data.huisnummer}`,
-      status: 'new_lead', // Changed from "new" to "new_lead"
-      source: 'Manual Entry',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    // Add to leads and select
-    setLeads([newLead, ...leads]);
-    handleLeadSelect(newLead);
-    setIsCreateLeadOpen(false);
-  };
-
-  const filteredLeads = leads.filter(lead => 
-    lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const leadsZ = useGetLeads(params);
 
   return (
     <div className="space-y-4">
@@ -70,45 +28,38 @@ export const WizardLeadStep: React.FC<WizardLeadStepProps> = ({
         <p className="text-muted-foreground mb-4">
           Kies een bestaande lead of maak een nieuwe aan voor dit project
         </p>
-        
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Zoek op naam of email..."
-            className="flex-1 px-3 py-2 border rounded-md"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button onClick={() => setIsCreateLeadOpen(true)}>Nieuwe Lead</Button>
-        </div>
-
-        <div className="border rounded-md max-h-[320px] overflow-y-auto">
-          {filteredLeads.length > 0 ? (
-            <div className="divide-y">
-              {filteredLeads.map(lead => (
-                <div 
-                  key={lead.id} 
-                  className={`p-3 cursor-pointer hover:bg-accent ${selectedLead?.id === lead.id ? 'bg-accent' : ''}`}
-                  onClick={() => handleLeadSelect(lead)}
-                >
-                  <div className="font-medium">{lead.name}</div>
-                  <div className="text-sm text-muted-foreground">{lead.email}</div>
-                  <div className="text-sm text-muted-foreground">{lead.phone}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              Geen leads gevonden
-            </div>
-          )}
-        </div>
       </div>
 
-      <CreateLeadDialog 
-        isOpen={isCreateLeadOpen}
-        onOpenChange={setIsCreateLeadOpen}
-        onSubmit={handleCreateLead}
+      <SelectList
+        name="leads"
+        // rules={{
+        //   required: "Selecteer een lead",
+        //   validate: (value) =>
+        //     Array.isArray(value) && value.length > 0 || "Selecteer minstens één lead"
+        // }}
+        placeholder="Zoek bestaande leads..."
+        items={leadsZ.data?.result.data ?? []}
+        selectedIdsField="leads"
+        onSearchChange={setSearchInput}
+        onLoadMore={() => {
+          if ((params.page ?? 1) < (leadsZ.data?.result.meta.last_page || 1)) {
+            setParams(prev => ({ ...prev, page: (prev.page ?? 1) + 1 }));
+          }
+        }}
+        renderItem={(lead, selected) => (
+          <div
+            className={`p-2 rounded-md transition-colors border shadow-sm ${selected
+              ? "bg-primary text-white border-primary"
+              : "bg-white hover:bg-blue-50 hover:border-blue-200"
+              }`}
+          >
+            <div className="flex flex-col gap-1">
+              <p className="font-semibold text-sm md:text-base">{lead.name}</p>
+              <p className={`${selected ? "text-white" : "text-muted-foreground"}`}>{lead.phone}</p>
+              <p className={`${selected ? "text-white" : "text-muted-foreground"}`}>{lead.email}</p>
+            </div>
+          </div>
+        )}
       />
     </div>
   );

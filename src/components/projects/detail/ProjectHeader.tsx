@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Project, ProjectNote } from "@/types/project";
-import { ProjectStatusBadge } from "../ProjectStatusBadge";
+// import { ProjectStatusBadge } from "../ProjectStatusBadge";
 import { Edit, PlusCircle } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { TaskDialog } from "./tabs/TaskDialog";
@@ -16,7 +16,7 @@ interface ProjectHeaderProps {
 
 export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask }) => {
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  
+
   const handleAddTask = (task: ProjectNote) => {
     if (onAddTask) {
       onAddTask(task);
@@ -30,7 +30,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
             {project.name}
-            <ProjectStatusBadge status={project.status} />
+            {/* <ProjectStatusBadge status={project.status} /> */}
           </h1>
           <p className="text-muted-foreground mt-1">
             {project.location} • Start: {format(new Date(project.startDate), "d MMMM yyyy", { locale: nl })}
@@ -71,11 +71,11 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask
           </p>
         </div>
       </div>
-      
-      <TaskDialog 
-        open={isTaskDialogOpen} 
-        onOpenChange={setIsTaskDialogOpen} 
-        onAddTask={handleAddTask} 
+
+      <TaskDialog
+        open={isTaskDialogOpen}
+        onOpenChange={setIsTaskDialogOpen}
+        onAddTask={handleAddTask}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { CompanyRes, CompanyRoleRes } from "../types/companyT";
+import { CompanyEmployeeReq, CompanyEmployeeRes, CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
@@ -125,7 +125,7 @@ export const useAddMemberMyTeam = () => {
 
 // ------ Employee ------ \\
 export const useGetMyEmployees = (params: ParamGlobal) => {
-    return useQuery<ApiSuccessPaginated<EmployeeRes>, ApiError>({
+    return useQuery<ApiSuccessPaginated<CompanyEmployeeRes>, ApiError>({
         queryKey: ['my-employees', params],
         queryFn: () => getMyEmployeesService(params),
         retry: false,
@@ -133,7 +133,7 @@ export const useGetMyEmployees = (params: ParamGlobal) => {
 };
 
 export const useGetMyEmployee = (id: string) => {
-    return useQuery<ApiSuccess<EmployeeRes>, ApiError>({
+    return useQuery<ApiSuccess<CompanyEmployeeRes>, ApiError>({
         queryKey: ['my-employee', id],
         queryFn: () => getMyEmployeeService(id),
         enabled: !!id,
@@ -141,13 +141,13 @@ export const useGetMyEmployee = (id: string) => {
 };
 
 export const useUpdateMyEmployee = () => {
-    return useMutation<ApiSuccess<EmployeeRes>, ApiError, { id: string, formData: EmployeeReq }>({
+    return useMutation<ApiSuccess<CompanyEmployeeRes>, ApiError, { id: string, formData: CompanyEmployeeReq }>({
         mutationFn: ({ id, formData }) => updateMyEmployeeService(id, formData),
     });
 };
 
 export const useDeleteMyEmployee = () => {
-    return useMutation<ApiSuccess<EmployeeRes>, ApiError, string>({
+    return useMutation<ApiSuccess<CompanyEmployeeRes>, ApiError, string>({
         mutationFn: deleteMyEmployeeService,
     });
 };

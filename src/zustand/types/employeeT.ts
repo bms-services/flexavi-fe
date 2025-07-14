@@ -48,7 +48,6 @@ export type EmployeeInvitationRes = {
 }
 
 
-
 export type EmployeeRate = {
     hourly_rate: number;
     daily_rate: number;

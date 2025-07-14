@@ -52,7 +52,12 @@ export const ProjectWizardSteps: React.FC<ProjectWizardStepsProps> = ({
               >
                 <Icon className="h-4 w-4" />
               </div>
-              <span className="text-sm font-medium">{step.label}</span>
+              <span className={
+                cn(
+                  "text-sm font-medium",
+                  isActive ? "text-primary-foreground" : "text-muted-foreground"
+                )
+              }>{step.label}</span>
             </div>
           );
         })}

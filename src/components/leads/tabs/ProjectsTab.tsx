@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { mockProjects } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
-import { ProjectStatusBadge } from "@/components/projects/ProjectStatusBadge";
+// import { ProjectStatusBadge } from "@/components/projects/ProjectStatusBadge";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ leadId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const leadProjects = mockProjects.filter(project => project.leads.includes(leadId));
-  
+
   const totalPages = Math.ceil(leadProjects.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -55,7 +55,7 @@ export const ProjectsTab: React.FC<ProjectsTabProps> = ({ leadId }) => {
               </div>
             </div>
             <div className="flex flex-col items-start md:items-end gap-3">
-              <ProjectStatusBadge status={project.status} />
+              {/* <ProjectStatusBadge status={project.status} /> */}
               <Link to={`/projects/${project.id}`}>
                 <Button variant="outline" size="sm">
                   Details bekijken

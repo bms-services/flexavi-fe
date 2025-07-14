@@ -86,3 +86,11 @@ export type ProjectStatus =
     | "completed"
     | "on_hold"
     | "cancelled";
+
+export const projectStatusMap: Record<ProjectStatus, { label: string; variant: "primary" | "secondary" | "warning" | "danger" | "success" }> = {
+    active: { label: "Actief", variant: "success" },
+    inactive: { label: "Inactief", variant: "secondary" },
+    completed: { label: "Voltooid", variant: "success" },
+    on_hold: { label: "In de wacht", variant: "warning" },
+    cancelled: { label: "Geannuleerd", variant: "danger" },
+};
