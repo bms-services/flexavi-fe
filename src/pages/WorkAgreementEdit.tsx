@@ -20,8 +20,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { WorkAgreementPaymentMethod, WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import { useCreateWorkAgreement, useGetWorkAgreement, useUpdateWorkAgreement } from "@/zustand/hooks/useWorkAgreement";
 import { useEffect } from "react";
-import { appendIfExists } from "@/utils/dataTransform";
-import { useGetQuotation } from "@/zustand/hooks/useQuotation";
+import { appendAddress, appendAttachments, appendExclusions, appendIfExists, appendItems, appendLeads, appendPayment, appendQuotes } from "@/utils/dataTransform";
 import { useGetMyAttachments } from "@/zustand/hooks/useSetting";
 
 const defaultWorkAgreement: WorkAgreementReq = {
@@ -31,7 +30,6 @@ const defaultWorkAgreement: WorkAgreementReq = {
   subtotal: 0,
   discount_amount: 0,
   discount_type: "percentage",
-  vat_amount: 0,
   total_amount: 0,
   payment: {
     payment_method: "bank_transfer",
@@ -57,20 +55,13 @@ const defaultWorkAgreement: WorkAgreementReq = {
   attachments: []
 };
 
-const appendWorkContract = (data: WorkAgreementReq): FormData => {
+const appendWorkContract = (data: WorkAgreementReq, isUpdate: boolean): FormData => {
   const formData = new FormData();
 
-  // leads[]
-  data.leads.forEach((lead: string | { value: string; label: string }) => {
-    formData.append("leads[]", typeof lead === "string" ? lead : lead.value);
-  });
+  if (isUpdate) {
+    formData.append('_method', "patch");
+  }
 
-  // quotes[]
-  data.quotes.forEach((quote) => {
-    formData.append("quotes[]", quote);
-  });
-
-  // Basic fields
   appendIfExists(formData, "description", data.description);
   appendIfExists(formData, "description_work", data.description_work);
   appendIfExists(formData, "warranty", data.warranty);
@@ -78,59 +69,13 @@ const appendWorkContract = (data: WorkAgreementReq): FormData => {
   appendIfExists(formData, "status", data.status || "concept");
   appendIfExists(formData, "general_term_conditions", data.general_term_conditions);
 
-  formData.append("address[street]", data.address.street || "");
-  formData.append("address[postal_code]", typeof data.address.postal_code === "object"
-    ? data.address.postal_code.value
-    : data.address.postal_code || "");
-  formData.append("address[house_number]", data.address.house_number || "");
-  formData.append("address[house_number_addition]", data.address.house_number_addition || "");
-  formData.append("address[city]", data.address.city || "");
-  formData.append("address[province]", data.address.province || "");
-
-  // Pricing
-  appendIfExists(formData, "subtotal", data.subtotal);
-  appendIfExists(formData, "vat_amount", data.vat_amount ?? 0);
-  appendIfExists(formData, "discount_amount", data.discount_amount);
-  appendIfExists(formData, "discount_type", data.discount_type || "percentage");
-  appendIfExists(formData, "total_amount", data.total_amount);
-
-  // items[n][field]
-  data.items.forEach((item, idx) => {
-    appendIfExists(formData, `items[${idx}][product_id]`, item.product_id);
-    appendIfExists(formData, `items[${idx}][unit]`, item.unit);
-    appendIfExists(formData, `items[${idx}][title]`, item.title);
-    appendIfExists(formData, `items[${idx}][description]`, item.description);
-    appendIfExists(formData, `items[${idx}][unit_price]`, item.unit_price);
-    appendIfExists(formData, `items[${idx}][vat_amount]`, item.vat_amount ?? 0);
-    appendIfExists(formData, `items[${idx}][total]`, item.total);
-  });
-
-  // Payment
-  if (data.payment) {
-    appendIfExists(formData, "payment[payment_method]", data.payment.payment_method);
-    appendIfExists(formData, "payment[total_cash]", data.payment.total_cash);
-
-    data.payment.terms?.forEach((term, idx) => {
-      appendIfExists(formData, `payment[terms][${idx}][description]`, term.description);
-      appendIfExists(formData, `payment[terms][${idx}][status]`, term.status);
-      appendIfExists(formData, `payment[terms][${idx}][percentage]`, term.percentage);
-      appendIfExists(formData, `payment[terms][${idx}][total_price]`, term.total_price);
-    });
-  }
-
-  // exclusions[]
-  (data.exclusions ?? []).forEach((exclusion) => {
-    formData.append("exclusions[]", exclusion.description);
-  });
-
-  // attachments[]
-  (data.attachments ?? []).forEach((file) => {
-    if (file instanceof File) {
-      formData.append("attachments[]", file);
-    } else if (typeof file === "object" && file !== null) {
-      formData.append("attachments[]", file.url || "");
-    }
-  });
+  appendLeads(formData, data.leads);
+  appendQuotes(formData, data.quotes);
+  appendAddress(formData, data.address);
+  appendAttachments(formData, data.attachments);
+  appendExclusions(formData, data.exclusions);
+  appendPayment(formData, data.payment);
+  appendItems(formData, data);
 
   return formData;
 };
@@ -140,8 +85,6 @@ const WorkAgreementEdit = () => {
   const methods = useForm<WorkAgreementReq>({
     defaultValues: defaultWorkAgreement,
   });
-
-  const quotes = methods.watch("quotes");
 
   const getMyAttachmentsZ = useGetMyAttachments({
     page: 1,
@@ -153,16 +96,14 @@ const WorkAgreementEdit = () => {
   const createWorkAgreementZ = useCreateWorkAgreement();
   const updateWorkAgreementZ = useUpdateWorkAgreement();
   const getWorkAgreementZ = useGetWorkAgreement(id || "");
-  const getQuotationZ = useGetQuotation(quotes && quotes.length > 0 ? quotes[0] : "");
-
 
   const handleStore = async (data: WorkAgreementReq) => {
-    const formData = appendWorkContract(data);
+    const formData = appendWorkContract(data, false);
     await createWorkAgreementZ.mutateAsync(formData);
   };
 
   const handleUpdate = async (data: WorkAgreementReq) => {
-    const formData = appendWorkContract(data);
+    const formData = appendWorkContract(data, true);
     formData.append("_method", "PATCH");
     await updateWorkAgreementZ.mutateAsync({ id: id || "", formData });
   };
@@ -179,7 +120,7 @@ const WorkAgreementEdit = () => {
         subtotal: Number(data.subtotal),
         discount_amount: Number(data.discount_amount ?? 0),
         discount_type: data.discount_type,
-        vat_amount: Number(data.vat_amount ?? 0),
+        // vat_amount: Number(data.vat_amount ?? 0),
         total_amount: Number(data.total_amount),
         address: {
           ...data.address,
@@ -207,7 +148,7 @@ const WorkAgreementEdit = () => {
           })) ?? [],
         },
         exclusions: data.exclusions.map((e) => ({ description: e.description })),
-        attachments: data.attachments.map((file) =>
+        attachments: data?.attachments.map((file) =>
           file instanceof File
             ? new File([], file.name || "attachment.pdf", { type: "application/pdf" })
             : file
@@ -216,20 +157,6 @@ const WorkAgreementEdit = () => {
     }
   }, [getWorkAgreementZ.isSuccess, getWorkAgreementZ.data]);
 
-
-  // load if quotation is selected
-  useEffect(() => {
-    if (getQuotationZ.isSuccess && getQuotationZ.data.result) {
-      const data = getQuotationZ.data.result;
-      methods.setValue("items", data.items.map(item => ({
-        ...item,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        vat_amount: Number(item.vat_amount),
-        total: Number(item.total),
-      })));
-    }
-  }, [getQuotationZ.isSuccess, getQuotationZ.data, methods]);
 
 
   return (

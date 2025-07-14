@@ -76,7 +76,6 @@ export const WorkAgreementAttachments: React.FC<WorkAgreementAttachmentsProps> =
           errors: errors as FieldValues,
         }}
         listUploaded={defaultAttachments}
-        deleteUploaded={undefined}
         type={"agreement"}
       />
     </div>

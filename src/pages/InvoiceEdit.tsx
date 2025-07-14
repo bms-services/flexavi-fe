@@ -12,14 +12,17 @@ import { InvoiceDetailsForm } from "@/components/invoices/forms/InvoiceDetailsFo
 import { LineItemsList } from "@/components/quotes/LineItemsList";
 import { InvoiceHeader } from "@/components/invoices/header/InvoiceHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
-import { FormProvider, useForm } from "react-hook-form";
+import { Control, FieldValues, FormProvider, useForm } from "react-hook-form";
 import { InvoiceCreditReq, InvoiceCreditType, InvoiceReq, InvoiceSendReq, InvoiceStatusMap } from "@/zustand/types/invoiceT";
-import { flattenAddressToObject } from "@/utils/dataTransform";
+import { appendAddress, appendAttachments, appendIfExists, appendItems, appendLeads, flattenAddressToObject } from "@/utils/dataTransform";
 import { useCreateInvoice, useCreditInvoice, useGetInvoice, useSendInvoice, useUpdateInvoice } from "@/zustand/hooks/useInvoice";
 import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { useEffect, useState } from "react";
 import { SendInvoiceDialog } from "@/components/invoices/SendInvoiceDialog";
 import { CreditInvoiceDialog } from "@/components/invoices/CreditInvoiceDialog";
+import { DropZoneAlpha } from "@/components/ui/drop-zone-alpha/DropZoneAlpha";
+import { useTranslation } from "react-i18next";
+import { useGetMyAttachments } from "@/zustand/hooks/useSetting";
 
 const defaultInvoiceData: InvoiceReq = {
   leads: [],
@@ -38,7 +41,8 @@ const defaultInvoiceData: InvoiceReq = {
   subtotal: 0,
   discount_amount: 0,
   discount_type: "percentage",
-  total_amount: 0
+  total_amount: 0,
+  attachments: [],
 };
 
 const defaultInvoiceSendData: InvoiceSendReq = {
@@ -48,7 +52,29 @@ const defaultInvoiceSendData: InvoiceSendReq = {
   email: "",
 };
 
+const appendInvoice = (data: InvoiceReq, isUpdate: boolean): FormData => {
+  const formData = new FormData();
+
+  if (isUpdate) {
+    formData.append('_method', "patch");
+  }
+
+  appendIfExists(formData, "description", data.description);
+  appendIfExists(formData, "notes", data.notes);
+  appendIfExists(formData, "payment_date", data.payment_date);
+  appendIfExists(formData, "expiration_date", data.expiration_date);
+  appendIfExists(formData, "status", data.status);
+
+  appendAddress(formData, data.address);
+  appendLeads(formData, data.leads);
+  appendAttachments(formData, data.attachments);
+  appendItems(formData, data);
+
+  return formData;
+}
+
 const InvoiceEdit = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
   const createInvoiceZ = useCreateInvoice();
@@ -62,6 +88,13 @@ const InvoiceEdit = () => {
     send: false,
   });
 
+  const getMyAttachmentsZ = useGetMyAttachments({
+    page: 1,
+    per_page: 10,
+    search: "",
+    type: "invoice",
+  });
+
 
   const methods = useForm<InvoiceReq>({
     defaultValues: defaultInvoiceData,
@@ -72,61 +105,13 @@ const InvoiceEdit = () => {
   });
 
   const handleStore = async (data: InvoiceReq) => {
-    const formattedData: InvoiceReq = {
-      ...data,
-      address: flattenAddressToObject(data.address),
-      leads: data.leads.map((lead) =>
-        typeof lead === "string" ? lead : lead.value
-      ),
-      items: data.items.map((item) => ({
-        ...item,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        vat_amount: Number(item.vat_amount),
-        total: Number(item.total),
-      })),
-      subtotal: Number(data.subtotal),
-      discount_amount: Number(data.discount_amount),
-      total_amount: Number(data.total_amount),
-    };
-    await createInvoiceZ.mutateAsync(formattedData);
+    const formData = appendInvoice(data, false);
+    await createInvoiceZ.mutateAsync(formData);
   };
 
   const handleUpdate = async (data: InvoiceReq) => {
-    const {
-      description,
-      notes,
-      expiration_date,
-      payment_date,
-      status,
-      discount_type,
-    } = data;
-
-
-    const formattedData: Partial<InvoiceReq> = {
-      description,
-      notes,
-      expiration_date,
-      payment_date,
-      status,
-      discount_type,
-      address: flattenAddressToObject(data.address),
-      leads: data.leads.map((lead) =>
-        typeof lead === "string" ? lead : lead.value
-      ),
-      items: data.items.map((item) => ({
-        ...item,
-        quantity: Number(item.quantity),
-        unit_price: Number(item.unit_price),
-        vat_amount: Number(item.vat_amount),
-        total: Number(item.total),
-      })),
-      subtotal: Number(data.subtotal),
-      discount_amount: Number(data.discount_amount),
-      total_amount: Number(data.total_amount),
-    };
-
-    await updateInvoiceZ.mutateAsync({ id: id || "", formData: formattedData });
+    const formData = appendInvoice(data, true);
+    await updateInvoiceZ.mutateAsync({ id: id || "", formData });
   }
 
   const handleOpenModal = (type: "send" | "credit") => {
@@ -171,6 +156,11 @@ const InvoiceEdit = () => {
         subtotal: Number(data.subtotal),
         discount_amount: Number(data.discount_amount),
         total_amount: Number(data.total_amount),
+        attachments: data?.attachments.map((file) =>
+          file instanceof File
+            ? new File([], file.name || "attachment.pdf", { type: "application/pdf" })
+            : file
+        ),
       });
     }
   }, [getInvoiceZ.isSuccess, getInvoiceZ.data, methods]);
@@ -204,6 +194,46 @@ const InvoiceEdit = () => {
                 <CardContent>
                   <LineItemsList />
                   <QuoteSummary />
+                </CardContent>
+              </Card>
+
+              <Card className="lg:col-span-3">
+                <CardHeader>
+                  <CardTitle>Factuur bijlagen</CardTitle>
+                  <CardDescription>
+                    Voeg bijlagen toe aan de factuur
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DropZoneAlpha
+                    label={t("settings.attachment.label.upload")}
+                    multiple={true}
+                    accept={{
+                      "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+                      "application/pdf": [".pdf"],
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+                      "application/vnd.ms-excel": [".xls", ".xlsx"],
+                      "text/plain": [".txt"],
+                    }}
+                    maxFiles={5}
+                    maxSize={2 * 1024 * 1024}
+                    rules={{
+                      name: "attachments",
+                      control: methods.control as unknown as Control<FieldValues>,
+                      options: {
+                        // required: t("settings.attachment.error.required.files"),
+                        // validate: {
+                        //   maxFiles: (value) => {
+                        //     const files = value as File[];
+                        //     return files.length <= 5 || t("settings.attachment.error.maxFiles.files");
+                        //   },
+                        // },
+                      },
+                      errors: methods.formState.errors as FieldValues,
+                    }}
+                    listUploaded={getMyAttachmentsZ}
+                    type={"agreement"}
+                  />
                 </CardContent>
               </Card>
             </div>

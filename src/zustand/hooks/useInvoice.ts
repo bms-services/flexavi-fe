@@ -31,7 +31,7 @@ export const useGetInvoice = (id: string) => {
 export const useCreateInvoice = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    return useMutation<ApiSuccess<InvoiceRes>, ApiError, InvoiceReq>({
+    return useMutation<ApiSuccess<InvoiceRes>, ApiError, FormData>({
         mutationFn: createInvoiceService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['invoices'] });
@@ -42,7 +42,7 @@ export const useCreateInvoice = () => {
 
 export const useUpdateInvoice = () => {
     const queryClient = useQueryClient();
-    return useMutation<ApiSuccess<InvoiceRes>, ApiError, { id: string; formData: Partial<InvoiceReq> }>({
+    return useMutation<ApiSuccess<InvoiceRes>, ApiError, { id: string; formData: FormData }>({
         mutationFn: updateInvoiceService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['invoices'] });

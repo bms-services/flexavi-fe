@@ -28,8 +28,6 @@ const defaultExpenseData: ExpenseReq = {
 
 const convertToFormData = (data: ExpenseReq) => {
   const formData = new FormData();
-
-  // Field biasa
   formData.append('company', data.company);
   formData.append('due_date', data.due_date);
   formData.append('description', data.description);
@@ -39,7 +37,7 @@ const convertToFormData = (data: ExpenseReq) => {
   formData.append('vat_amount', String(data.vat_amount));
   formData.append('total_amount', String(data.total_amount));
   formData.append('notes', data.notes || '');
-  formData.append('voucher', data.voucher || 'no_voucher');
+  // formData.append('voucher', data.voucher || 'no_voucher');
   formData.append('status', data.status);
 
   data.tags?.forEach((tag) => {
@@ -50,13 +48,9 @@ const convertToFormData = (data: ExpenseReq) => {
     }
   });
 
-  data.attachments?.forEach((file) => {
-    formData.append('attachments[]', file);
-    // if (file instanceof File) {
-    // } else {
-    //   formData.append('attachments[]', file);
-    // }
-  });
+  // data.attachments?.forEach((file) => {
+  //   formData.append('attachments[]', file);
+  // });
 
   return formData;
 };

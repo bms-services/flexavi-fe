@@ -1,4 +1,7 @@
 import { AddressReq } from "@/zustand/types/addressT";
+import { InvoiceAttachmentsRes, InvoiceReq } from "@/zustand/types/invoiceT";
+import { QuotationAttachmentsRes, QuotationReq } from "@/zustand/types/quotationT";
+import { WorkAgreementAttachmentsRes, WorkAgreementReq } from "@/zustand/types/workAgreementT";
 
 export const flattenAddressToObject = (address: AddressReq): AddressReq => {
     const { postal_code, street, house_number, house_number_addition } = address;
@@ -55,9 +58,97 @@ export const objectToFormData = (obj: Record<string, unknown>, form: FormData = 
     return form;
 };
 
-
 export const appendIfExists = (formData: FormData, key: string, value: string | number | undefined) => {
     if (value !== undefined && value !== null && value !== '') {
         formData.append(key, String(value));
     }
+};
+
+export const appendLeads = (formData: FormData, leads: (string | { value: string; label: string })[]) => {
+    leads.forEach(lead => {
+        if (typeof lead === "string") {
+            formData.append("leads[]", lead);
+        } else if (lead && typeof lead.value === "string") {
+            formData.append("leads[]", lead.value);
+        }
+    });
+}
+
+export const appendQuotes = (formData: FormData, quotes: (string | { value: string; label: string })[]) => {
+    quotes.forEach(quote => {
+        if (typeof quote === "string") {
+            formData.append("quotes[]", quote);
+        } else if (quote && typeof quote.value === "string") {
+            formData.append("quotes[]", quote.value);
+        }
+    });
+}
+
+export const appendAddress = (formData: FormData, address: AddressReq) => {
+    formData.append("address[street]", address.street || "");
+    formData.append("address[postal_code]", typeof address.postal_code === "object"
+        ? address.postal_code.value
+        : address.postal_code || "");
+    formData.append("address[house_number]", address.house_number || "");
+    formData.append("address[house_number_addition]", address.house_number_addition || "");
+    formData.append("address[city]", address.city || "");
+    formData.append("address[province]", address.province || "");
+};
+
+export const appendItems = (
+    formData: FormData,
+    data: Partial<WorkAgreementReq> | Partial<QuotationReq> | Partial<InvoiceReq>) => {
+    data?.items?.forEach((item, idx) => {
+        appendIfExists(formData, `items[${idx}][quantity]`, item.quantity);
+        appendIfExists(formData, `items[${idx}][unit]`, item.unit);
+        appendIfExists(formData, `items[${idx}][unit_price]`, item.unit_price);
+        appendIfExists(formData, `items[${idx}][vat_amount]`, item.vat_amount ?? 0);
+        appendIfExists(formData, `items[${idx}][total]`, item.total);
+
+        appendIfExists(formData, `items[${idx}][product_id]`, item.product_id);
+        appendIfExists(formData, `items[${idx}][title]`, item.title);
+        appendIfExists(formData, `items[${idx}][description]`, item.description);
+    });
+
+    appendIfExists(formData, "subtotal", data.subtotal);
+    appendIfExists(formData, "discount_amount", data.discount_amount);
+    appendIfExists(formData, "discount_type", data.discount_type || "percentage");
+    appendIfExists(formData, "total_amount", data.total_amount);
+}
+
+export const appendAttachments = (formData: FormData, attachments: File[] | WorkAgreementAttachmentsRes[] | QuotationAttachmentsRes[] | InvoiceAttachmentsRes[]) => {
+    if (attachments?.length === 0) {
+        return;
+    }
+
+    attachments.forEach(file => {
+        if (file instanceof File) {
+            formData.append("attachments[]", file);
+        } else if (typeof file === "object" && file !== null && 'url' in file) {
+            formData.append("attachments[]", file.url || "");
+        }
+    });
+}
+
+export const appendExclusions = (formData: FormData, exclusions: { description: string }[]) => {
+    exclusions?.forEach(exclusion => {
+        formData.append("exclusions[]", exclusion.description);
+    });
+}
+
+
+export const appendPayment = (formData: FormData, payment: {
+    payment_method?: string;
+    total_cash?: number;
+    terms?: { description: string; status: string; percentage: number; total_price: number }[];
+}) => {
+    appendIfExists(formData, "payment[payment_method]", payment.payment_method);
+    appendIfExists(formData, "payment[total_cash]", payment.total_cash);
+
+    payment.terms?.forEach((term, idx) => {
+        appendIfExists(formData, `payment[terms][${idx}][description]`, term.description);
+        appendIfExists(formData, `payment[terms][${idx}][status]`, term.status);
+        appendIfExists(formData, `payment[terms][${idx}][percentage]`, term.percentage);
+        appendIfExists(formData, `payment[terms][${idx}][total_price]`, term.total_price);
+    });
 };

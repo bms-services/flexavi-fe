@@ -14,14 +14,14 @@ export const getQuotationService = async (id: string): Promise<ApiSuccess<Quotat
     return data;
 };
 
-export const createQuotationService = async (formData: QuotationReq): Promise<ApiSuccess<QuotationRes>> => {
+export const createQuotationService = async (formData: FormData): Promise<ApiSuccess<QuotationRes>> => {
     const { data } = await mainApi.post("/quotes", formData);
     if (!data.success) throw data;
     return data;
 };
 
-export const updateQuotationService = async ({ id, formData }: { id: string, formData: Partial<QuotationReq> }): Promise<ApiSuccess<QuotationRes>> => {
-    const { data } = await mainApi.patch(`/quotes/${id}`, formData);
+export const updateQuotationService = async ({ id, formData }: { id: string, formData: Partial<FormData> }): Promise<ApiSuccess<QuotationRes>> => {
+    const { data } = await mainApi.post(`/quotes/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

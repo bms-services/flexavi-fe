@@ -91,16 +91,16 @@ export const PaymentTermsForm: React.FC<PaymentTermsFormProps> = ({
     if (getWorkAgreementTemplateZ.isSuccess && getWorkAgreementTemplateZ.data?.result) {
       const data = getWorkAgreementTemplateZ.data.result;
 
+      setValue("general_term_conditions", data.terms_and_conditions);
       setValue("warranty", Number(data.warranty ?? 0));
       setValue("exclusions", data.exclusions.map((e) => ({ description: e.description })));
       setValue("payment.payment_method", data.payment.payment_method as WorkAgreementPaymentMethod);
       setValue("payment.total_cash", Number(data.payment.total_cash ?? 0));
       setValue("payment.total_percentage", 0);
-
       replace(
         (data.payment.terms ?? []).map((term) => ({
           ...term,
-          id: term.id || `${Date.now()}-${Math.random()}`, // fallback id
+          id: term.id || `${Date.now()}-${Math.random()}`,
           percentage: Number(term.percentage),
           total_price: Number(term.total_price),
         }))

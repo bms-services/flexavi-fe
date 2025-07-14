@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { InvoiceReq, InvoiceRes, InvoiceSummaryRes, InvoiceCreditRes, InvoiceSendRes } from "../types/invoiceT";
+import { InvoiceRes, InvoiceSummaryRes, InvoiceCreditRes, InvoiceSendRes } from "../types/invoiceT";
 
 export const getInvoicesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<InvoiceRes>> => {
     const { data } = await mainApi.get("/invoices", { params });
@@ -14,14 +14,14 @@ export const getInvoiceService = async (id: string): Promise<ApiSuccess<InvoiceR
     return data;
 };
 
-export const createInvoiceService = async (formData: InvoiceReq): Promise<ApiSuccess<InvoiceRes>> => {
+export const createInvoiceService = async (formData: FormData): Promise<ApiSuccess<InvoiceRes>> => {
     const { data } = await mainApi.post("/invoices", formData);
     if (!data.success) throw data;
     return data;
 };
 
-export const updateInvoiceService = async ({ id, formData }: { id: string, formData: Partial<InvoiceReq> }): Promise<ApiSuccess<InvoiceRes>> => {
-    const { data } = await mainApi.patch(`/invoices/${id}`, formData);
+export const updateInvoiceService = async ({ id, formData }: { id: string, formData: FormData }): Promise<ApiSuccess<InvoiceRes>> => {
+    const { data } = await mainApi.post(`/invoices/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

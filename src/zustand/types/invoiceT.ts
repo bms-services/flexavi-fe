@@ -16,6 +16,7 @@ export type InvoiceReq = {
     discount_amount: number;
     discount_type: string;
     total_amount: number;
+    attachments: InvoiceAttachmentsRes[] | File[];
 };
 
 export type InvoiceRes = {
@@ -32,6 +33,7 @@ export type InvoiceRes = {
     discount_amount: number;
     discount_type: string;
     total_amount: number;
+    attachments: InvoiceAttachmentsRes[] | File[];
     created_at: string;
     updated_at: string;
 };
@@ -135,3 +137,13 @@ export type InvoiceSummaryRes = {
     total_paid: 0;
     total_open: 0;
 }
+
+export type InvoiceAttachmentsRes = {
+    id: string;
+    name: string;
+    size: number;
+    type: string;
+    url: string;
+    created_at: string;
+    updated_at: string;
+};

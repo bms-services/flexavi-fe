@@ -16,6 +16,7 @@ export type QuotationReq = {
     discount_amount: number;
     discount_type: string;
     total_amount: number;
+    attachments: QuotationAttachmentsRes[] | File[];
 };
 
 export type QuotationRes = {
@@ -33,6 +34,7 @@ export type QuotationRes = {
     discount_amount: number;
     discount_type: string;
     total_amount: number;
+    attachments: QuotationAttachmentsRes[] | File[];
     created_at: string;
     updated_at: string;
 };
@@ -92,4 +94,15 @@ export const quotationStatusMap: Record<
     expired: { label: "Verlopen", variant: "danger" },
     converted: { label: "Geconverteerd", variant: "success" },
     concept: { label: "Concept", variant: "secondary" },
+};
+
+
+export type QuotationAttachmentsRes = {
+    id: string;
+    name: string;
+    agreement_id: string;
+    url: string;
+    path: string;
+    created_at: string;
+    updated_at: string;
 };

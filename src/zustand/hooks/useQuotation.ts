@@ -28,7 +28,7 @@ export const useGetQuotation = (id: string) => {
 export const useCreateQuotation = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    return useMutation<ApiSuccess<QuotationRes>, ApiError, QuotationReq>({
+    return useMutation<ApiSuccess<QuotationRes>, ApiError, FormData>({
         mutationFn: createQuotationService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['quotations'] });
@@ -39,7 +39,7 @@ export const useCreateQuotation = () => {
 
 export const useUpdateQuotation = () => {
     const queryClient = useQueryClient();
-    return useMutation<ApiSuccess<QuotationRes>, ApiError, { id: string; formData: Partial<QuotationReq> }>({
+    return useMutation<ApiSuccess<QuotationRes>, ApiError, { id: string; formData: Partial<FormData> }>({
         mutationFn: updateQuotationService,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['quotations'] });

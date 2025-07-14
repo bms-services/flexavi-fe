@@ -14,11 +14,14 @@ import { QuoteSummary } from "@/components/quotes/QuoteSummary";
 import { QuoteHeader } from "@/components/quotes/header/QuoteHeader";
 import { CustomerCard } from "@/components/quotes/customer/CustomerCard";
 import { QuoteStats } from "@/components/quotes/QuoteStats";
-import { FormProvider, useForm } from "react-hook-form";
+import { Control, FieldValues, FormProvider, useForm } from "react-hook-form";
 import { QuotationReq, quotationStatusMap } from "@/zustand/types/quotationT";
 import { useCreateQuotation, useGetQuotation, useUpdateQuotation } from "@/zustand/hooks/useQuotation";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
-import { flattenAddressToObject } from "@/utils/dataTransform";
+import { appendAddress, appendAttachments, appendIfExists, appendItems, appendLeads } from "@/utils/dataTransform";
+import { useGetMyAttachments } from "@/zustand/hooks/useSetting";
+import { DropZoneAlpha } from "@/components/ui/drop-zone-alpha/DropZoneAlpha";
+import { useTranslation } from "react-i18next";
 
 const defaultQuotationData: QuotationReq = {
   leads: [],
@@ -37,32 +40,42 @@ const defaultQuotationData: QuotationReq = {
   subtotal: 0,
   discount_amount: 0,
   discount_type: "percentage",
-  total_amount: 0
+  total_amount: 0,
+  attachments: []
 };
 
-const appendQuotation = (data: QuotationReq) => {
-  return {
-    ...data,
-    address: flattenAddressToObject(data.address),
-    leads: data.leads.map((lead) =>
-      typeof lead === "string" ? lead : lead.value
-    ),
-    items: data.items.map((item) => ({
-      ...item,
-      quantity: Number(item.quantity),
-      unit_price: Number(item.unit_price),
-      vat_amount: Number(item.vat_amount),
-      total: Number(item.total),
-    })),
-    subtotal: Number(data.subtotal),
-    discount_amount: Number(data.discount_amount),
-    total_amount: Number(data.total_amount),
-  };
+const appendQuotation = (data: QuotationReq, isUpdate: boolean) => {
+  const formData = new FormData();
+
+  if (isUpdate) {
+    formData.append('_method', "patch");
+  }
+
+  appendIfExists(formData, "title", data.title);
+  appendIfExists(formData, "description", data.description);
+  appendIfExists(formData, "notes", data.notes);
+  appendIfExists(formData, "planned_start_date", data.planned_start_date);
+  appendIfExists(formData, "status", data.status);
+
+  appendLeads(formData, data.leads);
+  appendAddress(formData, data.address);
+  appendAttachments(formData, data.attachments);
+  appendItems(formData, data);
+
+
+  return formData;
 }
 
-
 const QuoteEdit = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+
+  const getMyAttachmentsZ = useGetMyAttachments({
+    page: 1,
+    per_page: 10,
+    search: "",
+    type: "quotation",
+  });
 
   const createQuotationZ = useCreateQuotation();
   const updateQuotationZ = useUpdateQuotation();
@@ -73,11 +86,12 @@ const QuoteEdit = () => {
   });
 
   const handleStore = async (data: QuotationReq) => {
-    await createQuotationZ.mutateAsync(appendQuotation(data));
+    const formData = appendQuotation(data, false);
+    await createQuotationZ.mutateAsync(formData);
   };
 
   const handleUpdate = async (data: QuotationReq) => {
-    await updateQuotationZ.mutateAsync({ id: id || "", formData: appendQuotation(data) });
+    await updateQuotationZ.mutateAsync({ id: id || "", formData: appendQuotation(data, true) });
   }
 
   useEffect(() => {
@@ -120,6 +134,11 @@ const QuoteEdit = () => {
         subtotal: Number(data.subtotal),
         discount_amount: Number(data.discount_amount),
         total_amount: Number(data.total_amount),
+        attachments: data?.attachments?.map((file) =>
+          file instanceof File
+            ? new File([], file.name || "attachment.pdf", { type: "application/pdf" })
+            : file
+        ),
       });
     }
   }, [getQuotationZ.isSuccess, getQuotationZ.data, methods]);
@@ -156,6 +175,44 @@ const QuoteEdit = () => {
                 <CardContent>
                   <LineItemsList />
                   <QuoteSummary />
+                </CardContent>
+              </Card>
+
+              <Card className="lg:col-span-3">
+                <CardHeader>
+                  <CardTitle>Offerte statistieken</CardTitle>
+                  <CardDescription>Inzicht in hoe vaak de offerte is bekeken (niet zichtbaar voor klanten)</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DropZoneAlpha
+                    label={t("settings.attachment.label.upload")}
+                    multiple={true}
+                    accept={{
+                      "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+                      "application/pdf": [".pdf"],
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+                      "application/vnd.ms-excel": [".xls", ".xlsx"],
+                      "text/plain": [".txt"],
+                    }}
+                    maxFiles={5}
+                    maxSize={2 * 1024 * 1024}
+                    rules={{
+                      name: "attachments",
+                      control: methods.control as unknown as Control<FieldValues>,
+                      options: {
+                        // required: t("settings.attachment.error.required.files"),
+                        // validate: {
+                        //   maxFiles: (value) => {
+                        //     const files = value as File[];
+                        //     return files.length <= 5 || t("settings.attachment.error.maxFiles.files");
+                        //   },
+                        // },
+                      },
+                      errors: methods.formState.errors as FieldValues,
+                    }}
+                    listUploaded={getMyAttachmentsZ}
+                    type={"agreement"}
+                  />
                 </CardContent>
               </Card>
 

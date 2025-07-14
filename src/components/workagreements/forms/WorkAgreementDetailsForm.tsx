@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Controller, ErrorOption, FieldArray, FieldArrayPath, FieldError, FieldErrors, FieldName, FieldValues, FormState, InternalFieldName, ReadFormState, RegisterOptions, SubmitErrorHandler, SubmitHandler, useFormContext, UseFormRegisterReturn } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { WorkAgreementReq, WorkAgreementStatusMap } from "@/zustand/types/workAgreementT";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
-import { useGetQuotations } from "@/zustand/hooks/useQuotation";
+import { useGetQuotation, useGetQuotations } from "@/zustand/hooks/useQuotation";
 import { ParamGlobal } from "@/zustand/types/apiT";
 import { useDebounce } from "use-debounce";
 import PostalCode from "@/components/ui/postal-code";
@@ -32,7 +32,11 @@ export const WorkAgreementDetailsForm: React.FC = () => {
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch] = useDebounce(searchInput, 500);
 
+  const quotes = watch("quotes");
+
   const getQuotationsZ = useGetQuotations(params);
+  const getQuotationZ = useGetQuotation(quotes && quotes.length > 0 ? quotes[0] : "");
+
 
   useEffect(() => {
     setParams(prev => ({
@@ -40,16 +44,23 @@ export const WorkAgreementDetailsForm: React.FC = () => {
       search: debouncedSearch
     }));
   }, [debouncedSearch]);
-  const handleSelectQuotation = (quotationId: string) => {
-    // TODO: Implement for multiple 
-    // const currentQuotes = watch("quotes") || [];
-    // if (currentQuotes.includes(quotationId)) {
-    //   setValue("quotes", currentQuotes.filter((id) => id !== quotationId));
-    // } else {
-    //   setValue("quotes", [...currentQuotes, quotationId]);
-    // }
 
-    // For now, only allow one quotation to be selected
+
+  // load if quotation is selected
+  useEffect(() => {
+    if (getQuotationZ.isSuccess && getQuotationZ.data.result) {
+      const data = getQuotationZ.data.result;
+      setValue("items", data.items.map(item => ({
+        ...item,
+        quantity: Number(item.quantity),
+        unit_price: Number(item.unit_price),
+        vat_amount: Number(item.vat_amount),
+        total: Number(item.total),
+      })));
+    }
+  }, [getQuotationZ.isSuccess, getQuotationZ.data, setValue]);
+
+  const handleSelectQuotation = (quotationId: string) => {
     setValue("quotes", [quotationId]);
   };
 

@@ -14,7 +14,6 @@ export type WorkAgreementReq = {
     items: WorkAgreementItemReq[];
     address: AddressReq;
     subtotal: number;
-    vat_amount: number;
     discount_amount: number;
     discount_type: WorkAgreementDiscountType;
     total_amount: number;
@@ -36,7 +35,6 @@ export type WorkAgreementRes = {
     items: QuotationItemRes[];
     address: AddressRes;
     subtotal: number;
-    vat_amount: number;
     discount_amount: number;
     discount_type: WorkAgreementDiscountType;
     total_amount: number;
@@ -80,6 +78,7 @@ export type WorkContractExclusionsRes = {
 
 export type WorkAgreementItemReq = {
     id?: string;
+    quantity: number;
     product_id?: string;
     unit?: string;
     title: string;
