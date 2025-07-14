@@ -6,6 +6,8 @@ import { IntentRes, PackageReq, PackageRes, PaymentReq, PaymentRes, TrialRes } f
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
 import { AttachmentRes, AttachmentType } from "../types/attachmentT";
+import { MailRes } from "../types/mailT";
+import { SignatureRes } from "../types/signatureT";
 
 // Company
 export const createMyCompanyService = async (formData: FormData): Promise<ApiSuccess<CompanyRes>> => {
@@ -207,6 +209,33 @@ export const deleteMyAttachmentsService = async (ids: string[], force: boolean, 
         params: { force, type },
         data: { ids },
     });
+    if (!data.success) throw data;
+    return data;
+};
+
+
+// Mail Template
+export const getMailTemplatesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<MailRes>> => {
+    const { data } = await mainApi.get("/setting/mail-template", { params });
+    if (!data.success) throw data;
+    return data;
+};
+
+export const updateMailTemplatesService = async (formData: FormData): Promise<ApiSuccess<MailRes>> => {
+    const { data } = await mainApi.post("/setting/mail-template", formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+// Signature
+export const getMySignatureService = async (): Promise<ApiSuccessPaginated<SignatureRes>> => {
+    const { data } = await mainApi.get("/setting/signature");
+    if (!data.success) throw data;
+    return data;
+}
+
+export const updateMySignatureService = async (formData: FormData): Promise<ApiSuccess<SignatureRes>> => {
+    const { data } = await mainApi.post("/setting/signature", formData);
     if (!data.success) throw data;
     return data;
 };

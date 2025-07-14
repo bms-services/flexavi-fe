@@ -1,85 +1,74 @@
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useForm, FormProvider, Controller } from "react-hook-form";
+import { Upload, Mail } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import Signature from "@/components/customer/Signature";
 
-import { Upload, Mail } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
 import { SignatureReq } from "@/zustand/types/signatureT";
-import { useUpdateSignatureTemplate } from "@/zustand/hooks/useSignature";
+import { useGetMySignature, useUpdateMySignature } from "@/zustand/hooks/useSetting";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
-const defaultWorkAgreement: SignatureReq = {
-  document_signature: null,
-  company_logo: null,
+const defaultValues: SignatureReq = {
+  mail_signature: "",
+  attachments: null,
+  blob: "",
+};
+
+const base64ToFile = (base64: string, filename: string): File => {
+  const arr = base64.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
 };
 
 export const SignatureSettings = () => {
-  const methods = useForm<SignatureReq>({
-    defaultValues: defaultWorkAgreement,
-  });
+  const methods = useForm<SignatureReq>({ defaultValues });
+  const { watch, setValue, handleSubmit, control, register } = methods;
 
-  const updateSignatureTemplate = useUpdateSignatureTemplate();
+  const [params] = useState<ParamGlobal>({ page: 1, per_page: 10, search: "" });
+  const getMySignatureZ = useGetMySignature(params);
+  const updateSignatureTemplateZ = useUpdateMySignature();
 
-  const [companyLogo, setCompanyLogo] = useState<string | null>(null);
+  const attachments = watch("attachments");
+  const blob = watch("blob");
+  const mailSignatureHTML = watch("mail_signature");
 
-  const defaultEmailSignature = `
-    <table style="font-family: Arial, sans-serif; color: #333333; font-size: 14px; line-height: 1.6; width: 100%; max-width: 600px; margin: 0; padding: 0; border-collapse: collapse;">
-      <tr>
-        <td style="padding: 20px 0;">
-          ${companyLogo ? `<img src="${companyLogo}" alt="[Bedrijfsnaam]" style="max-width: 200px; height: auto; margin-bottom: 15px;" />` : ''}
-          <div style="border-top: 2px solid #2563eb; margin: 15px 0;"></div>
-          <p style="margin: 0;">Met vriendelijke groet,</p>
-          <p style="margin: 5px 0; font-weight: bold;">[Naam]</p>
-          <p style="margin: 0; color: #666;">[Functie]</p>
-          <div style="margin: 15px 0;">
-            <table style="border-collapse: collapse;">
-              <tr>
-                <td style="padding: 2px 0;"><strong>[Bedrijfsnaam]</strong></td>
-              </tr>
-              <tr>
-                <td style="padding: 2px 0;"><span style="color: #666;">T:</span> [Telefoonnummer]</td>
-              </tr>
-              <tr>
-                <td style="padding: 2px 0;"><span style="color: #666;">E:</span> [E-mailadres]</td>
-              </tr>
-              <tr>
-                <td style="padding: 2px 0;"><span style="color: #666;">W:</span> <a href="[Website]" style="color: #2563eb; text-decoration: none;">[Website]</a></td>
-              </tr>
-            </table>
-          </div>
-          <div style="border-top: 1px solid #e5e7eb; margin: 15px 0; padding-top: 15px;">
-            <p style="margin: 0; font-size: 12px; color: #666;">
-              Dit e-mailbericht is uitsluitend bestemd voor de geadresseerde(n).
-            </p>
-          </div>
-        </td>
-      </tr>
-    </table>
-  `;
-
-  const documentSignature = methods.watch("document_signature");
-
-
-  /**
-   * Function to handle form submission
-   * 
-   * @param data 
-   * @returns {Promise<void>}
-   */
-  const onSubmit = async (data: SignatureReq) => {
-    if (data.document_signature) {
-      const formData = new FormData();
-      formData.append("document_signature", data.document_signature);
-      return updateSignatureTemplate.mutateAsync({ formData })
+  useEffect(() => {
+    const fetched = getMySignatureZ.data?.result?.data[0];
+    if (fetched) {
+      if (fetched.url) {
+        setValue("attachments", fetched.url);
+      }
+      if (fetched.mail_signature) {
+        setValue("mail_signature", fetched.mail_signature);
+      }
     }
+  }, [getMySignatureZ.data, setValue]);
 
-    console.error("No document signature provided");
-  }
+  const onSubmit = async (data: SignatureReq) => {
+    const formData = new FormData();
+    formData.append("_method", "patch");
+    formData.append("mail_signature", data.mail_signature || "");
 
+    if (data.blob && typeof data.blob === "string") {
+      const file = base64ToFile(data.blob, "signature.png");
+      formData.append("attachments", file);
+    }
+    await updateSignatureTemplateZ.mutateAsync(formData);
+  };
 
   return (
-    <form onSubmit={methods.handleSubmit(onSubmit)}>
-      <div className="space-y-6">
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Upload Signature */}
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -95,27 +84,39 @@ export const SignatureSettings = () => {
           <CardContent>
             <div className="space-y-4">
               <Controller
-                name="document_signature"
-                control={methods.control}
+                name="blob"
+                control={control}
                 render={({ field }) => (
                   <Signature onSignatureChange={field.onChange} />
                 )}
               />
-
-              {documentSignature && (
-                <div className="mt-4">
-                  <p className="text-sm text-muted-foreground mb-2">Voorbeeld van je handtekening:</p>
-                  <img
-                    src={documentSignature}
-                    alt="Handtekening voorbeeld"
-                    className="border rounded-md p-2 max-w-[200px]"
-                  />
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                {attachments && (
+                  <div className="mt-4">
+                    <p className="text-sm text-muted-foreground mb-2">Huidige handtekening:</p>
+                    <img
+                      src={attachments instanceof File ? URL.createObjectURL(attachments) : attachments}
+                      alt="Huidige handtekening"
+                      className="border rounded-md p-2 max-w-[200px]"
+                    />
+                  </div>
+                )}
+                {blob && (
+                  <div className="mt-4">
+                    <p className="text-sm text-muted-foreground mb-2">New handtekening:</p>
+                    <img
+                      src={blob}
+                      alt="Handtekening voorbeeld"
+                      className="border rounded-md p-2 max-w-[200px]"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
 
+        {/* Email Signature */}
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -130,9 +131,24 @@ export const SignatureSettings = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              {/* Preview */}
               <div className="border rounded-lg p-4 bg-white">
-                <div dangerouslySetInnerHTML={{ __html: defaultEmailSignature }} />
+                <div dangerouslySetInnerHTML={{ __html: mailSignatureHTML || "" }} />
               </div>
+
+              {/* Editable Textarea */}
+              <div className="space-y-2">
+                <label htmlFor="mail_signature" className="text-sm font-medium">
+                  HTML e-mail handtekening
+                </label>
+                <Textarea
+                  id="mail_signature"
+                  {...register("mail_signature")}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+              </div>
+
+              {/* Variable Info */}
               <div className="text-sm text-muted-foreground">
                 <p>Beschikbare variabelen:</p>
                 <ul className="list-disc list-inside">
@@ -144,11 +160,17 @@ export const SignatureSettings = () => {
                   <li>[Website] - Je website URL</li>
                 </ul>
               </div>
-              <Button type="submit">Handtekening opslaan</Button>
+
+              {/* Submit */}
+              <div className="flex justify-end">
+                <Button type="submit" disabled={updateSignatureTemplateZ.isPending}>
+                  {updateSignatureTemplateZ.isPending ? "Bezig met opslaan..." : "Handtekening opslaan"}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
-      </div>
-    </form>
+      </form>
+    </FormProvider>
   );
 };

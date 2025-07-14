@@ -4,7 +4,7 @@ import { CompanyRes, CompanyRoleRes } from "../types/companyT";
 import { TeamMemberReq, TeamReq, TeamRes } from "../types/teamT";
 import { EmployeeInvitationRes, EmployeeReq, EmployeeRes, EmployeeWorkdaysRes } from "../types/employeeT";
 import { AgendaSettingReq, AgendaSettingRes, AgendaSettingColorReq, AgendaSettingColorRes } from "../types/agendaT";
-import { AttachmentReq, AttachmentRes, AttachmentType } from "../types/attachmentT";
+import { AttachmentRes, AttachmentType } from "../types/attachmentT";
 
 
 import {
@@ -46,10 +46,16 @@ import {
     updateMyAgendaColorSettingsService,
     getMyAttachmentsService,
     createMyAttachmentsService,
-    deleteMyAttachmentsService
+    deleteMyAttachmentsService,
+    getMailTemplatesService,
+    updateMailTemplatesService,
+    getMySignatureService,
+    updateMySignatureService
 } from "../services/settingService";
 import { mapApiErrorsToForm } from "@/utils/mapApiErrorsToForm";
 import { UseFormReturn } from "react-hook-form";
+import { MailRes } from "../types/mailT";
+import { SignatureRes } from "../types/signatureT";
 
 // ------ Company ------ \\
 export const useShowMyCompany = () => {
@@ -306,6 +312,46 @@ export const useDeleteMyAttachment = () => {
         mutationFn: ({ ids, force, type }) => deleteMyAttachmentsService(ids, force, type),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['my-attachments'] });
+        },
+    });
+};
+
+// Mail Templates
+export const useGetMailTemplates = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<MailRes>, ApiError>({
+        queryKey: ['mail-templates', params],
+        queryFn: () => getMailTemplatesService(params),
+        retry: false,
+        retryOnMount: false,
+    });
+}
+
+export const useUpdateMailTemplates = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<MailRes>, ApiError, FormData>({
+        mutationFn: updateMailTemplatesService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['mail-templates'] });
+        },
+    });
+};
+
+// Signature
+export const useGetMySignature = (params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<SignatureRes>, ApiError>({
+        queryKey: ['my-signature', params],
+        queryFn: () => getMySignatureService(),
+        retry: false,
+        retryOnMount: false,
+    });
+}
+
+export const useUpdateMySignature = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<SignatureRes>, ApiError, FormData>({
+        mutationFn: updateMySignatureService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['my-signature'] });
         },
     });
 };
