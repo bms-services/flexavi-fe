@@ -22,7 +22,7 @@ export const WizardLeadStep: React.FC = () => {
   const leadsZ = useGetLeads(params);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-[600px]">
       <div>
         <h2 className="text-xl font-semibold mb-2">Selecteer een bestaande lead</h2>
         <p className="text-muted-foreground mb-4">
@@ -32,11 +32,7 @@ export const WizardLeadStep: React.FC = () => {
 
       <SelectList
         name="leads"
-        // rules={{
-        //   required: "Selecteer een lead",
-        //   validate: (value) =>
-        //     Array.isArray(value) && value.length > 0 || "Selecteer minstens één lead"
-        // }}
+        rules={{ required: "Selecteer een lead" }}
         placeholder="Zoek bestaande leads..."
         items={leadsZ.data?.result.data ?? []}
         selectedIdsField="leads"

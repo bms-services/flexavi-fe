@@ -21,7 +21,7 @@ export const createExpenseService = async (formData: FormData): Promise<ApiSucce
 };
 
 export const updateExpenseService = async ({ id, formData }: { id: string, formData: Partial<FormData> }): Promise<ApiSuccess<ExpenseRes>> => {
-    const { data } = await mainApi.patch(`/costs/${id}`, formData);
+    const { data } = await mainApi.post(`/costs/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };

@@ -4,7 +4,7 @@ export type AddressReq = {
     house_number: string;
     house_number_addition?: string;
     city: string;
-    province?: string;
+    province: string;
 }
 
 export type AddressRes = {

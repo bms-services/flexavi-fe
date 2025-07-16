@@ -34,7 +34,8 @@ const defaultQuotationData: QuotationReq = {
     street: "",
     city: "",
     postal_code: "",
-    house_number: ""
+    house_number: "",
+    province: "",
   },
   items: [],
   subtotal: 0,
@@ -126,9 +127,10 @@ const QuoteEdit = () => {
         },
         items: data.items.map((item) => ({
           ...item,
+          unit: item.unit || "",
           quantity: Number(item.quantity),
-          unit_price: Number(item.unit_price),
-          vat_amount: Number(item.vat_amount),
+          unit_price: item.unit_price !== undefined ? String(item.unit_price) : "",
+          vat_amount: item.vat_amount !== undefined ? String(item.vat_amount) : "",
           total: Number(item.total),
         })),
         subtotal: Number(data.subtotal),
@@ -200,13 +202,6 @@ const QuoteEdit = () => {
                       name: "attachments",
                       control: methods.control as unknown as Control<FieldValues>,
                       options: {
-                        // required: t("settings.attachment.error.required.files"),
-                        // validate: {
-                        //   maxFiles: (value) => {
-                        //     const files = value as File[];
-                        //     return files.length <= 5 || t("settings.attachment.error.maxFiles.files");
-                        //   },
-                        // },
                       },
                       errors: methods.formState.errors as FieldValues,
                     }}

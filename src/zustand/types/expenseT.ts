@@ -30,6 +30,7 @@ export type ExpenseRes = {
     total_amount: number;
     status: ExpenseStatus;
     notes: string;
+    tags: string[];
     receipt_url: string | null;
     created_at: string;
     updated_at: string;

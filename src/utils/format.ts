@@ -89,3 +89,21 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 };
+
+export const formatNormalizeCurrency = (value: unknown): number => {
+  if (typeof value === "string") {
+    const cleaned = value.replace(",", ".").replace(/[^0-9.-]+/g, "");
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+  return typeof value === "number" ? value : 0;
+};
+
+export const formatCurrencyToString = (value: number): string => {
+  if (isNaN(value)) return "0,00";
+  return new Intl.NumberFormat("nl-NL", {
+    style: "decimal",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value).replace(".", ",");
+}

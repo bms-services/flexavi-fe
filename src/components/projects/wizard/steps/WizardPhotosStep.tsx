@@ -1,120 +1,110 @@
-
-import React, { useState } from 'react';
-import { WizardData } from '../useProjectWizard';
+import React, { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useFormContext, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Image, X, Upload } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { ProjectReq } from '@/zustand/types/projectT';
+import { X, Image } from 'lucide-react';
+import { cn } from '@/utils/format';
 
-interface WizardPhotosStepProps {
-  wizardData: WizardData;
-  setWizardData: (data: WizardData) => void;
-}
+export const WizardPhotosStep: React.FC = () => {
+  const { control } = useFormContext<ProjectReq>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'photos',
+  });
 
-export const WizardPhotosStep: React.FC<WizardPhotosStepProps> = ({
-  wizardData,
-  setWizardData
-}) => {
-  const [photos, setPhotos] = useState<{ name: string; url: string }[]>(
-    wizardData.photos || []
-  );
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    acceptedFiles.forEach((file, idx) => {
+      const reader = new FileReader();
 
-  // These are mock functions as actual file uploading isn't implemented
-  const handleAddPhoto = () => {
-    // Mock uploading a photo
-    const mockPhotos = [
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      "https://images.unsplash.com/photo-1517581177682-a085bb7ffb38?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
-    ];
-    
-    const newPhoto = {
-      name: `Foto ${photos.length + 1}`,
-      url: mockPhotos[Math.floor(Math.random() * mockPhotos.length)]
-    };
-    
-    const updatedPhotos = [...photos, newPhoto];
-    setPhotos(updatedPhotos);
-    setWizardData({
-      ...wizardData,
-      photos: updatedPhotos
+      reader.onload = () => {
+        if (reader.result) {
+          append({
+            name: file.name,
+            description: '',
+            file,
+            url: reader.result as string,
+          });
+        }
+      };
+
+      reader.readAsDataURL(file);
     });
-  };
+  }, [append]);
 
-  const handleRemovePhoto = (index: number) => {
-    const updatedPhotos = photos.filter((_, i) => i !== index);
-    setPhotos(updatedPhotos);
-    setWizardData({
-      ...wizardData,
-      photos: updatedPhotos
-    });
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': []
+    },
+    multiple: true,
+  });
 
   const handleSkip = () => {
-    // Clear photos
-    setPhotos([]);
-    setWizardData({
-      ...wizardData,
-      photos: []
-    });
+    fields.forEach((_, i) => remove(i));
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-[600px]">
       <div>
         <h2 className="text-xl font-semibold mb-2">Voeg foto's toe (optioneel)</h2>
-        <p className="text-muted-foreground mb-4">
-          Voeg foto's toe aan het project om de voortgang te documenteren
-        </p>
+        <p className="text-muted-foreground">Voeg foto's toe aan het project om de voortgang te documenteren</p>
+      </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          {photos.map((photo, index) => (
-            <div key={index} className="relative group border rounded-md overflow-hidden">
-              <img 
-                src={photo.url} 
-                alt={photo.name} 
+      <div
+        {...getRootProps()}
+        className={cn(
+          'border-2 border-dashed border-muted rounded-md h-40 flex flex-col items-center justify-center cursor-pointer',
+          'transition-colors hover:bg-accent/50 text-muted-foreground text-center px-4',
+          isDragActive && 'bg-accent'
+        )}
+      >
+        <input {...getInputProps()} />
+        <p className="text-sm">
+          {isDragActive ? 'Laat hier je foto’s vallen...' : 'Sleep hier je foto’s heen of klik om te uploaden'}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">Maximale bestandsgrootte afhankelijk van server</p>
+      </div>
+
+      {fields.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {fields.map((field, index) => (
+            <Card key={field.id} className="relative overflow-hidden group p-0">
+              <img
+                src={field.url}
+                alt={field.name}
                 className="w-full h-40 object-cover"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Button 
-                  variant="destructive" 
+                <Button
+                  type="button"
+                  variant="destructive"
                   size="icon"
-                  onClick={() => handleRemovePhoto(index)}
+                  onClick={() => remove(index)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="p-2 bg-background">
-                <p className="text-sm truncate">{photo.name}</p>
+              <div className="p-2 bg-background border-t">
+                <p className="text-sm truncate">{field.name}</p>
               </div>
-            </div>
+            </Card>
           ))}
-          
-          <button 
-            onClick={handleAddPhoto}
-            className="border-2 border-dashed rounded-md h-52 flex flex-col items-center justify-center gap-2 hover:bg-accent/50 transition-colors"
-          >
-            <Upload className="h-8 w-8 text-muted-foreground" />
-            <span className="text-muted-foreground">Foto toevoegen</span>
-          </button>
         </div>
-
-        {photos.length === 0 && (
-          <div className="p-4 text-center border rounded-md mb-4">
-            <Image className="h-10 w-10 text-muted-foreground mx-auto mb-2" />
-            <p className="text-muted-foreground">
-              Er zijn nog geen foto's toegevoegd aan dit project
-            </p>
-          </div>
-        )}
-
-        <div className="flex gap-2 mt-4">
-          <Button
-            variant="outline"
-            onClick={handleSkip}
-          >
-            Overslaan
-          </Button>
+      ) : (
+        <div className="p-4 text-center border rounded-md flex flex-col items-center gap-2">
+          <Image className="h-10 w-10 text-muted-foreground" />
+          <p className="text-muted-foreground text-sm">
+            Er zijn nog geen foto's toegevoegd aan dit project
+          </p>
         </div>
+      )}
+
+      <div className="flex justify-end">
+        <Button type="button" variant="outline" onClick={handleSkip}>
+          Overslaan
+        </Button>
       </div>
     </div>
   );

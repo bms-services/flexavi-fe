@@ -6,15 +6,16 @@ export interface ProjectReq {
     status: ProjectStatus;
     start_date: string;
     budget: number;
-    profit: number;
+    // profit: number;
     address: AddressReq;
     leads: string[] | { value: string; label: string }[];
     quotes: string[] | { value: string; label: string }[];
     agreements: string[] | { value: string; label: string }[];
     invoices: string[] | { value: string; label: string }[];
-    staffs: ProjectStaffReq[];
+    staffs: string[] | { value: string; label: string }[];
     materials: ProjectMaterialReq[];
     transports: ProjectTransportReq[];
+    photos: ProjectPhotoReq[];
 }
 
 export interface ProjectRes {
@@ -33,6 +34,7 @@ export interface ProjectRes {
     staffs: ProjectStaffRes[];
     materials: ProjectMaterialRes[];
     transports: ProjectTransportRes[];
+    photos: ProjectPhotoRes[];
     created_at: string;
     updated_at: string;
 }
@@ -93,4 +95,18 @@ export const projectStatusMap: Record<ProjectStatus, { label: string; variant: "
     completed: { label: "Voltooid", variant: "success" },
     on_hold: { label: "In de wacht", variant: "warning" },
     cancelled: { label: "Geannuleerd", variant: "danger" },
+};
+
+export type ProjectPhotoReq = {
+    name: string;
+    description: string;
+    file: File;
+    url: string;
+};
+
+export type ProjectPhotoRes = {
+    id: string;
+    url: string;
+    created_at: string;
+    updated_at: string;
 };

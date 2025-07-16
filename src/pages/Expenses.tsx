@@ -9,6 +9,7 @@ import { useGetExpenses } from "@/zustand/hooks/useExpense";
 import { ExpenseRes, ExpenseStatusMap } from "@/zustand/types/expenseT";
 import { formatEuro, formatIsoToDate } from "@/utils/format";
 import ExpenseStatusBadge from "@/components/expenses/ExpenseStatusBadge";
+import { ExpenseTypeIcon } from "@/components/expenses/ExpenseTypeIcon";
 
 const Expenses = () => {
   const navigate = useNavigate();
@@ -27,26 +28,30 @@ const Expenses = () => {
   const meta = useGetExpensesZ.data?.result.meta;
 
   const columns = useMemo<CustomColumnDef<ExpenseRes>[]>(() => [
-    { accessorKey: "expense_number", header: "Nummer", cell: info => info.getValue() },
-    // {
-    //   accessorKey: "leads",
-    //   header: "Klant",
-    //   cell: info => {
-    //     const leads = info.row.original.leads;
-    //     if (Array.isArray(leads) && leads.length > 0) {
-    //       return (
-    //         <div className="flex flex-col">
-    //           {leads.map(lead => (
-    //             <span key={lead.id} className="text-sm text-gray-700">
-    //               {lead.name} ({lead.email})
-    //             </span>
-    //           ))}
-    //         </div>
-    //       )
-    //     }
-    //     return "-";
-    //   }
-    // },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: info => (
+        <span className="text-sm text-gray-700">
+          {ExpenseTypeIcon({
+            type: info.row.original.type,
+            className: "inline-block",
+            size: 16
+          })}
+          {" "}{info.row.original.type.charAt(0).toUpperCase() + info.row.original.type.slice(1)}
+        </span>
+      )
+    },
+    // description column
+    {
+      accessorKey: "description",
+      header: "Omschrijving",
+      cell: info => (
+        <span className="text-sm text-gray-700">
+          {info.getValue() as string}
+        </span>
+      )
+    },
     {
       accessorKey: "created_at",
       header: "Datum",

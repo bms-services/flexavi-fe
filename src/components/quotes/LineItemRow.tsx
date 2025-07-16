@@ -8,7 +8,7 @@ import { useFormContext, useWatch, Controller } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
 import CurrencyInputCore from "react-currency-input-field";
 import { ProductRes } from "@/zustand/types/productT";
-import { formatEuro } from "@/utils/format";
+import { formatEuro, formatNormalizeCurrency } from "@/utils/format";
 
 interface LineItemRowProps {
   index: number;
@@ -21,15 +21,19 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
 
   const productId = useWatch({ control, name: `items.${index}.product_id` });
   const productTitle = useWatch({ control, name: `items.${index}.product_title` });
-  const quantity = useWatch({ control, name: `items.${index}.quantity` });
-  const pricePerUnit = useWatch({ control, name: `items.${index}.unit_price` });
-  const vatRate = useWatch({ control, name: `items.${index}.vat_amount` });
 
-  const total = ((quantity || 0) * (pricePerUnit || 0));
+  const quantityRaw = useWatch({ control, name: `items.${index}.quantity` });
+  const priceRaw = useWatch({ control, name: `items.${index}.unit_price` });
+  // const vatRateRaw = useWatch({ control, name: `items.${index}.vat_amount` });
+
+  const quantity = formatNormalizeCurrency(quantityRaw);
+  const price = formatNormalizeCurrency(priceRaw);
+  // const vatRate = formatNormalizeCurrency(vatRateRaw);
+  const total = quantity * price;
 
   useEffect(() => {
-    setValue(`items.${index}.total`, parseFloat(total.toFixed(2)));
-  }, [quantity, pricePerUnit, vatRate, total, index, setValue]);
+    setValue(`items.${index}.total`, total);
+  }, [quantity, price, index, setValue]);
 
   const handleProductSelect = (product: ProductRes) => {
     setValue(`items.${index}.product_id`, product.id);
@@ -37,8 +41,8 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
     setValue(`items.${index}.title`, product.title);
     setValue(`items.${index}.description`, product.description || "");
     setValue(`items.${index}.unit`, product.unit);
-    setValue(`items.${index}.unit_price`, parseFloat(product.price));
-    setValue(`items.${index}.vat_amount`, parseFloat(product.btw_percentage));
+    setValue(`items.${index}.unit_price`, product.price);
+    setValue(`items.${index}.vat_amount`, product.btw_percentage);
   };
 
   const handleUnlinkProduct = () => {
@@ -96,7 +100,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
             render={({ field }) => (
               <CurrencyInputCore
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseFloat(value || "0"))}
+                onValueChange={(value) => field.onChange(value)}
                 prefix="€ "
                 decimalsLimit={2}
                 decimalSeparator=","
@@ -116,7 +120,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
             render={({ field }) => (
               <CurrencyInputCore
                 value={field.value}
-                onValueChange={(value) => field.onChange(parseFloat(value || "0"))}
+                onValueChange={(value) => field.onChange(value)}
                 suffix=" %"
                 decimalsLimit={2}
                 decimalSeparator=","

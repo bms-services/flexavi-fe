@@ -29,7 +29,7 @@ export function InputTags<T extends FieldValues>({
     return (
         <div className="flex flex-col gap-1">
             {label &&
-                <Label htmlFor={id} className="text-right">
+                <Label htmlFor={id} className="text-left">
                     {label}
                 </Label>
             }
@@ -52,6 +52,8 @@ export function InputTags<T extends FieldValues>({
                         newTags.splice(newPos, 0, tag);
                         field.onChange(newTags);
                     };
+
+                    console.log(field.value);
 
                     return (
                         <div className="relative space-y-1">

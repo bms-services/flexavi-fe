@@ -22,7 +22,7 @@ export const WizardEmployeeStep: React.FC = () => {
   const employeesZ = useGetMyEmployees(params);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-[600px]">
       <div>
         <h2 className="text-xl font-semibold mb-2">Selecteer een bestaande medewerker</h2>
         <p className="text-muted-foreground mb-4">

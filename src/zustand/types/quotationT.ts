@@ -45,8 +45,8 @@ export type QuotationItemReq = {
     unit: string;
     title: string;
     description: string;
-    unit_price: number;
-    vat_amount: number;
+    unit_price: string;
+    vat_amount: string;
     total: number;
     product_id?: string;
     product_title: string;

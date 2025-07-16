@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/utils/format';
-import { Users, Box, Truck, FileText, CircleDollarSign, Image } from 'lucide-react';
+import { Users, Box, Truck, FileText, CircleDollarSign, Image, Users2, Projector } from 'lucide-react';
 
 interface Step {
   icon: React.ElementType;
@@ -9,7 +9,8 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { icon: Users, label: 'Lead' },
+  { icon: Projector, label: 'Detail' },
+  { icon: Users2, label: 'Lead' },
   { icon: FileText, label: 'Offerte' },
   { icon: FileText, label: 'Werkopdracht' },
   { icon: CircleDollarSign, label: 'Factuur' },

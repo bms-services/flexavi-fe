@@ -3,6 +3,7 @@ import { QuotationReq } from "@/zustand/types/quotationT";
 import * as Toggle from "@radix-ui/react-toggle";
 import CurrencyInputCore from "react-currency-input-field";
 import { Euro, Percent } from "lucide-react";
+import { formatEuro, formatNormalizeCurrency } from "@/utils/format";
 
 interface DiscountSectionProps {
   subtotal: number;
@@ -15,11 +16,11 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({ subtotal, clas
   const discountValue = useWatch({ control, name: "discount_amount" });
 
   const calculateDiscount = () => {
+    const valueNum = formatNormalizeCurrency(discountValue);
     return discountType === "percentage"
-      ? (subtotal * discountValue) / 100
-      : discountValue;
+      ? (subtotal * valueNum) / 100
+      : valueNum;
   };
-
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
@@ -39,7 +40,7 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({ subtotal, clas
           <CurrencyInputCore
             value={discountValue}
             onValueChange={(value) =>
-              setValue("discount_amount", parseFloat(value || "0"))
+              setValue("discount_amount", value as unknown as number)
             }
             decimalsLimit={2}
             decimalSeparator=","
@@ -58,10 +59,7 @@ export const DiscountSection: React.FC<DiscountSectionProps> = ({ subtotal, clas
           Korting
         </span>
         <span className="font-bold text-red-500">
-          {new Intl.NumberFormat("nl-NL", {
-            style: "currency",
-            currency: "EUR",
-          }).format(calculateDiscount())}
+          {formatEuro(calculateDiscount())}
         </span>
       </div>
     </div>

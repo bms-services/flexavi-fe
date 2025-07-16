@@ -2,6 +2,7 @@ import { AddressReq } from "@/zustand/types/addressT";
 import { InvoiceAttachmentsRes, InvoiceReq } from "@/zustand/types/invoiceT";
 import { QuotationAttachmentsRes, QuotationReq } from "@/zustand/types/quotationT";
 import { WorkAgreementAttachmentsRes, WorkAgreementReq } from "@/zustand/types/workAgreementT";
+import { formatNormalizeCurrency } from "./format";
 
 export const flattenAddressToObject = (address: AddressReq): AddressReq => {
     const { postal_code, street, house_number, house_number_addition } = address;
@@ -101,19 +102,19 @@ export const appendItems = (
     data?.items?.forEach((item, idx) => {
         appendIfExists(formData, `items[${idx}][quantity]`, item.quantity);
         appendIfExists(formData, `items[${idx}][unit]`, item.unit);
-        appendIfExists(formData, `items[${idx}][unit_price]`, item.unit_price);
-        appendIfExists(formData, `items[${idx}][vat_amount]`, item.vat_amount ?? 0);
-        appendIfExists(formData, `items[${idx}][total]`, item.total);
+        appendIfExists(formData, `items[${idx}][unit_price]`, formatNormalizeCurrency(item.unit_price));
+        appendIfExists(formData, `items[${idx}][vat_amount]`, formatNormalizeCurrency(item.vat_amount) ?? 0);
+        appendIfExists(formData, `items[${idx}][total]`, formatNormalizeCurrency(item.total));
 
         appendIfExists(formData, `items[${idx}][product_id]`, item.product_id);
         appendIfExists(formData, `items[${idx}][title]`, item.title);
         appendIfExists(formData, `items[${idx}][description]`, item.description);
     });
 
-    appendIfExists(formData, "subtotal", data.subtotal);
-    appendIfExists(formData, "discount_amount", data.discount_amount);
+    appendIfExists(formData, "subtotal", formatNormalizeCurrency(data.subtotal));
+    appendIfExists(formData, "discount_amount", formatNormalizeCurrency(data.discount_amount));
     appendIfExists(formData, "discount_type", data.discount_type || "percentage");
-    appendIfExists(formData, "total_amount", data.total_amount);
+    appendIfExists(formData, "total_amount", formatNormalizeCurrency(data.total_amount));
 }
 
 export const appendAttachments = (formData: FormData, attachments: File[] | WorkAgreementAttachmentsRes[] | QuotationAttachmentsRes[] | InvoiceAttachmentsRes[]) => {

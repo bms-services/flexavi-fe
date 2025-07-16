@@ -1,7 +1,7 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { QuotationReq } from "@/zustand/types/quotationT";
 import { DiscountSection } from "./line-items/DiscountSection";
-import { formatEuro } from "@/utils/format";
+import { formatEuro, formatNormalizeCurrency } from "@/utils/format";
 import { useEffect } from "react";
 
 export const QuoteSummary = () => {
@@ -12,25 +12,33 @@ export const QuoteSummary = () => {
   const discountValue = useWatch({ control, name: "discount_amount" });
 
   const subtotal = items.reduce((sum, item) => {
-    return sum + (item.quantity || 0) * (item.unit_price || 0);
+    const qty = formatNormalizeCurrency(item.quantity);
+    const price = formatNormalizeCurrency(item.unit_price);
+    return sum + qty * price;
   }, 0);
 
   const vatGrouped = new Map<number, number>();
   items.forEach(item => {
-    const lineTotal = (item.quantity || 0) * (item.unit_price || 0);
-    const vatRate = item.vat_amount || 0;
+    const qty = formatNormalizeCurrency(item.quantity);
+    const price = formatNormalizeCurrency(item.unit_price);
+    const vatRate = formatNormalizeCurrency(item.vat_amount);
+
+    const lineTotal = qty * price;
     const vatAmount = (lineTotal * vatRate) / 100;
 
     vatGrouped.set(vatRate, (vatGrouped.get(vatRate) || 0) + vatAmount);
   });
 
-  const totalVAT = Array.from(vatGrouped.values()).reduce((sum, vat) => sum + vat, 0);
+  const totalVAT = Array.from(vatGrouped.values())
+    .reduce((s, v) => s + v, 0);
   const totalWithTax = subtotal + totalVAT;
+
+  const normalizedDiscount = formatNormalizeCurrency(discountValue);
 
   const discountAmount =
     discountType === "percentage"
-      ? (totalWithTax * discountValue) / 100
-      : discountValue;
+      ? (totalWithTax * normalizedDiscount) / 100
+      : normalizedDiscount;
 
   const grandTotal = totalWithTax - discountAmount;
 
@@ -53,7 +61,7 @@ export const QuoteSummary = () => {
           .sort(([a], [b]) => a - b)
           .map(([rate, amount]) => (
             <div key={rate} className="flex justify-between mb-2">
-              <span>BTW {rate}%</span>
+              <span>BTW {rate.toString().replace('.', ',')} %</span>
               <span>{formatEuro(amount)}</span>
             </div>
           ))}

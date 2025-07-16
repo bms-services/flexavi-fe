@@ -3,9 +3,9 @@ export type ProductReq = {
     title: string;
     description: string;
     category_id: string | { value: string; label: string };
-    unit: string;
-    price: string;
-    btw_percentage: string;
+    unit: number;
+    price: number;
+    btw_percentage: number;
 }
 
 

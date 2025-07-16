@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { ExpenseReq, ExpenseStatusMap, ExpenseTypeMap } from "@/zustand/types/expenseT";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { useTranslation } from "react-i18next";
-import { Control, Controller, FieldErrors, FieldValues, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -15,7 +15,6 @@ import {
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { InputCurrency } from "../ui/input-currency";
-import { DropZoneAlpha } from "../ui/drop-zone-alpha/DropZoneAlpha";
 import { InputTags } from "../ui/input-tags";
 
 interface ExpenseFormProps {
@@ -164,19 +163,29 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               </div>
               <div>
                 <Label htmlFor="type">Type uitgave</Label>
-                <Select
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecteer type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(ExpenseTypeMap).map(([value, option]) => (
-                      <SelectItem key={value} value={value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  control={control}
+                  name="type"
+                  rules={{ required: t('quotation.error.required.type') }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value || ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecteer type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(ExpenseTypeMap).map(([value, option]) => (
+                          <SelectItem key={value} value={value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
               <div>
                 <Label htmlFor="status">Status</Label>
@@ -246,7 +255,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
               control={control}
             />
 
-            <DropZoneAlpha
+            {/* <DropZoneAlpha
               label="Upload Files"
               multiple={true}
               accept={{
@@ -272,7 +281,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                 },
                 errors: errors as FieldErrors<FieldValues>,
               }}
-            />
+              type={"agreement"}
+            /> */}
           </div>
         </CardContent>
       </Card>

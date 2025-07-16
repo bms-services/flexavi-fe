@@ -9,6 +9,7 @@ interface ProjectWizardNavProps {
   canGoNext: boolean;
   canGoPrevious: boolean;
   isLastStep: boolean;
+  onSubmit: () => void;
 }
 
 export const ProjectWizardNav: React.FC<ProjectWizardNavProps> = ({
@@ -17,6 +18,7 @@ export const ProjectWizardNav: React.FC<ProjectWizardNavProps> = ({
   canGoNext,
   canGoPrevious,
   isLastStep,
+  onSubmit,
 }) => {
   return (
     <div className="flex justify-between mt-6">
@@ -30,7 +32,7 @@ export const ProjectWizardNav: React.FC<ProjectWizardNavProps> = ({
       </Button>
 
       {isLastStep ? (
-        <Button type='submit'>
+        <Button type="submit" onClick={onSubmit}>
           Project aanmaken
         </Button>
       ) : (
