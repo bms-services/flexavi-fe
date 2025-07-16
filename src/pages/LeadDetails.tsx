@@ -28,7 +28,6 @@ const LeadDetails = () => {
 
   if (getLeadZ.isSuccess) {
     const leadDetailZ = getLeadZ?.data?.result;
-    console.log("Lead Detail:", leadDetailZ);
 
     return (
       <div className="px-[24px] py-6 space-y-6">

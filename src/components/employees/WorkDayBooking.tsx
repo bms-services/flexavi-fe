@@ -24,7 +24,6 @@ export const WorkDayBooking = ({ employeeId }: WorkDayBookingProps) => {
   });
 
   const onSubmit = (data: WorkDay) => {
-    console.log("Work day booked:", data);
     form.reset();
   };
 
@@ -87,10 +86,10 @@ export const WorkDayBooking = ({ employeeId }: WorkDayBookingProps) => {
                 <FormItem>
                   <FormLabel>Uren</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      max="24" 
+                    <Input
+                      type="number"
+                      min="0"
+                      max="24"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />

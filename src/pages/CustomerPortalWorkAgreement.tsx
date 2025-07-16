@@ -33,7 +33,7 @@ const CustomerPortalWorkAgreement = () => {
           ]
         };
         setWorkAgreement(agreementWithAttachments);
-        
+
         const foundCustomer = mockLeads.find(l => l.id === foundAgreement.leadId);
         if (foundCustomer) {
           setCustomer(foundCustomer);
@@ -57,8 +57,7 @@ const CustomerPortalWorkAgreement = () => {
       alert("Plaats eerst uw handtekening om de werkovereenkomst te accepteren.");
       return;
     }
-    
-    console.log("Werkovereenkomst ondertekend met handtekening:", signature);
+
     setSubmitted(true);
   };
 
@@ -80,7 +79,7 @@ const CustomerPortalWorkAgreement = () => {
 
   if (submitted) {
     return (
-      <PortalSuccessMessage 
+      <PortalSuccessMessage
         title="Werkovereenkomst Ondertekend"
         description="Hartelijk dank voor het ondertekenen van de werkovereenkomst. Wij nemen spoedig contact met u op om de werkzaamheden in te plannen."
       />
@@ -91,8 +90,8 @@ const CustomerPortalWorkAgreement = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             onClick={() => navigate(-1)}
             className="gap-2"
           >
@@ -107,7 +106,7 @@ const CustomerPortalWorkAgreement = () => {
         <div className="space-y-8">
           <Card>
             <CardContent className="p-6">
-              <WorkAgreementDetails 
+              <WorkAgreementDetails
                 customer={{
                   name: customer.name,
                   address: customer.address,

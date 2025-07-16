@@ -65,7 +65,6 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
   });
 
   const onSubmit = (data: ProjectReq) => {
-    console.log('Submitting project data:', data);
     const formData = new FormData();
 
     // Basic project info

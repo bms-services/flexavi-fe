@@ -53,8 +53,6 @@ export function InputTags<T extends FieldValues>({
                         field.onChange(newTags);
                     };
 
-                    console.log(field.value);
-
                     return (
                         <div className="relative space-y-1">
                             <ReactTags
