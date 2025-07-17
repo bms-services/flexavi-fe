@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.MIJN_USER }}
           key: ${{ secrets.MIJN_KEY }}
           script: |
-            cd /home/flexavi/domains/flexavi.nl
+            cd /domains/demov4.flexavi.nl/dist
             git reset --hard origin/main
             git pull origin main
             npm ci
