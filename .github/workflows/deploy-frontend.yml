@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-to-mijnhost:
-    name: Deploy to MijnHost (Production)
+    name: Deploy to MijnHost
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +26,7 @@ jobs:
             npm run build
 
   deploy-to-hostinger:
-    name: Deploy to Hostinger (Staging)
+    name: Deploy to Hostinger
     runs-on: ubuntu-latest
 
     steps:
