@@ -108,29 +108,10 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
       });
     }
 
-    // Staff with additional properties
-    // if (data.staffs && data.staffs.length > 0) {
-    //   data.staffs.forEach((staff, index) => {
-    //     // Check if staff has expected structure
-    //     if (typeof staff === 'object' && staff !== null) {
-    //       // If it's a complex object with properties
-    //       if ('company_users_id' in staff) {
-    //         formData.append(`staffs[${index}][company_users_id]`, staff.company_users_id);
-    //         formData.append(`staffs[${index}][number_of_day]`, String(staff.number_of_day || 1));
-    //       } else {
-    //         // If it's just an ID
-    //         formData.append(`staffs[]`, String(staff));
-    //       }
-    //     } else {
-    //       // If it's just an ID string
-    //       formData.append(`staffs[]`, String(staff));
-    //     }
-    //   });
-    // }
-
+    // staff
     if (data.staffs && data.staffs.length > 0) {
       data.staffs.forEach((staff) => {
-        formData.append('invoices[]', staff as string);
+        formData.append('staffs[]', staff as string);
       });
     }
 
@@ -156,17 +137,8 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
         if (typeof photo === 'object' && photo !== null) {
           if (photo.file instanceof File) {
             // If it's a File object
-            formData.append(`photos[${index}][file]`, photo.file);
-          } else if (photo.file && 'path' in photo.file) {
-            // If it's an object with path property
-            formData.append(`photos[${index}][file]`, photo.file.path);
+            formData.append('photos[]', photo.file);
           }
-
-          if (photo.name) formData.append(`photos[${index}][name]`, photo.name);
-          if (photo.description) formData.append(`photos[${index}][description]`, photo.description || '');
-        } else {
-          // If it's just a string URL
-          formData.append(`photos[]`, String(photo));
         }
       });
     }

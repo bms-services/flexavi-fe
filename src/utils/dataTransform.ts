@@ -126,7 +126,7 @@ export const appendAttachments = (formData: FormData, attachments: File[] | Work
         if (file instanceof File) {
             formData.append("attachments[]", file);
         } else if (typeof file === "object" && file !== null && 'url' in file) {
-            formData.append("attachments[]", file.url || "");
+            formData.append("urls[]", file.url || "");
         }
     });
 }
