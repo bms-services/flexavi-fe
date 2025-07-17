@@ -46,6 +46,14 @@ export function formatPercentage(value: string | number | null | undefined): str
   }).format(numeric / 100);
 }
 
+export function formatStringToDate(dateString: string): Date {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid date string: ${dateString}`);
+  }
+  return date;
+}
+
 export function formatIsoToDate(date: string): string {
   return format(new Date(date), "dd MMMM yyyy", { locale: nl });
 }

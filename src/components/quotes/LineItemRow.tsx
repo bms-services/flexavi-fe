@@ -17,7 +17,7 @@ interface LineItemRowProps {
 }
 
 export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disabled = false }) => {
-  const { register, control, setValue } = useFormContext<QuotationReq>();
+  const { register, control, setValue, formState: { errors } } = useFormContext<QuotationReq>();
 
   const productId = useWatch({ control, name: `items.${index}.product_id` });
   const productTitle = useWatch({ control, name: `items.${index}.product_title` });
@@ -56,13 +56,36 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
         {/* Quantity */}
         <td className={COLUMN_CLASSES[0]}>
           <input type="number" min="0" className={`${INLINE_INPUT_STYLE} text-center`}
-            {...register(`items.${index}.quantity`, { valueAsNumber: true })} disabled={disabled} />
+            {...register(`items.${index}.quantity`, {
+              valueAsNumber: true,
+              required: "Hoeveelheid is verplicht",
+              validate: {
+                positive: value => value > 0 || "Hoeveelheid moet groter zijn dan 0",
+                integer: value => Number.isInteger(value) || "Hoeveelheid moet een  geheel getal zijn",
+              },
+            })}
+            disabled={disabled} />
+          {errors.items?.[index]?.quantity && (
+            <span className="text-red-500 text-xs">
+              {errors.items[index].quantity.message}
+            </span>
+          )}
         </td>
 
         {/* Unit */}
         <td className={`${COLUMN_CLASSES[1]} ${productId ? "bg-gray-300" : ""}`}>
           <input type="text" className={`${INLINE_INPUT_STYLE} text-center`}
-            {...register(`items.${index}.unit`)} disabled={disabled || !!productId} />
+            {...register(`items.${index}.unit`, {
+              required: "Eenheid is verplicht",
+              pattern: { value: /^[a-zA-Z]+$/, message: "Eenheid mag alleen letters bevatten" },
+            })}
+            disabled={disabled || !!productId}
+          />
+          {errors.items?.[index]?.unit && (
+            <span className="text-red-500 text-xs">
+              {errors.items[index].unit.message}
+            </span>
+          )}
         </td>
 
         {/* Title + Product search */}
@@ -70,6 +93,7 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
           <Controller
             control={control}
             name={`items.${index}.title`}
+            rules={{ required: "Titel is verplicht" }}
             render={({ field }) => (
               <LineProductCell
                 value={field.value}
@@ -79,6 +103,11 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
               />
             )}
           />
+          {errors.items?.[index]?.title && (
+            <span className="text-red-500 text-xs">
+              {errors.items[index].title.message}
+            </span>
+          )}
           {productId && (
             <div className="flex justify-between items-center gap-2 mt-1">
               <div className="font-normal text-[14px]">

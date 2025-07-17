@@ -24,8 +24,8 @@ export const LineItemsList: React.FC<LineItemsListProps> = ({
       unit: "",
       title: "",
       description: "",
-      unit_price: "",
-      vat_amount: "",
+      unit_price: "0",
+      vat_amount: "0",
       total: 0,
       product_id: "",
       product_title: ""

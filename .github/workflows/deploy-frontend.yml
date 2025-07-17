@@ -1,5 +1,5 @@
 # .github/workflows/deploy-frontend.yml
-name: Deploy Frontend (Production)
+name: Deploy Frontend to MijnHost and Hostinger
 
 on:
   push:
@@ -7,19 +7,30 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-to-mijnhost:
+    name: Deploy to MijnHost (Production)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Deploy via SSH to MijnHost
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.MIJN_HOST }}
+          username: ${{ secrets.MIJN_USER }}
+          key: ${{ secrets.MIJN_KEY }}
+          script: |
+            cd /home/flexavi/domains/flexavi.nl
+            git reset --hard origin/main
+            git pull origin main
+            npm ci
+            npm run build
 
-      - name: Build frontend
-        run: |
-          npm ci
-          npm run build
+  deploy-to-hostinger:
+    name: Deploy to Hostinger (Staging)
+    runs-on: ubuntu-latest
 
-      - name: Deploy to VPS via SSH
+    steps:
+      - name: Deploy via SSH to Hostinger
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}

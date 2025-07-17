@@ -10,6 +10,7 @@ import { ExpenseRes, ExpenseStatusMap } from "@/zustand/types/expenseT";
 import { formatEuro, formatIsoToDate } from "@/utils/format";
 import ExpenseStatusBadge from "@/components/expenses/ExpenseStatusBadge";
 import { ExpenseTypeIcon } from "@/components/expenses/ExpenseTypeIcon";
+import { exportExpensesService } from "@/zustand/services/expenseService";
 
 const Expenses = () => {
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ const Expenses = () => {
   });
 
   const useGetExpensesZ = useGetExpenses(params);
-
   const data = useGetExpensesZ.data?.result.data ?? [];
   const meta = useGetExpensesZ.data?.result.meta;
 
@@ -76,8 +76,31 @@ const Expenses = () => {
     navigate("/expenses/create");
   }
 
-  const handleExportExpenses = () => {
+  const handleExportExpenses = async () => {
+    try {
+      const blob = await exportExpensesService({
+        filters: params.filters,
+      });
 
+      let filename = 'expenses_export.xlsx';
+
+      const disposition = blob.type === "application/json" ? null : 'attachment; filename="expenses.xlsx"';
+
+      const match = disposition?.match(/filename="?(.+)"?/);
+      if (match && match[1]) {
+        filename = match[1];
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Export error:", err);
+    }
   };
 
   const handleShow = (data: ExpenseRes) => {

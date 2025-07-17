@@ -6,7 +6,9 @@ import {
     deleteExpenseService,
     getExpensesService,
     getExpenseService,
-    updateExpenseService
+    updateExpenseService,
+    uploadExpenseAttachmentService,
+    uploadExpenseReceiptService,
 } from "../services/expenseService";
 import { useNavigate } from "react-router-dom";
 
@@ -56,3 +58,24 @@ export const useDeleteExpense = () => {
         },
     });
 };
+
+export const useUploadExpenseReceipt = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ExpenseRes>, ApiError, FormData>({
+        mutationFn: uploadExpenseReceiptService,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+        },
+    });
+};
+
+export const useUploadExpenseAttachment = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ExpenseRes>, ApiError, { id: string; formData: FormData }>({
+        mutationFn: ({ id, formData }) => uploadExpenseAttachmentService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+        },
+    });
+};
+

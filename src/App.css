@@ -131,7 +131,7 @@
 
 /* Container for tags */
 .tagsClass {
-  @apply flex flex-wrap gap-2 p-2 border border-border rounded-md bg-background;
+  @apply flex flex-wrap gap-2 px-3 py-2 border border-border rounded-md bg-background;
 }
 
 /* Container for the input field */

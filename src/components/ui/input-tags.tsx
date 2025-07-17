@@ -27,7 +27,7 @@ export function InputTags<T extends FieldValues>({
     ...props
 }: InputTagsProps<T>) {
     return (
-        <div className="flex flex-col gap-1">
+        <div className="space-y-1">
             {label &&
                 <Label htmlFor={id} className="text-left">
                     {label}

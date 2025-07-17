@@ -39,12 +39,10 @@ export type ExpenseRes = {
 
 export type ExpenseStatus =
     | "concept"
-    | "pending"
-    | "submitted"
+    | "intreatment"
     | "approved"
     | "rejected"
-    | "paid"
-    | "cancelled";
+    | "incorporated";
 
 export const ExpenseStatusMap: Record<
     ExpenseStatus,
@@ -54,12 +52,10 @@ export const ExpenseStatusMap: Record<
     }
 > = {
     concept: { label: "Concept", variant: "secondary" },
-    pending: { label: "In behandeling", variant: "warning" },
-    submitted: { label: "Ingediend", variant: "primary" },
+    intreatment: { label: "In behandeling", variant: "warning" },
     approved: { label: "Goedgekeurd", variant: "success" },
     rejected: { label: "Afgewezen", variant: "danger" },
-    paid: { label: "Betaald", variant: "success" },
-    cancelled: { label: "Geannuleerd", variant: "danger" },
+    incorporated: { label: "Opgenomen", variant: "primary" },
 };
 
 

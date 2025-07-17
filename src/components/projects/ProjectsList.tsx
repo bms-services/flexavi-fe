@@ -54,8 +54,6 @@ export const ProjectsList: React.FC = () => {
     });
   };
 
-
-
   const handleViewChange = (view: "table" | "card") => {
     setCurrentView(view);
   };

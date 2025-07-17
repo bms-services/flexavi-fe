@@ -35,7 +35,8 @@ const defaultInvoiceData: InvoiceReq = {
     street: "",
     city: "",
     postal_code: "",
-    house_number: ""
+    house_number: "",
+    province: "",
   },
   items: [],
   subtotal: 0,
