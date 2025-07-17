@@ -25,9 +25,7 @@ jobs:
             git pull origin main
             npm ci
             npm run build
-            if [ -f ".htaccess" ]; then
             cp .htaccess dist/.htaccess
-            fi
 
   deploy-to-hostinger:
     name: Deploy to Hostinger
