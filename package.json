@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run type:check && vite build --mode production && cp .htaccess dist/.htaccess",
+    "build": "npm run type:check && vite build --mode production",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "serve": "vite preview",
