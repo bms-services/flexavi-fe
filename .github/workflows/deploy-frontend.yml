@@ -20,12 +20,14 @@ jobs:
           username: ${{ secrets.MIJN_USER }}
           key: ${{ secrets.MIJN_KEY }}
           script: |
-            cd /domains/demov4.flexavi.nl/dist
+            cd /domains/demov4.flexavi.nl
             git reset --hard origin/main
             git pull origin main
             npm ci
             npm run build
+            if [ -f ".htaccess" ]; then
             cp .htaccess dist/.htaccess
+            fi
 
   deploy-to-hostinger:
     name: Deploy to Hostinger
