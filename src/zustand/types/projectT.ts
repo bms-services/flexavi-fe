@@ -1,4 +1,5 @@
 import { AddressReq } from "./addressT";
+import { LeadRes } from "./leadT";
 
 export interface ProjectReq {
     name: string;
@@ -110,3 +111,22 @@ export type ProjectPhotoRes = {
     created_at: string;
     updated_at: string;
 };
+
+
+export type ProjectOverviewRes = {
+    id: string;
+    company_id: string;
+    name: string;
+    description: string;
+    status: ProjectStatus;
+    start_date: string;
+    budget: number;
+    profit: number;
+    total_document_quote: number;
+    total_document_agreement: number;
+    total_document_invoice: number;
+    created_at: string;
+    updated_at: string;
+    address: AddressReq;
+    project_leads: LeadRes[];
+}

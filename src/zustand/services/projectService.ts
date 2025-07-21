@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { ProjectReq, ProjectRes } from "../types/projectT";
+import { ProjectOverviewRes, ProjectRes } from "../types/projectT";
 
 export const getProjectsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectRes>> => {
     const { data } = await mainApi.get("/projects", { params });
@@ -34,3 +34,10 @@ export const deleteProjectService = async (ids: string[], force: boolean): Promi
     if (!data.success) throw data;
     return data;
 };
+
+
+export const getProjectOverviewService = async (id: string): Promise<ApiSuccess<ProjectOverviewRes>> => {
+    const { data } = await mainApi.get(`/projects/overview/${id}`);
+    if (!data.success) throw data;
+    return data;
+}

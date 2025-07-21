@@ -1,6 +1,5 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Project } from "@/types/project";
 import { ProjectOverview } from "./tabs/ProjectOverview";
 import { ProjectExpensesTab } from "./tabs/ProjectExpensesTab";
 import { ProjectPersonnelTab } from "./tabs/ProjectPersonnelTab";
@@ -8,9 +7,10 @@ import { ProjectDocumentsTab } from "./tabs/ProjectDocumentsTab";
 import { ProjectPhotosTab } from "./tabs/ProjectPhotosTab";
 import { ProjectProfitTab } from "./tabs/ProjectProfitTab";
 import { ProjectAppointmentsTab } from "./tabs/ProjectAppointmentsTab";
+import { ProjectRes } from "@/zustand/types/projectT";
 
 interface ProjectTabsProps {
-  project: Project;
+  project: ProjectRes;
 }
 
 export const ProjectTabs: React.FC<ProjectTabsProps> = ({ project }) => {
@@ -30,7 +30,7 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({ project }) => {
         <ProjectOverview project={project} />
       </TabsContent>
 
-      <TabsContent value="appointments" className="space-y-4">
+      {/* <TabsContent value="appointments" className="space-y-4">
         <ProjectAppointmentsTab project={project} />
       </TabsContent>
 
@@ -52,7 +52,7 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({ project }) => {
 
       <TabsContent value="profit" className="space-y-4">
         <ProjectProfitTab project={project} />
-      </TabsContent>
+      </TabsContent> */}
     </Tabs>
   );
 };

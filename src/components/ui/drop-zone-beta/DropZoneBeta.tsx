@@ -48,6 +48,8 @@ const AttachmentDropzone = ({ name, defaultUrls = [] }: Props) => {
         };
     }, [previews]);
 
+    console.log(previews);
+
     return (
         <div className="space-y-4">
             <div

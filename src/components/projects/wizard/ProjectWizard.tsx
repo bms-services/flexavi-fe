@@ -17,6 +17,8 @@ import { WizardTransportStep } from './steps/WizardTransportStep';
 import { WizardPhotosStep } from './steps/WizardPhotosStep';
 import { WizardInformation } from './steps/WizardInformation';
 import { useCreateProject } from '@/zustand/hooks/useProject';
+import { appendAddress, appendAgreements, appendInvoices, appendLeads, appendQuotes, appendStaffs } from '@/utils/dataTransform';
+import { formatNormalizeCurrency } from '@/utils/format';
 
 interface ProjectWizardProps {
   isOpen: boolean;
@@ -72,7 +74,7 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
     formData.append('description', data.description);
     formData.append('status', data.status);
     formData.append('start_date', data.start_date);
-    formData.append('budget', String(data.budget));
+    formData.append('budget', String(formatNormalizeCurrency(data.budget)));
 
     // Address
     formData.append('address[street]', data.address.street);
@@ -83,37 +85,13 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
     formData.append('address[city]', data.address.city);
     formData.append('address[province]', data.address.province);
 
-    // Relations - Arrays (leads, quotes, agreements, invoices)
-    if (data.leads && data.leads.length > 0) {
-      data.leads.forEach(leadId => {
-        formData.append('leads[]', leadId as string);
-      });
-    }
+    appendLeads(formData, data.leads);
+    appendAddress(formData, data.address);
+    appendQuotes(formData, data.quotes);
+    appendAgreements(formData, data.agreements);
+    appendInvoices(formData, data.invoices);
+    appendStaffs(formData, data.staffs);
 
-    if (data.quotes && data.quotes.length > 0) {
-      data.quotes.forEach(quoteId => {
-        formData.append('quotes[]', quoteId as string);
-      });
-    }
-
-    if (data.agreements && data.agreements.length > 0) {
-      data.agreements.forEach(agreementId => {
-        formData.append('agreements[]', agreementId as string);
-      });
-    }
-
-    if (data.invoices && data.invoices.length > 0) {
-      data.invoices.forEach(invoiceId => {
-        formData.append('invoices[]', invoiceId as string);
-      });
-    }
-
-    // staff
-    if (data.staffs && data.staffs.length > 0) {
-      data.staffs.forEach((staff) => {
-        formData.append('staffs[]', staff as string);
-      });
-    }
 
     // Materials
     if (data.materials && data.materials.length > 0) {
@@ -143,7 +121,15 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
       });
     }
 
-    createProjectZ.mutate(formData);
+    createProjectZ.mutateAsync(formData)
+      .then((res) => {
+        onOpenChange(false);
+        navigate(`/projects/${res.result.id}`);
+      })
+      .catch((error) => {
+        console.error('Error creating project:', error);
+        // Handle error (e.g., show notification)
+      });
   };
 
   // Render the current step content

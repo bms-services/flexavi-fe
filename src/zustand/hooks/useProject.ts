@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { ProjectReq, ProjectRes } from "../types/projectT";
+import { ProjectOverviewRes, ProjectReq, ProjectRes } from "../types/projectT";
 import {
     createProjectService,
     deleteProjectService,
     getProjectsService,
     getProjectService,
-    updateProjectService
+    updateProjectService,
+    getProjectOverviewService
 } from "../services/projectService";
 import { useNavigate } from "react-router-dom";
 
@@ -56,3 +57,12 @@ export const useDeleteProject = () => {
         },
     });
 };
+
+
+export const useGetProjectOverview = (id: string) => {
+    return useQuery<ApiSuccess<ProjectOverviewRes>, ApiError>({
+        queryKey: ['projectOverview', id],
+        queryFn: () => getProjectOverviewService(id),
+        enabled: !!id,
+    });
+}

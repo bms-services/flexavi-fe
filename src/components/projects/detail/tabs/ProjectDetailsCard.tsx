@@ -2,12 +2,13 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Calendar as CalendarIcon, MapPin as MapPinIcon } from "lucide-react";
-import { Project } from "@/types/project";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
+import { ProjectRes } from "@/zustand/types/projectT";
+import { formatIsoToDate } from "@/utils/format";
 
 interface ProjectDetailsCardProps {
-  project: Project;
+  project: ProjectRes;
 }
 
 export const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ project }) => (
@@ -32,17 +33,17 @@ export const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ project 
             <p className="text-sm font-medium text-muted-foreground">Startdatum</p>
           </div>
           <p className="text-base">
-            {format(new Date(project.startDate), "d MMMM yyyy", { locale: nl })}
+            {project.start_date && formatIsoToDate(project.start_date)}
           </p>
         </div>
-        {project.endDate && (
+        {project.end_date && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <CalendarIcon className="h-4 w-4 text-muted-foreground" />
               <p className="text-sm font-medium text-muted-foreground">Einddatum</p>
             </div>
             <p className="text-base">
-              {format(new Date(project.endDate), "d MMMM yyyy", { locale: nl })}
+              {format(new Date(project.end_date), "d MMMM yyyy", { locale: nl })}
             </p>
           </div>
         )}
@@ -52,7 +53,7 @@ export const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ project 
           <MapPinIcon className="h-4 w-4 text-muted-foreground" />
           <p className="text-sm font-medium text-muted-foreground">Locatie</p>
         </div>
-        <p className="text-base">{project.location}</p>
+        <p className="text-base">{project.address.street}</p>
       </div>
     </CardContent>
   </Card>

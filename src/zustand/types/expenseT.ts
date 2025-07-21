@@ -104,3 +104,13 @@ export const ExpenseTypeMap: Record<
     insurance: { label: "Verzekering", color: "#DC143C" },
     other: { label: "Overig", color: "#A9A9A9" },
 };
+
+export type ExpenseAttachmentRes = {
+    id: string;
+    cost_id: string | null;
+    name: string;
+    url: string;
+    path: string;
+    created_at: string;
+    updated_at: string;
+}

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpenseStatus, ExpenseStatusEnum, ExpenseStatusMap } from "@/zustand/types/expenseT";
-import { useGetExpense, useUpdateExpense, useUploadExpenseAttachment } from "@/zustand/hooks/useExpense";
+import { useGetExpense, useGetExpenseAttachments, useUpdateExpense, useUploadExpenseAttachment } from "@/zustand/hooks/useExpense";
 
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import { ExpenseTypeIcon, getTypeLabel } from "@/components/expenses/ExpenseType
 import { formatEuro, formatIsoToDate, formatStringToDate } from "@/utils/format";
 import { Badge } from "@/components/ui/badge";
 import AttachmentDropzone from "@/components/ui/drop-zone-beta/DropzoneBeta";
+import { useEffect, useState } from "react";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
 const placeholderExpense: ExpenseRes = {
   id: "",
@@ -42,10 +44,19 @@ const placeholderExpense: ExpenseRes = {
 const ExpenseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
+  const [paramsAttachments, setParamsAttachments] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
+
 
   const getExpenseZ = useGetExpense(id || "");
   const updateExpenseZ = useUpdateExpense();
   const uploadExpenseAttachmentZ = useUploadExpenseAttachment();
+  const getExpenseAttachmentsZ = useGetExpenseAttachments(id || "", paramsAttachments);
   const currentExpense = getExpenseZ.data?.result || placeholderExpense;
 
   const methods = useForm({
@@ -143,6 +154,24 @@ const ExpenseDetailPage = () => {
     });
   };
 
+
+  useEffect(() => {
+    if (getExpenseAttachmentsZ.isSuccess && getExpenseAttachmentsZ.data.result) {
+      const data = getExpenseAttachmentsZ.data.result.data;
+      methods.reset({
+        attachments: data.map((attachment) => {
+          return attachment.url; // Assuming attachment.url is the URL of the attachment
+          // if (typeof attachment === "string") {
+          //   return attachment;
+          // } else if (attachment instanceof File) {
+          //   return attachment;
+          // } else {
+          //   return new File([], attachment.name || "attachment.pdf", { type: attachment.mime_type });
+          // }
+        }),
+      });
+    }
+  }, [getExpenseAttachmentsZ.isSuccess, getExpenseAttachmentsZ.data, methods]);
 
 
   return (
@@ -365,7 +394,9 @@ const ExpenseDetailPage = () => {
                         <CardTitle className="text-lg">Bon toevoegen</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <AttachmentDropzone name="attachments" defaultUrls={currentExpense.receipt_url ? [currentExpense.receipt_url] : []} />
+                        <AttachmentDropzone name="attachments" defaultUrls={
+                          methods.getValues("attachments") || []}
+                        />
                         <Button variant="outline">
                           <Receipt className="h-4 w-4 mr-2" />
                           Bon uploaden
