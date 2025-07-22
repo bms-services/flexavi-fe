@@ -7,13 +7,25 @@ import { ProjectDocumentsTab } from "./tabs/ProjectDocumentsTab";
 import { ProjectPhotosTab } from "./tabs/ProjectPhotosTab";
 import { ProjectProfitTab } from "./tabs/ProjectProfitTab";
 import { ProjectAppointmentsTab } from "./tabs/ProjectAppointmentsTab";
-import { ProjectRes } from "@/zustand/types/projectT";
+import { ProjectEmployeeRes, ProjectNoteRes, ProjectOverviewRes, ProjectRes, ProjectSummaryRes, ProjectTaskRes } from "@/zustand/types/projectT";
 
 interface ProjectTabsProps {
-  project: ProjectRes;
+  projectOverview: ProjectOverviewRes;
+  projectTasks: ProjectTaskRes[];
+  onOpenCreateTask: () => void;
+  projectNotes: ProjectNoteRes[];
+  onOpenCreateNote: () => void;
+  onOpenCreateEmployee?: () => void;
 }
 
-export const ProjectTabs: React.FC<ProjectTabsProps> = ({ project }) => {
+export const ProjectTabs: React.FC<ProjectTabsProps> = ({
+  projectOverview,
+  onOpenCreateTask,
+  projectTasks,
+  projectNotes,
+  onOpenCreateNote,
+  onOpenCreateEmployee
+}) => {
   return (
     <Tabs defaultValue="overview" className="space-y-4">
       <TabsList className="grid grid-cols-4 md:grid-cols-7 w-full">
@@ -27,30 +39,38 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({ project }) => {
       </TabsList>
 
       <TabsContent value="overview" className="space-y-4">
-        <ProjectOverview project={project} />
+        <ProjectOverview
+          projectOverview={projectOverview}
+          projectTasks={projectTasks}
+          onOpenCreateTask={onOpenCreateTask}
+          projectNotes={projectNotes}
+          onOpenCreateNote={onOpenCreateNote}
+        />
       </TabsContent>
 
       {/* <TabsContent value="appointments" className="space-y-4">
         <ProjectAppointmentsTab project={project} />
-      </TabsContent>
+      </TabsContent> */}
 
-      <TabsContent value="expenses" className="space-y-4">
-        <ProjectExpensesTab project={project} />
-      </TabsContent>
+      {/* <TabsContent value="expenses" className="space-y-4">
+        <ProjectExpensesTab />
+      </TabsContent> */}
 
       <TabsContent value="personnel" className="space-y-4">
-        <ProjectPersonnelTab project={project} />
+        <ProjectPersonnelTab
+          onOpenCreateEmployee={onOpenCreateEmployee}
+        />
       </TabsContent>
 
-      <TabsContent value="documents" className="space-y-4">
+      {/* <TabsContent value="documents" className="space-y-4">
         <ProjectDocumentsTab project={project} />
-      </TabsContent>
+      </TabsContent> */}
 
-      <TabsContent value="photos" className="space-y-4">
+      {/* <TabsContent value="photos" className="space-y-4">
         <ProjectPhotosTab project={project} />
-      </TabsContent>
+      </TabsContent> */}
 
-      <TabsContent value="profit" className="space-y-4">
+      {/* <TabsContent value="profit" className="space-y-4">
         <ProjectProfitTab project={project} />
       </TabsContent> */}
     </Tabs>

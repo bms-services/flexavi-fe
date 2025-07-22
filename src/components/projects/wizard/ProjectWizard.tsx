@@ -46,7 +46,8 @@ const defaultProjectData: ProjectReq = {
   staffs: [],
   materials: [],
   transports: [],
-  photos: []
+  photos: [],
+  end_date: ''
 }
 
 export const ProjectWizard: React.FC<ProjectWizardProps> = ({
@@ -177,7 +178,7 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
     }[currentStep] || [];
 
     const results = await Promise.all(
-      fieldsToValidate.map(field => methods.trigger(field as unknown))
+      fieldsToValidate.map(field => methods.trigger(field as unknown as keyof ProjectReq))
     );
 
     // Return true hanya jika semua validasi berhasil

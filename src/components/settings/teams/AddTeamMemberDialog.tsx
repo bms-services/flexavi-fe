@@ -44,7 +44,7 @@ export const AddTeamMemberDialog: React.FC<AddTeamMemberDialogProps> = ({
       });
 
       return myEmployeeServiceZ.result.data.map((emp) => ({
-        label: emp.name,
+        label: emp.user.name,
         value: emp.id,
       }));
     } catch (error) {

@@ -10,6 +10,7 @@ import {
     RegisterOptions,
 } from "react-hook-form";
 import { Label } from "./label";
+import { wrap } from "module";
 
 interface DateRangePickerProps<T extends FieldValues> {
     id?: string;
@@ -29,6 +30,7 @@ interface DateRangePickerProps<T extends FieldValues> {
         options?: RegisterOptions<T>;
         errors: FieldErrors<T>;
     };
+    wrapperClassName?: string;
 }
 
 export const DateRangePicker = <T extends FieldValues>({
@@ -44,6 +46,7 @@ export const DateRangePicker = <T extends FieldValues>({
     onChange,
     rules,
     containerClassName,
+    wrapperClassName,
     ...props
 }: DateRangePickerProps<T>) => {
     return (
@@ -69,9 +72,11 @@ export const DateRangePicker = <T extends FieldValues>({
                             minDate={minDate}
                             maxDate={maxDate}
                             dateFormat={dateFormat ?? "dd/MM/yyyy"}
-                            className={cn("w-full px-3 py-2 border rounded text-sm", className)}
+                            className={cn("w-full px-3 py-2 border rounded text-sm focus-visible:outline-none focus-visible:border-primary", className)}
                             placeholderText={`${placeholder[0]} - ${placeholder[1]}`}
                             isClearable
+                            wrapperClassName={wrapperClassName}
+                            {...props}
                         />
                     )}
                 />
@@ -87,9 +92,9 @@ export const DateRangePicker = <T extends FieldValues>({
                     maxDate={maxDate}
                     dateFormat={dateFormat ?? "dd/MM/yyyy"}
                     className={cn("w-full min-h-[40px] rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className)}
-                    wrapperClassName="w-full"
                     placeholderText={`${placeholder[0]} - ${placeholder[1]}`}
                     isClearable
+                    wrapperClassName={wrapperClassName}
                     {...props}
                 />
             )}

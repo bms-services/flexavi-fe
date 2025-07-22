@@ -1,74 +1,57 @@
+//  <div key={n.id} className="border-t pt-2">
+//                   <div className="text-xs text-muted-foreground mb-1">
+//                     {new Date(n.createdAt).toLocaleString()} | Door: {n.createdBy} · Voor: {n.createdFor}
+//                   </div>
+//                   <div className="text-sm">{n.note}</div>
+//                 </div>
 
-import React, { useState } from "react";
-import { ProjectNote } from "@/types/project";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
+
+import React from "react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { CheckCircle, Clock } from "lucide-react";
+import { Plus } from "lucide-react";
+import { ProjectNoteRes } from "@/zustand/types/projectT";
+import { formatIsoToDate } from "@/utils/format";
 
 interface ProjectNotesSectionProps {
-  notes: ProjectNote[];
-  onAddNote: (note: ProjectNote) => void;
+  onOpenCreateNote?: () => void;
+  projectNotes: ProjectNoteRes[];
 }
 
-export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({ notes, onAddNote }) => {
-  const [newNote, setNewNote] = useState<Partial<ProjectNote>>({ note: "", createdBy: "", createdFor: "" });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setNewNote({ ...newNote, [e.target.name]: e.target.value });
-  };
-
-  const handleAdd = () => {
-    if (!newNote.note || !newNote.createdBy || !newNote.createdFor) {
-      return;
-    }
-    onAddNote({
-      id: "note-" + Date.now(),
-      createdAt: new Date().toISOString(),
-      createdBy: newNote.createdBy!,
-      createdFor: newNote.createdFor!,
-      note: newNote.note!,
-      type: "note"
-    });
-    setNewNote({ note: "", createdBy: "", createdFor: "" });
-  };
-
-  // Filter voor alleen notities (geen taken)
-  const filteredNotes = notes.filter(n => n.type !== "task");
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Projectnotities</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Input name="createdBy" value={newNote.createdBy} onChange={handleChange} placeholder="Gemaakt door" />
-            <Input name="createdFor" value={newNote.createdFor} onChange={handleChange} placeholder="Gemaakt voor" />
-            <Textarea name="note" value={newNote.note} onChange={handleChange} placeholder="Voeg een notitie toe..." />
-            <Button size="sm" onClick={handleAdd}>Toevoegen</Button>
-          </div>
-          <div className="mt-6 space-y-3">
-            {filteredNotes.length === 0 ? (
-              <div className="text-muted-foreground">Nog geen notities voor dit project.</div>
-            ) : (
-              filteredNotes.slice().reverse().map((n) => (
-                <div key={n.id} className="border-t pt-2">
-                  <div className="text-xs text-muted-foreground mb-1">
-                    {new Date(n.createdAt).toLocaleString()} | Door: {n.createdBy} · Voor: {n.createdFor}
-                  </div>
-                  <div className="text-sm">{n.note}</div>
-                </div>
-              ))
-            )}
-          </div>
+export const ProjectNotesSection: React.FC<ProjectNotesSectionProps> = ({
+  projectNotes,
+  onOpenCreateNote
+}) => (
+  <Card>
+    <CardHeader className="flex flex-row items-center justify-between">
+      <div>
+        <CardTitle>Openstaande notities</CardTitle>
+        <CardDescription>Notities die aandacht vereisen</CardDescription>
+      </div>
+      <Button size="sm" onClick={onOpenCreateNote}>
+        <Plus className="h-4 w-4 mr-2" />
+        Notitie toevoegen
+      </Button>
+    </CardHeader>
+    <CardContent>
+      {projectNotes.length > 0 ? (
+        <div className="space-y-3">
+          {projectNotes.map((note) => (
+            <div key={note.id} className="border-t pt-2">
+              <div className="text-xs text-muted-foreground mb-1">
+                {note.created_at && formatIsoToDate(note.created_at)} | Door: {note.created_by} · Voor: {note.assign_to.map((user) => (typeof user === "string" ? user : user.value)).join(", ")}
+              </div>
+              <div className="text-sm">{note.notes}</div>
+            </div>
+          ))}
         </div>
-      </CardContent>
-    </Card>
-  );
-};
+      ) : (
+        <div className="text-center py-6 text-muted-foreground">
+          <p>Geen openstaande taken</p>
+          <p className="text-sm">Voeg taken toe om het project te beheren</p>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+);

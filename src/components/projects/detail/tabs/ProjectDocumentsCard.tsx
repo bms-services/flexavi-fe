@@ -3,12 +3,14 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { FileText } from "lucide-react";
 import { Project } from "@/types/project";
+import { ProjectOverviewRes } from "@/zustand/types/projectT";
 
 interface ProjectDocumentsCardProps {
-  project: Project;
+  projectOverview: ProjectOverviewRes;
+
 }
 
-export const ProjectDocumentsCard: React.FC<ProjectDocumentsCardProps> = ({ project }) => (
+export const ProjectDocumentsCard: React.FC<ProjectDocumentsCardProps> = ({ projectOverview }) => (
   <Card className="md:col-span-2">
     <CardHeader>
       <CardTitle>Documenten</CardTitle>
@@ -24,7 +26,7 @@ export const ProjectDocumentsCard: React.FC<ProjectDocumentsCardProps> = ({ proj
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <p>{project.quotes.length} offerte(s)</p>
+            <p>{projectOverview.total_document_quote} offerte(s)</p>
           </CardContent>
         </Card>
         <Card>
@@ -35,7 +37,7 @@ export const ProjectDocumentsCard: React.FC<ProjectDocumentsCardProps> = ({ proj
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <p>{project.workAgreements.length} werkovereenkomst(en)</p>
+            <p>{projectOverview.total_document_agreement} werkovereenkomst(en)</p>
           </CardContent>
         </Card>
         <Card>
@@ -46,7 +48,7 @@ export const ProjectDocumentsCard: React.FC<ProjectDocumentsCardProps> = ({ proj
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <p>{project.invoices.length} factuur/facturen</p>
+            <p>{projectOverview.total_document_invoice} factuur/facturen</p>
           </CardContent>
         </Card>
       </div>

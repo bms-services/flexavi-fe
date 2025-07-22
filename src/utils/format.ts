@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format, formatDistanceToNow, isToday, isYesterday, differenceInDays } from "date-fns";
 import { nl } from "date-fns/locale";
+import { AddressRes } from "@/zustand/types/addressT";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -115,3 +116,22 @@ export const formatCurrencyToString = (value: number): string => {
     maximumFractionDigits: 2,
   }).format(value).replace(".", ",");
 }
+
+export const formatAddressToString = (address: AddressRes): string => {
+  if (!address) return "";
+
+  const postalCode =
+    typeof address.postal_code === "object"
+      ? address.postal_code.value
+      : address.postal_code;
+
+  const houseNumberFull = `${address.house_number}${address.house_number_addition || ""}`;
+
+  const parts = [
+    `${address.street} ${houseNumberFull}`,
+    `${postalCode} ${address.city}`,
+    address.province
+  ];
+
+  return parts.filter(Boolean).join(", ").trim();
+};
