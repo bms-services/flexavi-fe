@@ -42,6 +42,7 @@ export type ExpenseStatus =
     | "intreatment"
     | "approved"
     | "rejected"
+    | "submitted"
     | "incorporated";
 
 export const ExpenseStatusMap: Record<
@@ -55,8 +56,18 @@ export const ExpenseStatusMap: Record<
     intreatment: { label: "In behandeling", variant: "warning" },
     approved: { label: "Goedgekeurd", variant: "success" },
     rejected: { label: "Afgewezen", variant: "danger" },
+    submitted: { label: "Ingediend", variant: "primary" },
     incorporated: { label: "Opgenomen", variant: "primary" },
 };
+
+export enum ExpenseStatusEnum {
+    Concept = "concept",
+    InTreatment = "intreatment",
+    Approved = "approved",
+    Rejected = "rejected",
+    Submitted = "submitted",
+    Incorporated = "incorporated",
+}
 
 
 export type ExpenseType =
@@ -93,3 +104,13 @@ export const ExpenseTypeMap: Record<
     insurance: { label: "Verzekering", color: "#DC143C" },
     other: { label: "Overig", color: "#A9A9A9" },
 };
+
+export type ExpenseAttachmentRes = {
+    id: string;
+    cost_id: string | null;
+    name: string;
+    url: string;
+    path: string;
+    created_at: string;
+    updated_at: string;
+}

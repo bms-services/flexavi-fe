@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -58,8 +57,8 @@ export function DateRangePicker({ value, onChange, label }: DateRangePickerProps
             </div>
           </div>
           <div className="flex justify-end gap-2 p-3 pt-0">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => {
                 onChange([undefined, undefined]);
@@ -68,7 +67,7 @@ export function DateRangePicker({ value, onChange, label }: DateRangePickerProps
             >
               Reset
             </Button>
-            <Button 
+            <Button
               size="sm"
               onClick={() => setOpen(false)}
             >

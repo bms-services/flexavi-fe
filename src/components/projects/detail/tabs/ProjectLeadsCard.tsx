@@ -2,13 +2,15 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Users } from "lucide-react";
-import { Lead } from "@/types/index";
+import { ProjectOverviewRes } from "@/zustand/types/projectT";
+import { AddressJSX } from "@/components/ui/address";
 
 interface ProjectLeadsCardProps {
-  projectLeads: Lead[];
+  projectOverview: ProjectOverviewRes;
+
 }
 
-export const ProjectLeadsCard: React.FC<ProjectLeadsCardProps> = ({ projectLeads }) => (
+export const ProjectLeadsCard: React.FC<ProjectLeadsCardProps> = ({ projectOverview }) => (
   <Card>
     <CardHeader>
       <CardTitle>
@@ -20,16 +22,18 @@ export const ProjectLeadsCard: React.FC<ProjectLeadsCardProps> = ({ projectLeads
       <CardDescription>Leads die aan dit project zijn gekoppeld</CardDescription>
     </CardHeader>
     <CardContent>
-      {projectLeads && projectLeads.length > 0 ? (
+      {projectOverview.project_leads && projectOverview.project_leads.length > 0 ? (
         <div className="space-y-2">
           <div className="text-sm mb-2 font-semibold">
-            {projectLeads.length} gekoppeld{projectLeads.length === 1 ? "" : "e"} lead{projectLeads.length === 1 ? "" : "s"}
+            {projectOverview.project_leads.length} gekoppeld{projectOverview.project_leads.length === 1 ? "" : "e"} lead{projectOverview.project_leads.length === 1 ? "" : "s"}
           </div>
           <ul className="space-y-1">
-            {projectLeads.map(lead => (
-              <li key={lead.id} className="text-sm flex gap-2 items-center px-2 py-1 rounded hover:bg-muted">
+            {projectOverview.project_leads.map(lead => (
+              <li key={lead.id} className="text-sm flex flex-col gap-2 px-2 py-1 rounded hover:bg-muted">
                 <span className="font-medium">{lead.name}</span>
-                <span className="text-muted-foreground text-xs">({lead.address})</span>
+                <span className="text-muted-foreground text-xs">
+                  <AddressJSX address={lead.address} />
+                </span>
               </li>
             ))}
           </ul>

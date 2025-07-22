@@ -1,40 +1,30 @@
 
-import React, { useState } from "react";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Project, ProjectNote } from "@/types/project";
 // import { ProjectStatusBadge } from "../ProjectStatusBadge";
 import { Edit, PlusCircle } from "lucide-react";
-import { formatCurrency } from "@/utils/format";
-import { TaskDialog } from "./tabs/TaskDialog";
+import { formatEuro, formatIsoToDate } from "@/utils/format";
+import { ProjectOverviewRes, ProjectSummaryRes } from "@/zustand/types/projectT";
+import ProjectStatusBadge from "../ProjectStatusBadge";
 
 interface ProjectHeaderProps {
-  project: Project;
-  onAddTask?: (task: ProjectNote) => void;
+  onAddTask?: () => void;
+  projectOverview: ProjectOverviewRes;
+  projectSummary: ProjectSummaryRes;
 }
 
-export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask }) => {
-  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-
-  const handleAddTask = (task: ProjectNote) => {
-    if (onAddTask) {
-      onAddTask(task);
-    }
-    setIsTaskDialogOpen(false);
-  };
-
+export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ onAddTask, projectOverview, projectSummary }) => {
   return (
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            {project.name}
-            {/* <ProjectStatusBadge status={project.status} /> */}
+            {projectOverview.name}
+            <ProjectStatusBadge status={projectOverview.status} />
           </h1>
           <p className="text-muted-foreground mt-1">
-            {project.location} • Start: {format(new Date(project.startDate), "d MMMM yyyy", { locale: nl })}
-            {project.endDate && ` • Eind: ${format(new Date(project.endDate), "d MMMM yyyy", { locale: nl })}`}
+            {projectOverview.address.city} • Start: {projectOverview.start_date && formatIsoToDate(projectOverview.start_date)}
+            {projectOverview.end_date && ` • Eind: ${formatIsoToDate(projectOverview.end_date)}`}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -42,7 +32,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask
             <Edit className="h-4 w-4 mr-2" />
             Bewerken
           </Button>
-          <Button size="sm" onClick={() => setIsTaskDialogOpen(true)}>
+          <Button size="sm" onClick={onAddTask}>
             <PlusCircle className="h-4 w-4 mr-2" />
             Taak toevoegen
           </Button>
@@ -52,31 +42,31 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ project, onAddTask
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="rounded-lg border p-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">Budget</p>
-          <p className="text-2xl font-bold mt-1">{formatCurrency(project.budget)}</p>
+          <p className="text-2xl font-bold mt-1">{formatEuro(projectSummary.budget)}</p>
         </div>
         <div className="rounded-lg border p-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">Inkomsten</p>
-          <p className="text-2xl font-bold mt-1">{formatCurrency(project.revenue)}</p>
+          <p className="text-2xl font-bold mt-1">
+            {/* {formatEuro(projectOverview.revenue)} */}
+            {formatEuro(projectSummary.income)}
+          </p>
         </div>
         <div className="rounded-lg border p-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">Kosten</p>
           <p className="text-2xl font-bold mt-1">
-            {formatCurrency(project.revenue - project.profit)}
+            {/* {formatEuro(projectOverview.revenue - projectOverview.profit)} */}
+            {formatEuro(projectSummary.costs)}
           </p>
         </div>
         <div className="rounded-lg border p-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">Winst</p>
-          <p className={`text-2xl font-bold mt-1 ${project.profit >= 0 ? "text-green-500" : "text-red-500"}`}>
-            {formatCurrency(project.profit)}
+          <p className={`text-2xl font-bold mt-1 ${projectSummary.profit >= 0 ? "text-green-500" : "text-red-500"}`}>
+            {/* {formatEuro(projectOverview.profit)} */}
+            {formatEuro(projectSummary.profit)}
           </p>
         </div>
       </div>
 
-      <TaskDialog
-        open={isTaskDialogOpen}
-        onOpenChange={setIsTaskDialogOpen}
-        onAddTask={handleAddTask}
-      />
     </div>
   );
 };

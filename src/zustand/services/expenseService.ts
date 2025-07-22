@@ -1,6 +1,6 @@
 import { mainApi } from "@/utils/axios";
 import { ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "../types/apiT";
-import { ExpenseReq, ExpenseRes } from "../types/expenseT";
+import { ExpenseAttachmentRes, ExpenseReq, ExpenseRes } from "../types/expenseT";
 
 export const getExpensesService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<ExpenseRes>> => {
     const { data } = await mainApi.get("/costs", { params });
@@ -50,15 +50,20 @@ export const uploadExpenseReceiptService = async (formData: FormData): Promise<A
     return data;
 };
 
+export const getExpenseReceiptService = async (id: string): Promise<ApiSuccess<ExpenseRes>> => {
+    const { data } = await mainApi.get(`/costs/${id}/receipt`);
+    if (!data.success) throw data;
+    return data;
+};
+
 export const uploadExpenseAttachmentService = async (id: string, formData: FormData): Promise<ApiSuccess<ExpenseRes>> => {
     const { data } = await mainApi.post(`/costs/attachments/${id}`, formData);
     if (!data.success) throw data;
     return data;
 };
 
-// change status
-export const changeExpenseStatusService = async (id: string, status: string): Promise<ApiSuccess<ExpenseRes>> => {
-    const { data } = await mainApi.post(`/costs/${id}/status`, { status });
+export const getExpenseAttachmentsService = async (id: string, params: ParamGlobal): Promise<ApiSuccessPaginated<ExpenseAttachmentRes>> => {
+    const { data } = await mainApi.get(`/costs/attachments/${id}`, { params });
     if (!data.success) throw data;
     return data;
 };

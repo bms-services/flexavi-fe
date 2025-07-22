@@ -29,20 +29,19 @@ const Expenses = () => {
 
   const columns = useMemo<CustomColumnDef<ExpenseRes>[]>(() => [
     {
-      accessorKey: "type",
-      header: "Type",
+      accessorKey: "created_at",
+      header: "Datum",
+      cell: info => formatIsoToDate(info.row.original.created_at),
+    },
+    {
+      accessorKey: "company",
+      header: "Bedrijf",
       cell: info => (
         <span className="text-sm text-gray-700">
-          {ExpenseTypeIcon({
-            type: info.row.original.type,
-            className: "inline-block",
-            size: 16
-          })}
-          {" "}{info.row.original.type.charAt(0).toUpperCase() + info.row.original.type.slice(1)}
+          {info.getValue() as string}
         </span>
       )
     },
-    // description column
     {
       accessorKey: "description",
       header: "Omschrijving",
@@ -53,11 +52,29 @@ const Expenses = () => {
       )
     },
     {
-      accessorKey: "created_at",
-      header: "Datum",
-      cell: info => formatIsoToDate(info.row.original.created_at),
+      accessorKey: "type",
+      header: "Type",
+      cell: info => (
+        <span className="text-sm text-gray-700 flex items-center">
+          {ExpenseTypeIcon({
+            type: info.row.original.type,
+            className: "inline-block",
+            size: 16
+          })}
+          {" "}{info.row.original.type.charAt(0).toUpperCase() + info.row.original.type.slice(1)}
+        </span>
+      )
     },
-    { accessorKey: "amount", header: "Bedrag", cell: info => formatEuro(info.getValue() as string) },
+    {
+      accessorKey: "amount",
+      header: "Bedrag",
+      cell: info => formatEuro(info.getValue() as string)
+    },
+    {
+      accessorKey: "total_amount",
+      header: "Incl. BTW",
+      cell: info => formatEuro(info.getValue() as string),
+    },
     {
       accessorKey: "status", header: "Status", cell: info =>
       (

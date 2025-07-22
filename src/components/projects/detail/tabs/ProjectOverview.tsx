@@ -1,79 +1,42 @@
-import React, { useState } from "react";
-import { format } from "date-fns";
-import { nl } from "date-fns/locale";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Project, ProjectNote } from "@/types/project";
-import { 
-  CalendarIcon, 
-  MapPinIcon, 
-  FileTextIcon, 
-  Users, 
-  CheckCircle, 
-  Clock, 
-  PlusCircle 
-} from "lucide-react";
+import React from "react";
 import { ProjectNotesSection } from "../../../projects/detail/tabs/ProjectNotesSection";
-import { Button } from "@/components/ui/button";
-import { TaskDialog } from "./TaskDialog";
-import { mockLeads } from "@/data/mockLeads";
 import { ProjectDetailsCard } from "./ProjectDetailsCard";
 import { ProjectLeadsCard } from "./ProjectLeadsCard";
 import { ProjectOpenTasksCard } from "./ProjectOpenTasksCard";
 import { ProjectDocumentsCard } from "./ProjectDocumentsCard";
+import { ProjectNoteRes, ProjectOverviewRes, ProjectRes, ProjectTaskRes } from "@/zustand/types/projectT";
 
 interface ProjectOverviewProps {
-  project: Project;
+  projectOverview: ProjectOverviewRes;
+  projectTasks: ProjectTaskRes[];
+  onOpenCreateTask: () => void;
+  projectNotes: ProjectNoteRes[];
+  onOpenCreateNote: () => void;
 }
 
-export const ProjectOverview: React.FC<ProjectOverviewProps> = ({ project }) => {
-  const [notes, setNotes] = useState(project.notes ?? []);
-  const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
-  
-  const handleAddNote = (note: ProjectNote) => {
-    setNotes((prev) => [...prev, note]);
-  };
-  
-  const handleAddTask = (task: ProjectNote) => {
-    setNotes((prev) => [...prev, task]);
-  };
-  
-  const handleToggleTaskStatus = (taskId: string) => {
-    setNotes((prev) => 
-      prev.map(note => 
-        note.id === taskId && note.type === "task" 
-          ? { ...note, status: note.status === "open" ? "completed" : "open" } 
-          : note
-      )
-    );
-  };
-  
-  const openTasks = notes.filter(note => note.type === "task" && note.status === "open");
-  const projectLeads = mockLeads.filter(l => project.leads?.includes(l.id));
-
+export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
+  projectOverview,
+  projectTasks,
+  onOpenCreateTask,
+  projectNotes,
+  onOpenCreateNote,
+}) => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ProjectDetailsCard project={project} />
-        <ProjectLeadsCard projectLeads={projectLeads} />
+        <ProjectDetailsCard projectOverview={projectOverview} />
+        <ProjectLeadsCard projectOverview={projectOverview} />
         <ProjectOpenTasksCard
-          openTasks={openTasks}
-          onAddTaskClick={() => setIsTaskDialogOpen(true)}
-          onToggleTaskStatus={handleToggleTaskStatus}
+          projectTasks={projectTasks}
+          onOpenCreateTask={onOpenCreateTask}
         />
-        <ProjectDocumentsCard project={project} />
+        <ProjectNotesSection
+          projectNotes={projectNotes}
+          onOpenCreateNote={onOpenCreateNote}
+        />
+        <ProjectDocumentsCard projectOverview={projectOverview} />
       </div>
-      <ProjectNotesSection notes={notes} onAddNote={handleAddNote} />
-      <TaskDialog 
-        open={isTaskDialogOpen} 
-        onOpenChange={setIsTaskDialogOpen} 
-        onAddTask={handleAddTask} 
-      />
+
     </div>
   );
 };

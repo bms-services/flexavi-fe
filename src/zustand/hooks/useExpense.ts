@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { ExpenseReq, ExpenseRes } from "../types/expenseT";
+import { ExpenseAttachmentRes, ExpenseReq, ExpenseRes } from "../types/expenseT";
 import {
     createExpenseService,
     deleteExpenseService,
@@ -9,6 +9,9 @@ import {
     updateExpenseService,
     uploadExpenseAttachmentService,
     uploadExpenseReceiptService,
+    getExpenseAttachmentsService,
+    getExpenseReceiptService,
+    exportExpensesService,
 } from "../services/expenseService";
 import { useNavigate } from "react-router-dom";
 
@@ -69,13 +72,28 @@ export const useUploadExpenseReceipt = () => {
     });
 };
 
+export const useGetExpenseReceipt = (id: string) => {
+    return useQuery<ApiSuccess<ExpenseRes>, ApiError>({
+        queryKey: ['expenseReceipt', id],
+        queryFn: () => getExpenseReceiptService(id),
+        enabled: !!id,
+    });
+}
+
 export const useUploadExpenseAttachment = () => {
     const queryClient = useQueryClient();
     return useMutation<ApiSuccess<ExpenseRes>, ApiError, { id: string; formData: FormData }>({
         mutationFn: ({ id, formData }) => uploadExpenseAttachmentService(id, formData),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['expenseAttachments'] });
         },
     });
 };
 
+export const useGetExpenseAttachments = (id: string, params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<ExpenseAttachmentRes>, ApiError>({
+        queryKey: ['expenseAttachments', id],
+        queryFn: () => getExpenseAttachmentsService(id, params),
+        enabled: !!id,
+    });
+};

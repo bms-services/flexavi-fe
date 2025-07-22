@@ -5,34 +5,21 @@ import { Layout } from "@/components/layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExpenseReq, ExpenseStatusMap } from "@/zustand/types/expenseT";
-import { useCreateExpense, useGetExpense, useUpdateExpense } from "@/zustand/hooks/useExpense";
+import { ExpenseStatus, ExpenseStatusEnum, ExpenseStatusMap } from "@/zustand/types/expenseT";
+import { useGetExpense, useGetExpenseAttachments, useUpdateExpense, useUploadExpenseAttachment } from "@/zustand/hooks/useExpense";
 
 import { format } from "date-fns";
-import { nl } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Edit, Receipt, Download, FileText, ArrowLeft, Check } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ExpenseRes } from "@/zustand/types/expenseT";
 import ExpenseStatusBadge from "@/components/expenses/ExpenseStatusBadge";
 import { ExpenseTypeIcon, getTypeLabel } from "@/components/expenses/ExpenseTypeIcon";
-import { formatDate, formatEuro, formatIsoToDate, formatStringToDate } from "@/utils/format";
+import { formatEuro, formatIsoToDate, formatStringToDate } from "@/utils/format";
 import { Badge } from "@/components/ui/badge";
-
-// const defaultExpenseData: ExpenseReq = {
-//   company: "",
-//   due_date: "",
-//   description: "",
-//   type: "material",
-//   amount: 0,
-//   percentage: 0,
-//   vat_amount: 0,
-//   total_amount: 0,
-//   notes: "",
-//   voucher: "",
-//   status: "concept",
-//   tags: []
-// };
+import AttachmentDropzone from "@/components/ui/drop-zone-beta/DropzoneBeta";
+import { useEffect, useState } from "react";
+import { ParamGlobal } from "@/zustand/types/apiT";
 
 const placeholderExpense: ExpenseRes = {
   id: "",
@@ -56,26 +43,136 @@ const placeholderExpense: ExpenseRes = {
 
 const ExpenseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  // const methods = useForm<ExpenseReq>({
-  //   defaultValues: defaultExpenseData,
-  // });
+
+  const [paramsAttachments, setParamsAttachments] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 10,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
+
 
   const getExpenseZ = useGetExpense(id || "");
+  const updateExpenseZ = useUpdateExpense();
+  const uploadExpenseAttachmentZ = useUploadExpenseAttachment();
+  const getExpenseAttachmentsZ = useGetExpenseAttachments(id || "", paramsAttachments);
+  const currentExpense = getExpenseZ.data?.result || placeholderExpense;
+
+  const methods = useForm({
+    defaultValues: {
+      attachments: currentExpense.receipt_url ? [currentExpense.receipt_url] : [],
+    },
+  });
 
   const navigate = useNavigate();
 
-  const handleStatus = (newStatus: ExpenseRes["status"]) => {
-    const updated = { ...currentExpense, status: newStatus };
-    // setCurrentExpense(updated);
+  const handleStatus = (newStatus: ExpenseStatus) => {
+    // updateExpenseZ.mutate({ id ||"", status: newStatus }, {
+    //   onSuccess: () => {
+    //     getExpenseZ.refetch();
+    //   },
+    // });
 
+    const formData = new FormData();
+    formData.append("_method", "PATCH");
+    formData.append("status", newStatus);
+
+    // company
+    if (getExpenseZ.data?.result?.company) {
+      formData.append("company", getExpenseZ.data.result.company);
+    }
+
+    // description
+    if (getExpenseZ.data?.result?.description) {
+      formData.append("description", getExpenseZ.data.result.description);
+    }
+
+    // type
+    if (getExpenseZ.data?.result?.type) {
+      formData.append("type", getExpenseZ.data.result.type);
+    }
+
+    // due_date
+    if (getExpenseZ.data?.result?.due_date) {
+      const formattedDate = formatStringToDate(getExpenseZ.data.result.due_date);
+      formData.append("due_date", format(formattedDate, 'yyyy-MM-dd'));
+    }
+
+    // amount
+    if (getExpenseZ.data?.result?.amount) {
+      formData.append("amount", String(getExpenseZ.data.result.amount));
+    }
+
+
+    // for (const [key, value] of Object.entries(getExpenseZ.data?.result || {})) {
+    //   if (value !== undefined && value !== null && key !== "id") {
+    //     formData.append(key, String(value));
+    //   }
+    // }
+
+    updateExpenseZ.mutate({ id: id || "", formData }, {
+      onSuccess: () => {
+        // getExpenseZ.refetch();
+      },
+    });
   };
 
   const handleEdit = () => {
     navigate(`/expenses/edit/${id}`);
   };
 
+  const handleUploadAttachment = async (file: File) => {
+    if (!id) return;
 
-  const currentExpense = getExpenseZ.data?.result || placeholderExpense;
+    const formData = new FormData();
+    formData.append("file", file);
+    uploadExpenseAttachmentZ.mutate({ id, formData }, {
+      onSuccess: () => {
+        getExpenseZ.refetch();
+      },
+    });
+  };
+
+  const onSubmit = (data: {
+    attachments: (File | string)[];
+  }) => {
+    if (!id) return;
+    const formData = new FormData();
+    const files = data.attachments || [];
+
+    const urls = files.filter((f) => typeof f === "string");
+    const newFiles = files.filter((f) => f instanceof File);
+
+    urls.forEach((url: string) => formData.append("urls[]", url));
+    newFiles.forEach((file: File) => formData.append("attachments[]", file));
+
+    uploadExpenseAttachmentZ.mutate({ id, formData }, {
+      onSuccess: () => {
+        getExpenseZ.refetch();
+      }
+    });
+  };
+
+
+  useEffect(() => {
+    if (getExpenseAttachmentsZ.isSuccess && getExpenseAttachmentsZ.data.result) {
+      const data = getExpenseAttachmentsZ.data.result.data;
+      methods.reset({
+        attachments: data.map((attachment) => {
+          return attachment.url; // Assuming attachment.url is the URL of the attachment
+          // if (typeof attachment === "string") {
+          //   return attachment;
+          // } else if (attachment instanceof File) {
+          //   return attachment;
+          // } else {
+          //   return new File([], attachment.name || "attachment.pdf", { type: attachment.mime_type });
+          // }
+        }),
+      });
+    }
+  }, [getExpenseAttachmentsZ.isSuccess, getExpenseAttachmentsZ.data, methods]);
+
 
   return (
     <Layout>
@@ -87,7 +184,7 @@ const ExpenseDetailPage = () => {
               <div className="flex flex-wrap items-center gap-2 text-muted-foreground">
                 <span>{currentExpense.company}</span>
                 <span>•</span>
-                <span>{formatIsoToDate(currentExpense.created_at)}</span>
+                <span>{currentExpense?.created_at && formatIsoToDate(currentExpense?.created_at)}</span>
                 <ExpenseStatusBadge status={currentExpense.status || "concept"} />
               </div>
             </div>
@@ -127,9 +224,9 @@ const ExpenseDetailPage = () => {
                         <p className="font-medium">{currentExpense.company}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Datum</p>
+                        <p className="text-sm text-muted-foreground">Vervaldatum</p>
                         <p className="font-medium">
-                          {formatIsoToDate(currentExpense.due_date)}
+                          {currentExpense.due_date && formatIsoToDate(currentExpense.due_date)}
                         </p>
                       </div>
                       <div>
@@ -203,30 +300,30 @@ const ExpenseDetailPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {currentExpense.status === "concept" && (
+                    {currentExpense.status === ExpenseStatusEnum.Concept && (
                       <>
                         <Button
                           variant="outline"
-                          onClick={() => handleStatus("pending")}
+                          onClick={() => handleStatus(ExpenseStatusEnum.InTreatment)}
                         >
                           Ter goedkeuring indienen
                         </Button>
                       </>
                     )}
 
-                    {currentExpense.status === "pending" && (
+                    {currentExpense.status === ExpenseStatusEnum.InTreatment && (
                       <>
                         <Button
                           variant="default"
                           className="bg-green-600 hover:bg-green-700"
-                          onClick={() => handleStatus("approved")}
+                          onClick={() => handleStatus(ExpenseStatusEnum.Approved)}
                         >
                           <Check className="h-4 w-4 mr-2" />
                           Goedkeuren
                         </Button>
                         <Button
                           variant="destructive"
-                          onClick={() => handleStatus("rejected")}
+                          onClick={() => handleStatus(ExpenseStatusEnum.Rejected)}
                         >
                           Afkeuren
                         </Button>
@@ -236,7 +333,7 @@ const ExpenseDetailPage = () => {
                     {currentExpense.status === "approved" && (
                       <Button
                         variant="outline"
-                        onClick={() => handleStatus("submitted")}
+                        onClick={() => handleStatus(ExpenseStatusEnum.Submitted)}
                       >
                         Markeren als verwerkt
                       </Button>
@@ -245,7 +342,7 @@ const ExpenseDetailPage = () => {
                     {currentExpense.status === "rejected" && (
                       <Button
                         variant="outline"
-                        onClick={() => handleStatus("concept")}
+                        onClick={() => handleStatus(ExpenseStatusEnum.Incorporated)}
                       >
                         Opnieuw bewerken
                       </Button>
@@ -264,50 +361,58 @@ const ExpenseDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="receipt" className="space-y-6 pt-4">
-              {currentExpense.receipt_url ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Bon details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="border rounded-md p-4 flex flex-col items-center">
-                      <img
-                        src={currentExpense.receipt_url}
-                        alt="Receipt"
-                        className="max-w-full max-h-96 object-contain mb-4"
-                      />
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
-                          <Download className="h-4 w-4 mr-2" />
-                          Download
-                        </Button>
-                      </div>
-                    </div>
+              <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+                  {currentExpense.receipt_url ? (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Bon details</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="border rounded-md p-4 flex flex-col items-center">
+                          <img
+                            src={currentExpense.receipt_url}
+                            alt="Receipt"
+                            className="max-w-full max-h-96 object-contain mb-4"
+                          />
+                          <div className="flex space-x-2">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-4 w-4 mr-2" />
+                              Download
+                            </Button>
+                          </div>
+                        </div>
 
-                    <div className="text-sm text-center text-muted-foreground">
-                      Ontvangstbewijs geüpload op {format(new Date(currentExpense.created_at), 'dd MMMM yyyy', { locale: nl })}
-                    </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Bon toevoegen</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
-                      <Receipt className="h-10 w-10 text-gray-400 mb-2" />
-                      <p className="text-sm text-center text-muted-foreground mb-4">
-                        Er is nog geen bon gekoppeld aan deze uitgave. Upload een foto of scan van je bon.
-                      </p>
-                      <Button variant="outline">
-                        <Receipt className="h-4 w-4 mr-2" />
-                        Bon uploaden
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                        <div className="text-sm text-center text-muted-foreground">
+                          Ontvangstbewijs geüpload op {currentExpense?.created_at && formatIsoToDate(currentExpense?.created_at)}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">Bon toevoegen</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <AttachmentDropzone name="attachments" defaultUrls={
+                          methods.getValues("attachments") || []}
+                        />
+                        <Button variant="outline">
+                          <Receipt className="h-4 w-4 mr-2" />
+                          Bon uploaden
+                        </Button>
+                        {/* <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center">
+                          <Receipt className="h-10 w-10 text-gray-400 mb-2" />
+
+                          <p className="text-sm text-center text-muted-foreground mb-4">
+                            Er is nog geen bon gekoppeld aan deze uitgave. Upload een foto of scan van je bon.
+                          </p>
+                        </div> */}
+                      </CardContent>
+                    </Card>
+                  )}
+                </form>
+              </FormProvider>
             </TabsContent>
 
             {currentExpense.project_id && (

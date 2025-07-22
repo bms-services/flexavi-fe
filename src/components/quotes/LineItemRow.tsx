@@ -77,7 +77,6 @@ export const LineItemRow: React.FC<LineItemRowProps> = ({ index, onRemove, disab
           <input type="text" className={`${INLINE_INPUT_STYLE} text-center`}
             {...register(`items.${index}.unit`, {
               required: "Eenheid is verplicht",
-              pattern: { value: /^[a-zA-Z]+$/, message: "Eenheid mag alleen letters bevatten" },
             })}
             disabled={disabled || !!productId}
           />

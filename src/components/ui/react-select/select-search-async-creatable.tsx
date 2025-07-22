@@ -5,6 +5,7 @@ import { Path, Control, Controller, FieldValues, FieldErrors, RegisterOptions } 
 import { Label } from "../label";
 import { selectStyles } from "./style";
 import { useEffect, useRef } from "react";
+
 export interface Option {
     readonly label: string;
     readonly value: string;

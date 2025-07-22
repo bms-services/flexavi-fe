@@ -85,6 +85,36 @@ export const appendQuotes = (formData: FormData, quotes: (string | { value: stri
     });
 }
 
+export const appendInvoices = (formData: FormData, invoices: (string | { value: string; label: string })[]) => {
+    invoices.forEach(invoice => {
+        if (typeof invoice === "string") {
+            formData.append("invoices[]", invoice);
+        } else if (invoice && typeof invoice.value === "string") {
+            formData.append("invoices[]", invoice.value);
+        }
+    });
+}
+
+export const appendAgreements = (formData: FormData, agreements: (string | { value: string; label: string })[]) => {
+    agreements.forEach(agreement => {
+        if (typeof agreement === "string") {
+            formData.append("agreements[]", agreement);
+        } else if (agreement && typeof agreement.value === "string") {
+            formData.append("agreements[]", agreement.value);
+        }
+    });
+}
+
+export const appendStaffs = (formData: FormData, staffs: (string | { value: string; label: string })[]) => {
+    staffs.forEach(staff => {
+        if (typeof staff === "string") {
+            formData.append("staffs[]", staff);
+        } else if (staff && typeof staff.value === "string") {
+            formData.append("staffs[]", staff.value);
+        }
+    });
+};
+
 export const appendAddress = (formData: FormData, address: AddressReq) => {
     formData.append("address[street]", address.street || "");
     formData.append("address[postal_code]", typeof address.postal_code === "object"
@@ -126,7 +156,7 @@ export const appendAttachments = (formData: FormData, attachments: File[] | Work
         if (file instanceof File) {
             formData.append("attachments[]", file);
         } else if (typeof file === "object" && file !== null && 'url' in file) {
-            formData.append("attachments[]", file.url || "");
+            formData.append("urls[]", file.url || "");
         }
     });
 }

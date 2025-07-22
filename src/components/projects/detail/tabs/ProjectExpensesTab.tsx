@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Project, ProjectExpense } from "@/types/project";
@@ -28,147 +28,147 @@ interface ProjectExpensesTabProps {
 }
 
 export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project }) => {
-  const [expenses, setExpenses] = useState<ProjectExpense[]>(project.expenses);
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const [newExpense, setNewExpense] = useState<Partial<ProjectExpense>>({
-    description: "",
-    amount: 0,
-    date: new Date().toISOString().split("T")[0],
-  });
-  
-  // Receipt scanning states
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [receiptData, setReceiptData] = useState<ReceiptData>({
-    company: '',
-    description: '',
-    subtotal: '',
-    vat: '',
-    vatPaid: '',
-    total: '',
-    project: project.id,
-  });
+  // const [expenses, setExpenses] = useState<ProjectExpense[]>(project.expenses);
+  // const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
+  // const [newExpense, setNewExpense] = useState<Partial<ProjectExpense>>({
+  //   description: "",
+  //   amount: 0,
+  //   date: new Date().toISOString().split("T")[0],
+  // });
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setIsProcessing(true);
-      const file = e.target.files[0];
-      const reader = new FileReader();
+  // // Receipt scanning states
+  // const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  // const [isProcessing, setIsProcessing] = useState(false);
+  // const [receiptData, setReceiptData] = useState<ReceiptData>({
+  //   company: '',
+  //   description: '',
+  //   subtotal: '',
+  //   vat: '',
+  //   vatPaid: '',
+  //   total: '',
+  //   project: project.id,
+  // });
 
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setUploadedImage(event.target.result as string);
+  // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setIsProcessing(true);
+  //     const file = e.target.files[0];
+  //     const reader = new FileReader();
 
-          // Simulate AI processing
-          setTimeout(() => {
-            setReceiptData({
-              company: 'Bouwmarkt Nederland',
-              description: 'Aanschaf bouwmaterialen',
-              subtotal: '245.50',
-              vat: '21',
-              vatPaid: '51.56',
-              total: '297.06',
-              project: project.id,
-            });
-            
-            // Update the new expense with AI recognized data
-            setNewExpense({
-              description: 'Aanschaf bouwmaterialen - Bouwmarkt Nederland',
-              amount: 297.06,
-              date: new Date().toISOString().split("T")[0],
-              type: 'material',
-            });
-            
-            setIsProcessing(false);
-          }, 2000);
-        }
-      };
+  //     reader.onload = (event) => {
+  //       if (event.target?.result) {
+  //         setUploadedImage(event.target.result as string);
 
-      reader.readAsDataURL(file);
-    }
-  };
+  //         // Simulate AI processing
+  //         setTimeout(() => {
+  //           setReceiptData({
+  //             company: 'Bouwmarkt Nederland',
+  //             description: 'Aanschaf bouwmaterialen',
+  //             subtotal: '245.50',
+  //             vat: '21',
+  //             vatPaid: '51.56',
+  //             total: '297.06',
+  //             project: project.id,
+  //           });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    
-    if (name === "amount") {
-      setNewExpense({ ...newExpense, amount: parseFloat(value) });
-    } else {
-      setNewExpense({ ...newExpense, [name]: value });
-    }
-  };
+  //           // Update the new expense with AI recognized data
+  //           setNewExpense({
+  //             description: 'Aanschaf bouwmaterialen - Bouwmarkt Nederland',
+  //             amount: 297.06,
+  //             date: new Date().toISOString().split("T")[0],
+  //             type: 'material',
+  //           });
 
-  const handleReceiptDataChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setReceiptData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    // Update expense data based on receipt data changes
-    if (name === "description") {
-      setNewExpense(prev => ({ ...prev, description: value }));
-    } else if (name === "total") {
-      setNewExpense(prev => ({ ...prev, amount: parseFloat(value) || 0 }));
-    }
-  };
+  //           setIsProcessing(false);
+  //         }, 2000);
+  //       }
+  //     };
 
-  const handleClearFile = () => {
-    setUploadedImage(null);
-    setIsProcessing(false);
-    setReceiptData({
-      company: '',
-      description: '',
-      subtotal: '',
-      vat: '',
-      vatPaid: '',
-      total: '',
-      project: project.id,
-    });
-  };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-  const addExpense = () => {
-    if (!newExpense.description || !newExpense.amount || newExpense.amount <= 0) {
-      
-      return;
-    }
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  //   const { name, value } = e.target;
 
-    const expense: ProjectExpense = {
-      id: `exp-${Date.now()}`,
-      projectId: project.id,
-      description: newExpense.description || "",
-      amount: newExpense.amount || 0,
-      date: newExpense.date || new Date().toISOString(),
-      type: newExpense.type,
-      receiptUrl: uploadedImage || undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+  //   if (name === "amount") {
+  //     setNewExpense({ ...newExpense, amount: parseFloat(value) });
+  //   } else {
+  //     setNewExpense({ ...newExpense, [name]: value });
+  //   }
+  // };
 
-    setExpenses([...expenses, expense]);
-    setIsAddExpenseOpen(false);
-    
-    // Reset states
-    setNewExpense({
-      description: "",
-      amount: 0,
-      date: new Date().toISOString().split("T")[0],
-    });
-    setUploadedImage(null);
-    setReceiptData({
-      company: '',
-      description: '',
-      subtotal: '',
-      vat: '',
-      vatPaid: '',
-      total: '',
-      project: project.id,
-    });
-    
-    
-  };
+  // const handleReceiptDataChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setReceiptData(prev => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
 
-  const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  //   // Update expense data based on receipt data changes
+  //   if (name === "description") {
+  //     setNewExpense(prev => ({ ...prev, description: value }));
+  //   } else if (name === "total") {
+  //     setNewExpense(prev => ({ ...prev, amount: parseFloat(value) || 0 }));
+  //   }
+  // };
+
+  // const handleClearFile = () => {
+  //   setUploadedImage(null);
+  //   setIsProcessing(false);
+  //   setReceiptData({
+  //     company: '',
+  //     description: '',
+  //     subtotal: '',
+  //     vat: '',
+  //     vatPaid: '',
+  //     total: '',
+  //     project: project.id,
+  //   });
+  // };
+
+  // const addExpense = () => {
+  //   if (!newExpense.description || !newExpense.amount || newExpense.amount <= 0) {
+
+  //     return;
+  //   }
+
+  //   const expense: ProjectExpense = {
+  //     id: `exp-${Date.now()}`,
+  //     projectId: project.id,
+  //     description: newExpense.description || "",
+  //     amount: newExpense.amount || 0,
+  //     date: newExpense.date || new Date().toISOString(),
+  //     type: newExpense.type,
+  //     receiptUrl: uploadedImage || undefined,
+  //     createdAt: new Date().toISOString(),
+  //     updatedAt: new Date().toISOString(),
+  //   };
+
+  //   setExpenses([...expenses, expense]);
+  //   setIsAddExpenseOpen(false);
+
+  //   // Reset states
+  //   setNewExpense({
+  //     description: "",
+  //     amount: 0,
+  //     date: new Date().toISOString().split("T")[0],
+  //   });
+  //   setUploadedImage(null);
+  //   setReceiptData({
+  //     company: '',
+  //     description: '',
+  //     subtotal: '',
+  //     vat: '',
+  //     vatPaid: '',
+  //     total: '',
+  //     project: project.id,
+  //   });
+
+
+  // };
+
+  // const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
     <div className="space-y-6">
@@ -233,13 +233,13 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
               Upload een bonnetje om automatisch de gegevens uit te lezen met AI
             </DialogDescription>
           </DialogHeader>
-          
+
           {!uploadedImage ? (
             <ReceiptUploadArea onFileUpload={handleFileUpload} />
           ) : (
             <div className="space-y-4">
               <ReceiptFilePreview imageSrc={uploadedImage} onClear={handleClearFile} />
-              
+
               {isProcessing ? (
                 <div className="flex flex-col items-center justify-center py-4">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -258,12 +258,12 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
                       onInputChange={handleReceiptDataChange}
                     />
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="description">Beschrijving voor project</Label>
-                      <Textarea 
-                        id="description" 
+                      <Textarea
+                        id="description"
                         name="description"
                         value={newExpense.description}
                         onChange={handleInputChange}
@@ -272,12 +272,12 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
                     </div>
                     <div>
                       <Label htmlFor="amount">Bedrag</Label>
-                      <Input 
-                        id="amount" 
+                      <Input
+                        id="amount"
                         name="amount"
-                        type="number" 
-                        min="0" 
-                        step="0.01" 
+                        type="number"
+                        min="0"
+                        step="0.01"
                         value={newExpense.amount}
                         onChange={handleInputChange}
                         placeholder="0.00"
@@ -285,10 +285,10 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
                     </div>
                     <div>
                       <Label htmlFor="date">Datum</Label>
-                      <Input 
-                        id="date" 
+                      <Input
+                        id="date"
                         name="date"
-                        type="date" 
+                        type="date"
                         value={newExpense.date}
                         onChange={handleInputChange}
                       />
@@ -298,7 +298,7 @@ export const ProjectExpensesTab: React.FC<ProjectExpensesTabProps> = ({ project 
               )}
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddExpenseOpen(false)}>Annuleren</Button>
             <Button onClick={addExpense} disabled={isProcessing || !newExpense.description || !newExpense.amount}>Toevoegen</Button>
