@@ -1,4 +1,5 @@
 import { AddressReq } from "./addressT";
+import { AttachmentType } from "./attachmentT";
 import { LeadRes } from "./leadT";
 
 export interface ProjectReq {
@@ -194,3 +195,17 @@ export type ProjectEmployeeRes = {
     created_at: string;
     updated_at: string;
 }
+
+export type ProjectDocumentReq = {
+    type: AttachmentType;
+    documents: File[] | string[];
+};
+
+export type ProjectDocumentRes = {
+    id: string;
+    type: AttachmentType;
+    url: string;
+    name: string;
+    created_at: string;
+    updated_at: string;
+};

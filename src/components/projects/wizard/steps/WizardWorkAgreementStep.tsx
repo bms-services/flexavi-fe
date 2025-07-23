@@ -49,7 +49,7 @@ export const WizardWorkAgreementStep: React.FC = () => {
               }`}
           >
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-sm md:text-base">{agreement.description_work}</p>
+              <p className="font-semibold text-sm md:text-base">{agreement.description}</p>
               <p className={`${selected ? "text-white" : "text-muted-foreground"}`}>{agreement.start_date}</p>
               <p className={`${selected ? "text-white" : "text-muted-foreground"}`}>{agreement.status}</p>
             </div>

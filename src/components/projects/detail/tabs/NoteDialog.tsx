@@ -86,6 +86,7 @@ export const NoteDialog: React.FC<NoteDialogProps> = ({
                 register,
                 name: "notes",
                 options: {
+                  required: "Taak beschrijving is verplicht",
                 },
                 errors,
               }}

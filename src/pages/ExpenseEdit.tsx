@@ -63,7 +63,7 @@ const appendExpenses = (data: ExpenseReq, isUpdate: boolean) => {
 
 const ExpenseEdit = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+
   const methods = useForm<ExpenseReq>({
     defaultValues: defaultExpenseData,
   });

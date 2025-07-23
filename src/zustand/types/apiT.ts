@@ -93,3 +93,12 @@ export enum FilterType {
 }
 
 export type Filters = Record<string, string | number | [string, string]>;
+
+
+export const defaultParams: ParamGlobal = {
+    page: 1,
+    per_page: 10,
+    search: "",
+    sorts: {},
+    filters: {}
+};

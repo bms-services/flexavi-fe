@@ -6,6 +6,7 @@ export type EmployeeReq = {
     company_user_role_id: string;
     work_days: string[]
     start_time: string;
+    day_rate: number;
     end_time: string;
     status?: EmployeeStatus;
 };

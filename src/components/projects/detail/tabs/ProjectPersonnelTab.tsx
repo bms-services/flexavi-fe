@@ -1,31 +1,39 @@
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
-import { ProjectEmployeeRes } from "@/zustand/types/projectT";
+import { ProjectEmployeeReq, ProjectEmployeeRes } from "@/zustand/types/projectT";
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
-import { useGetProjectEmployees } from "@/zustand/hooks/useProject";
+import { useCreateProjectEmployee, useDeleteProjectEmployees, useGetProjectEmployees } from "@/zustand/hooks/useProject";
 import { useParams } from "react-router-dom";
 import { ParamGlobal } from "@/zustand/types/apiT";
+import { FormProvider, useForm } from "react-hook-form";
+import { EmployeeDialog } from "./EmployeeDialog";
 
 
-interface ProjectPersonnelTabProps {
-  onOpenCreateEmployee?: () => void;
-}
 
-export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ onOpenCreateEmployee }) => {
+export const ProjectPersonnelTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [isEmployeeDialogOpen, setIsEmployeeDialogOpen] = useState<boolean>(false);
 
-
-  const [params, setParams] = useState<ParamGlobal>(
-    {
-      page: 1,
-      per_page: 20,
+  const formProjectEmployee = useForm<ProjectEmployeeReq>({
+    defaultValues: {
+      staffs: []
     }
-  );
-  const getProjectEmployeesZ = useGetProjectEmployees(id || "", params);
+  });
 
+  const [params, setParams] = useState<ParamGlobal>({
+    page: 1,
+    per_page: 20,
+    search: "",
+    filters: {},
+    sorts: {},
+  });
+
+  const getProjectEmployeesZ = useGetProjectEmployees(id || "", params);
+  const deleteProjectEmployeeZ = useDeleteProjectEmployees(id || "");
+  const createProjectEmployeeZ = useCreateProjectEmployee(id || "");
 
   const columns = useMemo<CustomColumnDef<ProjectEmployeeRes>[]>(() => [
     { accessorKey: "name", header: "Name", cell: info => info.getValue() },
@@ -47,25 +55,39 @@ export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ onOpen
   const meta = getProjectEmployeesZ.data?.result.meta;
 
   /**
-     * Handles changes to the table parameters such as pagination, sorting, and filtering.
-     * 
-     * @param changed - Partial object containing the parameters that have changed.
-     * This function merges the new parameters with the existing ones in the state.
-     */
+   * Handles changes to the table parameters such as pagination, sorting, and filtering.
+   * 
+   * @param changed - Partial object containing the parameters that have changed.
+   * This function merges the new parameters with the existing ones in the state.
+   */
   const handleParamsChange = useCallback(
     (changed: Partial<ParamGlobal>) => setParams(prev => ({ ...prev, ...changed })),
     [setParams]
   );
 
+  const handleStoreEmployee = async (data: ProjectEmployeeReq) => {
+    await createProjectEmployeeZ.mutateAsync({
+      staffs: data.staffs.map((user) =>
+        typeof user === "string" ? user : user.value
+      ),
+    });
+  }
 
-  // /**
-  //  * Maps the lead status to filter options for the table.
-  //  * 
-  //  * @returns An array of objects containing value and label for each lead status.
-  //  */
-  // const statusFilterOptions = Object.entries(leadStatusMap).map(
-  //   ([value, { label }]) => ({ value, label })
-  // );
+  const handleCreateEmployee = () => {
+    setIsEmployeeDialogOpen(true);
+  }
+
+  const handleDelete = (ids: ProjectEmployeeRes[]) => {
+    deleteProjectEmployeeZ.mutate({ employeeIds: ids.map(emp => emp.id) });
+  };
+
+  useEffect(() => {
+    if (createProjectEmployeeZ.isSuccess) {
+      formProjectEmployee.reset({ staffs: [] });
+      setIsEmployeeDialogOpen(false);
+    }
+  }, [createProjectEmployeeZ.isSuccess, formProjectEmployee]);
+
 
   return (
     <div className="space-y-6">
@@ -76,7 +98,7 @@ export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ onOpen
             {/* Totaal: {formatCurrency(totalPersonnelCost)} */}
           </span>
         </h2>
-        <Button onClick={onOpenCreateEmployee}>
+        <Button onClick={handleCreateEmployee} >
           <Plus className="h-4 w-4 mr-2" />
           Personeel toevoegen
         </Button>
@@ -87,21 +109,19 @@ export const ProjectPersonnelTab: React.FC<ProjectPersonnelTabProps> = ({ onOpen
         data={data}
         meta={meta}
         isLoading={getProjectEmployeesZ.isLoading}
-        // isLoadingAction={deleteLeadZ.isPending || deleteLeadZ.isPending}
+        isLoadingAction={deleteProjectEmployeeZ.isPending}
         params={params}
         onParamsChange={handleParamsChange}
-      // onEdit={onEdit}
-      // onShow={onShow}
-      // onDelete={onDelete}
-      // onArchive={onArchive}
-      // filterOptions={{
-      //   status: {
-      //     label: "Status",
-      //     type: FilterType.SELECT,
-      //     options: statusFilterOptions,
-      //   },
-      // }}
+        onDelete={handleDelete}
       />
+
+      <FormProvider {...formProjectEmployee}>
+        <EmployeeDialog
+          open={isEmployeeDialogOpen}
+          onOpenChange={setIsEmployeeDialogOpen}
+          handleStore={formProjectEmployee.handleSubmit(handleStoreEmployee)}
+        />
+      </FormProvider>
     </div>
   )
 };

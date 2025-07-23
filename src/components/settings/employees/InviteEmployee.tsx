@@ -28,6 +28,7 @@ import {
   useGetMyWorkDays,
 } from "@/zustand/hooks/useSetting";
 import { ApiError } from "@/zustand/types/apiT";
+import { InputCurrency } from "@/components/ui/input-currency";
 
 interface InviteEmployeeProps {
   open: boolean;
@@ -196,6 +197,21 @@ export const InviteEmployee: React.FC<InviteEmployeeProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <InputCurrency
+              rules={{
+                name: "day_rate",
+                control: methods.control,
+                options: {
+                  required: t("settings.teamMember.error.required.dayRate"),
+                },
+                errors: methods.formState.errors,
+              }}
+              label={t("settings.teamMember.label.dayRate")}
+              placeholder={t("settings.teamMember.placeholder.dayRate")}
+              id="day_rate"
+              type="text"
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -9,8 +9,11 @@ import {
     ProjectNoteReq,
     ProjectNoteRes,
     ProjectEmployeeReq,
-    ProjectEmployeeRes
+    ProjectEmployeeRes,
+    ProjectDocumentReq,
+    ProjectDocumentRes
 } from "../types/projectT";
+import { AttachmentType } from "../types/attachmentT";
 
 // Project Service Functions
 export const getProjectsService = async (params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectRes>> => {
@@ -125,3 +128,32 @@ export const createProjectEmployeeService = async (id: string, formData: Project
     if (!data.success) throw data;
     return data;
 }
+
+export const deleteProjectEmployeesService = async ({ id, employeeIds }: { id: string; employeeIds: string[] }): Promise<ApiSuccess<ProjectEmployeeRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/delete/${id}/users`, {
+        data: { ids: employeeIds }
+    });
+    if (!data.success) throw data;
+    return data;
+}
+
+// Project Documents
+export const getProjectDocumentsService = async (id: string, params: ParamGlobal, type: AttachmentType): Promise<ApiSuccessPaginated<ProjectDocumentRes>> => {
+    const { data } = await mainApi.get(`/projects/list/${id}/documents`, { params: { ...params, type } });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const createProjectDocumentService = async (id: string, formData: FormData): Promise<ApiSuccess<ProjectDocumentRes>> => {
+    const { data } = await mainApi.post(`/projects/create/${id}/documents`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteProjectDocumentsService = async ({ id, documentIds }: { id: string; documentIds: string[] }): Promise<ApiSuccess<ProjectDocumentRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/delete/${id}/documents`, {
+        data: { ids: documentIds }
+    });
+    if (!data.success) throw data;
+    return data;
+};

@@ -75,6 +75,7 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
     formData.append('description', data.description);
     formData.append('status', data.status);
     formData.append('start_date', data.start_date);
+    formData.append('end_date', data.end_date);
     formData.append('budget', String(formatNormalizeCurrency(data.budget)));
 
     // Address
@@ -163,7 +164,7 @@ export const ProjectWizard: React.FC<ProjectWizardProps> = ({
   const validateStep = async () => {
     const fieldsToValidate = {
       0: [
-        "name", "start_date", "budget", "profit",
+        "name", "start_date", "end_date", "budget", "profit",
         "address.street", "address.postal_code", "address.house_number",
         "address.city", "address.province"
       ],

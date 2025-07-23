@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { ProjectOverviewRes, ProjectReq, ProjectRes, ProjectSummaryRes, ProjectTaskRes, ProjectTaskReq, ProjectNoteRes, ProjectNoteReq, ProjectEmployeeRes, ProjectEmployeeReq } from "../types/projectT";
+import { ProjectOverviewRes, ProjectReq, ProjectRes, ProjectSummaryRes, ProjectTaskRes, ProjectTaskReq, ProjectNoteRes, ProjectNoteReq, ProjectEmployeeRes, ProjectEmployeeReq, ProjectDocumentRes } from "../types/projectT";
 import {
     createProjectService,
     deleteProjectService,
@@ -18,9 +18,14 @@ import {
     updateProjectNoteService,
     deleteProjectNotesService,
     getProjectEmployeesService,
-    createProjectEmployeeService
+    createProjectEmployeeService,
+    deleteProjectEmployeesService,
+    getProjectDocumentsService,
+    createProjectDocumentService,
+    deleteProjectDocumentsService
 } from "../services/projectService";
 import { useNavigate } from "react-router-dom";
+import { AttachmentType } from "../types/attachmentT";
 
 // Project Hooks
 export const useGetProjects = (params: ParamGlobal) => {
@@ -186,3 +191,47 @@ export const useCreateProjectEmployee = (id: string) => {
         },
     });
 };
+
+export const useDeleteProjectEmployees = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectEmployeeRes[]>, ApiError, { employeeIds: string[] }>({
+        mutationFn: ({ employeeIds }) => deleteProjectEmployeesService({ id, employeeIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectEmployees', id] });
+        },
+    });
+};
+
+// Project Documents Hooks
+export const useGetProjectDocuments = (
+    id: string,
+    params: ParamGlobal,
+    type: AttachmentType
+) => {
+    return useQuery<ApiSuccessPaginated<ProjectDocumentRes>, ApiError>({
+        queryKey: ['projectDocuments', id, type],
+        queryFn: () => getProjectDocumentsService(id, params, type),
+        enabled: !!id,
+    });
+};
+
+export const useCreateProjectDocument = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectDocumentRes>, ApiError, FormData>({
+        mutationFn: (formData) => createProjectDocumentService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectDocuments', id] });
+        },
+    });
+};
+
+export const useDeleteProjectDocuments = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectDocumentRes[]>, ApiError, { documentIds: string[] }>({
+        mutationFn: ({ documentIds }) => deleteProjectDocumentsService({ id, documentIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectDocuments', id] });
+        },
+    });
+};
+

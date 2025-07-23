@@ -297,7 +297,6 @@ export const useGetMyAttachments = (params: ParamGlobal) => {
 
 export const useCreateMyAttachments = () => {
     const queryClient = useQueryClient();
-
     return useMutation<ApiSuccess<AttachmentRes>, ApiError, FormData>({
         mutationFn: createMyAttachmentsService,
         onSuccess: () => {

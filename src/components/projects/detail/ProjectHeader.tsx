@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 // import { ProjectStatusBadge } from "../ProjectStatusBadge";
-import { Edit, PlusCircle } from "lucide-react";
+import { Edit } from "lucide-react";
 import { formatEuro, formatIsoToDate } from "@/utils/format";
 import { ProjectOverviewRes, ProjectSummaryRes } from "@/zustand/types/projectT";
 import ProjectStatusBadge from "../ProjectStatusBadge";
@@ -13,7 +13,7 @@ interface ProjectHeaderProps {
   projectSummary: ProjectSummaryRes;
 }
 
-export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ onAddTask, projectOverview, projectSummary }) => {
+export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ projectOverview, projectSummary }) => {
   return (
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -31,10 +31,6 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({ onAddTask, project
           <Button variant="outline" size="sm">
             <Edit className="h-4 w-4 mr-2" />
             Bewerken
-          </Button>
-          <Button size="sm" onClick={onAddTask}>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Taak toevoegen
           </Button>
         </div>
       </div>

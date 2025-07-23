@@ -229,6 +229,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                   register,
                   name: "description",
                   options: {
+                    required: t('expense.error.required.description'),
                   },
                   errors,
                 }}

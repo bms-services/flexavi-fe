@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,14 +7,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Project } from "@/types/project";
 import { FileText, Link as LinkIcon, Plus, FileSpreadsheet } from "lucide-react";
+import { defaultParams, ParamGlobal } from "@/zustand/types/apiT";
+import { useGetProjectDocuments } from "@/zustand/hooks/useProject";
+import { useParams } from "react-router-dom";
 
-interface ProjectDocumentsTabProps {
-  project: Project;
-}
 
-export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ project }) => {
+export const ProjectDocumentsTab: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [projectAgreementDocumentsParam, setProjectAgreementDocumentsParam] = useState<ParamGlobal>(
+    defaultParams
+  );
+  const [projectInvoiceDocumentsParam, setProjectInvoiceDocumentsParam] = useState<ParamGlobal>(
+    defaultParams
+  );
+  const [projectQuoteDocumentsParam, setProjectQuoteDocumentsParam] = useState<ParamGlobal>(
+    defaultParams
+  );
+
+  const getProjectAgreementDocumentsZ = useGetProjectDocuments(id || "", projectAgreementDocumentsParam, 'agreement');
+  const getProjectInvoiceDocumentsZ = useGetProjectDocuments(id || "", projectInvoiceDocumentsParam, 'invoice');
+  const getProjectQuoteDocumentsZ = useGetProjectDocuments(id || "", projectQuoteDocumentsParam, 'quotation');
+
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -40,7 +55,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {project.quotes.length > 0 ? (
+            {/* {project.quotes.length > 0 ? (
               <div className="space-y-2">
                 {project.quotes.map((quoteId) => (
                   <div key={quoteId} className="flex items-center justify-between p-2 rounded-lg border">
@@ -58,7 +73,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
               <p className="text-muted-foreground text-sm">
                 Er zijn nog geen offertes gekoppeld
               </p>
-            )}
+            )} */}
             <Button variant="outline" className="w-full mt-4">
               <Plus className="h-4 w-4 mr-2" />
               Offerte koppelen
@@ -74,7 +89,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {project.workAgreements.length > 0 ? (
+            {/* {project.workAgreements.length > 0 ? (
               <div className="space-y-2">
                 {project.workAgreements.map((waId) => (
                   <div key={waId} className="flex items-center justify-between p-2 rounded-lg border">
@@ -92,7 +107,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
               <p className="text-muted-foreground text-sm">
                 Er zijn nog geen werkovereenkomsten gekoppeld
               </p>
-            )}
+            )} */}
             <Button variant="outline" className="w-full mt-4">
               <Plus className="h-4 w-4 mr-2" />
               Werkovereenkomst koppelen
@@ -108,7 +123,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {project.invoices.length > 0 ? (
+            {/* {project.invoices.length > 0 ? (
               <div className="space-y-2">
                 {project.invoices.map((invoiceId) => (
                   <div key={invoiceId} className="flex items-center justify-between p-2 rounded-lg border">
@@ -126,7 +141,7 @@ export const ProjectDocumentsTab: React.FC<ProjectDocumentsTabProps> = ({ projec
               <p className="text-muted-foreground text-sm">
                 Er zijn nog geen facturen gekoppeld
               </p>
-            )}
+            )} */}
             <Button variant="outline" className="w-full mt-4">
               <Plus className="h-4 w-4 mr-2" />
               Factuur koppelen
