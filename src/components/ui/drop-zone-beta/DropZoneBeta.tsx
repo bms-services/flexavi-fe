@@ -1,4 +1,4 @@
-// components/AttachmentDropzone.tsx
+// components/DropZoneBeta.tsx
 import { useDropzone } from "react-dropzone";
 import { useEffect, useState } from "react";
 import { useFormContext, useController } from "react-hook-form";
@@ -10,7 +10,7 @@ interface Props {
     defaultUrls?: string[];
 }
 
-const AttachmentDropzone = ({ name, defaultUrls = [] }: Props) => {
+const DropZoneBeta = ({ name, defaultUrls = [] }: Props) => {
     const { control, setValue } = useFormContext();
     const { field } = useController({ name, control });
     const [previews, setPreviews] = useState<(string | FileWithPreview)[]>([
@@ -48,8 +48,6 @@ const AttachmentDropzone = ({ name, defaultUrls = [] }: Props) => {
         };
     }, [previews]);
 
-    console.log(previews);
-
     return (
         <div className="space-y-4">
             <div
@@ -84,4 +82,4 @@ const AttachmentDropzone = ({ name, defaultUrls = [] }: Props) => {
     );
 };
 
-export default AttachmentDropzone;
+export default DropZoneBeta;

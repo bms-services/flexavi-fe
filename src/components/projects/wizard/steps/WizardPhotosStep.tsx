@@ -4,7 +4,7 @@ import { useFormContext, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ProjectReq } from '@/zustand/types/projectT';
-import { X, Image } from 'lucide-react';
+import { Image, Trash2, ViewIcon } from 'lucide-react';
 import { cn } from '@/utils/format';
 
 export const WizardPhotosStep: React.FC = () => {
@@ -45,6 +45,11 @@ export const WizardPhotosStep: React.FC = () => {
     fields.forEach((_, i) => remove(i));
   };
 
+  const handlePreview = (field: { url: string; name: string; file: File }) => {
+    const url = field.url;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="space-y-4 w-[600px]">
       <div>
@@ -77,14 +82,24 @@ export const WizardPhotosStep: React.FC = () => {
                 className="w-full h-40 object-cover"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => remove(index)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handlePreview(field)}
+                  >
+                    <ViewIcon className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div className="p-2 bg-background border-t">
                 <p className="text-sm truncate">{field.name}</p>

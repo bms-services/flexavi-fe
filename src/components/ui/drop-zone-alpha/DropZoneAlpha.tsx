@@ -16,6 +16,7 @@ import { ApiError, ApiSuccessPaginated } from "@/zustand/types/apiT";
 import { AttachmentRes, AttachmentType } from "@/zustand/types/attachmentT";
 import { ConfirmDialog } from "../confirm-dialog";
 import { useDeleteMyAttachment } from "@/zustand/hooks/useSetting";
+import { handlePreviewFile } from "./preview";
 
 interface ListFileItemProps {
     file: File;
@@ -129,7 +130,6 @@ interface DropZoneAlphaProps<T extends FieldValues = FieldValues> {
     isTemplate?: boolean;
 };
 
-
 export const DropZoneAlpha = <T extends FieldValues>({
     rules,
     label,
@@ -212,31 +212,12 @@ export const DropZoneAlpha = <T extends FieldValues>({
         return `Max: ${formatBytes(maxSize)}`;
     };
 
+
     const handlePreview = (file: File | AttachmentRes) => {
-        let previewFile: { uri: string; fileType: string | undefined };
-        const isFileInstance = typeof window !== "undefined" && file instanceof Blob && "name" in file;
-
-        if (isFileInstance) {
-            previewFile = {
-                uri: URL.createObjectURL(file as File),
-                fileType: (file as File).name.split(".").pop(),
-            };
-
-            return;
-        } else if ("url" in file && "name" in file) {
-            previewFile = {
-                uri: file.url,
-                fileType: file.name.split(".").pop(),
-            };
-        } else {
-            console.error("Invalid file type for preview");
-            return;
-        }
-
+        const previewFile = handlePreviewFile(file);
         setPreviewFiles(previewFile);
         setIsPreview(true);
-    };
-
+    }
 
     const handleModalRemove = (id: string) => {
         setModal((prev) => ({ ...prev, delete: true }));

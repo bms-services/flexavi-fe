@@ -10,8 +10,16 @@ import {
     ProjectNoteRes,
     ProjectEmployeeReq,
     ProjectEmployeeRes,
-    ProjectDocumentReq,
-    ProjectDocumentRes
+    ProjectDocumentRes,
+    ProjectAttachmentType,
+    ProjectPhotoRes,
+    ProjectProfitRes,
+    ProjectAppointmentReq,
+    ProjectAppointmentRes,
+    ProjectCostReq,
+    ProjectCostRes,
+    ProjectLeadReq,
+    ProjectLeadRes
 } from "../types/projectT";
 import { AttachmentType } from "../types/attachmentT";
 
@@ -82,7 +90,7 @@ export const updateProjectTaskService = async ({ id, taskId, formData }: { id: s
     return data;
 }
 export const deleteProjectTasksService = async ({ id, taskIds }: { id: string; taskIds: string[] }): Promise<ApiSuccess<ProjectTaskRes[]>> => {
-    const { data } = await mainApi.delete(`/projects/delete/${id}/tasks`, {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/tasks`, {
         data: { ids: taskIds }
     });
     if (!data.success) throw data;
@@ -109,7 +117,7 @@ export const updateProjectNoteService = async ({ id, noteId, formData }: { id: s
 }
 
 export const deleteProjectNotesService = async ({ id, noteIds }: { id: string; noteIds: string[] }): Promise<ApiSuccess<ProjectNoteRes[]>> => {
-    const { data } = await mainApi.delete(`/projects/delete/${id}/notes`, {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/notes`, {
         data: { ids: noteIds }
     });
     if (!data.success) throw data;
@@ -130,7 +138,7 @@ export const createProjectEmployeeService = async (id: string, formData: Project
 }
 
 export const deleteProjectEmployeesService = async ({ id, employeeIds }: { id: string; employeeIds: string[] }): Promise<ApiSuccess<ProjectEmployeeRes[]>> => {
-    const { data } = await mainApi.delete(`/projects/delete/${id}/users`, {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/users`, {
         data: { ids: employeeIds }
     });
     if (!data.success) throw data;
@@ -138,7 +146,7 @@ export const deleteProjectEmployeesService = async ({ id, employeeIds }: { id: s
 }
 
 // Project Documents
-export const getProjectDocumentsService = async (id: string, params: ParamGlobal, type: AttachmentType): Promise<ApiSuccessPaginated<ProjectDocumentRes>> => {
+export const getProjectDocumentsService = async (id: string, params: ParamGlobal, type: ProjectAttachmentType): Promise<ApiSuccessPaginated<ProjectDocumentRes>> => {
     const { data } = await mainApi.get(`/projects/list/${id}/documents`, { params: { ...params, type } });
     if (!data.success) throw data;
     return data;
@@ -151,8 +159,98 @@ export const createProjectDocumentService = async (id: string, formData: FormDat
 }
 
 export const deleteProjectDocumentsService = async ({ id, documentIds }: { id: string; documentIds: string[] }): Promise<ApiSuccess<ProjectDocumentRes[]>> => {
-    const { data } = await mainApi.delete(`/projects/delete/${id}/documents`, {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/documents`, {
         data: { ids: documentIds }
+    });
+    if (!data.success) throw data;
+    return data;
+};
+
+// Project Photos
+export const getProjectPhotosService = async (id: string, params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectPhotoRes>> => {
+    const { data } = await mainApi.get(`/projects/list/${id}/photos`, { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const createProjectPhotoService = async (id: string, formData: FormData): Promise<ApiSuccess<ProjectPhotoRes>> => {
+    const { data } = await mainApi.post(`/projects/create/${id}/photos`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteProjectPhotosService = async ({ id, photoIds }: { id: string; photoIds: string[] }): Promise<ApiSuccess<ProjectPhotoRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/photos`, {
+        data: { ids: photoIds }
+    });
+    if (!data.success) throw data;
+    return data;
+};
+
+// Project Profit
+export const getProjectProfitService = async (id: string): Promise<ApiSuccess<ProjectProfitRes>> => {
+    const { data } = await mainApi.get(`/projects/profit-calculation/${id}`);
+    if (!data.success) throw data;
+    return data;
+};
+
+// Project Appointments
+export const getProjectAppointmentsService = async (id: string, params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectAppointmentRes>> => {
+    const { data } = await mainApi.get(`/projects/list/${id}/appointments`, { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const createProjectAppointmentService = async (id: string, formData: ProjectAppointmentReq): Promise<ApiSuccess<ProjectAppointmentRes>> => {
+    const { data } = await mainApi.post(`/projects/create/${id}/appointments`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteProjectAppointmentsService = async ({ id, appointmentIds }: { id: string; appointmentIds: string[] }): Promise<ApiSuccess<ProjectAppointmentRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/appointments`, {
+        data: { ids: appointmentIds }
+    });
+    if (!data.success) throw data;
+    return data;
+};
+
+// Project Costs
+export const getProjectCostsService = async (id: string, params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectCostRes>> => {
+    const { data } = await mainApi.get(`/projects/list/${id}/costs`, { params });
+    if (!data.success) throw data;
+    return data;
+}
+
+export const createProjectCostService = async (id: string, formData: ProjectCostReq): Promise<ApiSuccess<ProjectCostRes>> => {
+    const { data } = await mainApi.post(`/projects/create/${id}/costs`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteProjectCostsService = async ({ id, costIds }: { id: string; costIds: string[] }): Promise<ApiSuccess<ProjectCostRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/costs`, {
+        data: { ids: costIds }
+    });
+    if (!data.success) throw data;
+    return data;
+};
+
+// Project Leads
+export const getProjectLeadsService = async (id: string, params: ParamGlobal): Promise<ApiSuccessPaginated<ProjectLeadRes>> => {
+    const { data } = await mainApi.get(`/projects/list/${id}/leads`, { params });
+    if (!data.success) throw data;
+    return data;
+}
+export const createProjectLeadService = async (id: string, formData: ProjectLeadReq): Promise<ApiSuccess<ProjectLeadRes>> => {
+    const { data } = await mainApi.post(`/projects/create/${id}/leads`, formData);
+    if (!data.success) throw data;
+    return data;
+}
+
+export const deleteProjectLeadsService = async ({ id, leadIds }: { id: string; leadIds: string[] }): Promise<ApiSuccess<ProjectLeadRes[]>> => {
+    const { data } = await mainApi.delete(`/projects/destroy/${id}/leads`, {
+        data: { ids: leadIds }
     });
     if (!data.success) throw data;
     return data;

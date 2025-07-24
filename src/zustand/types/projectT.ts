@@ -1,5 +1,4 @@
 import { AddressReq } from "./addressT";
-import { AttachmentType } from "./attachmentT";
 import { LeadRes } from "./leadT";
 
 export interface ProjectReq {
@@ -110,7 +109,10 @@ export type ProjectPhotoReq = {
 
 export type ProjectPhotoRes = {
     id: string;
+    project_id: string;
+    name: string;
     url: string;
+    path: string;
     created_at: string;
     updated_at: string;
 };
@@ -197,15 +199,82 @@ export type ProjectEmployeeRes = {
 }
 
 export type ProjectDocumentReq = {
-    type: AttachmentType;
+    type: ProjectAttachmentType;
     documents: File[] | string[];
 };
 
 export type ProjectDocumentRes = {
     id: string;
-    type: AttachmentType;
-    url: string;
+    project_id: string;
+    type: ProjectAttachmentType;
+    type_id: string | null;
     name: string;
+    url: string;
+    path: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type ProjectAttachmentType = "quote" | "invoice" | "agreement";
+
+
+export type ProjectProfitRes = {
+    revenue: number;
+    costs: number;
+    profit: number;
+    financial_overview: {
+        id: string;
+        type: ProjectAttachmentType;
+        type_id: string | null;
+        name: string;
+        url: string;
+    }[]
+    cost_specification: {
+        id: string;
+        type: ProjectAttachmentType;
+        type_id: string | null;
+        name: string;
+        url: string;
+    }[];
+}
+
+export type ProjectAppointmentReq = {
+    appointments: string[] | { value: string; label: string }[];
+}
+
+export type ProjectAppointmentRes = {
+    id: string;
+    name: string;
+    start_date: string;
+    end_date: string;
+    location: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type ProjectCostReq = {
+    costs: string[] | { value: string; label: string }[];
+}
+
+export type ProjectCostRes = {
+    id: string;
+    name: string;
+    amount: number;
+    description: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type ProjectLeadReq = {
+    leads: string[] | { value: string; label: string }[];
+}
+
+export type ProjectLeadRes = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
     created_at: string;
     updated_at: string;
 };

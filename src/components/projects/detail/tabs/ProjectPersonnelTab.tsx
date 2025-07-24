@@ -7,11 +7,9 @@ import { ProjectEmployeeReq, ProjectEmployeeRes } from "@/zustand/types/projectT
 import TableTanstack, { CustomColumnDef } from "@/components/ui/table-tanstack";
 import { useCreateProjectEmployee, useDeleteProjectEmployees, useGetProjectEmployees } from "@/zustand/hooks/useProject";
 import { useParams } from "react-router-dom";
-import { ParamGlobal } from "@/zustand/types/apiT";
+import { defaultParams, ParamGlobal } from "@/zustand/types/apiT";
 import { FormProvider, useForm } from "react-hook-form";
 import { EmployeeDialog } from "./EmployeeDialog";
-
-
 
 export const ProjectPersonnelTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,13 +21,7 @@ export const ProjectPersonnelTab: React.FC = () => {
     }
   });
 
-  const [params, setParams] = useState<ParamGlobal>({
-    page: 1,
-    per_page: 20,
-    search: "",
-    filters: {},
-    sorts: {},
-  });
+  const [params, setParams] = useState<ParamGlobal>(defaultParams);
 
   const getProjectEmployeesZ = useGetProjectEmployees(id || "", params);
   const deleteProjectEmployeeZ = useDeleteProjectEmployees(id || "");

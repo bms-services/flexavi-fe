@@ -1,6 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ApiError, ApiSuccess, ApiSuccessPaginated, ParamGlobal } from "@/zustand/types/apiT";
-import { ProjectOverviewRes, ProjectReq, ProjectRes, ProjectSummaryRes, ProjectTaskRes, ProjectTaskReq, ProjectNoteRes, ProjectNoteReq, ProjectEmployeeRes, ProjectEmployeeReq, ProjectDocumentRes } from "../types/projectT";
+import {
+    ProjectOverviewRes,
+    ProjectRes,
+    ProjectSummaryRes,
+    ProjectTaskRes,
+    ProjectTaskReq,
+    ProjectNoteRes,
+    ProjectNoteReq,
+    ProjectEmployeeRes,
+    ProjectEmployeeReq,
+    ProjectDocumentRes,
+    ProjectAttachmentType,
+    ProjectPhotoRes,
+    ProjectAppointmentRes,
+    ProjectLeadRes,
+    ProjectProfitRes,
+    ProjectLeadReq,
+    ProjectCostRes,
+    ProjectCostReq,
+    ProjectAppointmentReq,
+} from "../types/projectT";
 import {
     createProjectService,
     deleteProjectService,
@@ -22,10 +42,22 @@ import {
     deleteProjectEmployeesService,
     getProjectDocumentsService,
     createProjectDocumentService,
-    deleteProjectDocumentsService
+    deleteProjectDocumentsService,
+    getProjectPhotosService,
+    createProjectPhotoService,
+    deleteProjectPhotosService,
+    getProjectAppointmentsService,
+    createProjectAppointmentService,
+    deleteProjectAppointmentsService,
+    getProjectCostsService,
+    createProjectCostService,
+    deleteProjectCostsService,
+    getProjectLeadsService,
+    createProjectLeadService,
+    deleteProjectLeadsService,
+    getProjectProfitService,
 } from "../services/projectService";
 import { useNavigate } from "react-router-dom";
-import { AttachmentType } from "../types/attachmentT";
 
 // Project Hooks
 export const useGetProjects = (params: ParamGlobal) => {
@@ -206,10 +238,10 @@ export const useDeleteProjectEmployees = (id: string) => {
 export const useGetProjectDocuments = (
     id: string,
     params: ParamGlobal,
-    type: AttachmentType
+    type: ProjectAttachmentType
 ) => {
     return useQuery<ApiSuccessPaginated<ProjectDocumentRes>, ApiError>({
-        queryKey: ['projectDocuments', id, type],
+        queryKey: ['projectDocuments', id, type, params],
         queryFn: () => getProjectDocumentsService(id, params, type),
         enabled: !!id,
     });
@@ -219,8 +251,8 @@ export const useCreateProjectDocument = (id: string) => {
     const queryClient = useQueryClient();
     return useMutation<ApiSuccess<ProjectDocumentRes>, ApiError, FormData>({
         mutationFn: (formData) => createProjectDocumentService(id, formData),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['projectDocuments', id] });
+        onSuccess: (_data, formData) => {
+            queryClient.invalidateQueries({ queryKey: ['projectDocuments', id, formData.get('type')] });
         },
     });
 };
@@ -234,4 +266,129 @@ export const useDeleteProjectDocuments = (id: string) => {
         },
     });
 };
+
+// Project Photos Hooks
+export const useGetProjectPhotos = (id: string, params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<ProjectPhotoRes>, ApiError>({
+        queryKey: ['projectPhotos', id],
+        queryFn: () => getProjectPhotosService(id, params),
+        enabled: !!id,
+    });
+}
+
+export const useCreateProjectPhoto = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectPhotoRes>, ApiError, FormData>({
+        mutationFn: (formData) => createProjectPhotoService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectPhotos', id] });
+        },
+    });
+};
+
+export const useDeleteProjectPhotos = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectPhotoRes[]>, ApiError, { photoIds: string[] }>({
+        mutationFn: ({ photoIds }) => deleteProjectPhotosService({ id, photoIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectPhotos', id] });
+        },
+    });
+};
+
+// Project Appointments Hooks
+export const useGetProjectAppointments = (id: string, params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<ProjectAppointmentRes>, ApiError>({
+        queryKey: ['projectAppointments', id],
+        queryFn: () => getProjectAppointmentsService(id, params),
+        enabled: !!id,
+    });
+}
+
+export const useCreateProjectAppointment = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectAppointmentRes>, ApiError, ProjectAppointmentReq>({
+        mutationFn: (formData) => createProjectAppointmentService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectAppointments', id] });
+        },
+    });
+};
+
+export const useDeleteProjectAppointments = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectAppointmentRes[]>, ApiError, { appointmentIds: string[] }>({
+        mutationFn: ({ appointmentIds }) => deleteProjectAppointmentsService({ id, appointmentIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectAppointments', id] });
+        },
+    });
+};
+
+// Project Costs Hooks
+export const useGetProjectCosts = (id: string, params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<ProjectCostRes>, ApiError>({
+        queryKey: ['projectCosts', id],
+        queryFn: () => getProjectCostsService(id, params),
+        enabled: !!id,
+    });
+}
+
+export const useCreateProjectCost = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectCostRes>, ApiError, ProjectCostReq>({
+        mutationFn: (formData) => createProjectCostService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectCosts', id] });
+        },
+    });
+};
+
+export const useDeleteProjectCosts = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectCostRes[]>, ApiError, { costIds: string[] }>({
+        mutationFn: ({ costIds }) => deleteProjectCostsService({ id, costIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectCosts', id] });
+        },
+    });
+};
+
+// Project Leads Hooks
+export const useGetProjectLeads = (id: string, params: ParamGlobal) => {
+    return useQuery<ApiSuccessPaginated<ProjectLeadRes>, ApiError>({
+        queryKey: ['projectLeads', id],
+        queryFn: () => getProjectLeadsService(id, params),
+        enabled: !!id,
+    });
+}
+
+export const useCreateProjectLead = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectLeadRes>, ApiError, ProjectLeadReq>({
+        mutationFn: (formData) => createProjectLeadService(id, formData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectLeads', id] });
+        },
+    });
+};
+
+export const useDeleteProjectLeads = (id: string) => {
+    const queryClient = useQueryClient();
+    return useMutation<ApiSuccess<ProjectLeadRes[]>, ApiError, { leadIds: string[] }>({
+        mutationFn: ({ leadIds }) => deleteProjectLeadsService({ id, leadIds }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['projectLeads', id] });
+        },
+    });
+};
+
+// Project Profit Hooks
+export const useGetProjectProfit = (id: string) => {
+    return useQuery<ApiSuccess<ProjectProfitRes>, ApiError>({
+        queryKey: ['projectProfit', id],
+        queryFn: () => getProjectProfitService(id),
+        enabled: !!id,
+    });
+}
 

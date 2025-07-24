@@ -1,85 +1,89 @@
-
-import React, { useState } from "react";
-import { Project } from "@/types/project";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Eye, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
+import { useParams } from "react-router-dom";
+import {
+  useCreateProjectAppointment,
+  useDeleteProjectAppointments,
+  useGetProjectAppointments,
+} from "@/zustand/hooks/useProject";
+import { defaultParams, ParamGlobal } from "@/zustand/types/apiT";
+import { FormProvider, useForm } from "react-hook-form";
+import { ProjectAppointmentReq } from "@/zustand/types/projectT";
+import { AppointmentDialog } from "./AppointmentDialog";
+import { useDebounce } from "use-debounce";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
+const defaultProjectAppointment: ProjectAppointmentReq = {
+  appointments: []
+};
 
-interface ProjectAppointmentsTabProps {
-  project: Project;
-}
+export const ProjectAppointmentsTab: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
 
-interface ProjectAppointment {
-  id: string;
-  projectId: string;
-  title: string;
-  description: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  createdBy: string;
-}
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 300);
 
-const initialAppointments: ProjectAppointment[] = [
-  // Dummy: vervang door echte data
-];
-
-export const ProjectAppointmentsTab: React.FC<ProjectAppointmentsTabProps> = ({ project }) => {
-  const [appointments, setAppointments] = useState<ProjectAppointment[]>(project.appointments ?? initialAppointments);
+  const [params, setParams] = useState<ParamGlobal>({ ...defaultParams, per_page: 5 });
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [previewItem, setPreviewItem] = useState<any | null>(null);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [newAppointment, setNewAppointment] = useState<Partial<ProjectAppointment>>({
-    title: "",
-    description: "",
-    date: new Date().toISOString().split("T")[0],
-    startTime: "",
-    endTime: "",
-    createdBy: "",
+  const getProjectAppointmentsZ = useGetProjectAppointments(id || "", params);
+  const createProjectAppointmentZ = useCreateProjectAppointment(id || "");
+  const deleteProjectAppointmentZ = useDeleteProjectAppointments(id || "");
+
+  const appointments = getProjectAppointmentsZ.data?.result?.data || [];
+  const meta = getProjectAppointmentsZ.data?.result?.meta;
+
+  const methods = useForm<ProjectAppointmentReq>({
+    defaultValues: defaultProjectAppointment,
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewAppointment(prev => ({ ...prev, [name]: value }));
+  const handleStore = (data: ProjectAppointmentReq) => {
+    createProjectAppointmentZ.mutateAsync(data, {
+      onSuccess: () => {
+        setIsAddOpen(false);
+      },
+    });
   };
 
-  const handleAddAppointment = () => {
-    if (!newAppointment.title || !newAppointment.date || !newAppointment.startTime || !newAppointment.endTime) {
-      
-      return;
-    }
-    const appointment: ProjectAppointment = {
-      id: `appt-${Date.now()}`,
-      projectId: project.id,
-      title: newAppointment.title!,
-      description: newAppointment.description || "",
-      date: newAppointment.date!,
-      startTime: newAppointment.startTime!,
-      endTime: newAppointment.endTime!,
-      createdBy: newAppointment.createdBy || "Medewerker",
-    };
-    setAppointments([...appointments, appointment]);
-    setIsAddOpen(false);
-    setNewAppointment({
-      title: "",
-      description: "",
-      date: new Date().toISOString().split("T")[0],
-      startTime: "",
-      endTime: "",
-      createdBy: "",
-    });
-    
+  const handlePreview = (item: any) => {
+    setPreviewItem(item);
   };
+
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+    setModalDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
+    await deleteProjectAppointmentZ.mutateAsync({ appointmentIds: [deleteId] });
+    setModalDelete(false);
+    setDeleteId(null);
+  };
+
+  const handleChangePage = (direction: "next" | "prev") => {
+    setParams((prev) => ({
+      ...prev,
+      page: direction === "next" ? (prev.page ?? 1) + 1 : Math.max((prev.page ?? 1) - 1, 1),
+    }));
+  };
+
+  useEffect(() => {
+    setParams((prev) => ({ ...prev, search: debouncedSearch, page: 1 }));
+  }, [debouncedSearch]);
 
   return (
     <div className="space-y-6">
@@ -90,6 +94,14 @@ export const ProjectAppointmentsTab: React.FC<ProjectAppointmentsTabProps> = ({ 
           Afspraak toevoegen
         </Button>
       </div>
+
+      <Input
+        placeholder="Zoeken afspraak..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="max-w-sm"
+      />
+
       {appointments.length === 0 ? (
         <Card>
           <CardContent className="p-6 text-center">
@@ -98,45 +110,69 @@ export const ProjectAppointmentsTab: React.FC<ProjectAppointmentsTabProps> = ({ 
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4">
-          {appointments.map((appt) => (
-            <Card key={appt.id}>
-              <CardContent className="p-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <h3 className="font-medium">{appt.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {appt.date && format(parseISO(appt.date), "d MMMM yyyy", { locale: nl })} &bull; {appt.startTime} - {appt.endTime}
-                    </p>
-                    <p className="text-xs text-muted-foreground">Door: {appt.createdBy}</p>
-                  </div>
-                  <div className="text-sm">{appt.description}</div>
+          {appointments.map((appointment) => (
+            <Card key={appointment.id}>
+              <CardContent className="p-4 flex justify-between items-start">
+                <div className="space-y-1">
+                  <h3 className="font-medium">{appointment.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {appointment.date && format(parseISO(appointment.date), "d MMMM yyyy", { locale: nl })} &bull; {appointment.startTime} - {appointment.endTime}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Door: {appointment.createdBy}</p>
+                  <p className="text-sm mt-1">{appointment.description}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="icon" variant="outline" onClick={() => handlePreview(appointment)}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="destructive" onClick={() => handleDelete(appointment.id)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
+
+          <div className="flex justify-between pt-2">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => handleChangePage("prev")}
+              disabled={!meta || meta.current_page <= 1}
+              aria-label="Vorige pagina"
+            >
+              <ChevronLeft />
+            </Button>
+
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => handleChangePage("next")}
+              disabled={!meta || meta.current_page >= meta.last_page}
+              aria-label="Volgende pagina"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
         </div>
       )}
-      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Nieuwe afspraak</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Input name="title" placeholder="Titel" value={newAppointment.title} onChange={handleInputChange} />
-            <Input name="description" placeholder="Beschrijving" value={newAppointment.description} onChange={handleInputChange} />
-            <Input name="date" type="date" value={newAppointment.date} onChange={handleInputChange} />
-            <div className="flex gap-2">
-              <Input name="startTime" type="time" value={newAppointment.startTime} onChange={handleInputChange} placeholder="Starttijd" />
-              <Input name="endTime" type="time" value={newAppointment.endTime} onChange={handleInputChange} placeholder="Eindtijd" />
-            </div>
-            <Input name="createdBy" placeholder="Aangemaakt door (optioneel)" value={newAppointment.createdBy} onChange={handleInputChange} />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddOpen(false)}>Annuleren</Button>
-            <Button onClick={handleAddAppointment}>Toevoegen</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
+      <FormProvider {...methods}>
+        <AppointmentDialog
+          open={isAddOpen}
+          onOpenChange={setIsAddOpen}
+          handleStore={methods.handleSubmit(handleStore)}
+        />
+      </FormProvider>
+
+      <ConfirmDialog
+        open={modalDelete}
+        onCancel={() => setModalDelete(false)}
+        onConfirm={handleConfirmDelete}
+        title="Afspraak verwijderen"
+        description="Weet je zeker dat je deze afspraak wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
+        loading={deleteProjectAppointmentZ.isPending}
+      />
     </div>
   );
 };

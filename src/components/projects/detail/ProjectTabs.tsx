@@ -4,6 +4,10 @@ import { ProjectOverview } from "./tabs/ProjectOverview";
 import { ProjectPersonnelTab } from "./tabs/ProjectPersonnelTab";
 import { ProjectDocumentsTab } from "./tabs/ProjectDocumentsTab";
 import { ProjectOverviewRes } from "@/zustand/types/projectT";
+import { ProjectPhotosTab } from "./tabs/ProjectPhotosTab";
+import { ProjectProfitTab } from "./tabs/ProjectProfitTab";
+import { ProjectAppointmentsTab } from "./tabs/ProjectAppointmentsTab";
+import { ProjectExpensesTab } from "./tabs/ProjectExpensesTab";
 
 interface ProjectTabsProps {
   projectOverview: ProjectOverviewRes;
@@ -30,13 +34,13 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
         />
       </TabsContent>
 
-      {/* <TabsContent value="appointments" className="space-y-4">
-        <ProjectAppointmentsTab project={project} />
-      </TabsContent> */}
+      <TabsContent value="appointments" className="space-y-4">
+        <ProjectAppointmentsTab />
+      </TabsContent>
 
-      {/* <TabsContent value="expenses" className="space-y-4">
+      <TabsContent value="expenses" className="space-y-4">
         <ProjectExpensesTab />
-      </TabsContent> */}
+      </TabsContent>
 
       <TabsContent value="personnel" className="space-y-4">
         <ProjectPersonnelTab />
@@ -46,13 +50,13 @@ export const ProjectTabs: React.FC<ProjectTabsProps> = ({
         <ProjectDocumentsTab />
       </TabsContent>
 
-      {/* <TabsContent value="photos" className="space-y-4">
-        <ProjectPhotosTab project={project} />
-      </TabsContent> */}
+      <TabsContent value="photos" className="space-y-4">
+        <ProjectPhotosTab />
+      </TabsContent>
 
-      {/* <TabsContent value="profit" className="space-y-4">
-        <ProjectProfitTab project={project} />
-      </TabsContent> */}
+      <TabsContent value="profit" className="space-y-4">
+        <ProjectProfitTab />
+      </TabsContent>
     </Tabs>
   );
 };
